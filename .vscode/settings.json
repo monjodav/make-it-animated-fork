@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "explorer.confirmDelete": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit",
+    "source.sortMembers": "explicit"
+  }
+}
