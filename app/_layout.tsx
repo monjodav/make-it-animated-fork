@@ -6,8 +6,9 @@ import "../global.css";
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Stack>
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="linkedin/(tabs)" />
       </Stack>
     </GestureHandlerRootView>
   );
