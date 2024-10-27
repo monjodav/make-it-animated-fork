@@ -1,3 +1,4 @@
+import { AddButton } from "@/components/x/AddButton";
 import { TabsContext } from "@/providers/x/TabsProvider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
@@ -17,6 +18,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const TAB_BAR_HEIGHT_WITHOUT_INSET = 30;
 
 enum Tab {
   Home = "home",
@@ -55,9 +58,13 @@ const AnimatedIconWrapper: FC<PropsWithChildren<AnimatedIconWrapperProps>> = ({
 };
 
 const TabsLayout = () => {
-  const { isBottomBlurVisible, setIsBottomBlurVisible } = useContext(TabsContext);
+  const { isBottomBlurVisible, setIsBottomBlurVisible, setIsAddButtonVisible } =
+    useContext(TabsContext);
 
   const insets = useSafeAreaInsets();
+
+  const tabBarPaddingBottom = insets.bottom + 16;
+  const tabBarHeight = tabBarPaddingBottom + TAB_BAR_HEIGHT_WITHOUT_INSET;
 
   const homeIconScale = useSharedValue(1);
   const searchIconScale = useSharedValue(1);
@@ -98,8 +105,9 @@ const TabsLayout = () => {
             bottom: 0,
             elevation: 0,
             overflow: "hidden",
+            height: tabBarHeight,
             paddingTop: 8,
-            paddingBottom: insets.bottom + 16,
+            paddingBottom: tabBarPaddingBottom,
             borderTopColor: "#ffffff20",
             backgroundColor: "#00000000",
             opacity: tabBarOpacity,
@@ -112,6 +120,13 @@ const TabsLayout = () => {
         }}
         screenListeners={{
           tabPress: () => setIsBottomBlurVisible(true),
+          focus: (e) => {
+            if (e.target?.includes(Tab.Grok)) {
+              setIsAddButtonVisible(false);
+            } else {
+              setIsAddButtonVisible(true);
+            }
+          },
         }}
       >
         <Tabs.Screen
@@ -189,6 +204,7 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      <AddButton tabBarHeight={tabBarHeight} />
     </>
   );
 };
