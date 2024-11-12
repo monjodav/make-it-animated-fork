@@ -1,16 +1,16 @@
 import type { FC, PropsWithChildren } from "react";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useState } from "react";
 
-interface TabsContextValue {
+interface XTabsContextValue {
   isBottomBlurVisible: boolean;
   setIsBottomBlurVisible: (isBottomBlurVisible: boolean) => void;
   isAddButtonVisible: boolean;
   setIsAddButtonVisible: (isAddButtonVisible: boolean) => void;
 }
 
-export const TabsContext = createContext<TabsContextValue>({} as TabsContextValue);
+export const XTabsContext = createContext<XTabsContextValue>({} as XTabsContextValue);
 
-export const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
+export const XTabsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isBottomBlurVisible, setIsBottomBlurVisible] = useState(true);
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);
 
@@ -21,5 +21,5 @@ export const TabsProvider: FC<PropsWithChildren> = ({ children }) => {
     setIsAddButtonVisible,
   };
 
-  return <TabsContext.Provider value={value}>{children}</TabsContext.Provider>;
+  return <XTabsContext.Provider value={value}>{children}</XTabsContext.Provider>;
 };

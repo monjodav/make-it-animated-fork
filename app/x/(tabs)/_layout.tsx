@@ -1,5 +1,5 @@
 import { AddButton } from "@/components/x/AddButton";
-import { TabsContext } from "@/providers/x/TabsProvider";
+import { XTabsContext } from "@/providers/x-tabs-provider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import Foundation from "@expo/vector-icons/Foundation";
@@ -59,7 +59,7 @@ const AnimatedIconWrapper: FC<PropsWithChildren<AnimatedIconWrapperProps>> = ({
 
 const TabsLayout = () => {
   const { isBottomBlurVisible, setIsBottomBlurVisible, setIsAddButtonVisible } =
-    useContext(TabsContext);
+    useContext(XTabsContext);
 
   const insets = useSafeAreaInsets();
 
@@ -83,6 +83,7 @@ const TabsLayout = () => {
     }).start();
   }, [isBottomBlurVisible]);
 
+  // NOTE - Add button animation
   const rBlurContainerStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(isBottomBlurVisible ? 1 : 0),
@@ -204,6 +205,7 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      {/* x-fab-animation */}
       <AddButton tabBarHeight={tabBarHeight} />
     </>
   );

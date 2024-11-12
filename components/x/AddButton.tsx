@@ -1,4 +1,4 @@
-import { TabsContext } from "@/providers/x/TabsProvider";
+import { XTabsContext } from "@/providers/x-tabs-provider";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { usePathname } from "expo-router";
@@ -20,8 +20,9 @@ type Props = {
   tabBarHeight: number;
 };
 
+// x-fab-animation
 export const AddButton: FC<Props> = ({ tabBarHeight }) => {
-  const { isAddButtonVisible } = useContext(TabsContext);
+  const { isAddButtonVisible } = useContext(XTabsContext);
 
   const pathname = usePathname();
   const isMessagesScreen = useRef(false);

@@ -1,4 +1,4 @@
-import { TabsContext } from "@/providers/x/TabsProvider";
+import { XTabsContext } from "@/providers/x-tabs-provider";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useIsFocused } from "@react-navigation/native";
 import { useContext } from "react";
@@ -31,8 +31,9 @@ export const Post = () => {
   );
 };
 
+// x-fab-animation
 export default function Home() {
-  const { isBottomBlurVisible, setIsBottomBlurVisible } = useContext(TabsContext);
+  const { isBottomBlurVisible, setIsBottomBlurVisible } = useContext(XTabsContext);
   const insets = useSafeAreaInsets();
   const tabBarHeight = useBottomTabBarHeight();
 

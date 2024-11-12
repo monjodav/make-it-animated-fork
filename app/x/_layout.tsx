@@ -1,12 +1,12 @@
-import { TabsProvider } from "@/providers/x/TabsProvider";
+import { XTabsProvider } from "@/providers/x-tabs-provider";
 import { Stack } from "expo-router/stack";
 
 export default function XLayout() {
   return (
-    <TabsProvider>
+    <XTabsProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
-    </TabsProvider>
+    </XTabsProvider>
   );
 }
