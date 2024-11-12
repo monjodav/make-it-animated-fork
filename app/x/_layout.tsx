@@ -1,12 +1,10 @@
 import { XTabsProvider } from "@/providers/x-tabs-provider";
-import { Stack } from "expo-router/stack";
+import { Slot } from "expo-router";
 
 export default function XLayout() {
   return (
     <XTabsProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <Slot />
     </XTabsProvider>
   );
 }

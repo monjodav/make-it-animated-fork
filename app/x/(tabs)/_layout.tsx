@@ -1,4 +1,4 @@
-import { AddButton } from "@/components/x/AddButton";
+import { AddButton } from "@/components/x/add-button";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
