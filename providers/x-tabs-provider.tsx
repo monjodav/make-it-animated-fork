@@ -1,7 +1,12 @@
 import type { FC, PropsWithChildren } from "react";
 import React, { createContext, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const TAB_BAR_HEIGHT_WITHOUT_INSET = 30;
 
 interface XTabsContextValue {
+  tabBarHeight: number;
+  tabBarPaddingBottom: number;
   isBottomBlurVisible: boolean;
   setIsBottomBlurVisible: (isBottomBlurVisible: boolean) => void;
   isAddButtonVisible: boolean;
@@ -14,7 +19,14 @@ export const XTabsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isBottomBlurVisible, setIsBottomBlurVisible] = useState(true);
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);
 
+  const insets = useSafeAreaInsets();
+
+  const tabBarPaddingBottom = insets.bottom + 16;
+  const tabBarHeight = tabBarPaddingBottom + TAB_BAR_HEIGHT_WITHOUT_INSET;
+
   const value = {
+    tabBarHeight,
+    tabBarPaddingBottom,
     isBottomBlurVisible,
     setIsBottomBlurVisible,
     isAddButtonVisible,

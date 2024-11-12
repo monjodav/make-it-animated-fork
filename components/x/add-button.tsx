@@ -16,13 +16,9 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const DURATION = 200;
 
-type Props = {
-  tabBarHeight: number;
-};
-
 // x-fab-animation
-export const AddButton: FC<Props> = ({ tabBarHeight }) => {
-  const { isAddButtonVisible } = useContext(XTabsContext);
+export const AddButton: FC = () => {
+  const { tabBarHeight, isAddButtonVisible } = useContext(XTabsContext);
 
   const pathname = usePathname();
   const isMessagesScreen = useRef(false);

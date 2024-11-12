@@ -17,9 +17,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const TAB_BAR_HEIGHT_WITHOUT_INSET = 30;
 
 enum Tab {
   Home = "home",
@@ -58,13 +55,13 @@ const AnimatedIconWrapper: FC<PropsWithChildren<AnimatedIconWrapperProps>> = ({
 };
 
 const TabsLayout = () => {
-  const { isBottomBlurVisible, setIsBottomBlurVisible, setIsAddButtonVisible } =
-    useContext(XTabsContext);
-
-  const insets = useSafeAreaInsets();
-
-  const tabBarPaddingBottom = insets.bottom + 16;
-  const tabBarHeight = tabBarPaddingBottom + TAB_BAR_HEIGHT_WITHOUT_INSET;
+  const {
+    tabBarHeight,
+    tabBarPaddingBottom,
+    isBottomBlurVisible,
+    setIsBottomBlurVisible,
+    setIsAddButtonVisible,
+  } = useContext(XTabsContext);
 
   const homeIconScale = useSharedValue(1);
   const searchIconScale = useSharedValue(1);
@@ -206,7 +203,7 @@ const TabsLayout = () => {
         />
       </Tabs>
       {/* x-fab-animation */}
-      <AddButton tabBarHeight={tabBarHeight} />
+      <AddButton />
     </>
   );
 };

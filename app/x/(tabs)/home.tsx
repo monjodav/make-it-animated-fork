@@ -1,7 +1,6 @@
 import { HomePost } from "@/components/x/home-post";
 import { XTabsContext } from "@/providers/x-tabs-provider";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useIsFocused } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 import { useContext } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -13,11 +12,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // x-fab-animation
 export default function Home() {
-  const { isBottomBlurVisible, setIsBottomBlurVisible } = useContext(XTabsContext);
+  const { tabBarHeight, isBottomBlurVisible, setIsBottomBlurVisible } = useContext(XTabsContext);
   const insets = useSafeAreaInsets();
-  const tabBarHeight = useBottomTabBarHeight();
 
-  const isFocused = useIsFocused();
+  const navigation = useNavigation();
+  const isFocused = navigation.isFocused();
 
   const offsetYRefPoint = useSharedValue(0);
 
