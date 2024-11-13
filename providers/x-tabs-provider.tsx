@@ -1,5 +1,6 @@
+import { usePathname } from "expo-router";
 import type { FC, PropsWithChildren } from "react";
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TAB_BAR_HEIGHT_WITHOUT_INSET = 30;
@@ -20,6 +21,12 @@ export const XTabsProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isAddButtonVisible, setIsAddButtonVisible] = useState(true);
 
   const insets = useSafeAreaInsets();
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsBottomBlurVisible(true);
+  }, [pathname]);
 
   const tabBarPaddingBottom = insets.bottom + 16;
   const tabBarHeight = tabBarPaddingBottom + TAB_BAR_HEIGHT_WITHOUT_INSET;

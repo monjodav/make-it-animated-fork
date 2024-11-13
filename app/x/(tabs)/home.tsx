@@ -1,6 +1,6 @@
 import { HomePost } from "@/components/x/home-post";
 import { XTabsContext } from "@/providers/x-tabs-provider";
-import { useNavigation } from "expo-router";
+import { usePathname } from "expo-router";
 import { useContext } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -15,17 +15,16 @@ export default function Home() {
   const { tabBarHeight, isBottomBlurVisible, setIsBottomBlurVisible } = useContext(XTabsContext);
   const insets = useSafeAreaInsets();
 
-  const navigation = useNavigation();
-  const isFocused = navigation.isFocused();
-
   const offsetYRefPoint = useSharedValue(0);
+
+  const pathname = usePathname();
 
   const scrollHandler = useAnimatedScrollHandler({
     onMomentumBegin: (e) => {
       offsetYRefPoint.value = e.contentOffset.y;
     },
     onScroll: (e) => {
-      if (!isFocused) return;
+      if (pathname !== "/x/home") return;
       if (offsetYRefPoint.value < 0) return;
 
       const isScrollingToBottom = e.contentOffset.y > offsetYRefPoint.value;

@@ -8,12 +8,14 @@ export default function Search() {
   const insets = useSafeAreaInsets();
   const { tabBarHeight } = useContext(XTabsContext);
 
+  const renderItem = () => <SearchListItem />;
+
   return (
     <View className="flex-1 bg-x-back">
       <FlatList
         data={Array.from({ length: 20 })}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={SearchListItem}
+        renderItem={renderItem}
         ItemSeparatorComponent={() => <View className="h-px bg-x-front my-6" />}
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: tabBarHeight + 16 }}
       />
