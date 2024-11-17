@@ -1,20 +1,6 @@
+import { UserCard } from "@/components/linkedin/user-card";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-const UserCard = () => {
-  return (
-    <View className="flex-1 aspect-[0.75] rounded-xl border border-[#283036] py-4">
-      <View className="flex-1 items-center">
-        <View className="w-1/2 aspect-square rounded-full bg-[#283036] mb-4" />
-        <View className="w-3/4 h-3 rounded-md bg-[#283036] mb-1" />
-        <View className="w-1/2 h-3 rounded-md bg-[#283036]" />
-      </View>
-      <View className="self-center w-3/4 h-8 rounded-full border border-[#283036] items-center justify-center">
-        <View className="w-1/2 h-3 rounded-md bg-[#283036]" />
-      </View>
-    </View>
-  );
-};
 
 export default function MyNetwork() {
   const insets = useSafeAreaInsets();
@@ -22,25 +8,25 @@ export default function MyNetwork() {
   return (
     <View className="flex-1 bg-black">
       <ScrollView contentContainerClassName="gap-2">
-        <View className="bg-[#1C2226]" style={{ height: insets.top + 16 }} />
-        <View className="bg-[#1C2226] w-full py-4 gap-4">
+        <View className="bg-linkedin-back" style={{ height: insets.top + 16 }} />
+        <View className="bg-linkedin-back w-full py-4 gap-4">
           <View className="flex-row items-center px-4 gap-4">
-            <View className="w-16 h-16 rounded-md bg-[#283036]" />
+            <View className="w-16 h-16 rounded-md bg-linkedin-front" />
             <View className="flex-1 gap-2">
-              <View className="w-40 h-3 rounded-md bg-[#283036]" />
-              <View className="w-32 h-3 rounded-md bg-[#283036]" />
+              <View className="w-40 h-3 rounded-md bg-linkedin-front" />
+              <View className="w-32 h-3 rounded-md bg-linkedin-front" />
             </View>
           </View>
-          <View className="h-px bg-[#283036]" />
+          <View className="h-px bg-linkedin-front" />
           <View className="flex-row items-center px-4 gap-4">
-            <View className="w-16 h-16 rounded-md bg-[#283036]" />
+            <View className="w-16 h-16 rounded-md bg-linkedin-front" />
             <View className="flex-1 gap-2">
-              <View className="w-40 h-3 rounded-md bg-[#283036]" />
-              <View className="w-32 h-3 rounded-md bg-[#283036]" />
+              <View className="w-40 h-3 rounded-md bg-linkedin-front" />
+              <View className="w-32 h-3 rounded-md bg-linkedin-front" />
             </View>
           </View>
         </View>
-        <View className="px-4 py-4 gap-4 bg-[#1C2226]">
+        <View className="px-4 py-4 gap-4 bg-linkedin-back">
           <View className="flex-row gap-4">
             <UserCard />
             <UserCard />
@@ -50,7 +36,7 @@ export default function MyNetwork() {
             <UserCard />
           </View>
         </View>
-        <View className="px-4 py-4 gap-4 bg-[#1C2226]">
+        <View className="px-4 py-4 gap-4 bg-linkedin-back">
           <View className="flex-row gap-4">
             <UserCard />
             <UserCard />

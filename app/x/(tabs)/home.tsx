@@ -17,6 +17,7 @@ export default function Home() {
 
   const offsetYRefPoint = useSharedValue(0);
 
+  // VS create useIsFocused Hook
   const pathname = usePathname();
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -24,7 +25,7 @@ export default function Home() {
       offsetYRefPoint.value = e.contentOffset.y;
     },
     onScroll: (e) => {
-      if (pathname !== "/x/home") return;
+      // if (pathname !== "/x/home") return;
       if (offsetYRefPoint.value < 0) return;
 
       const isScrollingToBottom = e.contentOffset.y > offsetYRefPoint.value;

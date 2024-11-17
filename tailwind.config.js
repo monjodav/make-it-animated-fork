@@ -6,6 +6,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        "linkedin-back": "#21262E",
+        "linkedin-front": "#333c47",
         "x-back": "#000000",
         "x-front": "#171717",
       },

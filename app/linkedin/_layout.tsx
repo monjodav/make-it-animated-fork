@@ -59,14 +59,14 @@ const TabsLayout = () => {
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: true,
-          tabBarActiveTintColor: "#E9E9E9",
-          tabBarInactiveTintColor: "#BBBDBE",
+          tabBarActiveTintColor: "#C4C6C7",
+          tabBarInactiveTintColor: "#96999b",
           tabBarStyle: {
             height: tabBarHeight,
             overflow: "hidden",
             paddingBottom: tabBarPaddingBottom,
             borderTopColor: "#ffffff20",
-            backgroundColor: "#1C2226",
+            backgroundColor: "#21262E",
           },
         }}
         screenListeners={{
@@ -126,7 +126,7 @@ const TabsLayout = () => {
         />
       </Tabs>
       <Animated.View
-        className="absolute left-0 right-0 rounded-full bg-white"
+        className="absolute left-0 right-0 rounded-full bg-[#C4C6C7]"
         style={[
           rAnimatedBarStyle,
           {
@@ -141,10 +141,3 @@ const TabsLayout = () => {
 };
 
 export default TabsLayout;
-
-// KEY POINTS:
-// 1. The tab bar is a Tabs component from expo-router.
-// 2. The animated bar is an Animated.View that moves left to right based on the current tab.
-// 3. The tab bar height is calculated based on the safe area inset and the tab bar height without the inset.
-// 4. The animated bar width is calculated based on the screen width and the number of tabs.
-// 5. The current tab is shared between the tab press listener and the animated bar style.
