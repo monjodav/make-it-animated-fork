@@ -5,7 +5,6 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { FC, useState } from "react";
 import { View } from "react-native";
 import Animated, {
-  useAnimatedRef,
   useAnimatedScrollHandler,
   useDerivedValue,
   useSharedValue,
@@ -70,6 +69,9 @@ const tabs: Tabs = [
 export const TabBar: FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.AllIssues);
 
+  const offsetX = useSharedValue(0);
+  const isScrolling = useSharedValue(false);
+
   const tabWidths = useSharedValue<number[]>(new Array(tabs.length).fill(0));
 
   const tabOffsets = useDerivedValue(() => {
@@ -81,16 +83,17 @@ export const TabBar: FC = () => {
     }, []);
   });
 
-  const animatedRef = useAnimatedRef<Animated.FlatList<Tabs>>();
-
-  const offsetX = useSharedValue(0);
-  const isScrolling = useSharedValue(false);
-
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       offsetX.value = event.contentOffset.x;
     },
     onBeginDrag: () => {
+      isScrolling.value = true;
+    },
+    onEndDrag: () => {
+      isScrolling.value = false;
+    },
+    onMomentumBegin: () => {
       isScrolling.value = true;
     },
     onMomentumEnd: () => {
@@ -128,7 +131,6 @@ export const TabBar: FC = () => {
         isScrolling={isScrolling}
       />
       <Animated.FlatList
-        ref={animatedRef}
         data={tabs}
         keyExtractor={(item) => item.value.toString()}
         renderItem={_renderItem}
