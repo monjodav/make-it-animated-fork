@@ -70,40 +70,16 @@ const tabs: Tabs = [
 export const TabBar: FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.AllIssues);
 
-  const allIssuesWidth = useSharedValue(0);
-  const activeWidth = useSharedValue(0);
-  const backlogWidth = useSharedValue(0);
-  const triageWidth = useSharedValue(0);
-  const currentCycleWidth = useSharedValue(0);
-  const upcomingCycleWidth = useSharedValue(0);
+  const tabWidths = useSharedValue<number[]>(new Array(tabs.length).fill(0));
 
-  const allIssuesX = useDerivedValue(() => _sidePadding);
-  const activeX = useDerivedValue(() => _sidePadding + allIssuesWidth.value + _gap);
-  const backlogX = useDerivedValue(
-    () => _sidePadding + allIssuesWidth.value + activeWidth.value + _gap * 2
-  );
-  const triageX = useDerivedValue(
-    () => _sidePadding + allIssuesWidth.value + activeWidth.value + backlogWidth.value + _gap * 3
-  );
-  const currentCycleX = useDerivedValue(
-    () =>
-      _sidePadding +
-      allIssuesWidth.value +
-      activeWidth.value +
-      backlogWidth.value +
-      triageWidth.value +
-      _gap * 4
-  );
-  const upcomingCycleX = useDerivedValue(
-    () =>
-      _sidePadding +
-      allIssuesWidth.value +
-      activeWidth.value +
-      backlogWidth.value +
-      triageWidth.value +
-      currentCycleWidth.value +
-      _gap * 5
-  );
+  const tabOffsets = useDerivedValue(() => {
+    return tabWidths.value.reduce<number[]>((acc, width, index) => {
+      const previousX = index === 0 ? _sidePadding : acc[index - 1];
+      const previousWidth = index === 0 ? 0 : tabWidths.value[index - 1];
+      acc[index] = previousX + previousWidth + (index === 0 ? 0 : _gap);
+      return acc;
+    }, []);
+  });
 
   const animatedRef = useAnimatedRef<Animated.FlatList<Tabs>>();
 
@@ -127,30 +103,17 @@ export const TabBar: FC = () => {
       icon={item.icon}
       label={item.label}
       value={item.value}
-      // isActive={activeTab === item.value}
+      isActive={activeTab === item.value}
       onPress={() => {
         setActiveTab(item.value);
       }}
       onLayout={(event) => {
-        const { width, x } = event.nativeEvent.layout;
-        if (item.value === Tab.AllIssues) {
-          allIssuesWidth.value = width;
-        }
-        if (item.value === Tab.Active) {
-          activeWidth.value = width;
-        }
-        if (item.value === Tab.Backlog) {
-          backlogWidth.value = width;
-        }
-        if (item.value === Tab.Triage) {
-          triageWidth.value = width;
-        }
-        if (item.value === Tab.CurrentCycle) {
-          currentCycleWidth.value = width;
-        }
-        if (item.value === Tab.UpcomingCycle) {
-          upcomingCycleWidth.value = width;
-        }
+        const { width } = event.nativeEvent.layout;
+        tabWidths.modify((value) => {
+          "worklet";
+          value[index] = width;
+          return value;
+        });
       }}
     />
   );
@@ -160,18 +123,8 @@ export const TabBar: FC = () => {
       <TabIndicator
         activeTab={activeTab}
         tabBarOffsetX={offsetX}
-        allIssuesWidth={allIssuesWidth}
-        allIssuesX={allIssuesX}
-        activeWidth={activeWidth}
-        activeX={activeX}
-        backlogWidth={backlogWidth}
-        backlogX={backlogX}
-        triageWidth={triageWidth}
-        triageX={triageX}
-        currentCycleWidth={currentCycleWidth}
-        currentCycleX={currentCycleX}
-        upcomingCycleWidth={upcomingCycleWidth}
-        upcomingCycleX={upcomingCycleX}
+        tabWidths={tabWidths}
+        tabOffsets={tabOffsets}
         isScrolling={isScrolling}
       />
       <Animated.FlatList
