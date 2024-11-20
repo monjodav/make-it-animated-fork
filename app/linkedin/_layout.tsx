@@ -13,6 +13,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// linkedin-bottom-tabs-indicator-animation 🔽
+
 enum Tab {
   Home = "home",
   Video = "video",
@@ -141,3 +143,5 @@ const TabsLayout = () => {
 };
 
 export default TabsLayout;
+
+// linkedin-bottom-tabs-indicator-animation 🔼

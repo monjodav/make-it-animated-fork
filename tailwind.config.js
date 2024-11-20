@@ -6,6 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        "linear-back": "#0A090C",
+        "linear-front": "#3a3446",
+        "linear-text": "#A1A1A4",
         "linkedin-back": "#21262E",
         "linkedin-front": "#333c47",
         "x-back": "#000000",
