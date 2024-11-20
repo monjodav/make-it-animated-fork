@@ -14,7 +14,7 @@ import { TabIndicator } from "./tab-indicator";
 import { TabItem, TabItemProps } from "./tab-item";
 
 const _sidePadding = 20;
-const _gap = 16;
+const _gap = 8;
 const _iconColor = "#A1A1A4";
 
 export enum Tab {
@@ -73,7 +73,7 @@ export const TabBar: FC = () => {
   const tabWidths = useSharedValue<number[]>(new Array(tabs.length).fill(0));
 
   const tabOffsets = useDerivedValue(() => {
-    return tabWidths.value.reduce<number[]>((acc, width, index) => {
+    return tabWidths.value.reduce<number[]>((acc, _width, index) => {
       const previousX = index === 0 ? _sidePadding : acc[index - 1];
       const previousWidth = index === 0 ? 0 : tabWidths.value[index - 1];
       acc[index] = previousX + previousWidth + (index === 0 ? 0 : _gap);

@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Tab } from "./tab-bar";
 
-const _duration = 300;
+const _duration = 250;
 
 type Props = {
   activeTab: Tab;
@@ -32,7 +32,12 @@ export const TabIndicator: FC<Props> = ({
   });
 
   const rIndicatorStyle = useAnimatedStyle(() => {
-    const width = interpolate(activeTab, Object.keys(tabWidths.value).map(Number), tabWidths.value);
+    const width = withTiming(
+      interpolate(activeTab, Object.keys(tabWidths.value).map(Number), tabWidths.value),
+      {
+        duration: isScrolling.value ? 0 : _duration,
+      }
+    );
 
     return {
       left: left.value,

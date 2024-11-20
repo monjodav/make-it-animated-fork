@@ -1,11 +1,6 @@
 import React, { FC } from "react";
-import { LayoutChangeEvent, Pressable, Text, View } from "react-native";
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from "react-native";
 import { Tab } from "./tab-bar";
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const _duration = 300;
 
 export type TabItemProps = {
   icon: React.ReactNode;
@@ -17,21 +12,21 @@ export type TabItemProps = {
 };
 
 export const TabItem: FC<TabItemProps> = ({ icon, label, value, isActive, onPress, onLayout }) => {
-  const rPressableStyle = useAnimatedStyle(() => {
-    return {
-      borderColor: withTiming(isActive ? "transparent" : "#28282B", { duration: _duration }),
-    };
-  });
-
   return (
-    <AnimatedPressable
-      className="flex-row items-center gap-1 px-3 py-2 border rounded-lg"
-      style={rPressableStyle}
+    <Pressable
+      className="flex-row items-center gap-1 px-3 py-2 border border-[#28282B] rounded-lg"
+      style={styles.borderCurve}
       onLayout={onLayout}
       onPress={onPress}
     >
       <View className="w-4 h-4 items-center justify-center">{icon}</View>
       <Text className="text-linear-text font-medium">{label}</Text>
-    </AnimatedPressable>
+    </Pressable>
   );
 };
+
+const styles = StyleSheet.create({
+  borderCurve: {
+    borderCurve: "continuous",
+  },
+});
