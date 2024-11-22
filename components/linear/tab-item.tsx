@@ -2,6 +2,10 @@ import React, { FC } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from "react-native";
 import { Tab } from "./tab-bar";
 
+export const _borderRadius = 8;
+export const _borderColor = "#28282B";
+export const _borderCurve = "continuous";
+
 export type TabItemProps = {
   icon: React.ReactNode;
   label: string;
@@ -14,8 +18,8 @@ export type TabItemProps = {
 export const TabItem: FC<TabItemProps> = ({ icon, label, value, isActive, onPress, onLayout }) => {
   return (
     <Pressable
-      className="flex-row items-center gap-1 px-3 py-2 border border-[#28282B] rounded-lg"
-      style={styles.borderCurve}
+      className="flex-row items-center gap-1 px-3 py-2 border"
+      style={styles.container}
       onLayout={onLayout}
       onPress={onPress}
     >
@@ -26,7 +30,9 @@ export const TabItem: FC<TabItemProps> = ({ icon, label, value, isActive, onPres
 };
 
 const styles = StyleSheet.create({
-  borderCurve: {
-    borderCurve: "continuous",
+  container: {
+    borderRadius: _borderRadius,
+    borderColor: _borderColor,
+    borderCurve: _borderCurve,
   },
 });

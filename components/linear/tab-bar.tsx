@@ -1,9 +1,6 @@
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Entypo from "@expo/vector-icons/Entypo";
-import Feather from "@expo/vector-icons/Feather";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import React, { FC, useState } from "react";
-import { View } from "react-native";
+import { CircleDashed, CircleMinus, CirclePlay, Copy, Folders } from "lucide-react-native";
+import React, { FC, useRef, useState } from "react";
+import { FlatList, View, ViewToken } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useDerivedValue,
@@ -12,9 +9,10 @@ import Animated, {
 import { TabIndicator } from "./tab-indicator";
 import { TabItem, TabItemProps } from "./tab-item";
 
-const _sidePadding = 20;
+const _sidePadding = 16;
 const _gap = 8;
 const _iconColor = "#A1A1A4";
+const _iconSize = 12;
 
 export enum Tab {
   AllIssues = 0,
@@ -29,38 +27,32 @@ type Tabs = Pick<TabItemProps, "icon" | "label" | "value">[];
 
 const tabs: Tabs = [
   {
-    icon: <AntDesign name="copy1" size={12} color={_iconColor} />,
+    icon: <Folders size={_iconSize} color={_iconColor} />,
     label: "All Issues",
     value: Tab.AllIssues,
   },
   {
-    icon: <Feather name="copy" size={12} color={_iconColor} />,
+    icon: <Copy size={_iconSize} color={_iconColor} />,
     label: "Active",
     value: Tab.Active,
   },
   {
-    icon: (
-      <MaterialCommunityIcons name="checkbox-blank-circle-outline" size={12} color={_iconColor} />
-    ),
+    icon: <CircleDashed size={_iconSize} color={_iconColor} />,
     label: "Backlog",
     value: Tab.Backlog,
   },
   {
-    icon: <Entypo name="500px-with-circle" size={12} color={_iconColor} />,
+    icon: <CircleMinus size={_iconSize} color={_iconColor} />,
     label: "Triage",
     value: Tab.Triage,
   },
   {
-    icon: (
-      <MaterialCommunityIcons name="arrow-right-drop-circle-outline" size={12} color={_iconColor} />
-    ),
+    icon: <CirclePlay size={_iconSize} color={_iconColor} />,
     label: "Current Cycle",
     value: Tab.CurrentCycle,
   },
   {
-    icon: (
-      <MaterialCommunityIcons name="arrow-right-drop-circle-outline" size={12} color={_iconColor} />
-    ),
+    icon: <CirclePlay size={_iconSize} color={_iconColor} />,
     label: "Upcoming Cycle",
     value: Tab.UpcomingCycle,
   },
@@ -68,9 +60,7 @@ const tabs: Tabs = [
 
 export const TabBar: FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.AllIssues);
-
-  const offsetX = useSharedValue(0);
-  const isScrolling = useSharedValue(false);
+  const [viewableItems, setViewableItems] = useState<ViewToken[]>([]);
 
   const tabWidths = useSharedValue<number[]>(new Array(tabs.length).fill(0));
 
@@ -83,21 +73,13 @@ export const TabBar: FC = () => {
     }, []);
   });
 
+  const ref = useRef<FlatList>(null);
+
+  const offsetX = useSharedValue(0);
+
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       offsetX.value = event.contentOffset.x;
-    },
-    onBeginDrag: () => {
-      isScrolling.value = true;
-    },
-    onEndDrag: () => {
-      isScrolling.value = false;
-    },
-    onMomentumBegin: () => {
-      isScrolling.value = true;
-    },
-    onMomentumEnd: () => {
-      isScrolling.value = false;
     },
   });
 
@@ -109,6 +91,15 @@ export const TabBar: FC = () => {
       isActive={activeTab === item.value}
       onPress={() => {
         setActiveTab(item.value);
+        const isPrevItemVisible = viewableItems.some((item) => item.index === index - 1);
+        const isCurrentItemVisible = viewableItems.some((item) => item.index === index);
+
+        const viewPosition = isPrevItemVisible ? 1 : 0;
+        const viewOffset = isPrevItemVisible ? -_sidePadding : _sidePadding;
+
+        if (!isCurrentItemVisible) {
+          ref.current?.scrollToIndex({ index, viewPosition, viewOffset });
+        }
       }}
       onLayout={(event) => {
         const { width } = event.nativeEvent.layout;
@@ -128,9 +119,9 @@ export const TabBar: FC = () => {
         tabBarOffsetX={offsetX}
         tabWidths={tabWidths}
         tabOffsets={tabOffsets}
-        isScrolling={isScrolling}
       />
       <Animated.FlatList
+        ref={ref}
         data={tabs}
         keyExtractor={(item) => item.value.toString()}
         renderItem={_renderItem}
@@ -138,6 +129,13 @@ export const TabBar: FC = () => {
         contentContainerStyle={{ paddingHorizontal: _sidePadding, gap: _gap }}
         showsHorizontalScrollIndicator={false}
         onScroll={scrollHandler}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 100,
+          minimumViewTime: 16,
+        }}
+        onViewableItemsChanged={({ viewableItems }) => {
+          setViewableItems(viewableItems);
+        }}
       />
     </View>
   );
