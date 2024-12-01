@@ -9,6 +9,8 @@ import Animated, {
 import { TabIndicator } from "./tab-indicator";
 import { TabItem, TabItemProps } from "./tab-item";
 
+// linear-button-tabs-indicator-animation 🔽
+
 const _sidePadding = 16;
 const _gap = 8;
 const _iconColor = "#A1A1A4";
@@ -140,3 +142,5 @@ export const TabBar: FC = () => {
     </View>
   );
 };
+
+// linear-button-tabs-indicator-animation 🔼

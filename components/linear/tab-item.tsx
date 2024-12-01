@@ -2,6 +2,8 @@ import React, { FC } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet, Text, View } from "react-native";
 import { Tab } from "./tab-bar";
 
+// linear-button-tabs-indicator-animation 🔽
+
 export const _borderRadius = 8;
 export const _borderColor = "#28282B";
 export const _borderCurve = "continuous";
@@ -36,3 +38,5 @@ const styles = StyleSheet.create({
     borderCurve: _borderCurve,
   },
 });
+
+// linear-button-tabs-indicator-animation 🔼

@@ -18,7 +18,9 @@ export default function Home() {
       </View>
       <View className="h-6 w-20 ml-5 mb-6 rounded-lg bg-linear-front" />
       <View className="mb-1">
+        {/* linear-button-tabs-indicator-animation 🔽 */}
         <TabBar />
+        {/* linear-button-tabs-indicator-animation 🔼 */}
       </View>
       <LinearIssues />
       <View className="flex-row items-center justify-between px-8 pt-4">

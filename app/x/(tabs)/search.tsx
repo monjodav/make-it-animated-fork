@@ -1,24 +1,37 @@
 import { SearchListItem } from "@/components/x/search-list-item";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import { useContext } from "react";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
+import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// x-bottom-tabs-background-animation 🔽
+
 export default function Search() {
+  const { tabBarHeight, handleMomentumBegin, handleScroll } = useContext(XTabsContext);
+
   const insets = useSafeAreaInsets();
-  const { tabBarHeight } = useContext(XTabsContext);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onMomentumBegin: handleMomentumBegin,
+    onScroll: handleScroll,
+  });
 
   const renderItem = () => <SearchListItem />;
 
   return (
     <View className="flex-1 bg-x-back">
-      <FlatList
-        data={Array.from({ length: 20 })}
+      <Animated.FlatList
+        data={Array.from({ length: 40 })}
         keyExtractor={(_, index) => index.toString()}
         renderItem={renderItem}
         ItemSeparatorComponent={() => <View className="h-px bg-x-front my-6" />}
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: tabBarHeight + 16 }}
+        scrollEventThrottle={1000 / 60}
+        onScroll={scrollHandler}
       />
     </View>
   );
 }
+
+// x-bottom-tabs-background-animation 🔼

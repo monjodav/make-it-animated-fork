@@ -12,11 +12,12 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+// x-floating-action-button-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const DURATION = 200;
 
-// x-fab-animation
 export const AddButton: FC = () => {
   const { tabBarHeight, isAddButtonVisible } = useContext(XTabsContext);
 
@@ -115,3 +116,5 @@ export const AddButton: FC = () => {
     </Animated.View>
   );
 };
+
+// x-floating-action-button-animation 🔼

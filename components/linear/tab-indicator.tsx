@@ -9,6 +9,8 @@ import Animated, {
 import { Tab } from "./tab-bar";
 import { _borderColor, _borderCurve, _borderRadius } from "./tab-item";
 
+// linear-button-tabs-indicator-animation 🔽
+
 const _duration = 200;
 
 type Props = {
@@ -51,3 +53,5 @@ const styles = StyleSheet.create({
     borderCurve: _borderCurve,
   },
 });
+
+// linear-button-tabs-indicator-animation 🔼

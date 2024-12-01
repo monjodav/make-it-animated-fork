@@ -18,6 +18,10 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+// x-bottom-tabs-background-animation 🔽
+
+const _duration = 200;
+
 enum Tab {
   Home = "home",
   Search = "search",
@@ -75,15 +79,14 @@ const TabsLayout = () => {
   useEffect(() => {
     RNAnimated.timing(tabBarOpacity, {
       toValue: isBottomBlurVisible ? 1 : 0.25,
-      duration: 250,
+      duration: _duration,
       useNativeDriver: true,
     }).start();
   }, [isBottomBlurVisible]);
 
-  // NOTE - Add button animation
   const rBlurContainerStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isBottomBlurVisible ? 1 : 0),
+      opacity: withTiming(isBottomBlurVisible ? 1 : 0, { duration: _duration }),
     };
   });
 
@@ -112,12 +115,18 @@ const TabsLayout = () => {
           },
           tabBarBackground: () => (
             <Animated.View style={[StyleSheet.absoluteFillObject, rBlurContainerStyle]}>
+              {/* BlurView is experimental on Android and should be used with caution */}
+              {/* To apply blur effect on Android, you need use experimentalBlurMethod prop */}
               <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
             </Animated.View>
           ),
         }}
         screenListeners={{
-          tabPress: () => setIsBottomBlurVisible(true),
+          tabPress: () => {
+            setTimeout(() => {
+              setIsBottomBlurVisible(true);
+            }, 50);
+          },
           focus: (e) => {
             if (e.target?.includes(Tab.Grok)) {
               setIsAddButtonVisible(false);
@@ -202,10 +211,13 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
-      {/* x-fab-animation */}
+      {/* x-floating-action-button-animation 🔽 */}
       <AddButton />
+      {/* x-floating-action-button-animation 🔼 */}
     </>
   );
 };
 
 export default TabsLayout;
+
+// x-bottom-tabs-background-animation 🔼
