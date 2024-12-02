@@ -13,6 +13,8 @@ module.exports = {
         "linkedin-front": "#333c47",
         "x-back": "#000000",
         "x-front": "#171717",
+        "instagram-back": "#000000",
+        "instagram-front": "#171717",
       },
     },
   },
