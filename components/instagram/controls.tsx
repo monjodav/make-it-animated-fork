@@ -3,9 +3,11 @@ import Feather from "@expo/vector-icons/Feather";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeftRight, ChevronUp, CircleStop, Infinity } from "lucide-react-native";
 import React, { FC, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { _height, ControlItem } from "./control-item";
+
+// instagram-story-controls-animation 🔽
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -29,7 +31,7 @@ export const Controls: FC = () => {
     };
   });
 
-  const rOpacityStyle = useAnimatedStyle(() => {
+  const rLabelStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(isOpen ? 1 : 0, { duration: 200 }),
     };
@@ -47,21 +49,20 @@ export const Controls: FC = () => {
     };
   });
 
-  const toggleOpenState = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <Animated.View
       style={[StyleSheet.absoluteFillObject, styles.container]}
-      className={cn("justify-center", controlsPosition === "left" ? "items-start" : "items-end")}
+      className={cn(
+        "justify-center pointer-events-box-none",
+        controlsPosition === "left" ? "items-start" : "items-end"
+      )}
     >
       {isOpen && (
         <AnimatedPressable
           entering={FadeIn}
           exiting={FadeOut}
           style={StyleSheet.absoluteFillObject}
-          onPress={toggleOpenState}
+          onPress={() => setIsOpen(!isOpen)}
         >
           <LinearGradient
             colors={["rgba(0,0,0,0.8)", "transparent"]}
@@ -98,35 +99,39 @@ export const Controls: FC = () => {
             controlsPosition={controlsPosition}
             icon={<Text className="text-white text-2xl">Aa</Text>}
             label={
-              <Animated.View style={rOpacityStyle}>
+              <Animated.View style={rLabelStyle}>
                 <Text className={className.label}>Create</Text>
               </Animated.View>
             }
+            onPress={() => Alert.alert("Create")}
           />
           <ControlItem
             controlsPosition={controlsPosition}
             icon={<Infinity size={_iconSize} color={_iconColor} />}
             label={
-              <Animated.View style={rOpacityStyle}>
+              <Animated.View style={rLabelStyle}>
                 <Text className={className.label}>Boomerang</Text>
               </Animated.View>
             }
+            onPress={() => Alert.alert("Boomerang")}
           />
           <ControlItem
             controlsPosition={controlsPosition}
             icon={<Feather name="layout" size={_iconSize} color="white" />}
             label={
-              <Animated.View style={rOpacityStyle}>
+              <Animated.View style={rLabelStyle}>
                 <Text className={className.label}>Layout</Text>
               </Animated.View>
             }
+            onPress={() => Alert.alert("Layout")}
           />
         </Animated.View>
-        <Animated.View style={rOpacityStyle}>
+        <Animated.View style={rLabelStyle}>
           <ControlItem
             controlsPosition={controlsPosition}
             icon={<CircleStop size={_iconSize} color={_iconColor} />}
             label={<Text className={className.label}>Hands-free</Text>}
+            onPress={() => Alert.alert("Hands-free")}
           />
         </Animated.View>
         <Animated.View style={rCloseItemStyle}>
@@ -145,11 +150,11 @@ export const Controls: FC = () => {
               </Animated.View>
             }
             label={
-              <Animated.View style={rOpacityStyle}>
+              <Animated.View style={rLabelStyle}>
                 <Text className={className.label}>Close</Text>
               </Animated.View>
             }
-            onPress={toggleOpenState}
+            onPress={() => setIsOpen(!isOpen)}
           />
         </Animated.View>
       </View>
@@ -165,3 +170,5 @@ const styles = StyleSheet.create({
     top: _padding,
   },
 });
+
+// instagram-story-controls-animation 🔼

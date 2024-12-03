@@ -3,6 +3,8 @@ import React, { FC } from "react";
 import { Pressable, View } from "react-native";
 import { Position } from "./controls";
 
+// instagram-story-controls-animation 🔽
+
 export const _height = 40;
 
 type Props = {
@@ -27,3 +29,5 @@ export const ControlItem: FC<Props> = ({ controlsPosition, icon, label, onPress 
     </Pressable>
   );
 };
+
+// instagram-story-controls-animation 🔼

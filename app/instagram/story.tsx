@@ -1,7 +1,7 @@
 import { _padding, Controls } from "@/components/instagram/controls";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { X } from "lucide-react-native";
-import { StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const _iconSize = 24;
@@ -20,14 +20,24 @@ export default function Story() {
         style={styles.container}
       >
         <View className="flex-row items-center justify-between">
-          <X size={_iconSize} color={_iconColor} strokeWidth={1.5} />
-          <Ionicons name="flash-off" size={_iconSize} color={_iconColor} />
-          <Ionicons name="settings-sharp" size={_iconSize} color={_iconColor} />
+          <Pressable onPress={() => Alert.alert("Close")}>
+            <X size={_iconSize} color={_iconColor} strokeWidth={1.5} />
+          </Pressable>
+          <Pressable onPress={() => Alert.alert("Flash")}>
+            <Ionicons name="flash-off" size={_iconSize} color={_iconColor} />
+          </Pressable>
+          <Pressable onPress={() => Alert.alert("Settings")}>
+            <Ionicons name="settings-sharp" size={_iconSize} color={_iconColor} />
+          </Pressable>
         </View>
         <View className="pb-4 items-center">
-          <View className="h-[60px] w-[60px] rounded-full bg-white/50 border border-white/90" />
+          <Pressable onPress={() => Alert.alert("Camera")}>
+            <View className="h-[60px] w-[60px] rounded-full bg-white/50 border border-white/90" />
+          </Pressable>
         </View>
+        {/* instagram-story-controls-animation 🔽 */}
         <Controls />
+        {/* instagram-story-controls-animation 🔼 */}
       </View>
       <View className="flex-row items-center justify-between p-4">
         <View className="h-9 w-9 rounded-lg bg-instagram-front" />
