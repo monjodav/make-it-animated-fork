@@ -1,7 +1,7 @@
 import { cn } from "@/utils/cn";
 import Feather from "@expo/vector-icons/Feather";
 import { LinearGradient } from "expo-linear-gradient";
-import { ArrowLeftRight, ChevronUp, CircleStop, Infinity } from "lucide-react-native";
+import { ArrowLeftRight, ChevronDown, CircleStop, Infinity } from "lucide-react-native";
 import React, { FC, useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
@@ -43,7 +43,7 @@ export const Controls: FC = () => {
     };
   });
 
-  const rChevronUpStyle = useAnimatedStyle(() => {
+  const rChevronDownStyle = useAnimatedStyle(() => {
     return {
       transform: [{ rotate: withTiming(isOpen ? "180deg" : "0deg", { duration: 200 }) }],
     };
@@ -140,13 +140,13 @@ export const Controls: FC = () => {
             icon={
               <Animated.View
                 style={[
-                  rChevronUpStyle,
+                  rChevronDownStyle,
                   {
                     transformOrigin: "center",
                   },
                 ]}
               >
-                <ChevronUp size={_iconSize + 8} color={_iconColor} strokeWidth={1.5} />
+                <ChevronDown size={_iconSize + 8} color={_iconColor} strokeWidth={1.5} />
               </Animated.View>
             }
             label={
