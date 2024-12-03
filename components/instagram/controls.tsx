@@ -4,8 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeftRight, ChevronUp, CircleStop, Infinity } from "lucide-react-native";
 import React, { FC, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated from "react-native-reanimated";
-import { ControlItem } from "./control-item";
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { _height, ControlItem } from "./control-item";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -17,9 +17,38 @@ export const _iconColor = "#fff";
 
 export const Controls: FC = () => {
   const [controlsPosition, setControlsPosition] = useState<Position>("left");
+  const [isOpen, setIsOpen] = useState(false);
 
   const className = {
     label: "text-white text-sm",
+  };
+
+  const rTopItemsStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withTiming(isOpen ? 0 : _height / 2, { duration: 200 }) }],
+    };
+  });
+
+  const rOpacityStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isOpen ? 1 : 0, { duration: 200 }),
+    };
+  });
+
+  const rCloseItemStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withTiming(isOpen ? 0 : -(_height / 2), { duration: 200 }) }],
+    };
+  });
+
+  const rChevronUpStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: withTiming(isOpen ? "180deg" : "0deg", { duration: 200 }) }],
+    };
+  });
+
+  const toggleOpenState = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -27,57 +56,102 @@ export const Controls: FC = () => {
       style={[StyleSheet.absoluteFillObject, styles.container]}
       className={cn("justify-center", controlsPosition === "left" ? "items-start" : "items-end")}
     >
-      <AnimatedPressable style={StyleSheet.absoluteFillObject}>
-        <LinearGradient
-          colors={["rgba(0,0,0,0.8)", "transparent"]}
+      {isOpen && (
+        <AnimatedPressable
+          entering={FadeIn}
+          exiting={FadeOut}
           style={StyleSheet.absoluteFillObject}
-          start={{ x: controlsPosition === "left" ? 0 : 1, y: 0 }}
-          end={{ x: controlsPosition === "left" ? 1 : 0, y: 0 }}
-          dither={false}
-        />
-      </AnimatedPressable>
-      <AnimatedPressable
-        className={"absolute"}
-        style={[
-          styles.arrowLeftRightContainer,
-          {
-            left: controlsPosition === "left" ? _padding : undefined,
-            right: controlsPosition === "right" ? _padding : undefined,
-          },
-        ]}
-        hitSlop={10}
-        onPress={() => {
-          setControlsPosition(controlsPosition === "left" ? "right" : "left");
-        }}
-      >
-        <ArrowLeftRight size={_iconSize} color={_iconColor} />
-      </AnimatedPressable>
-      <View className="gap-5">
-        <ControlItem
-          controlsPosition={controlsPosition}
-          icon={<Text className="text-white text-2xl">Aa</Text>}
-          label={<Text className={className.label}>Create</Text>}
-        />
-        <ControlItem
-          controlsPosition={controlsPosition}
-          icon={<Infinity size={_iconSize} color={_iconColor} />}
-          label={<Text className={className.label}>Boomerang</Text>}
-        />
-        <ControlItem
-          controlsPosition={controlsPosition}
-          icon={<Feather name="layout" size={_iconSize} color="white" />}
-          label={<Text className={className.label}>Layout</Text>}
-        />
-        <ControlItem
-          controlsPosition={controlsPosition}
-          icon={<CircleStop size={_iconSize} color={_iconColor} />}
-          label={<Text className={className.label}>Hands-free</Text>}
-        />
-        <ControlItem
-          controlsPosition={controlsPosition}
-          icon={<ChevronUp size={_iconSize} color={_iconColor} />}
-          label={<Text className={className.label}>Close</Text>}
-        />
+          onPress={toggleOpenState}
+        >
+          <LinearGradient
+            colors={["rgba(0,0,0,0.8)", "transparent"]}
+            style={StyleSheet.absoluteFillObject}
+            start={{ x: controlsPosition === "left" ? 0 : 1, y: 0 }}
+            end={{ x: controlsPosition === "left" ? 1 : 0, y: 0 }}
+            dither={false}
+          />
+        </AnimatedPressable>
+      )}
+      {isOpen && (
+        <AnimatedPressable
+          entering={FadeIn}
+          exiting={FadeOut}
+          className="absolute"
+          style={[
+            styles.arrowLeftRightContainer,
+            {
+              left: controlsPosition === "left" ? _padding : undefined,
+              right: controlsPosition === "right" ? _padding : undefined,
+            },
+          ]}
+          hitSlop={10}
+          onPress={() => {
+            setControlsPosition(controlsPosition === "left" ? "right" : "left");
+          }}
+        >
+          <ArrowLeftRight size={_iconSize} color={_iconColor} />
+        </AnimatedPressable>
+      )}
+      <View>
+        <Animated.View style={rTopItemsStyle}>
+          <ControlItem
+            controlsPosition={controlsPosition}
+            icon={<Text className="text-white text-2xl">Aa</Text>}
+            label={
+              <Animated.View style={rOpacityStyle}>
+                <Text className={className.label}>Create</Text>
+              </Animated.View>
+            }
+          />
+          <ControlItem
+            controlsPosition={controlsPosition}
+            icon={<Infinity size={_iconSize} color={_iconColor} />}
+            label={
+              <Animated.View style={rOpacityStyle}>
+                <Text className={className.label}>Boomerang</Text>
+              </Animated.View>
+            }
+          />
+          <ControlItem
+            controlsPosition={controlsPosition}
+            icon={<Feather name="layout" size={_iconSize} color="white" />}
+            label={
+              <Animated.View style={rOpacityStyle}>
+                <Text className={className.label}>Layout</Text>
+              </Animated.View>
+            }
+          />
+        </Animated.View>
+        <Animated.View style={rOpacityStyle}>
+          <ControlItem
+            controlsPosition={controlsPosition}
+            icon={<CircleStop size={_iconSize} color={_iconColor} />}
+            label={<Text className={className.label}>Hands-free</Text>}
+          />
+        </Animated.View>
+        <Animated.View style={rCloseItemStyle}>
+          <ControlItem
+            controlsPosition={controlsPosition}
+            icon={
+              <Animated.View
+                style={[
+                  rChevronUpStyle,
+                  {
+                    transformOrigin: "center",
+                  },
+                ]}
+              >
+                <ChevronUp size={_iconSize + 8} color={_iconColor} strokeWidth={1.5} />
+              </Animated.View>
+            }
+            label={
+              <Animated.View style={rOpacityStyle}>
+                <Text className={className.label}>Close</Text>
+              </Animated.View>
+            }
+            onPress={toggleOpenState}
+          />
+        </Animated.View>
       </View>
     </Animated.View>
   );
