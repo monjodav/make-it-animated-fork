@@ -6,35 +6,47 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
   useDerivedValue,
+  withDelay,
+  withSequence,
   withTiming,
 } from "react-native-reanimated";
 import { _loadingIndicatorDiameter, LoadingIndicator } from "./loading-indicator";
 
+export const _onRefreshingContainerHeight = 150;
 export const _onRefreshCompleteDuration = 500;
 
 type Props = {
-  offsetY: SharedValue<number>;
-  lastOffsetY: SharedValue<number>;
+  listOffsetY: SharedValue<number>;
+  listOffsetYOnEndDrag: SharedValue<number>;
   isDragging: SharedValue<boolean>;
-  refreshing: boolean;
-  isRefreshed: boolean;
+  refreshing: SharedValue<boolean>;
+  isRefreshed: SharedValue<boolean>;
 };
 
 export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   children,
-  offsetY,
-  lastOffsetY,
+  listOffsetY,
+  listOffsetYOnEndDrag,
   isDragging,
   refreshing,
   isRefreshed,
 }) => {
   const { height } = useWindowDimensions();
 
+  const loadingIndicatorContainerHeightOnRefreshing = useDerivedValue(() => {
+    return listOffsetYOnEndDrag.value < _onRefreshingContainerHeight
+      ? withSequence(
+          withTiming(listOffsetYOnEndDrag.value, { duration: 0 }),
+          withDelay(25, withTiming(_onRefreshingContainerHeight, { duration: 500 }))
+        )
+      : listOffsetYOnEndDrag.value;
+  });
+
   const loadingIndicatorContainerHeight = useDerivedValue(() => {
     return isDragging.value
-      ? interpolate(offsetY.value, [0, -height], [0, height], Extrapolation.CLAMP)
-      : lastOffsetY.value > _loadingIndicatorDiameter
-        ? lastOffsetY.value
+      ? interpolate(listOffsetY.value, [0, -height], [0, height], Extrapolation.CLAMP)
+      : listOffsetYOnEndDrag.value > _loadingIndicatorDiameter
+        ? loadingIndicatorContainerHeightOnRefreshing.value
         : withTiming(0, { duration: _onRefreshCompleteDuration });
   });
 
@@ -48,12 +60,12 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   return (
     <View className="flex-1">
       <Animated.View
-        className="top-0 left-0 right-0 items-center justify-center bg-blue-500"
+        className="top-0 left-0 right-0 items-center justify-center"
         style={rLoadingIndicatorContainerStyle}
       >
         <LoadingIndicator
-          offsetY={loadingIndicatorContainerHeight}
-          lastOffsetY={lastOffsetY}
+          wrapperHeight={loadingIndicatorContainerHeight}
+          listOffsetYOnEndDrag={listOffsetYOnEndDrag}
           refreshing={refreshing}
           isRefreshed={isRefreshed}
         />

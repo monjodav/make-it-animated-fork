@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { View } from "react-native";
 import Animated, {
   Easing,
@@ -7,7 +7,6 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
@@ -19,77 +18,90 @@ const className = {
 };
 
 type Props = {
-  offsetY: SharedValue<number>;
-  lastOffsetY: SharedValue<number>;
-  refreshing: boolean;
-  isRefreshed: boolean;
+  wrapperHeight: SharedValue<number>;
+  listOffsetYOnEndDrag: SharedValue<number>;
+  refreshing: SharedValue<boolean>;
+  isRefreshed: SharedValue<boolean>;
 };
 
-export const LoadingIndicator: FC<Props> = ({ offsetY, lastOffsetY, refreshing, isRefreshed }) => {
+export const LoadingIndicator: FC<Props> = ({
+  wrapperHeight,
+  listOffsetYOnEndDrag,
+  refreshing,
+  isRefreshed,
+}) => {
   const rotateBeforeRefreshing = useDerivedValue(() => {
-    return isRefreshed
+    return isRefreshed.value
       ? 360
-      : interpolate(offsetY.value, [0, _loadingIndicatorDiameter], [0, 360], Extrapolation.CLAMP);
+      : interpolate(
+          wrapperHeight.value,
+          [0, _loadingIndicatorDiameter],
+          [0, 360],
+          Extrapolation.CLAMP
+        );
   });
 
-  const rContainerStyle = useAnimatedStyle(() => {
+  const scaleBeforeRefreshing = useDerivedValue(() => {
+    return isRefreshed.value
+      ? 1
+      : interpolate(
+          wrapperHeight.value,
+          [0, _loadingIndicatorDiameter],
+          [0.2, 1],
+          Extrapolation.CLAMP
+        );
+  });
+
+  const rInnerContainerStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
-        offsetY.value,
+        wrapperHeight.value,
         [0, _loadingIndicatorDiameter],
         [0, 1],
         Extrapolation.CLAMP
       ),
       transform: [
-        {
-          scale: isRefreshed
-            ? 1
-            : interpolate(
-                offsetY.value,
-                [0, _loadingIndicatorDiameter],
-                [0.2, 1],
-                Extrapolation.CLAMP
-              ),
-        },
+        { scale: scaleBeforeRefreshing.value },
         { rotate: `-${rotateBeforeRefreshing.value}deg` },
       ],
     };
   });
 
-  const rotateAfterRefreshing = useSharedValue(0);
+  // I need to make here listOffsetYOnEndDrag.value - _onRefreshingContainerHeight / 2 - _loadingIndicatorDiameter / 2
+  // but before I need to chnage logic from listOffsetYOnEndDrag.value === 0 to isRefreshed
+  const translateYOnRefreshing = useDerivedValue(() => {
+    return refreshing.value ? withTiming(45, { duration: 500 }) : withTiming(0);
+  });
 
-  useEffect(() => {
-    if (refreshing) {
-      rotateAfterRefreshing.value = withRepeat(
-        withTiming(360, { duration: 1000, easing: Easing.linear }),
-        -1,
-        false
-      );
-    } else {
-      rotateAfterRefreshing.value = 0;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshing]);
+  const rotateOnRefreshing = useDerivedValue(() => {
+    console.log("🔴 🔴", refreshing.value); // VS remove
+    return refreshing.value
+      ? withRepeat(withTiming(360, { duration: 1000, easing: Easing.linear }), -1, false)
+      : 0;
+  });
 
-  const rRotateAfterRefreshingStyle = useAnimatedStyle(() => {
+  const scaleOnRefreshing = useDerivedValue(() => {
+    return isRefreshed.value
+      ? interpolate(wrapperHeight.value, [150, 0], [1, 0], Extrapolation.CLAMP)
+      : 1;
+  });
+
+  const rOuterContainerStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        { rotate: `${rotateAfterRefreshing.value}deg` },
-        {
-          scale: isRefreshed
-            ? interpolate(offsetY.value, [150, 0], [1, 0], Extrapolation.CLAMP)
-            : 1,
-        },
+        { translateY: translateYOnRefreshing.value },
+        { rotate: `${rotateOnRefreshing.value}deg` },
+        { scale: scaleOnRefreshing.value },
       ],
     };
   });
 
   return (
-    <Animated.View style={rRotateAfterRefreshingStyle}>
+    <Animated.View style={rOuterContainerStyle}>
       <Animated.View
         className="items-center justify-center rounded-full bg-neutral-700 gap-[5px]"
         style={[
-          rContainerStyle,
+          rInnerContainerStyle,
           {
             width: _loadingIndicatorDiameter,
             height: _loadingIndicatorDiameter,

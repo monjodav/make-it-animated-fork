@@ -1,6 +1,6 @@
 import { MasonryFlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { View } from "react-native";
 import Animated, {
   runOnJS,
@@ -15,20 +15,18 @@ const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 const _data = Array.from({ length: 20 }).map((_, index) => ({ id: index }));
 
 export const MasonryList: FC = () => {
-  const [refreshing, setRefreshing] = useState(false);
-  const [isRefreshed, setIsRefreshed] = useState(false);
-
-  const offsetY = useSharedValue(0);
-  const lastOffsetY = useSharedValue(0);
+  const listOffsetY = useSharedValue(0);
   const isDragging = useSharedValue(false);
+  const listOffsetYOnEndDrag = useSharedValue(0);
+  const refreshing = useSharedValue(false);
+  const isRefreshed = useSharedValue(false);
 
   const refresh = async () => {
-    setRefreshing(true);
-    console.log("🔴 refresh 🔴"); // VS remove
+    refreshing.value = true;
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    lastOffsetY.value = 0;
-    setRefreshing(false);
-    setIsRefreshed(true);
+    listOffsetYOnEndDrag.value = 0;
+    refreshing.value = false;
+    isRefreshed.value = true;
   };
 
   const handleHaptics = () => {
@@ -39,24 +37,24 @@ export const MasonryList: FC = () => {
     onBeginDrag: (event) => {
       const y = event.contentOffset.y;
       isDragging.value = true;
-      if (y === 0 && isRefreshed) {
-        runOnJS(setIsRefreshed)(false);
+      if (y === 0 && isRefreshed.value) {
+        isRefreshed.value = false;
       }
     },
     onScroll: (event) => {
       const y = event.contentOffset.y;
-      offsetY.value = y;
+      listOffsetY.value = y;
 
-      if (offsetY.value < -_loadingIndicatorDiameter) {
+      if (listOffsetY.value < -_loadingIndicatorDiameter) {
         runOnJS(handleHaptics)();
       }
     },
     onEndDrag: (event) => {
       isDragging.value = false;
       const y = event.contentOffset.y;
-      lastOffsetY.value = -y;
+      listOffsetYOnEndDrag.value = -y;
 
-      if (offsetY.value < -_loadingIndicatorDiameter && !refreshing) {
+      if (listOffsetY.value < -_loadingIndicatorDiameter && !refreshing.value) {
         runOnJS(refresh)();
       }
     },
@@ -85,8 +83,8 @@ export const MasonryList: FC = () => {
 
   return (
     <WithPullToRefresh
-      offsetY={offsetY}
-      lastOffsetY={lastOffsetY}
+      listOffsetY={listOffsetY}
+      listOffsetYOnEndDrag={listOffsetYOnEndDrag}
       isDragging={isDragging}
       refreshing={refreshing}
       isRefreshed={isRefreshed}
