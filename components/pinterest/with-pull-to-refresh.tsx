@@ -10,9 +10,12 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import { _loadingIndicatorDiameter, LoadingIndicator } from "./loading-indicator";
+import { LoadingIndicator } from "./loading-indicator";
 
-export const _onRefreshingContainerHeight = 150;
+export const _loadingIndicatorDiameter = 44;
+export const _refreshingTriggerOffset = _loadingIndicatorDiameter;
+export const _wrapperHeightOnRefreshing = 150;
+
 export const _onRefreshCompleteDuration = 500;
 
 type Props = {
@@ -33,27 +36,27 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
 }) => {
   const { height } = useWindowDimensions();
 
-  const loadingIndicatorContainerHeightOnRefreshing = useDerivedValue(() => {
-    return listOffsetYOnEndDrag.value < _onRefreshingContainerHeight
+  const wrapperHeightOnRefreshing = useDerivedValue(() => {
+    return listOffsetYOnEndDrag.value < _wrapperHeightOnRefreshing
       ? withSequence(
           withTiming(listOffsetYOnEndDrag.value, { duration: 0 }),
-          withDelay(25, withTiming(_onRefreshingContainerHeight, { duration: 500 }))
+          withDelay(25, withTiming(_wrapperHeightOnRefreshing, { duration: 500 }))
         )
       : listOffsetYOnEndDrag.value;
   });
 
-  const loadingIndicatorContainerHeight = useDerivedValue(() => {
+  const wrapperHeight = useDerivedValue(() => {
     return isDragging.value
       ? interpolate(listOffsetY.value, [0, -height], [0, height], Extrapolation.CLAMP)
-      : listOffsetYOnEndDrag.value > _loadingIndicatorDiameter
-        ? loadingIndicatorContainerHeightOnRefreshing.value
+      : refreshing.value === true
+        ? wrapperHeightOnRefreshing.value
         : withTiming(0, { duration: _onRefreshCompleteDuration });
   });
 
-  const rLoadingIndicatorContainerStyle = useAnimatedStyle(() => {
+  const rWrapperStyle = useAnimatedStyle(() => {
     return {
-      position: isDragging.value ? "absolute" : "relative",
-      height: loadingIndicatorContainerHeight.value,
+      position: isDragging.value === true ? "absolute" : "relative",
+      height: wrapperHeight.value,
     };
   });
 
@@ -61,10 +64,10 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
     <View className="flex-1">
       <Animated.View
         className="top-0 left-0 right-0 items-center justify-center"
-        style={rLoadingIndicatorContainerStyle}
+        style={rWrapperStyle}
       >
         <LoadingIndicator
-          wrapperHeight={loadingIndicatorContainerHeight}
+          wrapperHeight={wrapperHeight}
           listOffsetYOnEndDrag={listOffsetYOnEndDrag}
           refreshing={refreshing}
           isRefreshed={isRefreshed}

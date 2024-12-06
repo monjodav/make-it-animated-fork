@@ -7,8 +7,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { _loadingIndicatorDiameter } from "./loading-indicator";
-import { WithPullToRefresh } from "./with-pull-to-refresh";
+import { _refreshingTriggerOffset, WithPullToRefresh } from "./with-pull-to-refresh";
 
 const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 
@@ -24,7 +23,6 @@ export const MasonryList: FC = () => {
   const refresh = async () => {
     refreshing.value = true;
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    listOffsetYOnEndDrag.value = 0;
     refreshing.value = false;
     isRefreshed.value = true;
   };
@@ -45,7 +43,7 @@ export const MasonryList: FC = () => {
       const y = event.contentOffset.y;
       listOffsetY.value = y;
 
-      if (listOffsetY.value < -_loadingIndicatorDiameter) {
+      if (listOffsetY.value < -_refreshingTriggerOffset) {
         runOnJS(handleHaptics)();
       }
     },
@@ -54,7 +52,7 @@ export const MasonryList: FC = () => {
       const y = event.contentOffset.y;
       listOffsetYOnEndDrag.value = -y;
 
-      if (listOffsetY.value < -_loadingIndicatorDiameter && !refreshing.value) {
+      if (listOffsetY.value < -_refreshingTriggerOffset && !refreshing.value) {
         runOnJS(refresh)();
       }
     },

@@ -10,8 +10,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-
-export const _loadingIndicatorDiameter = 44;
+import { _loadingIndicatorDiameter } from "./with-pull-to-refresh";
 
 const className = {
   dot: "w-[5px] h-[5px] rounded-full bg-black",
@@ -30,7 +29,7 @@ export const LoadingIndicator: FC<Props> = ({
   refreshing,
   isRefreshed,
 }) => {
-  const rotateBeforeRefreshing = useDerivedValue(() => {
+  const rotateWithoutRefreshing = useDerivedValue(() => {
     return isRefreshed.value
       ? 360
       : interpolate(
@@ -41,7 +40,7 @@ export const LoadingIndicator: FC<Props> = ({
         );
   });
 
-  const scaleBeforeRefreshing = useDerivedValue(() => {
+  const scaleWithoutRefreshing = useDerivedValue(() => {
     return isRefreshed.value
       ? 1
       : interpolate(
@@ -61,8 +60,8 @@ export const LoadingIndicator: FC<Props> = ({
         Extrapolation.CLAMP
       ),
       transform: [
-        { scale: scaleBeforeRefreshing.value },
-        { rotate: `-${rotateBeforeRefreshing.value}deg` },
+        { scale: scaleWithoutRefreshing.value },
+        { rotate: `-${rotateWithoutRefreshing.value}deg` },
       ],
     };
   });
