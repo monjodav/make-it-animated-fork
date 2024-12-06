@@ -8,24 +8,27 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   withRepeat,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { _loadingIndicatorDiameter } from "./with-pull-to-refresh";
+import {
+  _loadingIndicatorDiameter,
+  _onRefreshingConfigs,
+  _wrapperHeightOnRefreshing,
+} from "./with-pull-to-refresh";
 
 const className = {
   dot: "w-[5px] h-[5px] rounded-full bg-black",
 };
 
-type Props = {
+export type LoadingIndicatorProps = {
   wrapperHeight: SharedValue<number>;
-  listOffsetYOnEndDrag: SharedValue<number>;
   refreshing: SharedValue<boolean>;
   isRefreshed: SharedValue<boolean>;
 };
 
-export const LoadingIndicator: FC<Props> = ({
+export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
   wrapperHeight,
-  listOffsetYOnEndDrag,
   refreshing,
   isRefreshed,
 }) => {
@@ -66,14 +69,19 @@ export const LoadingIndicator: FC<Props> = ({
     };
   });
 
-  // I need to make here listOffsetYOnEndDrag.value - _onRefreshingContainerHeight / 2 - _loadingIndicatorDiameter / 2
-  // but before I need to chnage logic from listOffsetYOnEndDrag.value === 0 to isRefreshed
   const translateYOnRefreshing = useDerivedValue(() => {
-    return refreshing.value ? withTiming(45, { duration: 500 }) : withTiming(0);
+    const maxTranslateDistance =
+      _wrapperHeightOnRefreshing -
+      _wrapperHeightOnRefreshing / 2 -
+      _loadingIndicatorDiameter / 2 -
+      12;
+
+    return refreshing.value
+      ? withSpring(maxTranslateDistance, _onRefreshingConfigs)
+      : withTiming(0);
   });
 
   const rotateOnRefreshing = useDerivedValue(() => {
-    console.log("🔴 🔴", refreshing.value); // VS remove
     return refreshing.value
       ? withRepeat(withTiming(360, { duration: 1000, easing: Easing.linear }), -1, false)
       : 0;

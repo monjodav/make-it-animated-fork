@@ -1,29 +1,36 @@
 import React, { FC, PropsWithChildren } from "react";
 import { useWindowDimensions, View } from "react-native";
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
   SharedValue,
   useAnimatedStyle,
   useDerivedValue,
-  withDelay,
   withSequence,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { LoadingIndicator } from "./loading-indicator";
+import { LoadingIndicator, LoadingIndicatorProps } from "./loading-indicator";
 
 export const _loadingIndicatorDiameter = 44;
 export const _refreshingTriggerOffset = _loadingIndicatorDiameter;
-export const _wrapperHeightOnRefreshing = 150;
+
+export const _wrapperHeightOnRefreshing = 180;
+export const _wrapperHeightOnRefreshingAnimDuration = 350;
 
 export const _onRefreshCompleteDuration = 500;
 
-type Props = {
+export const _onRefreshingConfigs = {
+  mass: 0.75,
+  damping: 8,
+  stiffness: 100,
+};
+
+type Props = Pick<LoadingIndicatorProps, "refreshing" | "isRefreshed"> & {
   listOffsetY: SharedValue<number>;
   listOffsetYOnEndDrag: SharedValue<number>;
   isDragging: SharedValue<boolean>;
-  refreshing: SharedValue<boolean>;
-  isRefreshed: SharedValue<boolean>;
 };
 
 export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
@@ -37,12 +44,10 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   const { height } = useWindowDimensions();
 
   const wrapperHeightOnRefreshing = useDerivedValue(() => {
-    return listOffsetYOnEndDrag.value < _wrapperHeightOnRefreshing
-      ? withSequence(
-          withTiming(listOffsetYOnEndDrag.value, { duration: 0 }),
-          withDelay(25, withTiming(_wrapperHeightOnRefreshing, { duration: 500 }))
-        )
-      : listOffsetYOnEndDrag.value;
+    return withSequence(
+      withTiming(listOffsetYOnEndDrag.value, { duration: 0 }),
+      withSpring(_wrapperHeightOnRefreshing, _onRefreshingConfigs)
+    );
   });
 
   const wrapperHeight = useDerivedValue(() => {
@@ -50,7 +55,7 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
       ? interpolate(listOffsetY.value, [0, -height], [0, height], Extrapolation.CLAMP)
       : refreshing.value === true
         ? wrapperHeightOnRefreshing.value
-        : withTiming(0, { duration: _onRefreshCompleteDuration });
+        : withTiming(0, { duration: _onRefreshCompleteDuration, easing: Easing.out(Easing.quad) });
   });
 
   const rWrapperStyle = useAnimatedStyle(() => {
@@ -68,7 +73,6 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
       >
         <LoadingIndicator
           wrapperHeight={wrapperHeight}
-          listOffsetYOnEndDrag={listOffsetYOnEndDrag}
           refreshing={refreshing}
           isRefreshed={isRefreshed}
         />

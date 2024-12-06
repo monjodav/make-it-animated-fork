@@ -22,7 +22,7 @@ export const MasonryList: FC = () => {
 
   const refresh = async () => {
     refreshing.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     refreshing.value = false;
     isRefreshed.value = true;
   };
