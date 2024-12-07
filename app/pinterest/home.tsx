@@ -66,7 +66,7 @@ export default function Home() {
   const isListScrollingX = useSharedValue(false);
 
   const scrollHandler = useAnimatedScrollHandler({
-    onMomentumBegin: () => {
+    onBeginDrag: () => {
       isListScrollingX.value = true;
     },
     onScroll: (event) => {

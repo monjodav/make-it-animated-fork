@@ -46,6 +46,10 @@ export const TabBar: FC<Props> = ({ tabs, listRef, listOffsetX, isListScrollingX
   });
 
   useDerivedValue(() => {
+    if (!isListScrollingX.value) {
+      return;
+    }
+
     const tabsCenter = tabs.map((_, index) => tabOffsets.value[index] + tabWidths.value[index] / 2);
 
     const firstTabIndexCanBeCentered = tabs.findIndex(
@@ -77,6 +81,7 @@ export const TabBar: FC<Props> = ({ tabs, listRef, listOffsetX, isListScrollingX
       label={item.title}
       onPress={() => {
         setActiveTab(item.value);
+        animatedRef.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
         listRef.current?.scrollToIndex({ index: index, animated: true });
       }}
       onLayout={(event) => {
