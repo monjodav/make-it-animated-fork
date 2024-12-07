@@ -1,3 +1,4 @@
+import { configs } from "@/constants/pinterest/configs";
 import React, { FC } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -11,11 +12,8 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import {
-  _loadingIndicatorDiameter,
-  _onRefreshingConfigs,
-  _wrapperHeightOnRefreshing,
-} from "./with-pull-to-refresh";
+
+// pinterest-pull-to-refresh-animation 🔽
 
 const className = {
   dot: "w-[5px] h-[5px] rounded-full bg-black",
@@ -37,7 +35,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
       ? 360
       : interpolate(
           wrapperHeight.value,
-          [0, _loadingIndicatorDiameter],
+          [0, configs.loadingIndicatorDiameter],
           [0, 360],
           Extrapolation.CLAMP
         );
@@ -48,7 +46,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
       ? 1
       : interpolate(
           wrapperHeight.value,
-          [0, _loadingIndicatorDiameter],
+          [0, configs.loadingIndicatorDiameter],
           [0.2, 1],
           Extrapolation.CLAMP
         );
@@ -58,7 +56,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
     return {
       opacity: interpolate(
         wrapperHeight.value,
-        [0, _loadingIndicatorDiameter],
+        [0, configs.loadingIndicatorDiameter],
         [0, 1],
         Extrapolation.CLAMP
       ),
@@ -71,13 +69,13 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
 
   const translateYOnRefreshing = useDerivedValue(() => {
     const maxTranslateDistance =
-      _wrapperHeightOnRefreshing -
-      _wrapperHeightOnRefreshing / 2 -
-      _loadingIndicatorDiameter / 2 -
+      configs.wrapperHeightOnRefreshing -
+      configs.wrapperHeightOnRefreshing / 2 -
+      configs.loadingIndicatorDiameter / 2 -
       12;
 
     return refreshing.value
-      ? withSpring(maxTranslateDistance, _onRefreshingConfigs)
+      ? withSpring(maxTranslateDistance, configs.onRefreshingSpringConfigs)
       : withTiming(0);
   });
 
@@ -110,8 +108,8 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
         style={[
           rInnerContainerStyle,
           {
-            width: _loadingIndicatorDiameter,
-            height: _loadingIndicatorDiameter,
+            width: configs.loadingIndicatorDiameter,
+            height: configs.loadingIndicatorDiameter,
           },
         ]}
       >
@@ -127,3 +125,5 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
     </Animated.View>
   );
 };
+
+// pinterest-pull-to-refresh-animation 🔼

@@ -1,3 +1,4 @@
+import { configs } from "@/constants/pinterest/configs";
 import { MasonryFlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
 import React, { FC } from "react";
@@ -7,7 +8,9 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { _refreshingTriggerOffset, WithPullToRefresh } from "./with-pull-to-refresh";
+import { WithPullToRefresh } from "./with-pull-to-refresh";
+
+// pinterest-pull-to-refresh-animation 🔽
 
 const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 
@@ -43,7 +46,7 @@ export const MasonryList: FC = () => {
       const y = event.contentOffset.y;
       listOffsetY.value = y;
 
-      if (listOffsetY.value < -_refreshingTriggerOffset) {
+      if (listOffsetY.value < -configs.refreshingTriggerOffset) {
         runOnJS(handleHaptics)();
       }
     },
@@ -52,7 +55,7 @@ export const MasonryList: FC = () => {
       const y = event.contentOffset.y;
       listOffsetYOnEndDrag.value = -y;
 
-      if (listOffsetY.value < -_refreshingTriggerOffset && !refreshing.value) {
+      if (listOffsetY.value < -configs.refreshingTriggerOffset && !refreshing.value) {
         runOnJS(refresh)();
       }
     },
@@ -99,3 +102,5 @@ export const MasonryList: FC = () => {
     </WithPullToRefresh>
   );
 };
+
+// pinterest-pull-to-refresh-animation 🔼
