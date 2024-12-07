@@ -47,7 +47,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
       : interpolate(
           wrapperHeight.value,
           [0, configs.loadingIndicatorDiameter],
-          [0.2, 1],
+          [0, 1],
           Extrapolation.CLAMP
         );
   });

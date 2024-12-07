@@ -123,6 +123,7 @@ export const TabBar: FC = () => {
         contentContainerStyle={{ paddingHorizontal: _sidePadding, gap: _gap }}
         showsHorizontalScrollIndicator={false}
         onScroll={scrollHandler}
+        scrollEventThrottle={1000 / 60}
         viewabilityConfig={{
           itemVisiblePercentThreshold: 100,
           minimumViewTime: 16,
