@@ -16,7 +16,11 @@ const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 
 const _data = Array.from({ length: 20 }).map((_, index) => ({ id: index }));
 
-export const MasonryList: FC = () => {
+type Props = {
+  listHeader?: React.ReactNode;
+};
+
+export const MasonryList: FC<Props> = ({ listHeader }) => {
   const listOffsetY = useSharedValue(0);
   const isDragging = useSharedValue(false);
   const listOffsetYOnEndDrag = useSharedValue(0);
@@ -61,6 +65,10 @@ export const MasonryList: FC = () => {
     },
   });
 
+  const _renderListHeader = () => {
+    return listHeader;
+  };
+
   const _renderItem = ({ index }: { index: number }) => {
     const height = Math.floor(Math.random() * 200) + 100;
 
@@ -82,6 +90,10 @@ export const MasonryList: FC = () => {
     );
   };
 
+  const _renderItemSeparator = () => {
+    return <View className="h-3" />;
+  };
+
   return (
     <WithPullToRefresh
       listOffsetY={listOffsetY}
@@ -93,8 +105,9 @@ export const MasonryList: FC = () => {
       <AnimatedList
         data={_data}
         numColumns={2}
-        ItemSeparatorComponent={() => <View className="h-3" />}
+        ListHeaderComponent={_renderListHeader}
         renderItem={_renderItem}
+        ItemSeparatorComponent={_renderItemSeparator}
         estimatedItemSize={200}
         scrollEventThrottle={1000 / 60}
         onScroll={scrollHandler}
