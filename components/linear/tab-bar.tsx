@@ -1,11 +1,8 @@
+import { useMeasureFlatListTabsLayout } from "@/hooks/use-measure-flat-list-tabs-layout";
 import { CircleDashed, CircleMinus, CirclePlay, Copy, Folders } from "lucide-react-native";
 import React, { FC, useRef, useState } from "react";
 import { FlatList, View, ViewToken } from "react-native";
-import Animated, {
-  useAnimatedScrollHandler,
-  useDerivedValue,
-  useSharedValue,
-} from "react-native-reanimated";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { TabIndicator } from "./tab-indicator";
 import { TabItem, TabItemProps } from "./tab-item";
 
@@ -64,15 +61,10 @@ export const TabBar: FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.AllIssues);
   const [viewableItems, setViewableItems] = useState<ViewToken[]>([]);
 
-  const tabWidths = useSharedValue<number[]>(new Array(tabs.length).fill(0));
-
-  const tabOffsets = useDerivedValue(() => {
-    return tabWidths.value.reduce<number[]>((acc, _width, index) => {
-      const previousX = index === 0 ? _sidePadding : acc[index - 1];
-      const previousWidth = index === 0 ? 0 : tabWidths.value[index - 1];
-      acc[index] = previousX + previousWidth + (index === 0 ? 0 : _gap);
-      return acc;
-    }, []);
+  const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
+    tabsLength: tabs.length,
+    sidePadding: _sidePadding,
+    gap: _gap,
   });
 
   const ref = useRef<FlatList>(null);
