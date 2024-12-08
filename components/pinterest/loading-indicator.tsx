@@ -13,7 +13,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-// pinterest-pull-to-refresh-animation 🔽
+// pinterest-pull-to-refresh-loading-animation 🔽
 
 const className = {
   dot: "w-[5px] h-[5px] rounded-full bg-black",
@@ -126,4 +126,4 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
   );
 };
 
-// pinterest-pull-to-refresh-animation 🔼
+// pinterest-pull-to-refresh-loading-animation 🔼

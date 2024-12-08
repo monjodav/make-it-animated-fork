@@ -1,4 +1,4 @@
-// pinterest-pull-to-refresh-animation 🔽
+// pinterest-pull-to-refresh-loading-animation 🔽
 
 const loadingIndicatorDiameter = 44;
 
@@ -15,4 +15,4 @@ export const configs = {
   },
 };
 
-// pinterest-pull-to-refresh-animation 🔼
+// pinterest-pull-to-refresh-loading-animation 🔼

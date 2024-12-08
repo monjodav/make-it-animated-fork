@@ -14,7 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { LoadingIndicator, LoadingIndicatorProps } from "./loading-indicator";
 
-// pinterest-pull-to-refresh-animation 🔽
+// pinterest-pull-to-refresh-loading-animation 🔽
 
 type Props = Pick<LoadingIndicatorProps, "refreshing" | "isRefreshed"> & {
   listOffsetY: SharedValue<number>;
@@ -74,4 +74,4 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   );
 };
 
-// pinterest-pull-to-refresh-animation 🔼
+// pinterest-pull-to-refresh-loading-animation 🔼

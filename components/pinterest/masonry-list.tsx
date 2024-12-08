@@ -10,7 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { WithPullToRefresh } from "./with-pull-to-refresh";
 
-// pinterest-pull-to-refresh-animation 🔽
+// pinterest-pull-to-refresh-loading-animation 🔽
 
 const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 
@@ -116,4 +116,4 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
   );
 };
 
-// pinterest-pull-to-refresh-animation 🔼
+// pinterest-pull-to-refresh-loading-animation 🔼
