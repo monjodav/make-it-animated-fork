@@ -1,29 +1,47 @@
 import React, { FC } from "react";
 import { useWindowDimensions } from "react-native";
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 type Props = {
+  activeTabIndex: SharedValue<number>;
   tabWidths: SharedValue<number[]>;
   tabOffsets: SharedValue<number[]>;
   tabBarOffsetX: SharedValue<number>;
   listOffsetX: SharedValue<number>;
+  isListScrollingX: SharedValue<boolean>;
 };
 
-export const TabIndicator: FC<Props> = ({ tabWidths, tabOffsets, tabBarOffsetX, listOffsetX }) => {
+export const TabIndicator: FC<Props> = ({
+  activeTabIndex,
+  tabWidths,
+  tabOffsets,
+  tabBarOffsetX,
+  listOffsetX,
+  isListScrollingX,
+}) => {
   const { width: windowWidth } = useWindowDimensions();
 
   const rIndicatorStyle = useAnimatedStyle(() => {
-    const left = interpolate(
-      listOffsetX.value / windowWidth,
-      Object.keys(tabOffsets.value).map(Number),
-      tabOffsets.value
-    );
+    const left = isListScrollingX.value
+      ? interpolate(
+          listOffsetX.value / windowWidth,
+          Object.keys(tabOffsets.value).map(Number),
+          tabOffsets.value
+        )
+      : withTiming(tabOffsets.value[activeTabIndex.value], { duration: 300 });
 
-    const width = interpolate(
-      listOffsetX.value / windowWidth,
-      Object.keys(tabWidths.value).map(Number),
-      tabWidths.value
-    );
+    const width = isListScrollingX.value
+      ? interpolate(
+          listOffsetX.value / windowWidth,
+          Object.keys(tabWidths.value).map(Number),
+          tabWidths.value
+        )
+      : withTiming(tabWidths.value[activeTabIndex.value], { duration: 300 });
 
     return {
       left,

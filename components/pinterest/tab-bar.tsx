@@ -1,6 +1,6 @@
 import { Tab } from "@/app/pinterest/home";
 import { useMeasureFlatListTabsLayout } from "@/hooks/use-measure-flat-list-tabs-layout";
-import React, { FC, RefObject, useState } from "react";
+import React, { FC, RefObject } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 import Animated, {
   interpolate,
@@ -19,14 +19,19 @@ const _gap = 24;
 
 type Props = {
   tabs: Tab[];
+  activeTabIndex: SharedValue<number>;
   listRef: RefObject<FlatList>;
   listOffsetX: SharedValue<number>;
   isListScrollingX: SharedValue<boolean>;
 };
 
-export const TabBar: FC<Props> = ({ tabs, listRef, listOffsetX, isListScrollingX }) => {
-  const [activeTab, setActiveTab] = useState<number>(tabs[0].value);
-
+export const TabBar: FC<Props> = ({
+  tabs,
+  activeTabIndex,
+  listRef,
+  listOffsetX,
+  isListScrollingX,
+}) => {
   const { width: windowWidth } = useWindowDimensions();
 
   const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
@@ -80,9 +85,17 @@ export const TabBar: FC<Props> = ({ tabs, listRef, listOffsetX, isListScrollingX
     <TabItem
       label={item.title}
       onPress={() => {
-        setActiveTab(item.value);
         animatedRef.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
-        listRef.current?.scrollToIndex({ index: index, animated: true });
+
+        const targetIndex = index;
+        // const previousIndex = activeTabIndex.value;
+        // const direction = targetIndex > previousIndex ? "right" : "left";
+        // const adjacentIndex = direction === "right" ? index - 1 : index + 1;
+
+        // listRef.current?.scrollToIndex({ index: adjacentIndex, animated: false });
+        listRef.current?.scrollToOffset({ offset: targetIndex * windowWidth, animated: true });
+
+        activeTabIndex.value = item.value;
       }}
       onLayout={(event) => {
         const { width } = event.nativeEvent.layout;
@@ -98,10 +111,12 @@ export const TabBar: FC<Props> = ({ tabs, listRef, listOffsetX, isListScrollingX
   return (
     <View>
       <TabIndicator
+        activeTabIndex={activeTabIndex}
         tabWidths={tabWidths}
         tabOffsets={tabOffsets}
         tabBarOffsetX={tabBarOffsetX}
         listOffsetX={listOffsetX}
+        isListScrollingX={isListScrollingX}
       />
       <Animated.FlatList
         ref={animatedRef}

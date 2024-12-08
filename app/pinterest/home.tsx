@@ -1,7 +1,7 @@
 import { ListHeader } from "@/components/pinterest/list-header";
 import { MasonryList } from "@/components/pinterest/masonry-list";
 import { TabBar } from "@/components/pinterest/tab-bar";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -64,6 +64,7 @@ export default function Home() {
   const listRef = useRef<FlatList>(null);
   const listOffsetX = useSharedValue(0);
   const isListScrollingX = useSharedValue(false);
+  const activeTabIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
@@ -72,10 +73,15 @@ export default function Home() {
     onScroll: (event) => {
       listOffsetX.value = event.contentOffset.x;
     },
-    onMomentumEnd: () => {
+    onMomentumEnd: (event) => {
       isListScrollingX.value = false;
+      activeTabIndex.value = Math.round(event.contentOffset.x / width);
     },
   });
+
+  const data = useMemo(() => {
+    return boards.map((board) => ({ ...board, id: board.title }));
+  }, [boards]);
 
   const _renderItem = ({ item }: { item: Board }) => {
     return <View style={{ width }}>{item.list}</View>;
@@ -83,9 +89,10 @@ export default function Home() {
 
   return (
     <View className="flex-1 bg-black" style={{ paddingTop: insets.top + 16 }}>
-      <View className="mb-6">
+      <View className="mb-5">
         <TabBar
           tabs={tabs}
+          activeTabIndex={activeTabIndex}
           listRef={listRef}
           listOffsetX={listOffsetX}
           isListScrollingX={isListScrollingX}
@@ -93,9 +100,8 @@ export default function Home() {
       </View>
       <Animated.FlatList
         ref={listRef}
-        data={boards}
+        data={data}
         renderItem={_renderItem}
-        keyExtractor={(item, index) => `${item.title}-${index}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
