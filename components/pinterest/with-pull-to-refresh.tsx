@@ -1,4 +1,4 @@
-import { configs } from "@/constants/pinterest/configs";
+import { configs } from "@/constants/pinterest/pull-to-refresh-animation";
 import React, { FC, PropsWithChildren } from "react";
 import { useWindowDimensions, View } from "react-native";
 import Animated, {
@@ -15,6 +15,7 @@ import Animated, {
 import { LoadingIndicator, LoadingIndicatorProps } from "./loading-indicator";
 
 // pinterest-pull-to-refresh-animation 🔽
+
 type Props = Pick<LoadingIndicatorProps, "refreshing" | "isRefreshed"> & {
   listOffsetY: SharedValue<number>;
   listOffsetYOnEndDrag: SharedValue<number>;

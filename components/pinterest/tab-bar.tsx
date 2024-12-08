@@ -1,4 +1,5 @@
 import { Tab } from "@/app/pinterest/home";
+import { configs } from "@/constants/pinterest/navigation-between-boards-animation";
 import { useMeasureFlatListTabsLayout } from "@/hooks/use-measure-flat-list-tabs-layout";
 import React, { FC, RefObject } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
@@ -14,8 +15,7 @@ import Animated, {
 import { TabIndicator } from "./tab-indicator";
 import { TabItem } from "./tab-item";
 
-const _sidePadding = 20;
-const _gap = 24;
+// pinterest-navigation-between-boards-animation 🔽
 
 type Props = {
   tabs: Tab[];
@@ -36,11 +36,11 @@ export const TabBar: FC<Props> = ({
 
   const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
     tabsLength: tabs.length,
-    sidePadding: _sidePadding,
-    gap: _gap,
+    sidePadding: configs.tabBarSidePadding,
+    gap: configs.tabBarGap,
   });
 
-  const animatedRef = useAnimatedRef();
+  const animatedRef = useAnimatedRef<FlatList>();
 
   const tabBarOffsetX = useSharedValue(0);
 
@@ -88,14 +88,16 @@ export const TabBar: FC<Props> = ({
         animatedRef.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
 
         const targetIndex = index;
-        // const previousIndex = activeTabIndex.value;
-        // const direction = targetIndex > previousIndex ? "right" : "left";
-        // const adjacentIndex = direction === "right" ? index - 1 : index + 1;
+        const previousIndex = activeTabIndex.value;
+        const direction = targetIndex > previousIndex ? "right" : "left";
+        const adjacentIndex = direction === "right" ? index - 1 : index + 1;
 
-        // listRef.current?.scrollToIndex({ index: adjacentIndex, animated: false });
-        listRef.current?.scrollToOffset({ offset: targetIndex * windowWidth, animated: true });
+        listRef.current?.scrollToIndex({ index: adjacentIndex, animated: false });
+        listRef.current?.scrollToIndex({ index: targetIndex, animated: true });
 
         activeTabIndex.value = item.value;
+
+        // You can add the fetching logic here
       }}
       onLayout={(event) => {
         const { width } = event.nativeEvent.layout;
@@ -124,7 +126,10 @@ export const TabBar: FC<Props> = ({
         keyExtractor={(item) => item.value.toString()}
         renderItem={_renderItem}
         horizontal
-        contentContainerStyle={{ paddingHorizontal: _sidePadding, gap: _gap }}
+        contentContainerStyle={{
+          paddingHorizontal: configs.tabBarSidePadding,
+          gap: configs.tabBarGap,
+        }}
         showsHorizontalScrollIndicator={false}
         onScroll={scrollHandler}
         scrollEventThrottle={1000 / 60}
@@ -132,3 +137,5 @@ export const TabBar: FC<Props> = ({
     </View>
   );
 };
+
+// pinterest-navigation-between-boards-animation 🔼

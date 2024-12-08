@@ -1,4 +1,4 @@
-import { configs } from "@/constants/pinterest/configs";
+import { configs } from "@/constants/pinterest/pull-to-refresh-animation";
 import React, { FC } from "react";
 import { View } from "react-native";
 import Animated, {

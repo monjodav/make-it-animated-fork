@@ -1,3 +1,4 @@
+import { configs } from "@/constants/pinterest/navigation-between-boards-animation";
 import React, { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
@@ -6,6 +7,8 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+
+// pinterest-navigation-between-boards-animation 🔽
 
 type Props = {
   activeTabIndex: SharedValue<number>;
@@ -33,7 +36,9 @@ export const TabIndicator: FC<Props> = ({
           Object.keys(tabOffsets.value).map(Number),
           tabOffsets.value
         )
-      : withTiming(tabOffsets.value[activeTabIndex.value], { duration: 300 });
+      : withTiming(tabOffsets.value[activeTabIndex.value], {
+          duration: configs.indicatorOnPressAnimDuration,
+        });
 
     const width = isListScrollingX.value
       ? interpolate(
@@ -41,7 +46,9 @@ export const TabIndicator: FC<Props> = ({
           Object.keys(tabWidths.value).map(Number),
           tabWidths.value
         )
-      : withTiming(tabWidths.value[activeTabIndex.value], { duration: 300 });
+      : withTiming(tabWidths.value[activeTabIndex.value], {
+          duration: configs.indicatorOnPressAnimDuration,
+        });
 
     return {
       left,
@@ -61,3 +68,5 @@ export const TabIndicator: FC<Props> = ({
     />
   );
 };
+
+// pinterest-navigation-between-boards-animation 🔼

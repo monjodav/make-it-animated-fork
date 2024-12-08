@@ -1,4 +1,4 @@
-import { configs } from "@/constants/pinterest/configs";
+import { configs } from "@/constants/pinterest/pull-to-refresh-animation";
 import { MasonryFlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
 import React, { FC } from "react";

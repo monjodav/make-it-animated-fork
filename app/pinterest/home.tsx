@@ -6,6 +6,8 @@ import { FlatList, useWindowDimensions, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// pinterest-navigation-between-boards-animation 🔽
+
 type Board = {
   title: string;
   list: React.ReactNode;
@@ -76,6 +78,7 @@ export default function Home() {
     onMomentumEnd: (event) => {
       isListScrollingX.value = false;
       activeTabIndex.value = Math.round(event.contentOffset.x / width);
+      // You can add the fetching logic here using react-native-reanimated runOnJS;
     },
   });
 
@@ -111,3 +114,5 @@ export default function Home() {
     </View>
   );
 }
+
+// pinterest-navigation-between-boards-animation 🔼
