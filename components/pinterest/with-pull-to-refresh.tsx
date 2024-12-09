@@ -1,6 +1,6 @@
 import { sharedConfigs } from "@/constants/pinterest/pull-to-refresh-animation";
 import React, { FC, PropsWithChildren } from "react";
-import { useWindowDimensions, View } from "react-native";
+import { useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   Extrapolation,
@@ -32,6 +32,12 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
 }) => {
   const { height } = useWindowDimensions();
 
+  const rContainerStyle = useAnimatedStyle(() => {
+    return {
+      pointerEvents: refreshing.value === true ? "none" : "auto",
+    };
+  });
+
   const wrapperHeightOnRefreshing = useDerivedValue(() => {
     return withSequence(
       withTiming(listOffsetYOnEndDrag.value, { duration: 0 }),
@@ -58,7 +64,7 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   });
 
   return (
-    <View className="flex-1">
+    <Animated.View className="flex-1" style={rContainerStyle}>
       <Animated.View
         className="top-0 left-0 right-0 items-center justify-center"
         style={rWrapperStyle}
@@ -70,7 +76,7 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
         />
       </Animated.View>
       {children}
-    </View>
+    </Animated.View>
   );
 };
 
