@@ -1,4 +1,4 @@
-import { configs } from "@/constants/pinterest/pull-to-refresh-animation";
+import { sharedConfigs } from "@/constants/pinterest/pull-to-refresh-animation";
 import React, { FC } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -35,7 +35,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
       ? 360
       : interpolate(
           wrapperHeight.value,
-          [0, configs.loadingIndicatorDiameter],
+          [0, sharedConfigs.loadingIndicatorDiameter],
           [0, 360],
           Extrapolation.CLAMP
         );
@@ -46,7 +46,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
       ? 1
       : interpolate(
           wrapperHeight.value,
-          [0, configs.loadingIndicatorDiameter],
+          [0, sharedConfigs.loadingIndicatorDiameter],
           [0, 1],
           Extrapolation.CLAMP
         );
@@ -56,7 +56,7 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
     return {
       opacity: interpolate(
         wrapperHeight.value,
-        [0, configs.loadingIndicatorDiameter],
+        [0, sharedConfigs.loadingIndicatorDiameter],
         [0, 1],
         Extrapolation.CLAMP
       ),
@@ -69,13 +69,13 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
 
   const translateYOnRefreshing = useDerivedValue(() => {
     const maxTranslateDistance =
-      configs.wrapperHeightOnRefreshing -
-      configs.wrapperHeightOnRefreshing / 2 -
-      configs.loadingIndicatorDiameter / 2 -
+      sharedConfigs.wrapperHeightOnRefreshing -
+      sharedConfigs.wrapperHeightOnRefreshing / 2 -
+      sharedConfigs.loadingIndicatorDiameter / 2 -
       12;
 
     return refreshing.value
-      ? withSpring(maxTranslateDistance, configs.onRefreshingSpringConfigs)
+      ? withSpring(maxTranslateDistance, sharedConfigs.onRefreshingSpringConfigs)
       : withTiming(0);
   });
 
@@ -108,8 +108,8 @@ export const LoadingIndicator: FC<LoadingIndicatorProps> = ({
         style={[
           rInnerContainerStyle,
           {
-            width: configs.loadingIndicatorDiameter,
-            height: configs.loadingIndicatorDiameter,
+            width: sharedConfigs.loadingIndicatorDiameter,
+            height: sharedConfigs.loadingIndicatorDiameter,
           },
         ]}
       >

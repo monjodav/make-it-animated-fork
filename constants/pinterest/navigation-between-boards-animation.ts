@@ -1,6 +1,6 @@
 // pinterest-navigation-between-boards-animation 🔽
 
-export const configs = {
+export const sharedConfigs = {
   tabBarSidePadding: 20,
   tabBarGap: 24,
   indicatorOnPressAnimDuration: 250,

@@ -1,4 +1,4 @@
-import { configs } from "@/constants/pinterest/pull-to-refresh-animation";
+import { sharedConfigs } from "@/constants/pinterest/pull-to-refresh-animation";
 import React, { FC, PropsWithChildren } from "react";
 import { useWindowDimensions, View } from "react-native";
 import Animated, {
@@ -35,7 +35,7 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   const wrapperHeightOnRefreshing = useDerivedValue(() => {
     return withSequence(
       withTiming(listOffsetYOnEndDrag.value, { duration: 0 }),
-      withSpring(configs.wrapperHeightOnRefreshing, configs.onRefreshingSpringConfigs)
+      withSpring(sharedConfigs.wrapperHeightOnRefreshing, sharedConfigs.onRefreshingSpringConfigs)
     );
   });
 
@@ -45,7 +45,7 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
       : refreshing.value === true
         ? wrapperHeightOnRefreshing.value
         : withTiming(0, {
-            duration: configs.onRefreshCompleteDuration,
+            duration: sharedConfigs.onRefreshCompleteDuration,
             easing: Easing.out(Easing.quad),
           });
   });

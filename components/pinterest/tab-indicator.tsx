@@ -1,4 +1,4 @@
-import { configs } from "@/constants/pinterest/navigation-between-boards-animation";
+import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
 import React, { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
@@ -37,7 +37,7 @@ export const TabIndicator: FC<Props> = ({
           tabOffsets.value
         )
       : withTiming(tabOffsets.value[activeTabIndex.value], {
-          duration: configs.indicatorOnPressAnimDuration,
+          duration: sharedConfigs.indicatorOnPressAnimDuration,
         });
 
     const width = isListScrollingX.value
@@ -47,7 +47,7 @@ export const TabIndicator: FC<Props> = ({
           tabWidths.value
         )
       : withTiming(tabWidths.value[activeTabIndex.value], {
-          duration: configs.indicatorOnPressAnimDuration,
+          duration: sharedConfigs.indicatorOnPressAnimDuration,
         });
 
     return {

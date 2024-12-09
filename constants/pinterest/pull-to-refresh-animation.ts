@@ -2,7 +2,7 @@
 
 const loadingIndicatorDiameter = 44;
 
-export const configs = {
+export const sharedConfigs = {
   loadingIndicatorDiameter,
   refreshingTriggerOffset: loadingIndicatorDiameter,
   wrapperHeightOnRefreshing: 150,

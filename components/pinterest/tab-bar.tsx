@@ -1,5 +1,5 @@
 import { Tab } from "@/app/pinterest/home";
-import { configs } from "@/constants/pinterest/navigation-between-boards-animation";
+import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
 import { useMeasureFlatListTabsLayout } from "@/hooks/use-measure-flat-list-tabs-layout";
 import React, { FC, RefObject } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
@@ -36,8 +36,8 @@ export const TabBar: FC<Props> = ({
 
   const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
     tabsLength: tabs.length,
-    sidePadding: configs.tabBarSidePadding,
-    gap: configs.tabBarGap,
+    sidePadding: sharedConfigs.tabBarSidePadding,
+    gap: sharedConfigs.tabBarGap,
   });
 
   const animatedRef = useAnimatedRef<FlatList>();
@@ -127,8 +127,8 @@ export const TabBar: FC<Props> = ({
         renderItem={_renderItem}
         horizontal
         contentContainerStyle={{
-          paddingHorizontal: configs.tabBarSidePadding,
-          gap: configs.tabBarGap,
+          paddingHorizontal: sharedConfigs.tabBarSidePadding,
+          gap: sharedConfigs.tabBarGap,
         }}
         showsHorizontalScrollIndicator={false}
         onScroll={scrollHandler}
