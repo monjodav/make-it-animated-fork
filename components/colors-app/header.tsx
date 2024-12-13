@@ -38,10 +38,7 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
           </Text>
         </View>
         <View className="w-[2px]" />
-        <Animated.View
-          className="w-[80] items-center justify-center"
-          style={rSelectedColorContainerStyle}
-        >
+        <Animated.View className="w-[80] pl-3 justify-center" style={rSelectedColorContainerStyle}>
           <ReText text={rSelectedColor} style={[styles.text, { color: rSelectedColorTextColor }]} />
         </Animated.View>
       </View>
