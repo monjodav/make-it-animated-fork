@@ -1,4 +1,4 @@
-import { ColorPickerPanel } from "@/components/colors-app/color-picker-panel";
+import { PalettePickerPanel } from "@/components/colors-app/palette-picker-panel";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { ArrowLeft } from "lucide-react-native";
 import { useRef } from "react";
@@ -57,7 +57,7 @@ export default function PalettePicker() {
           <Text className="text-white text-lg font-medium">Triadic</Text>
           <View className="w-8 h-8 rounded-lg bg-zinc-400/25" />
         </View>
-        <ColorPickerPanel
+        <PalettePickerPanel
           state={state}
           lightShadeColor={lightShadeColor}
           lightAccentColor={lightAccentColor}
