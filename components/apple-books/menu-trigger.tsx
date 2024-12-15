@@ -1,19 +1,27 @@
 import { MenuIcon } from "lucide-react-native";
 import React, { FC } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import Animated from "react-native-reanimated";
+import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+
+// apple-books-menu-buttons-animation 🔽
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = {
+  isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 };
 
-export const MenuTrigger: FC<Props> = ({ setIsOpen }) => {
+export const MenuTrigger: FC<Props> = ({ isOpen, setIsOpen }) => {
+  const rStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isOpen ? 0 : 1),
+    transform: [{ scale: withTiming(isOpen ? 0.5 : 1) }],
+  }));
+
   return (
     <AnimatedPressable
       className="p-1 bg-neutral-800 rounded-lg items-center justify-center self-end mr-4 mt-1"
-      style={styles.container}
+      style={[styles.container, rStyle]}
       onPress={() => setIsOpen(true)}
     >
       <MenuIcon size={20} color="#d4d4d4" />
@@ -26,3 +34,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// apple-books-menu-buttons-animation 🔼

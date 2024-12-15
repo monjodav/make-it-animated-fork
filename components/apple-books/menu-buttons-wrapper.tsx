@@ -1,7 +1,10 @@
+import { cn } from "@/utils/cn";
 import React, { FC, PropsWithChildren } from "react";
 import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import { AnimatedRow } from "./animated-row";
+
+// apple-books-menu-buttons-animation 🔽
 
 type Props = {
   isOpen: boolean;
@@ -15,7 +18,10 @@ export const MenuButtonsWrapper: FC<PropsWithChildren<Props>> = ({ isOpen, child
   }
 
   return (
-    <View className="gap-1" onLayout={(e) => (containerHeight.value = e.nativeEvent.layout.height)}>
+    <View
+      className={cn("gap-1 pointer-events-none", isOpen && "pointer-events-auto")}
+      onLayout={(e) => (containerHeight.value = e.nativeEvent.layout.height)}
+    >
       {React.Children.map(children, (child, index) => {
         if (!React.isValidElement(child)) {
           return <></>;
@@ -25,8 +31,8 @@ export const MenuButtonsWrapper: FC<PropsWithChildren<Props>> = ({ isOpen, child
           <AnimatedRow
             key={index}
             isOpen={isOpen}
-            rowNumber={index}
-            totalRows={React.Children.count(children)}
+            index={index}
+            numberOfRows={React.Children.count(children)}
             containerHeight={containerHeight}
           >
             {child}
@@ -36,3 +42,5 @@ export const MenuButtonsWrapper: FC<PropsWithChildren<Props>> = ({ isOpen, child
     </View>
   );
 };
+
+// apple-books-menu-buttons-animation 🔼
