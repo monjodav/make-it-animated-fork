@@ -8,8 +8,8 @@ import Animated, {
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
 // x-bottom-tabs-background-animation 🔽
@@ -21,18 +21,20 @@ export default function Home() {
 
   const listOffsetY = useSharedValue(0);
   const listOffsetYRefPoint = useSharedValue(0);
+  const isListDragging = useSharedValue(false);
+  const draggingRefPointY = useSharedValue(0);
+  const draggingDirection = useSharedValue<"up" | "down">("down");
 
-  const headerState = useSharedValue<"expanded" | "idle" | "collapsed">("expanded");
+  const headerState = useSharedValue<"expanded" | "idle" | "collapsed" | "transition">("idle");
   const headerOpacity = useSharedValue(1);
   const headerTranslateY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (e) => {
       listOffsetYRefPoint.value = e.contentOffset.y;
+      isListDragging.value = true;
     },
-    onMomentumBegin: (e) => {
-      handleMomentumBegin(e);
-    },
+    onMomentumBegin: handleMomentumBegin,
     onScroll: (e) => {
       const offsetY = e.contentOffset.y;
 
@@ -42,28 +44,10 @@ export default function Home() {
 
       listOffsetY.value = offsetY;
 
-      if (offsetY < headerHeight && headerState.value === "idle") {
-        headerOpacity.value = interpolate(
-          offsetY,
-          [0, headerHeight / 2],
-          [1, 0],
-          Extrapolation.CLAMP
-        );
-        headerTranslateY.value = interpolate(
-          offsetY,
-          [0, headerHeight],
-          [0, -headerHeight],
-          Extrapolation.CLAMP
-        );
-      }
+      draggingRefPointY.value = withTiming(offsetY, { duration: 1000 / 60 });
 
-      const isScrollingToBottom = e.contentOffset.y > listOffsetYRefPoint.value;
-      const isScrollingToTop = e.contentOffset.y < listOffsetYRefPoint.value;
-
-      if (offsetY > 0 && isScrollingToBottom) {
-        if (headerState.value === "collapsed") {
-          return;
-        }
+      if (offsetY < headerHeight && headerState.value === "idle" && isListDragging.value === true) {
+        headerState.value = "transition";
 
         headerOpacity.value = interpolate(
           offsetY,
@@ -77,10 +61,54 @@ export default function Home() {
           [0, -headerHeight],
           Extrapolation.CLAMP
         );
-      } else if (offsetY > 0 && isScrollingToTop) {
-        if (headerState.value === "expanded") {
+      }
+
+      if (offsetY > draggingRefPointY.value) {
+        draggingDirection.value = "down";
+      }
+      if (offsetY < draggingRefPointY.value) {
+        draggingDirection.value = "up";
+      }
+
+      if (
+        offsetY > headerHeight &&
+        draggingDirection.value === "down" &&
+        isListDragging.value === true
+      ) {
+        if (headerState.value === "collapsed") {
+          headerOpacity.value = 0;
+          headerTranslateY.value = -headerHeight;
           return;
         }
+
+        headerState.value = "transition";
+
+        headerOpacity.value = interpolate(
+          offsetY,
+          [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight / 2],
+          [1, 0],
+          Extrapolation.CLAMP
+        );
+        headerTranslateY.value = interpolate(
+          offsetY,
+          [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight],
+          [0, -headerHeight],
+          Extrapolation.CLAMP
+        );
+      }
+
+      if (
+        offsetY > headerHeight &&
+        draggingDirection.value === "up" &&
+        isListDragging.value === true
+      ) {
+        if (headerState.value === "expanded") {
+          headerOpacity.value = 1;
+          headerTranslateY.value = 0;
+          return;
+        }
+
+        headerState.value = "transition";
 
         headerOpacity.value = interpolate(
           offsetY,
@@ -98,15 +126,31 @@ export default function Home() {
 
       handleScroll(e);
     },
-  });
+    onEndDrag: () => {
+      isListDragging.value = false;
 
-  useDerivedValue(() => {
-    if (headerTranslateY.value === -headerHeight) {
-      headerState.value = "collapsed";
-    }
-    if (headerTranslateY.value === 0) {
-      headerState.value = "expanded";
-    }
+      if (headerState.value === "transition" && listOffsetY.value < headerHeight) {
+        headerOpacity.value = withTiming(1, { duration: 200 });
+        headerTranslateY.value = withTiming(0, { duration: 200 });
+        headerState.value = "idle";
+        return;
+      }
+
+      if (headerState.value === "transition" && draggingDirection.value === "down") {
+        headerOpacity.value = withTiming(0, { duration: 200 });
+        headerTranslateY.value = withTiming(-headerHeight, { duration: 200 });
+        headerState.value = "collapsed";
+        return;
+      }
+
+      if (headerState.value === "transition" && draggingDirection.value === "up") {
+        headerOpacity.value = withTiming(1, { duration: 200 });
+        headerTranslateY.value = withTiming(0, { duration: 200 });
+        headerState.value = "expanded";
+        return;
+      }
+      // Add one more shared value to write the transition separataly
+    },
   });
 
   const rHeaderStyle = useAnimatedStyle(() => ({

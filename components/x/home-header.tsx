@@ -13,7 +13,7 @@ export const HomeHeader: FC = () => {
     >
       {/* BlurView is experimental on Android and should be used with caution */}
       {/* To apply blur effect on Android, you need use experimentalBlurMethod prop */}
-      <BlurView intensity={25} tint="dark" style={StyleSheet.absoluteFillObject} />
+      <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
       <View className="flex-row items-end justify-between">
         <View className="w-8 h-8 bg-x-front rounded-full" />
         <View className="absolute w-full h-full flex-row items-center justify-center pointer-events-none">
