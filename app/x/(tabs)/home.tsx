@@ -66,32 +66,19 @@ export default function Home() {
     },
     onMomentumBegin: handleMomentumBegin,
     onScroll: (e) => {
-      const offsetY = e.contentOffset.y;
-
-      listOffsetY.value = offsetY;
-
+      listOffsetY.value = e.contentOffset.y;
       handleScrollDirectionOnScroll(e);
-
-      if (offsetY <= headerHeight && isListDragging.value === true) {
-        headerTransition.value = true;
-        headerOpacity.value = interpolate(
-          offsetY,
-          [0, headerHeight / 2],
-          [1, 0],
-          Extrapolation.CLAMP
-        );
-        headerTranslateY.value = interpolate(
-          offsetY,
-          [0, headerHeight],
-          [0, -headerHeight],
-          Extrapolation.CLAMP
-        );
-      }
-
       handleScroll(e);
     },
     onEndDrag: () => {
       isListDragging.value = false;
+
+      if (listOffsetY.value < headerHeight) {
+        headerOpacity.value = withTiming(1, { duration: 200 });
+        headerTranslateY.value = withTiming(0, { duration: 200 });
+        headerTransition.value = false;
+        return;
+      }
 
       if (
         listOffsetY.value > headerHeight &&
@@ -119,7 +106,7 @@ export default function Home() {
 
   const rHeaderStyle = useAnimatedStyle(() => {
     if (
-      listOffsetY.value > headerHeight &&
+      listOffsetY.value > 0 &&
       scrollDirection.value === "down" &&
       isListDragging.value === true
     ) {
@@ -144,11 +131,7 @@ export default function Home() {
       );
     }
 
-    if (
-      listOffsetY.value > headerHeight &&
-      scrollDirection.value === "up" &&
-      isListDragging.value === true
-    ) {
+    if (listOffsetY.value > 0 && scrollDirection.value === "up" && isListDragging.value === true) {
       if (headerState.value === "visible") {
         return {
           opacity: 1,
