@@ -10,12 +10,16 @@ export const useScrollDirection = () => {
 
     const offsetY = e.contentOffset.y;
 
-    scrollDirectionRefY.value = withTiming(offsetY, { duration: 1000 / 60 });
+    scrollDirectionRefY.value = withTiming(offsetY, { duration: 1 });
 
-    if (offsetY > 0 && offsetY > scrollDirectionRefY.value && scrollDirection.value === "up") {
+    if (offsetY > 0 && offsetY - 2 > scrollDirectionRefY.value && scrollDirection.value === "up") {
       scrollDirection.value = "down";
     }
-    if (offsetY > 0 && offsetY < scrollDirectionRefY.value && scrollDirection.value === "down") {
+    if (
+      offsetY > 0 &&
+      offsetY + 2 < scrollDirectionRefY.value &&
+      scrollDirection.value === "down"
+    ) {
       scrollDirection.value = "up";
     }
   };

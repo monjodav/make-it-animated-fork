@@ -29,7 +29,9 @@ export default function Home() {
   const isListDragging = useSharedValue(false);
 
   const headerOpacity = useSharedValue(1);
+  const headerOpacityRefPoint = useSharedValue(1);
   const headerTranslateY = useSharedValue(0);
+  const headerTranslateYRefPoint = useSharedValue(0);
 
   const headerState = useDerivedValue(() => {
     if (headerTranslateY.value === 0) {
@@ -49,14 +51,18 @@ export default function Home() {
     (currentValue, previousValue) => {
       if (currentValue !== previousValue) {
         listOffsetYRefPoint.value = listOffsetY.value;
+        headerOpacityRefPoint.value = headerOpacity.value;
+        headerTranslateYRefPoint.value = headerTranslateY.value;
       }
     }
   );
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (e) => {
-      listOffsetYRefPoint.value = e.contentOffset.y;
       isListDragging.value = true;
+      listOffsetYRefPoint.value = e.contentOffset.y;
+      headerOpacityRefPoint.value = headerOpacity.value;
+      headerTranslateYRefPoint.value = headerTranslateY.value;
     },
     onMomentumBegin: handleMomentumBegin,
     onScroll: (e) => {
@@ -66,68 +72,18 @@ export default function Home() {
 
       handleScrollDirectionOnScroll(e);
 
-      if (
-        offsetY < headerHeight &&
-        isListDragging.value === true &&
-        scrollDirection.value === "down"
-      ) {
+      if (offsetY <= headerHeight && isListDragging.value === true) {
         headerTransition.value = true;
         headerOpacity.value = interpolate(
           offsetY,
-          [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight / 2],
+          [0, headerHeight / 2],
           [1, 0],
           Extrapolation.CLAMP
         );
         headerTranslateY.value = interpolate(
           offsetY,
-          [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight],
+          [0, headerHeight],
           [0, -headerHeight],
-          Extrapolation.CLAMP
-        );
-      }
-
-      if (
-        offsetY > headerHeight &&
-        scrollDirection.value === "down" &&
-        isListDragging.value === true
-      ) {
-        if (headerState.value === "hidden") {
-          return;
-        }
-        headerTransition.value = true;
-        headerOpacity.value = interpolate(
-          offsetY,
-          [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight / 2],
-          [1, 0],
-          Extrapolation.CLAMP
-        );
-        headerTranslateY.value = interpolate(
-          offsetY,
-          [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight],
-          [0, -headerHeight],
-          Extrapolation.CLAMP
-        );
-      }
-
-      if (
-        offsetY > headerHeight &&
-        scrollDirection.value === "up" &&
-        isListDragging.value === true
-      ) {
-        if (headerState.value === "visible") {
-          return;
-        }
-        headerTransition.value = true;
-        headerOpacity.value = interpolate(
-          offsetY,
-          [listOffsetYRefPoint.value, listOffsetYRefPoint.value - headerHeight / 2],
-          [0, 1],
-          Extrapolation.CLAMP
-        );
-        headerTranslateY.value = interpolate(
-          offsetY,
-          [listOffsetYRefPoint.value, listOffsetYRefPoint.value - headerHeight],
-          [-headerHeight, 0],
           Extrapolation.CLAMP
         );
       }
@@ -138,48 +94,91 @@ export default function Home() {
       isListDragging.value = false;
 
       if (
-        listOffsetY.value < headerHeight &&
-        headerTransition.value === true &&
-        scrollDirection.value === "down"
-      ) {
-        headerOpacity.value = withTiming(1, { duration: 200 });
-        headerTranslateY.value = withTiming(0, { duration: 200 });
-        headerTransition.value = false;
-        return;
-      }
-
-      if (
         listOffsetY.value > headerHeight &&
-        headerTransition.value === true &&
-        scrollDirection.value === "down"
-      ) {
-        headerOpacity.value = withTiming(0, { duration: 200 });
-        headerTranslateY.value = withTiming(-headerHeight, { duration: 200 });
-        headerTransition.value = false;
-        return;
-      }
-
-      if (
-        listOffsetY.value > headerHeight &&
-        headerTransition.value === true &&
+        headerTranslateY.value < 0 &&
         scrollDirection.value === "up"
       ) {
-        headerOpacity.value = withTiming(1, { duration: 200 });
-        headerTranslateY.value = withTiming(0, { duration: 200 });
+        headerOpacity.value = withTiming(1, { duration: 100 });
+        headerTranslateY.value = withTiming(0, { duration: 100 });
+        headerTransition.value = false;
+        return;
+      }
+
+      if (
+        listOffsetY.value > headerHeight &&
+        headerTranslateY.value > -headerHeight &&
+        scrollDirection.value === "down"
+      ) {
+        headerOpacity.value = withTiming(0, { duration: 100 });
+        headerTranslateY.value = withTiming(-headerHeight, { duration: 100 });
         headerTransition.value = false;
         return;
       }
     },
   });
 
-  const rHeaderStyle = useAnimatedStyle(() => ({
-    opacity: headerOpacity.value,
-    transform: [
-      {
-        translateY: headerTranslateY.value,
-      },
-    ],
-  }));
+  const rHeaderStyle = useAnimatedStyle(() => {
+    if (
+      listOffsetY.value > headerHeight &&
+      scrollDirection.value === "down" &&
+      isListDragging.value === true
+    ) {
+      if (headerState.value === "hidden") {
+        return {
+          opacity: 0,
+          transform: [{ translateY: -headerHeight }],
+        };
+      }
+      headerTransition.value = true;
+      headerOpacity.value = interpolate(
+        listOffsetY.value,
+        [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight / 2],
+        [headerOpacityRefPoint.value, 0],
+        Extrapolation.CLAMP
+      );
+      headerTranslateY.value = interpolate(
+        listOffsetY.value,
+        [listOffsetYRefPoint.value, listOffsetYRefPoint.value + headerHeight],
+        [headerTranslateYRefPoint.value, -headerHeight],
+        Extrapolation.CLAMP
+      );
+    }
+
+    if (
+      listOffsetY.value > headerHeight &&
+      scrollDirection.value === "up" &&
+      isListDragging.value === true
+    ) {
+      if (headerState.value === "visible") {
+        return {
+          opacity: 1,
+          transform: [{ translateY: 0 }],
+        };
+      }
+      headerTransition.value = true;
+      headerOpacity.value = interpolate(
+        listOffsetY.value,
+        [listOffsetYRefPoint.value, listOffsetYRefPoint.value - headerHeight],
+        [headerOpacityRefPoint.value, 1],
+        Extrapolation.CLAMP
+      );
+      headerTranslateY.value = interpolate(
+        listOffsetY.value,
+        [listOffsetYRefPoint.value, listOffsetYRefPoint.value - headerHeight],
+        [headerTranslateYRefPoint.value, 0],
+        Extrapolation.CLAMP
+      );
+    }
+
+    return {
+      opacity: headerOpacity.value,
+      transform: [
+        {
+          translateY: headerTranslateY.value,
+        },
+      ],
+    };
+  });
 
   const _renderItem = () => {
     return <HomePost />;
