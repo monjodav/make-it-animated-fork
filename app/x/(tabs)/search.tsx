@@ -8,13 +8,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 // x-bottom-tabs-background-animation 🔽
 
 export default function Search() {
-  const { tabBarHeight, handleMomentumBegin, handleScroll } = useContext(XTabsContext);
+  const { tabBarHeight, handleXTabsOnScroll } = useContext(XTabsContext);
 
   const insets = useSafeAreaInsets();
 
   const scrollHandler = useAnimatedScrollHandler({
-    onMomentumBegin: handleMomentumBegin,
-    onScroll: handleScroll,
+    onScroll: handleXTabsOnScroll,
   });
 
   const renderItem = () => <SearchListItem />;

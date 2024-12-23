@@ -19,7 +19,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const DURATION = 200;
 
 export const AddButton: FC = () => {
-  const { tabBarHeight, isAddButtonVisible } = useContext(XTabsContext);
+  const { isAddButtonVisible } = useContext(XTabsContext);
 
   const pathname = usePathname();
   const isMessagesScreen = useRef(false);
@@ -89,10 +89,7 @@ export const AddButton: FC = () => {
   });
 
   return (
-    <Animated.View
-      className="absolute right-4"
-      style={[rAddButtonStyle, { bottom: tabBarHeight + 12 }]}
-    >
+    <Animated.View style={rAddButtonStyle}>
       <AnimatedPressable
         className="w-14 h-14 rounded-full bg-[#1D9BF0] items-center justify-center"
         style={{

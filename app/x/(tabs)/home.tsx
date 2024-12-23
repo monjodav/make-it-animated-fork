@@ -1,6 +1,5 @@
 import { HomeHeader } from "@/components/x/home-header";
 import { HomePost } from "@/components/x/home-post";
-import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import { BlurView } from "expo-blur";
 import { useContext, useState } from "react";
@@ -17,15 +16,14 @@ import Animated, {
 } from "react-native-reanimated";
 
 // x-bottom-tabs-background-animation 🔽
+// x-home-header-animation 🔽
 
 const _onEndDragAnimDuration = 100;
 
 export default function Home() {
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  const { tabBarHeight, handleMomentumBegin, handleScroll } = useContext(XTabsContext);
-
-  const { scrollDirection, handleScrollDirectionOnScroll } = useScrollDirection();
+  const { tabBarHeight, scrollDirection, handleXTabsOnScroll } = useContext(XTabsContext);
 
   const listOffsetY = useSharedValue(0);
   const listOffsetYRefPoint = useSharedValue(0);
@@ -67,11 +65,9 @@ export default function Home() {
       headerOpacityRefPoint.value = headerOpacity.value;
       headerTranslateYRefPoint.value = headerTranslateY.value;
     },
-    onMomentumBegin: handleMomentumBegin,
     onScroll: (e) => {
       listOffsetY.value = e.contentOffset.y;
-      handleScrollDirectionOnScroll(e);
-      handleScroll(e);
+      handleXTabsOnScroll(e);
     },
     onEndDrag: () => {
       isListDragging.value = false;
@@ -213,4 +209,5 @@ export default function Home() {
   );
 }
 
+// x-home-header-animation 🔼
 // x-bottom-tabs-background-animation 🔼

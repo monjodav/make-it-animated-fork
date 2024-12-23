@@ -90,6 +90,12 @@ const TabsLayout = () => {
     };
   });
 
+  const rFabStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isBottomBlurVisible ? 1 : 0.25, { duration: _duration }),
+    };
+  });
+
   return (
     <>
       <StatusBar style="light" />
@@ -212,7 +218,12 @@ const TabsLayout = () => {
         />
       </Tabs>
       {/* x-floating-action-button-animation 🔽 */}
-      <AddButton />
+      <Animated.View
+        className="absolute right-4"
+        style={[rFabStyle, { bottom: tabBarHeight + 12 }]}
+      >
+        <AddButton />
+      </Animated.View>
       {/* x-floating-action-button-animation 🔼 */}
     </>
   );
