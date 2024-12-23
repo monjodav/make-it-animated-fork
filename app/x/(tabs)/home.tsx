@@ -59,6 +59,9 @@ export default function Home() {
   );
 
   const scrollHandler = useAnimatedScrollHandler({
+    onMomentumBegin: () => {
+      isListDragging.value = true;
+    },
     onBeginDrag: (e) => {
       isListDragging.value = true;
       listOffsetYRefPoint.value = e.contentOffset.y;
@@ -101,6 +104,9 @@ export default function Home() {
         return;
       }
     },
+    // onMomentumEnd: () => {
+    //   isListDragging.value = false;
+    // },
   });
 
   const rHeaderStyle = useAnimatedStyle(() => {
