@@ -2,8 +2,9 @@ import { HomeHeader } from "@/components/x/home-header";
 import { HomePost } from "@/components/x/home-post";
 import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { XTabsContext } from "@/providers/x-tabs-provider";
+import { BlurView } from "expo-blur";
 import { useContext, useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -16,6 +17,8 @@ import Animated, {
 } from "react-native-reanimated";
 
 // x-bottom-tabs-background-animation 🔽
+
+const _onEndDragAnimDuration = 100;
 
 export default function Home() {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -74,30 +77,30 @@ export default function Home() {
       isListDragging.value = false;
 
       if (listOffsetY.value < headerHeight) {
-        headerOpacity.value = withTiming(1, { duration: 200 });
-        headerTranslateY.value = withTiming(0, { duration: 200 });
+        headerOpacity.value = withTiming(1, { duration: _onEndDragAnimDuration * 2 });
+        headerTranslateY.value = withTiming(0, { duration: _onEndDragAnimDuration * 2 });
         headerTransition.value = false;
         return;
       }
 
       if (
         listOffsetY.value > headerHeight &&
-        headerTranslateY.value < 0 &&
-        scrollDirection.value === "up"
-      ) {
-        headerOpacity.value = withTiming(1, { duration: 100 });
-        headerTranslateY.value = withTiming(0, { duration: 100 });
-        headerTransition.value = false;
-        return;
-      }
-
-      if (
-        listOffsetY.value > headerHeight &&
-        headerTranslateY.value > -headerHeight &&
+        headerTransition.value === true &&
         scrollDirection.value === "down"
       ) {
-        headerOpacity.value = withTiming(0, { duration: 100 });
-        headerTranslateY.value = withTiming(-headerHeight, { duration: 100 });
+        headerOpacity.value = withTiming(0, { duration: _onEndDragAnimDuration });
+        headerTranslateY.value = withTiming(-headerHeight, { duration: _onEndDragAnimDuration });
+        headerTransition.value = false;
+        return;
+      }
+
+      if (
+        listOffsetY.value > headerHeight &&
+        headerTransition.value === true &&
+        scrollDirection.value === "up"
+      ) {
+        headerOpacity.value = withTiming(1, { duration: _onEndDragAnimDuration });
+        headerTranslateY.value = withTiming(0, { duration: _onEndDragAnimDuration });
         headerTransition.value = false;
         return;
       }
@@ -141,13 +144,13 @@ export default function Home() {
       headerTransition.value = true;
       headerOpacity.value = interpolate(
         listOffsetY.value,
-        [listOffsetYRefPoint.value, listOffsetYRefPoint.value - headerHeight],
+        [listOffsetYRefPoint.value, listOffsetYRefPoint.value - 2 * headerHeight],
         [headerOpacityRefPoint.value, 1],
         Extrapolation.CLAMP
       );
       headerTranslateY.value = interpolate(
         listOffsetY.value,
-        [listOffsetYRefPoint.value, listOffsetYRefPoint.value - headerHeight],
+        [listOffsetYRefPoint.value, listOffsetYRefPoint.value - 2 * headerHeight],
         [headerTranslateYRefPoint.value, 0],
         Extrapolation.CLAMP
       );
@@ -160,6 +163,12 @@ export default function Home() {
           translateY: headerTranslateY.value,
         },
       ],
+    };
+  });
+
+  const rBlurViewStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(listOffsetY.value > headerHeight ? 1 : 0),
     };
   });
 
@@ -180,6 +189,11 @@ export default function Home() {
           setHeaderHeight(nativeEvent.layout.height);
         }}
       >
+        {/* BlurView is experimental on Android and should be used with caution */}
+        {/* To apply blur effect on Android, you need use experimentalBlurMethod prop */}
+        <Animated.View style={[StyleSheet.absoluteFillObject, rBlurViewStyle]}>
+          <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+        </Animated.View>
         <HomeHeader />
       </Animated.View>
       <Animated.FlatList
