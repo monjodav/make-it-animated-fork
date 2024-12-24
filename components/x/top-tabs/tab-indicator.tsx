@@ -63,7 +63,7 @@ export const TabIndicator: FC<Props> = ({
 
   return (
     <Animated.View
-      className="self-center absolute h-1 bottom-0 rounded-full bg-[#1D9BF0]"
+      className="absolute h-1 bottom-0 rounded-full bg-[#1D9BF0]"
       style={rIndicatorStyle}
     />
   );
