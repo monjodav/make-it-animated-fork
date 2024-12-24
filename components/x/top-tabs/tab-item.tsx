@@ -1,30 +1,40 @@
+import { _homePostsListWidth } from "@/app/x/(tabs)/home";
 import React, { FC } from "react";
 import { LayoutChangeEvent, Pressable } from "react-native";
 import Animated, { interpolateColor, SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
 // x-top-tabs-indicator-animation 🔽
 
+const _defaultColor = "#737373";
+const _activeColor = "#e5e5e5";
+
 export type TabItemProps = {
   label: string;
-  offsetX: SharedValue<number>;
+  horizontalListOffsetX: SharedValue<number>;
   index: number;
   onPress: () => void;
   onLayout: (event: LayoutChangeEvent) => void;
 };
 
-export const TabItem: FC<TabItemProps> = ({ label, offsetX, index, onPress, onLayout }) => {
+export const TabItem: FC<TabItemProps> = ({
+  label,
+  horizontalListOffsetX,
+  index,
+  onPress,
+  onLayout,
+}) => {
   const rTextStyle = useAnimatedStyle(() => {
     return {
       color: interpolateColor(
-        offsetX.value,
+        horizontalListOffsetX.value / _homePostsListWidth,
         [index - 1, index, index + 1],
-        ["#737373", "#e5e5e5", "#737373"]
+        [_defaultColor, _activeColor, _defaultColor]
       ),
     };
   });
 
   return (
-    <Pressable className="py-3 px-1" onLayout={onLayout} onPress={onPress}>
+    <Pressable className="py-4 px-1" onLayout={onLayout} onPress={onPress}>
       <Animated.Text style={rTextStyle} className="font-bold text-base">
         {label}
       </Animated.Text>

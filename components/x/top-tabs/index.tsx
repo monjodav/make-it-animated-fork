@@ -1,74 +1,61 @@
+import { Tabs } from "@/app/x/(tabs)/home";
 import { useMeasureFlatListTabsLayout } from "@/hooks/use-measure-flat-list-tabs-layout";
-import React, { FC, useRef, useState } from "react";
-import { FlatList, View, ViewToken } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import React, { FC, RefObject, useRef } from "react";
+import { FlatList, View } from "react-native";
+import Animated, {
+  SharedValue,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated";
 import { TabIndicator } from "./tab-indicator";
 import { TabItem } from "./tab-item";
 
 // x-top-tabs-indicator-animation 🔽
 
-const _sidePadding = 32;
-const _gap = 55;
+const _sidePadding = 0;
+const _gap = 0;
 
-export enum Tab {
-  ForYou = 0,
-  Following = 1,
-  NextJs = 2,
-}
+type Props = {
+  tabs: Tabs;
+  horizontalListRef: RefObject<FlatList>;
+  horizontalListOffsetX: SharedValue<number>;
+  isHorizontalListScrollingX: SharedValue<boolean>;
+  activeTabIndex: SharedValue<number>;
+};
 
-type Tabs = { label: string; value: Tab }[];
-
-const tabs: Tabs = [
-  {
-    label: "For you",
-    value: Tab.ForYou,
-  },
-  {
-    label: "Following",
-    value: Tab.Following,
-  },
-  {
-    label: "Next.js",
-    value: Tab.NextJs,
-  },
-];
-
-export const TopTabs: FC = () => {
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.ForYou);
-  const [viewableItems, setViewableItems] = useState<ViewToken[]>([]);
-
+export const TopTabs: FC<Props> = ({
+  tabs,
+  horizontalListRef,
+  horizontalListOffsetX,
+  isHorizontalListScrollingX,
+  activeTabIndex,
+}) => {
   const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
     tabsLength: tabs.length,
     sidePadding: _sidePadding,
     gap: _gap,
   });
 
-  const ref = useRef<FlatList>(null);
+  const tabsListRef = useRef<FlatList>(null);
 
-  const offsetX = useSharedValue(0);
+  const tabsListOffsetX = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      offsetX.value = event.contentOffset.x;
+      tabsListOffsetX.value = event.contentOffset.x;
     },
   });
 
   const _renderItem = ({ item, index }: { item: Tabs[number]; index: number }) => (
     <TabItem
       label={item.label}
-      offsetX={offsetX}
+      horizontalListOffsetX={horizontalListOffsetX}
       index={index}
       onPress={() => {
-        setActiveTab(item.value);
-        const isPrevItemVisible = viewableItems.some((item) => item.index === index - 1);
-        const isCurrentItemVisible = viewableItems.some((item) => item.index === index);
-
-        const viewPosition = isPrevItemVisible ? 1 : 0;
-        const viewOffset = isPrevItemVisible ? -_sidePadding : _sidePadding;
-
-        if (!isCurrentItemVisible) {
-          ref.current?.scrollToIndex({ index, viewPosition, viewOffset });
-        }
+        activeTabIndex.value = item.value;
+        tabsListRef.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
+        horizontalListRef.current?.scrollToIndex({ index, viewPosition: 0.5, animated: true });
+        // You can add the fetching logic here
       }}
       onLayout={(event) => {
         const { width } = event.nativeEvent.layout;
@@ -84,13 +71,15 @@ export const TopTabs: FC = () => {
   return (
     <View>
       <TabIndicator
-        activeTab={activeTab}
-        tabBarOffsetX={offsetX}
+        activeTabIndex={activeTabIndex}
+        tabBarOffsetX={tabsListOffsetX}
         tabWidths={tabWidths}
         tabOffsets={tabOffsets}
+        horizontalListOffsetX={horizontalListOffsetX}
+        isHorizontalListScrollingX={isHorizontalListScrollingX}
       />
       <Animated.FlatList
-        ref={ref}
+        ref={tabsListRef}
         data={tabs}
         keyExtractor={(item) => item.value.toString()}
         renderItem={_renderItem}
@@ -99,13 +88,6 @@ export const TopTabs: FC = () => {
         showsHorizontalScrollIndicator={false}
         onScroll={scrollHandler}
         scrollEventThrottle={1000 / 60}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 100,
-          minimumViewTime: 16,
-        }}
-        onViewableItemsChanged={({ viewableItems }) => {
-          setViewableItems(viewableItems);
-        }}
       />
     </View>
   );

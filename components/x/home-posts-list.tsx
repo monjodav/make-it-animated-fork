@@ -9,7 +9,7 @@ type Props = {
   scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>;
 };
 
-export const HomeList: FC<Props> = ({ headerHeight, tabBarHeight, scrollHandler }) => {
+export const HomePostsList: FC<Props> = ({ headerHeight, tabBarHeight, scrollHandler }) => {
   const _renderItem = () => {
     return <HomePost />;
   };

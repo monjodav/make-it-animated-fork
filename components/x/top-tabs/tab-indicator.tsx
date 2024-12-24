@@ -1,49 +1,69 @@
+import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
 import React, { FC } from "react";
+import { useWindowDimensions } from "react-native";
 import Animated, {
   interpolate,
   SharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { Tab } from ".";
 
 // x-top-tabs-indicator-animation 🔽
 
-const _duration = 200;
-
 type Props = {
-  activeTab: Tab;
-  tabBarOffsetX: SharedValue<number>;
+  activeTabIndex: SharedValue<number>;
   tabWidths: SharedValue<number[]>;
   tabOffsets: SharedValue<number[]>;
+  tabBarOffsetX: SharedValue<number>;
+  horizontalListOffsetX: SharedValue<number>;
+  isHorizontalListScrollingX: SharedValue<boolean>;
 };
 
-export const TabIndicator: FC<Props> = ({ activeTab, tabBarOffsetX, tabWidths, tabOffsets }) => {
-  const rIndicatorStyle = useAnimatedStyle(() => {
-    const left = withTiming(
-      interpolate(activeTab, Object.keys(tabOffsets.value).map(Number), tabOffsets.value),
-      {
-        duration: _duration,
-      }
-    );
+export const TabIndicator: FC<Props> = ({
+  activeTabIndex,
+  tabWidths,
+  tabOffsets,
+  tabBarOffsetX,
+  horizontalListOffsetX,
+  isHorizontalListScrollingX,
+}) => {
+  const { width: windowWidth } = useWindowDimensions();
 
-    const width = withTiming(
-      interpolate(activeTab, Object.keys(tabWidths.value).map(Number), tabWidths.value),
-      {
-        duration: _duration,
-      }
-    );
+  const rIndicatorStyle = useAnimatedStyle(() => {
+    const left = isHorizontalListScrollingX.value
+      ? interpolate(
+          horizontalListOffsetX.value / windowWidth,
+          Object.keys(tabOffsets.value).map(Number),
+          tabOffsets.value
+        )
+      : withTiming(tabOffsets.value[activeTabIndex.value], {
+          duration: sharedConfigs.indicatorOnPressAnimDuration,
+        });
+
+    const width = isHorizontalListScrollingX.value
+      ? interpolate(
+          horizontalListOffsetX.value / windowWidth,
+          Object.keys(tabWidths.value).map(Number),
+          tabWidths.value
+        )
+      : withTiming(tabWidths.value[activeTabIndex.value], {
+          duration: sharedConfigs.indicatorOnPressAnimDuration,
+        });
 
     return {
       left,
       width,
-      transform: [{ translateX: -tabBarOffsetX.value }],
+      transform: [
+        {
+          translateX: -tabBarOffsetX.value,
+        },
+      ],
     };
   });
 
   return (
     <Animated.View
-      className="absolute bottom-0 w-full h-1 rounded-full bg-[#1D9BF0]"
+      className="self-center absolute h-1 bottom-0 rounded-full bg-[#1D9BF0]"
       style={rIndicatorStyle}
     />
   );

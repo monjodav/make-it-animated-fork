@@ -1,36 +1,47 @@
-import { HomeHeader } from "@/components/x/home-header";
-import { HomeList } from "@/components/x/home-list";
+import { HomePostsList } from "@/components/x/home-posts-list";
+import { TopTabs } from "@/components/x/top-tabs";
 import { useHeaderAnimation } from "@/hooks/x/use-header-animation";
 import { XTabsContext } from "@/providers/x-tabs-provider";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { BlurView } from "expo-blur";
-import { useContext, useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import Animated from "react-native-reanimated";
+import { useContext, useRef, useState } from "react";
+import { Dimensions, FlatList, StyleSheet, View } from "react-native";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // x-bottom-tabs-background-animation 🔽
 
-type PostList = {
-  title: string;
-};
+export const _homePostsListWidth = Dimensions.get("window").width;
 
-const posts: PostList[] = [
+export enum Tab {
+  ForYou = 0,
+  Following = 1,
+  NextJs = 2,
+}
+
+export type Tabs = { label: string; value: Tab }[];
+
+const tabs: Tabs = [
   {
-    title: "All",
+    label: "For you",
+    value: Tab.ForYou,
   },
   {
-    title: "ColorsApp",
+    label: "Following",
+    value: Tab.Following,
   },
   {
-    title: "project 1",
+    label: "Next.js",
+    value: Tab.NextJs,
   },
 ];
 
 export default function Home() {
   const [headerHeight, setHeaderHeight] = useState(0);
 
-  const { tabBarHeight, scrollDirection, handleXTabsOnScroll } = useContext(XTabsContext);
+  const insets = useSafeAreaInsets();
 
-  const { width } = useWindowDimensions();
+  const { tabBarHeight, scrollDirection, handleXTabsOnScroll } = useContext(XTabsContext);
 
   // x-home-header-animation 🔽
   const { rHeaderStyle, rBlurViewStyle, scrollHandler } = useHeaderAnimation({
@@ -39,6 +50,25 @@ export default function Home() {
     handleXTabsOnScroll,
   });
   // x-home-header-animation 🔼
+
+  const horizontalListRef = useRef<FlatList>(null);
+  const horizontalListOffsetX = useSharedValue(0);
+  const isHorizontalListScrollingX = useSharedValue(false);
+  const activeTabIndex = useSharedValue(0);
+
+  const horizontalScrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {
+      isHorizontalListScrollingX.value = true;
+    },
+    onScroll: (event) => {
+      horizontalListOffsetX.value = event.contentOffset.x;
+    },
+    onMomentumEnd: (event) => {
+      isHorizontalListScrollingX.value = false;
+      activeTabIndex.value = Math.round(event.contentOffset.x / _homePostsListWidth);
+      // You can add the fetching logic here using react-native-reanimated runOnJS;
+    },
+  });
 
   return (
     <View className="flex-1 bg-x-back">
@@ -55,15 +85,34 @@ export default function Home() {
         <Animated.View style={[StyleSheet.absoluteFillObject, rBlurViewStyle]}>
           <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
         </Animated.View>
-        <HomeHeader />
+        <View
+          className="bg-x-back/50 border-b border-x-front"
+          style={{ paddingTop: insets.top + 8 }}
+        >
+          <View className="flex-row items-end justify-between mb-2 px-5">
+            <View className="w-8 h-8 bg-x-front rounded-full" />
+            <View className="absolute top-0 left-0 right-0 bottom-0 flex-row items-center justify-center pointer-events-none">
+              <FontAwesome6 name="x-twitter" size={24} color="#e5e5e5" />
+            </View>
+            <View className="w-[60px] h-8 bg-x-front rounded-full" />
+          </View>
+          <TopTabs
+            tabs={tabs}
+            horizontalListRef={horizontalListRef}
+            horizontalListOffsetX={horizontalListOffsetX}
+            isHorizontalListScrollingX={isHorizontalListScrollingX}
+            activeTabIndex={activeTabIndex}
+          />
+        </View>
       </Animated.View>
       {/* x-home-header-animation 🔼 */}
       <Animated.FlatList
-        data={posts}
-        keyExtractor={(item) => item.title}
+        ref={horizontalListRef}
+        data={tabs}
+        keyExtractor={(item) => item.value.toString()}
         renderItem={() => (
-          <View style={{ width }}>
-            <HomeList
+          <View style={{ width: _homePostsListWidth }}>
+            <HomePostsList
               headerHeight={headerHeight}
               tabBarHeight={tabBarHeight}
               scrollHandler={scrollHandler}
@@ -73,6 +122,8 @@ export default function Home() {
         showsHorizontalScrollIndicator={false}
         horizontal
         pagingEnabled
+        scrollEventThrottle={1000 / 60}
+        onScroll={horizontalScrollHandler}
       />
     </View>
   );
