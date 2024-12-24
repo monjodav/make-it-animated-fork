@@ -9,7 +9,7 @@ import { Dimensions, FlatList, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// x-bottom-tabs-background-animation 🔽
+// x-top-tabs-indicator-animation 🔽
 
 export const _homePostsListWidth = Dimensions.get("window").width;
 
@@ -36,11 +36,14 @@ const tabs: Tabs = [
   },
 ];
 
+// x-top-tabs-indicator-animation 🔼
+
 export default function Home() {
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const insets = useSafeAreaInsets();
 
+  // x-bottom-tabs-background-animation 🔽
   const { tabBarHeight, scrollDirection, handleXTabsOnScroll } = useContext(XTabsContext);
 
   // x-home-header-animation 🔽
@@ -51,6 +54,9 @@ export default function Home() {
   });
   // x-home-header-animation 🔼
 
+  // x-bottom-tabs-background-animation 🔼
+
+  // x-top-tabs-indicator-animation 🔽
   const horizontalListRef = useRef<FlatList>(null);
   const horizontalListOffsetX = useSharedValue(0);
   const isHorizontalListScrollingX = useSharedValue(false);
@@ -69,6 +75,7 @@ export default function Home() {
       // You can add the fetching logic here using react-native-reanimated runOnJS;
     },
   });
+  // x-top-tabs-indicator-animation 🔼
 
   return (
     <View className="flex-1 bg-x-back">
@@ -96,6 +103,7 @@ export default function Home() {
             </View>
             <View className="w-[60px] h-8 bg-x-front rounded-full" />
           </View>
+          {/* x-top-tabs-indicator-animation 🔽 */}
           <TopTabs
             tabs={tabs}
             horizontalListRef={horizontalListRef}
@@ -103,13 +111,18 @@ export default function Home() {
             isHorizontalListScrollingX={isHorizontalListScrollingX}
             activeTabIndex={activeTabIndex}
           />
+          {/* x-top-tabs-indicator-animation 🔼 */}
         </View>
       </Animated.View>
       {/* x-home-header-animation 🔼 */}
+
+      {/* x-top-tabs-indicator-animation 🔽 */}
       <Animated.FlatList
         ref={horizontalListRef}
         data={tabs}
         keyExtractor={(item) => item.value.toString()}
+        // x-bottom-tabs-background-animation 🔽
+        // x-home-header-animation 🔽
         renderItem={() => (
           <View style={{ width: _homePostsListWidth }}>
             <HomePostsList
@@ -119,14 +132,15 @@ export default function Home() {
             />
           </View>
         )}
+        // x-home-header-animation 🔼
+        // x-bottom-tabs-background-animation 🔼
         showsHorizontalScrollIndicator={false}
         horizontal
         pagingEnabled
         scrollEventThrottle={1000 / 60}
         onScroll={horizontalScrollHandler}
       />
+      {/* x-top-tabs-indicator-animation 🔼 */}
     </View>
   );
 }
-
-// x-bottom-tabs-background-animation 🔼
