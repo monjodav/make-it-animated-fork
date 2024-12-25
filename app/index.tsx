@@ -1,5 +1,5 @@
-import { Redirect } from "expo-router";
+import { Animations } from "@/components/_home/animations";
 
 export default function Index() {
-  return <Redirect href="/x/home" />;
+  return <Animations />;
 }
