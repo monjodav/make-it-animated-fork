@@ -1,5 +1,5 @@
-import LinkedinImage from "@/assets/images/apps/linkedin.png";
 import LinearImage from "@/assets/images/apps/linear.png";
+import LinkedinImage from "@/assets/images/apps/linkedin.png";
 import { App } from "../the-list";
 
 export const linear: App = {
@@ -19,6 +19,10 @@ export const linkedin: App = {
   animations: [
     {
       name: "Bottom tabs indicator animation",
+      href: "/linkedin/home",
+    },
+    {
+      name: "Header on scroll animation",
       href: "/linkedin/home",
     },
   ],
