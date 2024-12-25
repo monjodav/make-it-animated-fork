@@ -1,25 +1,15 @@
 import { HomePostsList } from "@/components/x/home-posts-list";
-import { TopTabs } from "@/components/x/top-tabs";
+import { _homePostsListWidth, Tab, Tabs, TopTabs } from "@/components/x/top-tabs";
 import { useHeaderAnimation } from "@/hooks/x/use-header-animation";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { BlurView } from "expo-blur";
 import { useContext, useRef, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // x-top-tabs-indicator-animation 🔽
-
-export const _homePostsListWidth = Dimensions.get("window").width;
-
-export enum Tab {
-  ForYou = 0,
-  Following = 1,
-  NextJs = 2,
-}
-
-export type Tabs = { label: string; value: Tab }[];
 
 const tabs: Tabs = [
   {

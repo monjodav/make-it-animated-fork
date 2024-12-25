@@ -1,6 +1,5 @@
-import { _homePostsListWidth, Tabs } from "@/app/x/(tabs)/home";
 import React, { FC, RefObject, useRef } from "react";
-import { FlatList, View } from "react-native";
+import { Dimensions, FlatList, View } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedScrollHandler,
@@ -10,6 +9,16 @@ import { TabIndicator } from "./tab-indicator";
 import { TabItem } from "./tab-item";
 
 // x-top-tabs-indicator-animation 🔽
+
+export enum Tab {
+  ForYou = 0,
+  Following = 1,
+  NextJs = 2,
+}
+
+export type Tabs = { label: string; value: Tab }[];
+
+export const _homePostsListWidth = Dimensions.get("window").width;
 
 type Props = {
   tabs: Tabs;
@@ -47,6 +56,7 @@ export const TopTabs: FC<Props> = ({
       <TabItem
         label={item.label}
         horizontalListOffsetX={horizontalListOffsetX}
+        homePostsListWidth={_homePostsListWidth}
         index={index}
         onPress={() => {
           activeTabIndex.value = item.value;

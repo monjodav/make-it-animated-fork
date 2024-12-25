@@ -1,4 +1,3 @@
-import { _homePostsListWidth } from "@/app/x/(tabs)/home";
 import React, { FC } from "react";
 import { LayoutChangeEvent, Pressable } from "react-native";
 import Animated, { interpolateColor, SharedValue, useAnimatedStyle } from "react-native-reanimated";
@@ -11,6 +10,7 @@ const _activeColor = "#e5e5e5";
 export type TabItemProps = {
   label: string;
   horizontalListOffsetX: SharedValue<number>;
+  homePostsListWidth: number;
   index: number;
   onPress: () => void;
   onLayout: (event: LayoutChangeEvent) => void;
@@ -19,6 +19,7 @@ export type TabItemProps = {
 export const TabItem: FC<TabItemProps> = ({
   label,
   horizontalListOffsetX,
+  homePostsListWidth,
   index,
   onPress,
   onLayout,
@@ -26,7 +27,7 @@ export const TabItem: FC<TabItemProps> = ({
   const rTextStyle = useAnimatedStyle(() => {
     return {
       color: interpolateColor(
-        horizontalListOffsetX.value / _homePostsListWidth,
+        horizontalListOffsetX.value / homePostsListWidth,
         [index - 1, index, index + 1],
         [_defaultColor, _activeColor, _defaultColor]
       ),
