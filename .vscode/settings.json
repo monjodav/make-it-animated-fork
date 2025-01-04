@@ -4,11 +4,11 @@
   "explorer.confirmDelete": false,
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit",
-    "source.organizeImports": "explicit",
-    "source.sortMembers": "explicit"
+    "source.sortMembers": "explicit",
   },
   "cSpell.words": [
     "colorsapp",
+    "luma",
     "pinterest",
     "Pressable"
   ]
