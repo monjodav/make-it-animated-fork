@@ -4,6 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { FC } from "react";
 import { Canvas, Blur, Image as SkImage, useImage } from "@shopify/react-native-skia";
 
+// luma-blurred-header-image-animation 🔽
+
 type SkiaBlurImageProps = {
   imageSource: number;
 };
@@ -51,3 +53,5 @@ export const BlurredImage: FC<Props> = ({ imageSource }) => {
     </View>
   );
 };
+
+// luma-blurred-header-image-animation 🔼

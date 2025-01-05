@@ -11,6 +11,8 @@ import { BlurredImage } from "./blurred-image";
 // NOTE: The image must be portrait orientation
 import DubaiImage from "@/assets/images/misc/dubai.png";
 
+// luma-blurred-header-image-animation 🔽
+
 type Props = {
   scrollY: SharedValue<number>;
 };
@@ -54,3 +56,5 @@ export const HeaderImage: FC<Props> = ({ scrollY }) => {
     </Animated.View>
   );
 };
+
+// luma-blurred-header-image-animation 🔼

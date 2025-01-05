@@ -6,6 +6,8 @@ import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HeaderImage } from "@/components/luma/header-image";
 
+// luma-blurred-header-image-animation 🔽
+
 export default function DiscoverCity() {
   const insets = useSafeAreaInsets();
 
@@ -44,3 +46,5 @@ export default function DiscoverCity() {
     </View>
   );
 }
+
+// luma-blurred-header-image-animation 🔼

@@ -1,5 +1,6 @@
 import LinearImage from "@/assets/images/apps/linear.png";
 import LinkedinImage from "@/assets/images/apps/linkedin.png";
+import LumaImage from "@/assets/images/apps/luma.png";
 import { App } from "../the-list";
 
 export const linear: App = {
@@ -24,6 +25,17 @@ export const linkedin: App = {
     {
       name: "Header on scroll animation",
       href: "/linkedin/home",
+    },
+  ],
+};
+
+export const luma: App = {
+  name: "Luma",
+  imageSource: LumaImage,
+  animations: [
+    {
+      name: "Discover city",
+      href: "/luma/discover-city",
     },
   ],
 };

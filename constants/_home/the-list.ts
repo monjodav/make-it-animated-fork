@@ -2,7 +2,7 @@ import { Href } from "expo-router";
 import { appleBooks } from "./apps/a";
 import { colorsApp } from "./apps/c";
 import { instagram } from "./apps/i";
-import { linear, linkedin } from "./apps/l";
+import { linear, linkedin, luma } from "./apps/l";
 import { pinterest } from "./apps/p";
 import { x } from "./apps/x";
 
@@ -36,6 +36,7 @@ export const apps: App[] = [
   // L
   linear,
   linkedin,
+  luma,
   // M
   // N
   // O

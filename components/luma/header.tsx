@@ -2,9 +2,11 @@ import React, { FC } from "react";
 import { View, Dimensions, Pressable, Alert, Text } from "react-native";
 import { Map } from "lucide-react-native";
 
+// luma-blurred-header-image-animation 🔽
+
 export const _headerWidth = Dimensions.get("window").width;
 export const _headerHeight = Dimensions.get("window").height * 0.8;
-export const _topOffset = 40;
+export const _topOffset = 30;
 
 export const Header: FC = () => {
   return (
@@ -40,3 +42,5 @@ export const Header: FC = () => {
     </View>
   );
 };
+
+// luma-blurred-header-image-animation 🔼
