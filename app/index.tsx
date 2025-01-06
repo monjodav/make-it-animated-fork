@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { Redirect } from "expo-router";
 
 export default function Index() {
-  return <Redirect href="/luma/discover-city" />;
+  return <Redirect href="/viber/chats" />;
 
   // return (
   //   <>
