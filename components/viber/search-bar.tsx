@@ -1,25 +1,57 @@
 import { Search } from "lucide-react-native";
 import React, { FC } from "react";
-import { View, StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput } from "react-native";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import { SharedValue } from "react-native-reanimated";
 
-type Props = {};
+export const _searchBarHeight = 36;
 
-export const SearchBar: FC<Props> = ({}) => {
+type Props = {
+  listOffsetY: SharedValue<number>;
+};
+
+export const SearchBar: FC<Props> = ({ listOffsetY }) => {
+  const rContainerStyle = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        listOffsetY.value,
+        [0, _searchBarHeight],
+        [_searchBarHeight, 0],
+        Extrapolation.CLAMP
+      ),
+    };
+  });
+
+  const rContentStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        listOffsetY.value,
+        [0, _searchBarHeight / 4],
+        [1, 0],
+        Extrapolation.CLAMP
+      ),
+    };
+  });
+
   return (
-    <View className="justify-center">
-      <TextInput
-        className="h-10 rounded-full bg-neutral-900 px-4 pl-8"
-        placeholder="Search"
-        placeholderTextColor="gray"
-      />
-      <Search size={16} color="gray" style={styles.searchIcon} />
-    </View>
+    <Animated.View
+      className="overflow-hidden bg-neutral-900 rounded-full"
+      style={[rContainerStyle, styles.container]}
+    >
+      <Animated.View className="w-full h-full justify-center" style={rContentStyle}>
+        <TextInput className="h-full px-4 pl-9" placeholder="Search" placeholderTextColor="gray" />
+        <Search size={16} color="gray" style={styles.searchIcon} />
+      </Animated.View>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    height: _searchBarHeight,
+  },
   searchIcon: {
     position: "absolute",
-    left: 6,
+    left: 8,
   },
 });
