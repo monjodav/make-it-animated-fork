@@ -12,7 +12,11 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-const _defaultPaddingTop = 0;
+// viber-chats-header-animation 🔽
+
+const _defaultListPaddingTop = 0;
+const _finalListPaddingTop = _defaultListPaddingTop + _searchBarHeight;
+
 const _contentPadding = 20;
 const _gap = 16;
 
@@ -27,11 +31,11 @@ export default function Chats() {
     onScroll: ({ contentOffset: { y } }) => {
       listOffsetY.value = y;
 
-      const dist = titlePlusSearchBarHeight.value + _contentPadding;
+      const scrollDistance = titlePlusSearchBarHeight.value + _contentPadding;
 
-      if (y > dist && !isHeaderTitleVisible.value) {
+      if (y > scrollDistance && !isHeaderTitleVisible.value) {
         isHeaderTitleVisible.value = true;
-      } else if (y < dist && isHeaderTitleVisible.value) {
+      } else if (y < scrollDistance && isHeaderTitleVisible.value) {
         isHeaderTitleVisible.value = false;
       }
     },
@@ -42,7 +46,7 @@ export default function Chats() {
       paddingTop: interpolate(
         listOffsetY.value,
         [0, _searchBarHeight],
-        [_defaultPaddingTop, _defaultPaddingTop + _searchBarHeight],
+        [_defaultListPaddingTop, _finalListPaddingTop],
         Extrapolation.CLAMP
       ),
     };
@@ -107,3 +111,5 @@ const styles = StyleSheet.create({
     gap: _gap,
   },
 });
+
+// viber-chats-header-animation 🔼

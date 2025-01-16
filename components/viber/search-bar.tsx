@@ -4,6 +4,8 @@ import { StyleSheet, TextInput } from "react-native";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { SharedValue } from "react-native-reanimated";
 
+// viber-chats-search-bar-animation 🔽
+
 export const _searchBarHeight = 36;
 
 type Props = {
@@ -55,3 +57,5 @@ const styles = StyleSheet.create({
     left: 8,
   },
 });
+
+// viber-chats-search-bar-animation 🔼

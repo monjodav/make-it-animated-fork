@@ -3,6 +3,8 @@ import { View, TouchableOpacity } from "react-native";
 import Animated, { SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// viber-chats-header-animation 🔽
+
 type Props = {
   title: string;
   onRightButton1Press?: () => void;
@@ -44,3 +46,5 @@ export const ScreenHeader: FC<Props> = ({
     </View>
   );
 };
+
+// viber-chats-header-animation 🔼
