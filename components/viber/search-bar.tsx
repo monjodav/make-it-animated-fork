@@ -9,14 +9,14 @@ import { SharedValue } from "react-native-reanimated";
 export const _searchBarHeight = 36;
 
 type Props = {
-  listOffsetY: SharedValue<number>;
+  listOffsetY?: SharedValue<number>;
 };
 
 export const SearchBar: FC<Props> = ({ listOffsetY }) => {
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       height: interpolate(
-        listOffsetY.value,
+        listOffsetY?.value ?? 0,
         [0, _searchBarHeight],
         [_searchBarHeight, 0],
         Extrapolation.CLAMP
@@ -27,7 +27,7 @@ export const SearchBar: FC<Props> = ({ listOffsetY }) => {
   const rContentStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
-        listOffsetY.value,
+        listOffsetY?.value ?? 0,
         [0, _searchBarHeight / 4],
         [1, 0],
         Extrapolation.CLAMP

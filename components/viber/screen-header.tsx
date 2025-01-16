@@ -31,7 +31,7 @@ export const ScreenHeader: FC<Props> = ({
   });
 
   return (
-    <View className="items-center px-5 pb-2" style={{ paddingTop: insets.top + 8 }}>
+    <View className="items-center px-5 pb-2 bg-black z-50" style={{ paddingTop: insets.top + 8 }}>
       <Animated.Text className="text-lg text-neutral-300 font-semibold" style={rTitleStyle}>
         {title}
       </Animated.Text>
