@@ -5,6 +5,7 @@ import { instagram } from "./apps/i";
 import { linear, linkedin, luma } from "./apps/l";
 import { pinterest } from "./apps/p";
 import { x } from "./apps/x";
+import { viber } from "./apps/v";
 
 type Animation = {
   name: string;
@@ -48,6 +49,7 @@ export const apps: App[] = [
   // T
   // U
   // V
+  viber,
   // W
   // X
   x,
