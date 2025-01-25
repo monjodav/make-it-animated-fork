@@ -13,5 +13,13 @@ export const colorsApp: App = {
       name: "Palette picker color change animation",
       href: "/colors-app/palette-picker",
     },
+    {
+      name: "Home header animation",
+      href: "/colors-app/home",
+    },
+    {
+      name: "Card blurry circles animation",
+      href: "/colors-app/home",
+    },
   ],
 };

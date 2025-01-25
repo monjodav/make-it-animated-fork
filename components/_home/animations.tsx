@@ -67,6 +67,13 @@ export const Animations: FC = () => {
           onChangeText={setQuery}
         />
       </View>
+      {__DEV__ && (
+        <View className="px-5 pb-5">
+          <Text className="text-neutral-500">
+            {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
+          </Text>
+        </View>
+      )}
       <SectionList
         sections={sections}
         keyExtractor={(item: App["animations"][number], index: number) => `${item.name}-${index}`}
