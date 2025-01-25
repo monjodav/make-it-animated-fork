@@ -11,6 +11,7 @@ import Animated, {
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 import { View } from "react-native";
 import { HomeHeader, Scroll_Distance } from "@/components/colors-app/home-header";
+import { Carousel } from "@/components/colors-app/carousel";
 
 // colorsapp-home-header-animation 🔽
 
@@ -32,11 +33,10 @@ const HomeScreen: FC = () => {
       </Animated.View>
       <Animated.ScrollView ref={animatedRef} showsVerticalScrollIndicator={false}>
         <View className="mt-5">
-          {/* <Carousel /> */}
-          <View className="h-[300px]" />
+          {/* colorsapp-card-blurry-circles-animation 🔽 */}
+          <Carousel />
+          {/* colorsapp-card-blurry-circles-animation 🔼 */}
         </View>
-        <View className="h-2 w-full bg-[#1B1721] my-5" />
-        <View className="h-[300px]" />
         <View className="h-2 w-full bg-[#1B1721] my-5" />
         <View className="h-[300px]" />
         <View className="h-2 w-full bg-[#1B1721] my-5" />
