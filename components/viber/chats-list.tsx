@@ -9,6 +9,7 @@ import Animated, {
 import { ChatListItem } from "./chat-list-item";
 import { useIosHeader } from "../_shared/ios-header/provider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Insets } from "react-native";
 
 export const ChatsList: FC = () => {
   const insets = useSafeAreaInsets();
@@ -27,7 +28,7 @@ export const ChatsList: FC = () => {
     };
   });
 
-  const scrollIndicatorInsets = useDerivedValue(() => {
+  const scrollIndicatorInsets = useDerivedValue<Insets>(() => {
     if (!headerHeight.value) {
       return { top: 0 };
     }
