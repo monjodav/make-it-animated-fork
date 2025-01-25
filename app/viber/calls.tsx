@@ -8,6 +8,8 @@ import { IosHeader } from "@/components/_shared/ios-header";
 import { CallsList } from "@/components/viber/calls-list";
 import { CallsRecentList } from "@/components/viber/calls-recent-list";
 
+// viber-calls-top-tabs-animation 🔽
+
 export enum Tab {
   Contacts = 0,
   Recent = 1,
@@ -23,7 +25,7 @@ export default function Calls() {
           smallTitle="Calls"
           bigTitle="Calls"
           right={
-            <View className="flex-row items-center gap-5 pr-4">
+            <View className="flex-row items-center gap-5 pr-4 pb-1">
               <TouchableOpacity
                 activeOpacity={0.9}
                 hitSlop={15}
@@ -57,3 +59,5 @@ export default function Calls() {
     </IosHeaderProvider>
   );
 }
+
+// viber-calls-top-tabs-animation 🔼

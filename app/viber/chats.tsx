@@ -15,7 +15,7 @@ export default function Chats() {
           smallTitle="Chats"
           bigTitle="Chats"
           right={
-            <View className="flex-row items-center gap-5 pr-4">
+            <View className="flex-row items-center gap-5 pr-4 pb-1">
               <TouchableOpacity
                 activeOpacity={0.9}
                 hitSlop={15}
@@ -47,6 +47,7 @@ export default function Chats() {
               </View>
             </View>
           }
+          withBlur={false}
         />
         <ChatsList />
       </View>

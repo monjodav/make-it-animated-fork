@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { useIosHeader } from "./provider";
 
 type Props = {
@@ -11,7 +11,9 @@ export const BigTitle: FC<Props> = ({ bigTitle }) => {
 
   const rBigTitleStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: interpolate(listOffsetY.value, [0, -150], [1, 1.1]) }],
+      transform: [
+        { scale: interpolate(listOffsetY.value, [0, -150], [1, 1.1], Extrapolation.CLAMP) },
+      ],
     };
   });
 

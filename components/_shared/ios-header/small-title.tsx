@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useIosHeader } from "./provider";
-import { _bigTitlePaddingTop } from ".";
+import { _bigTitlePaddingTop } from "./big-title-and-searchbar-container";
 
 type Props = {
   smallTitle?: string;

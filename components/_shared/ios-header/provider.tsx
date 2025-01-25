@@ -6,6 +6,7 @@ type IosHeaderContextType = {
   headerContentHeight: SharedValue<number>;
   bigTitleHeight: SharedValue<number>;
   searchbarHeight: SharedValue<number>;
+  bigTitleAndSearchBarHeight: SharedValue<number>;
   listOffsetY: SharedValue<number>;
   listPaddingTop: SharedValue<number>;
 };
@@ -29,6 +30,7 @@ export const IosHeaderProvider: React.FC<Props> = ({ children }) => {
   const headerContentHeight = useSharedValue(0);
   const bigTitleHeight = useSharedValue(0);
   const searchbarHeight = useSharedValue(0);
+  const bigTitleAndSearchBarHeight = useSharedValue(0);
 
   const listOffsetY = useSharedValue(0);
 
@@ -48,6 +50,7 @@ export const IosHeaderProvider: React.FC<Props> = ({ children }) => {
         headerContentHeight,
         bigTitleHeight,
         searchbarHeight,
+        bigTitleAndSearchBarHeight,
         listPaddingTop,
       }}
     >
