@@ -1,6 +1,7 @@
 import React, { FC, PropsWithChildren } from "react";
 import Animated, { useAnimatedStyle, Extrapolation, interpolate } from "react-native-reanimated";
 import { useIosHeader } from "./provider";
+import { _bigTitlePaddingTop } from ".";
 
 type Props = {
   hideSearchBarOnScroll?: boolean;
@@ -10,7 +11,7 @@ export const ContentContainer: FC<PropsWithChildren<Props>> = ({
   children,
   hideSearchBarOnScroll,
 }) => {
-  const { listOffsetY, headerContentHeight, searchbarHeight } = useIosHeader();
+  const { listOffsetY, headerContentHeight, bigTitleHeight, searchbarHeight } = useIosHeader();
 
   const rTransformYStyle = useAnimatedStyle(() => {
     if (!headerContentHeight.value) {
@@ -32,13 +33,15 @@ export const ContentContainer: FC<PropsWithChildren<Props>> = ({
       };
     }
 
+    const totalBigTitleHeight = bigTitleHeight.value + _bigTitlePaddingTop;
+
     return {
       transform: [
         {
           translateY: interpolate(
             listOffsetY.value,
-            [-1000, 0, headerContentHeight.value],
-            [1000, 0, -headerContentHeight.value],
+            [-1000, 0, totalBigTitleHeight],
+            [1000, 0, -totalBigTitleHeight],
             Extrapolation.CLAMP
           ),
         },

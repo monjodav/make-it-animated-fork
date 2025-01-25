@@ -41,7 +41,7 @@ export default function Calls() {
             </View>
           }
           bottom={
-            <View className="gap-2">
+            <View className="gap-2 pb-2">
               <TopTabs activeTab={activeTab} setActiveTab={setActiveTab} />
               <View className="h-px bg-neutral-800/75 mt-3 -mx-5" />
               {activeTab === Tab.Contacts && (

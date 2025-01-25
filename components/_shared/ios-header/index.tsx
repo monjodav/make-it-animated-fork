@@ -31,7 +31,7 @@ export const IosHeader: FC<Props> = ({
   const insets = useSafeAreaInsets();
 
   return (
-    <HeaderContainer>
+    <HeaderContainer hideSearchBarOnScroll={hideSearchBarOnScroll}>
       <View className="bg-black z-[99]" style={{ height: insets.top + 8 }} />
       <View className="px-5 pb-2 flex-row items-center justify-center bg-black z-[99]">
         <View className="absolute left-0">{left}</View>

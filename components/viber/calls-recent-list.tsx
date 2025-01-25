@@ -17,7 +17,7 @@ export const CallsRecentList: FC = () => {
           <View className="w-[100px] h-8 bg-neutral-900 rounded-full" />
         </View>
       )}
-      contentContainerClassName="gap-4 px-5"
+      contentContainerClassName="gap-4 px-5 pt-3"
       style={{ paddingTop: listPaddingTop }}
     />
   );

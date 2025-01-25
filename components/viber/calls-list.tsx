@@ -41,7 +41,7 @@ export const CallsList: FC = () => {
       data={Array.from({ length: 20 }, (_, index) => index)}
       renderItem={({ item }) => <CallsListItem key={item} />}
       ListHeaderComponent={() => <View className="h-[75px] bg-neutral-900 rounded-2xl" />}
-      contentContainerClassName="gap-4 p-5"
+      contentContainerClassName="gap-4 p-5 pt-3"
       style={{
         paddingTop: listPaddingTop,
       }}
