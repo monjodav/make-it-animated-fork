@@ -47,7 +47,6 @@ export default function Chats() {
               </View>
             </View>
           }
-          hideSearchBarOnScroll={true}
         />
         <ChatsList />
       </View>
