@@ -5,7 +5,6 @@ import { BigTitle } from "./big-title";
 import { HeaderContainer } from "./header-container";
 import { SmallTitle } from "./small-title";
 import { ContentContainer } from "./content-container";
-import { BlurBg } from "./blur-bg";
 import { SmallTitleContainer } from "./small-title-container";
 import { BigTitleAndSearchbarContainer } from "./big-title-and-searchbar-container";
 
