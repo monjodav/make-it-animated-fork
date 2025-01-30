@@ -37,6 +37,11 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Updates}
           options={{
+            headerShown: true,
+            headerTitle: "Updates",
+            headerTintColor: "white",
+            headerTransparent: true,
+            headerBackground: () => <View className="absolute inset-0 bg-blue-500/30" />,
             tabBarLabel: "Updates",
             tabBarIcon: ({ color }) => <MessageCircle size={24} color={color} />,
           }}
