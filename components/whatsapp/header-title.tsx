@@ -18,10 +18,11 @@ import { cn } from "@/utils/cn";
 type Props = {
   title: string;
   offsetY: SharedValue<number>;
+  searchBarHeight?: number;
   className?: string;
 };
 
-export const HeaderTitle: FC<Props> = ({ title, offsetY, className }) => {
+export const HeaderTitle: FC<Props> = ({ title, offsetY, searchBarHeight = 0, className }) => {
   const navigation = useNavigation();
 
   const headerHeight = useHeaderHeight();
@@ -29,7 +30,7 @@ export const HeaderTitle: FC<Props> = ({ title, offsetY, className }) => {
   const headerBaselineY = useSharedValue(0);
 
   const rHeaderStyle = useAnimatedStyle(() => {
-    const scrollDistance = headerBaselineY.value - headerHeight;
+    const scrollDistance = headerBaselineY.value + searchBarHeight - headerHeight;
 
     return {
       opacity: withTiming(offsetY.value > scrollDistance ? 1 : 0),
@@ -47,12 +48,12 @@ export const HeaderTitle: FC<Props> = ({ title, offsetY, className }) => {
       headerTitle: (props: HeaderTitleProps) => {
         return (
           <Animated.View style={rHeaderStyle}>
-            <HeaderTitleComponent {...props} />
+            <HeaderTitleComponent {...props}>{title}</HeaderTitleComponent>
           </Animated.View>
         );
       },
     });
-  }, [navigation, rHeaderStyle]);
+  }, [title, navigation, rHeaderStyle]);
 
   return (
     <Animated.Text

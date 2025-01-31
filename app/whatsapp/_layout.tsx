@@ -38,7 +38,6 @@ const TabsLayout = () => {
           name={Tab.Updates}
           options={{
             headerShown: true,
-            headerTitle: "Updates",
             headerTintColor: "white",
             headerTransparent: true,
             headerBackground: () => <View className="absolute inset-0 bg-blue-500/30" />,

@@ -1,10 +1,21 @@
 import React from "react";
-import { View } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import { Insets, View } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  SharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { HeaderTitle } from "@/components/whatsapp/header-title";
+import { _searchBarHeight, SearchBar } from "@/components/whatsapp/search-bar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Updates() {
+  const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
   const offsetY = useSharedValue(0);
@@ -15,17 +26,49 @@ export default function Updates() {
     },
   });
 
+  const rContainerStyle = useAnimatedStyle(() => {
+    return {
+      paddingTop: interpolate(
+        offsetY.value,
+        [0, _searchBarHeight],
+        [0, _searchBarHeight],
+        Extrapolation.CLAMP
+      ),
+    };
+  });
+
+  const rScrollIndicatorInsets = useDerivedValue<Insets>(() => {
+    return {
+      top: interpolate(
+        offsetY.value,
+        [0, _searchBarHeight, _searchBarHeight + 10],
+        [insets.top, insets.top - _searchBarHeight / 2, insets.top - _searchBarHeight / 2 + 10],
+        {
+          extrapolateLeft: "clamp",
+        }
+      ),
+    };
+  });
+
   return (
     <View className="flex-1 bg-black">
       <Animated.ScrollView
+        style={rContainerStyle}
         contentContainerClassName="p-5"
         contentContainerStyle={{ paddingTop: headerHeight + 16 }}
         indicatorStyle="white"
+        scrollIndicatorInsets={rScrollIndicatorInsets}
         scrollEventThrottle={1000 / 60}
         onScroll={scrollHandler}
       >
-        <HeaderTitle title="Updates" offsetY={offsetY} className="mb-4" />
-        <View className="h-7 w-[80px] bg-neutral-900 rounded-full mb-6" />
+        <HeaderTitle
+          title="Updates"
+          offsetY={offsetY}
+          searchBarHeight={_searchBarHeight}
+          className="mb-4"
+        />
+        <SearchBar offsetY={offsetY} />
+        <View className="h-7 w-[80px] bg-neutral-900 rounded-full my-6" />
 
         {/* My Status Section */}
         <View className="flex-row items-center mb-8">
@@ -50,7 +93,7 @@ export default function Updates() {
         <View className="h-5 w-[180px] bg-neutral-900 rounded-full mb-4" />
 
         {/* Channel Items */}
-        {Array.from({ length: 5 }).map((item, index) => (
+        {Array.from({ length: 15 }).map((item, index) => (
           <View key={index} className="flex-row items-center mb-6">
             <View className="h-12 w-12 rounded-full bg-neutral-900 mr-3" />
             <View>
