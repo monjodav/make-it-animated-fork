@@ -3,19 +3,25 @@ import { Insets, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { HeaderTitle } from "@/components/whatsapp/header-title";
-import { _searchBarHeight, SearchBar } from "@/components/whatsapp/search-bar";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LargeTitle } from "@/components/whatsapp/large-title";
+import { SearchBar } from "@/components/whatsapp/search-bar";
+import { UpdatesContent } from "@/components/whatsapp/updates-content";
+
+const _searchBarHeight = 36;
+const _searchBarMarginBottomMin = 12;
+const _searchBarMarginBottomMax = 36;
+
+const _searchBarMarginBottomDistance = _searchBarMarginBottomMax - _searchBarMarginBottomMin;
+
+const _searchBarAnimationDistance = _searchBarHeight + _searchBarMarginBottomDistance;
 
 export default function Updates() {
-  const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
   const offsetY = useSharedValue(0);
@@ -30,8 +36,8 @@ export default function Updates() {
     return {
       paddingTop: interpolate(
         offsetY.value,
-        [0, _searchBarHeight],
-        [0, _searchBarHeight],
+        [0, _searchBarAnimationDistance],
+        [0, _searchBarAnimationDistance],
         Extrapolation.CLAMP
       ),
     };
@@ -41,8 +47,8 @@ export default function Updates() {
     return {
       top: interpolate(
         offsetY.value,
-        [0, _searchBarHeight, _searchBarHeight + 10],
-        [insets.top, insets.top - _searchBarHeight / 2, insets.top - _searchBarHeight / 2 + 10],
+        [0, _searchBarAnimationDistance, _searchBarAnimationDistance + 10],
+        [0, 0, 10],
         {
           extrapolateLeft: "clamp",
         }
@@ -51,60 +57,29 @@ export default function Updates() {
   });
 
   return (
-    <View className="flex-1 bg-black">
+    <View className="flex-1 bg-neutral-950">
       <Animated.ScrollView
         style={rContainerStyle}
-        contentContainerClassName="p-5"
         contentContainerStyle={{ paddingTop: headerHeight + 16 }}
+        contentContainerClassName="p-5"
         indicatorStyle="white"
         scrollIndicatorInsets={rScrollIndicatorInsets}
         scrollEventThrottle={1000 / 60}
         onScroll={scrollHandler}
       >
-        <HeaderTitle
+        <LargeTitle
           title="Updates"
           offsetY={offsetY}
-          searchBarHeight={_searchBarHeight}
+          searchBarAnimationDistance={_searchBarAnimationDistance}
           className="mb-4"
         />
-        <SearchBar offsetY={offsetY} />
-        <View className="h-7 w-[80px] bg-neutral-900 rounded-full my-6" />
-
-        {/* My Status Section */}
-        <View className="flex-row items-center mb-8">
-          <View className="h-14 w-14 rounded-full bg-neutral-900 mr-3" />
-          <View>
-            <View className="h-5 w-24 bg-neutral-900 rounded-full mb-1" />
-            <View className="h-4 w-32 bg-neutral-900 rounded-full opacity-60" />
-          </View>
-          <View className="ml-auto flex-row">
-            <View className="h-7 w-7 bg-neutral-900 rounded-full mr-3" />
-            <View className="h-7 w-7 bg-neutral-900 rounded-full" />
-          </View>
-        </View>
-
-        {/* Channels Section */}
-        <View className="mb-4">
-          <View className="h-7 w-[100px] bg-neutral-900 rounded-full mb-2" />
-          <View className="h-4 w-[280px] bg-neutral-900 rounded-full opacity-60 mb-6" />
-        </View>
-
-        {/* Channel List */}
-        <View className="h-5 w-[180px] bg-neutral-900 rounded-full mb-4" />
-
-        {/* Channel Items */}
-        {Array.from({ length: 15 }).map((item, index) => (
-          <View key={index} className="flex-row items-center mb-6">
-            <View className="h-12 w-12 rounded-full bg-neutral-900 mr-3" />
-            <View>
-              <View className="h-5 w-48 bg-neutral-900 rounded-full mb-1" />
-              <View className="h-4 w-24 bg-neutral-900 rounded-full opacity-60" />
-            </View>
-            <View className="ml-auto">
-              <View className="h-8 w-20 bg-green-500/5 rounded-full" />
-            </View>
-          </View>
-        ))}
+        <SearchBar
+          offsetY={offsetY}
+          height={_searchBarHeight}
+          marginBottomMin={_searchBarMarginBottomMin}
+          marginBottomMax={_searchBarMarginBottomMax}
+        />
+        <UpdatesContent offsetY={offsetY} />
       </Animated.ScrollView>
     </View>
   );

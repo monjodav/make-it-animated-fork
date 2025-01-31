@@ -1,6 +1,6 @@
 import { Search } from "lucide-react-native";
 import React, { FC } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, ViewStyle } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -8,47 +8,43 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-export const _searchBarHeight = 36;
-
-// viber-chats-search-bar-animation 🔽
-
 type Props = {
   offsetY: SharedValue<number>;
+  height: number;
+  marginBottomMin: number;
+  marginBottomMax: number;
+  style?: Omit<ViewStyle, "height" | "margin" | "marginBottom">;
 };
 
-export const SearchBar: FC<Props> = ({ offsetY }) => {
+export const SearchBar: FC<Props> = ({
+  offsetY,
+  height,
+  marginBottomMin,
+  marginBottomMax,
+  style,
+}) => {
   const rHeightStyle = useAnimatedStyle(() => {
     return {
-      height: interpolate(
+      height: interpolate(offsetY?.value ?? 0, [0, height], [height, 0], Extrapolation.CLAMP),
+      marginBottom: interpolate(
         offsetY?.value ?? 0,
-        [0, _searchBarHeight],
-        [_searchBarHeight, 0],
+        [0, height, height + marginBottomMax - marginBottomMin],
+        [marginBottomMax, marginBottomMax, marginBottomMin],
         Extrapolation.CLAMP
       ),
     };
   });
 
   const rOpacityStyle = useAnimatedStyle(() => {
-    // if (!hideSearchBarOnScroll) {
-    //   return {
-    //     opacity: 1,
-    //   };
-    // }
-
     return {
-      opacity: interpolate(
-        offsetY?.value ?? 0,
-        [0, _searchBarHeight / 4],
-        [1, 0],
-        Extrapolation.CLAMP
-      ),
+      opacity: interpolate(offsetY?.value ?? 0, [0, height / 4], [1, 0], Extrapolation.CLAMP),
     };
   });
 
   return (
     <Animated.View
-      className="bg-neutral-900 rounded-lg justify-center"
-      style={[rHeightStyle, styles.container]}
+      className="bg-neutral-900 rounded-xl justify-center"
+      style={[rHeightStyle, styles.container, style]}
     >
       <Animated.View className="justify-center h-full" style={rOpacityStyle}>
         <TextInput className="px-4 py-2 pl-9" placeholder="Search" placeholderTextColor="gray" />
@@ -67,5 +63,3 @@ const styles = StyleSheet.create({
     left: 8,
   },
 });
-
-// viber-chats-search-bar-animation 🔼

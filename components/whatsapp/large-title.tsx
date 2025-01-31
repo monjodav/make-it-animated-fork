@@ -18,28 +18,38 @@ import { cn } from "@/utils/cn";
 type Props = {
   title: string;
   offsetY: SharedValue<number>;
-  searchBarHeight?: number;
+  searchBarAnimationDistance?: number;
   className?: string;
 };
 
-export const HeaderTitle: FC<Props> = ({ title, offsetY, searchBarHeight = 0, className }) => {
+export const LargeTitle: FC<Props> = ({
+  title,
+  offsetY,
+  searchBarAnimationDistance = 0,
+  className,
+}) => {
   const navigation = useNavigation();
 
   const headerHeight = useHeaderHeight();
 
   const headerBaselineY = useSharedValue(0);
 
-  const rHeaderStyle = useAnimatedStyle(() => {
-    const scrollDistance = headerBaselineY.value + searchBarHeight - headerHeight;
+  const rTitleOpacityStyle = useAnimatedStyle(() => {
+    if (headerBaselineY.value <= 0) return { opacity: 0 };
+
+    const scrollDistance = headerBaselineY.value + searchBarAnimationDistance - headerHeight;
 
     return {
       opacity: withTiming(offsetY.value > scrollDistance ? 1 : 0),
     };
   });
 
-  const rBigTitleStyle = useAnimatedStyle(() => {
+  const rLargeTitleStyle = useAnimatedStyle(() => {
+    const scrollDistance = headerBaselineY.value + searchBarAnimationDistance - headerHeight;
+
     return {
-      transform: [{ scale: interpolate(offsetY.value, [0, -150], [1, 1.1], Extrapolation.CLAMP) }],
+      opacity: offsetY.value < scrollDistance ? 1 : 0,
+      transform: [{ scale: interpolate(offsetY.value, [0, -200], [1, 1.1], Extrapolation.CLAMP) }],
     };
   });
 
@@ -47,18 +57,18 @@ export const HeaderTitle: FC<Props> = ({ title, offsetY, searchBarHeight = 0, cl
     navigation.setOptions({
       headerTitle: (props: HeaderTitleProps) => {
         return (
-          <Animated.View style={rHeaderStyle}>
+          <Animated.View style={rTitleOpacityStyle}>
             <HeaderTitleComponent {...props}>{title}</HeaderTitleComponent>
           </Animated.View>
         );
       },
     });
-  }, [title, navigation, rHeaderStyle]);
+  }, [title, navigation, rTitleOpacityStyle]);
 
   return (
     <Animated.Text
       className={cn("text-white font-bold text-3xl", className)}
-      style={[rBigTitleStyle, { transformOrigin: "left" }]}
+      style={[rLargeTitleStyle, { transformOrigin: "left" }]}
       onLayout={({ nativeEvent }) =>
         headerBaselineY.set(nativeEvent.layout.y + nativeEvent.layout.height)
       }

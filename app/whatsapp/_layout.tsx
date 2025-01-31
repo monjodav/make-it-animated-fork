@@ -40,7 +40,6 @@ const TabsLayout = () => {
             headerShown: true,
             headerTintColor: "white",
             headerTransparent: true,
-            headerBackground: () => <View className="absolute inset-0 bg-blue-500/30" />,
             tabBarLabel: "Updates",
             tabBarIcon: ({ color }) => <MessageCircle size={24} color={color} />,
           }}
