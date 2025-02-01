@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Insets, View } from "react-native";
+import { Insets } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -72,31 +72,30 @@ export default function Updates() {
   });
 
   return (
-    <View className="flex-1 bg-neutral-950">
-      <Animated.ScrollView
-        ref={scrollRef}
-        style={rContainerStyle}
-        contentContainerStyle={{ paddingTop: headerHeight + 16 }}
-        contentContainerClassName="p-5"
-        indicatorStyle="white"
-        scrollIndicatorInsets={rScrollIndicatorInsets}
-        scrollEventThrottle={1000 / 60}
-        onScroll={scrollHandler}
-      >
-        <LargeTitle
-          title="Updates"
-          offsetY={offsetY}
-          searchBarAnimationDistance={_searchBarAnimationDistance}
-          className="mb-4"
-        />
-        <SearchBar
-          offsetY={offsetY}
-          height={_searchBarHeight}
-          marginBottomMin={_searchBarMarginBottomMin}
-          marginBottomMax={_searchBarMarginBottomMax}
-        />
-        <UpdatesContent offsetY={offsetY} />
-      </Animated.ScrollView>
-    </View>
+    <Animated.ScrollView
+      ref={scrollRef}
+      style={rContainerStyle}
+      className="bg-neutral-950"
+      contentContainerStyle={{ paddingTop: headerHeight + 16 }}
+      contentContainerClassName="p-5"
+      indicatorStyle="white"
+      scrollIndicatorInsets={rScrollIndicatorInsets}
+      scrollEventThrottle={1000 / 60}
+      onScroll={scrollHandler}
+    >
+      <LargeTitle
+        title="Updates"
+        offsetY={offsetY}
+        searchBarAnimationDistance={_searchBarAnimationDistance}
+        className="mb-4"
+      />
+      <SearchBar
+        offsetY={offsetY}
+        height={_searchBarHeight}
+        marginBottomMin={_searchBarMarginBottomMin}
+        marginBottomMax={_searchBarMarginBottomMax}
+      />
+      <UpdatesContent offsetY={offsetY} />
+    </Animated.ScrollView>
   );
 }

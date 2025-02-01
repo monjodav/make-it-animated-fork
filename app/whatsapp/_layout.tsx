@@ -59,6 +59,9 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Communities}
           options={{
+            headerShown: true,
+            headerTintColor: "white",
+            headerTransparent: true,
             tabBarLabel: "Communities",
             tabBarIcon: ({ color }) => <FontAwesome5 name="users" size={20} color={color} />,
           }}

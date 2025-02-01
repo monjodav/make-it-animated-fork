@@ -1,63 +1,14 @@
-import { useNavigation } from "expo-router";
-import React, { FC, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import Animated, {
-  SharedValue,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { BlurView } from "expo-blur";
+import React, { FC } from "react";
+import { View } from "react-native";
+import { SharedValue } from "react-native-reanimated";
+import { useHeaderBackground } from "@/hooks/whatsapp/use-header-background";
 
 type Props = {
   offsetY: SharedValue<number>;
 };
 
 export const UpdatesContent: FC<Props> = ({ offsetY }) => {
-  const navigation = useNavigation();
-
-  const headerHeight = useHeaderHeight();
-
-  const contentOffsetY = useSharedValue(0);
-
-  const rBgStyle = useAnimatedStyle(() => {
-    if (contentOffsetY.value <= 0) return { backgroundColor: "#0a0a0a" };
-
-    const scrollDistance = contentOffsetY.value - headerHeight;
-
-    return {
-      backgroundColor: offsetY.value > scrollDistance ? "#0a0a0a80" : "#0a0a0a",
-    };
-  });
-
-  const rBlurStyle = useAnimatedStyle(() => {
-    if (contentOffsetY.value <= 0) return { opacity: 0 };
-
-    const scrollDistance = contentOffsetY.value - headerHeight;
-
-    return {
-      opacity: withTiming(offsetY.value > scrollDistance ? 1 : 0, { duration: 150 }),
-    };
-  });
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerBackground: () => {
-        return (
-          <Animated.View className="absolute inset-0" style={rBgStyle}>
-            <Animated.View className="absolute inset-0" style={rBlurStyle}>
-              <BlurView
-                intensity={50}
-                tint="systemChromeMaterialDark"
-                style={StyleSheet.absoluteFillObject}
-              />
-            </Animated.View>
-          </Animated.View>
-        );
-      },
-    });
-  }, [navigation, rBgStyle, rBlurStyle]);
+  const { contentOffsetY } = useHeaderBackground({ offsetY });
 
   return (
     <View
