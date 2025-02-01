@@ -1,47 +1,55 @@
 import { Search } from "lucide-react-native";
 import React, { FC } from "react";
-import { StyleSheet, TextInput } from "react-native";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { SharedValue } from "react-native-reanimated";
+import { StyleSheet, TextInput, ViewStyle } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
-// viber-chats-search-bar-animation 🔽
-
-export const _searchBarHeight = 36;
+// viber-chats-header-animation 🔽
 
 type Props = {
-  listOffsetY?: SharedValue<number>;
+  offsetY: SharedValue<number>;
+  height: number;
+  marginBottomMin: number;
+  marginBottomMax: number;
+  style?: Omit<ViewStyle, "height" | "margin" | "marginBottom">;
 };
 
-export const SearchBar: FC<Props> = ({ listOffsetY }) => {
-  const rContainerStyle = useAnimatedStyle(() => {
+export const SearchBar: FC<Props> = ({
+  offsetY,
+  height,
+  marginBottomMin,
+  marginBottomMax,
+  style,
+}) => {
+  const rHeightStyle = useAnimatedStyle(() => {
     return {
-      height: interpolate(
-        listOffsetY?.value ?? 0,
-        [0, _searchBarHeight],
-        [_searchBarHeight, 0],
+      height: interpolate(offsetY?.value ?? 0, [0, height], [height, 0], Extrapolation.CLAMP),
+      marginBottom: interpolate(
+        offsetY?.value ?? 0,
+        [0, height, height + marginBottomMax - marginBottomMin],
+        [marginBottomMax, marginBottomMax, marginBottomMin],
         Extrapolation.CLAMP
       ),
     };
   });
 
-  const rContentStyle = useAnimatedStyle(() => {
+  const rOpacityStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(
-        listOffsetY?.value ?? 0,
-        [0, _searchBarHeight / 4],
-        [1, 0],
-        Extrapolation.CLAMP
-      ),
+      opacity: interpolate(offsetY?.value ?? 0, [0, height / 4], [1, 0], Extrapolation.CLAMP),
     };
   });
 
   return (
     <Animated.View
-      className="overflow-hidden bg-neutral-900 rounded-full"
-      style={[rContainerStyle, styles.container]}
+      className="bg-neutral-900 rounded-full justify-center"
+      style={[rHeightStyle, style]}
     >
-      <Animated.View className="w-full h-full justify-center" style={rContentStyle}>
-        <TextInput className="h-full px-4 pl-9" placeholder="Search" placeholderTextColor="gray" />
+      <Animated.View className="justify-center h-full" style={rOpacityStyle}>
+        <TextInput className="px-4 py-2 pl-9" placeholder="Search" placeholderTextColor="gray" />
         <Search size={16} color="gray" style={styles.searchIcon} />
       </Animated.View>
     </Animated.View>
@@ -49,13 +57,10 @@ export const SearchBar: FC<Props> = ({ listOffsetY }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    height: _searchBarHeight,
-  },
   searchIcon: {
     position: "absolute",
     left: 8,
   },
 });
 
-// viber-chats-search-bar-animation 🔼
+// viber-chats-header-animation 🔼

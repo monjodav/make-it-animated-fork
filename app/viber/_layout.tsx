@@ -17,7 +17,11 @@ const TabsLayout = () => {
       <StatusBar style="light" />
       <Tabs
         screenOptions={{
-          headerShown: false,
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          headerTintColor: "white",
+          headerTransparent: true,
           tabBarShowLabel: true,
           tabBarActiveTintColor: "#7F61F2",
           tabBarInactiveTintColor: "gray",
