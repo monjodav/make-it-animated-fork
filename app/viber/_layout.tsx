@@ -1,8 +1,9 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Ellipsis, LayoutGrid, Phone } from "lucide-react-native";
+import { Camera, Ellipsis, LayoutGrid, Phone, SquarePen } from "lucide-react-native";
 import React from "react";
+import { Alert, TouchableOpacity, View } from "react-native";
 
 enum Tab {
   Chats = "chats",
@@ -35,6 +36,24 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Chats}
           options={{
+            headerRight: () => (
+              <View className="flex-row items-center gap-5 pr-4 pb-1">
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  hitSlop={15}
+                  onPress={() => Alert.alert("Take a photo")}
+                >
+                  <Camera size={20} color="#7F61F2" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  hitSlop={15}
+                  onPress={() => Alert.alert("Create a chat")}
+                >
+                  <SquarePen size={18} color="#7F61F2" />
+                </TouchableOpacity>
+              </View>
+            ),
             tabBarLabel: "Chats",
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="message-processing" size={24} color={color} />
