@@ -14,6 +14,8 @@ import { LargeTitle } from "@/components/whatsapp/large-title";
 import { SearchBar } from "@/components/whatsapp/search-bar";
 import { UpdatesContent } from "@/components/whatsapp/updates-content";
 
+// whatsapp-updates-screen-header-animation 🔽
+
 const _searchBarHeight = 36;
 const _searchBarMarginBottomMin = 12;
 const _searchBarMarginBottomMax = 36;
@@ -99,3 +101,5 @@ export default function Updates() {
     </Animated.ScrollView>
   );
 }
+
+// whatsapp-updates-screen-header-animation 🔼

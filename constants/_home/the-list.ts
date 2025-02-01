@@ -6,6 +6,7 @@ import { linear, linkedin, luma } from "./apps/l";
 import { pinterest } from "./apps/p";
 import { x } from "./apps/x";
 import { viber } from "./apps/v";
+import { whatsapp } from "./apps/w";
 
 type Animation = {
   name: string;
@@ -51,6 +52,7 @@ export const apps: App[] = [
   // V
   viber,
   // W
+  whatsapp,
   // X
   x,
   // Y

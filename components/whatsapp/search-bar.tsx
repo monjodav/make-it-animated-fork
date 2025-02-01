@@ -8,6 +8,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+// whatsapp-updates-screen-header-animation 🔽
+
 type Props = {
   offsetY: SharedValue<number>;
   height: number;
@@ -63,3 +65,5 @@ const styles = StyleSheet.create({
     left: 8,
   },
 });
+
+// whatsapp-updates-screen-header-animation 🔼

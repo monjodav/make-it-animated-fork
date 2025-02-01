@@ -4,6 +4,8 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { LargeTitle } from "@/components/whatsapp/large-title";
 import { CommunitiesContent } from "@/components/whatsapp/communities-content";
 
+// whatsapp-header-large-title-animation 🔽
+
 export default function Communities() {
   const headerHeight = useHeaderHeight();
 
@@ -29,3 +31,5 @@ export default function Communities() {
     </Animated.ScrollView>
   );
 }
+
+// whatsapp-header-large-title-animation 🔼

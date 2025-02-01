@@ -8,7 +8,9 @@ type Props = {
 };
 
 export const UpdatesContent: FC<Props> = ({ offsetY }) => {
+  // whatsapp-updates-screen-header-animation 🔽
   const { contentOffsetY } = useHeaderBackground({ offsetY });
+  // whatsapp-updates-screen-header-animation 🔼
 
   return (
     <View

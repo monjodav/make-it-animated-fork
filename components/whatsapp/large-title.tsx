@@ -15,6 +15,9 @@ import {
 } from "@react-navigation/elements";
 import { cn } from "@/utils/cn";
 
+// whatsapp-header-large-title-animation 🔽
+// whatsapp-updates-screen-header-animation 🔽
+
 type Props = {
   title: string;
   offsetY: SharedValue<number>;
@@ -77,3 +80,6 @@ export const LargeTitle: FC<Props> = ({
     </Animated.Text>
   );
 };
+
+// whatsapp-updates-screen-header-animation 🔼
+// whatsapp-header-large-title-animation 🔼
