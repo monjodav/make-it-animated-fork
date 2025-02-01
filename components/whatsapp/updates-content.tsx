@@ -57,10 +57,13 @@ export const UpdatesContent: FC<Props> = ({ offsetY }) => {
         );
       },
     });
-  }, [navigation, rBlurStyle]);
+  }, [navigation, rBgStyle, rBlurStyle]);
 
   return (
-    <View onLayout={({ nativeEvent }) => contentOffsetY.set(nativeEvent.layout.y)}>
+    <View
+      className="opacity-75"
+      onLayout={({ nativeEvent }) => contentOffsetY.set(nativeEvent.layout.y)}
+    >
       <View className="h-7 w-[80px] bg-neutral-900 rounded-full mb-6" />
       <View className="flex-row items-center mb-8">
         <View className="h-14 w-14 rounded-full bg-neutral-900 mr-3" />

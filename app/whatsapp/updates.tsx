@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Insets, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
@@ -24,11 +25,25 @@ const _searchBarAnimationDistance = _searchBarHeight + _searchBarMarginBottomDis
 export default function Updates() {
   const headerHeight = useHeaderHeight();
 
+  const scrollRef = useRef<Animated.ScrollView>(null);
+
   const offsetY = useSharedValue(0);
+
+  const scrollToOffset = (offset: number) => {
+    scrollRef.current?.scrollTo({ y: offset, animated: true });
+  };
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { y } }) => {
       offsetY.value = y;
+    },
+    onEndDrag: ({ contentOffset: { y } }) => {
+      if (y <= _searchBarHeight / 2) {
+        runOnJS(scrollToOffset)(0);
+      }
+      if (y > _searchBarHeight / 2 && y < _searchBarAnimationDistance) {
+        runOnJS(scrollToOffset)(_searchBarAnimationDistance);
+      }
     },
   });
 
@@ -59,6 +74,7 @@ export default function Updates() {
   return (
     <View className="flex-1 bg-neutral-950">
       <Animated.ScrollView
+        ref={scrollRef}
         style={rContainerStyle}
         contentContainerStyle={{ paddingTop: headerHeight + 16 }}
         contentContainerClassName="p-5"

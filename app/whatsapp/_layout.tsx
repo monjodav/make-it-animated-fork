@@ -1,10 +1,10 @@
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Cog, MessageCircle, MessagesSquare, Phone } from "lucide-react-native";
+import { Cog, MessageCircle, MessagesSquare, MoreHorizontal, Phone } from "lucide-react-native";
 import React from "react";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { BlurView } from "expo-blur";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 enum Tab {
   Updates = "updates",
@@ -41,35 +41,40 @@ const TabsLayout = () => {
             headerTintColor: "white",
             headerTransparent: true,
             tabBarLabel: "Updates",
-            tabBarIcon: ({ color }) => <MessageCircle size={24} color={color} />,
+            tabBarIcon: ({ color }) => <MessageCircle size={20} color={color} />,
+            headerLeft: () => (
+              <Pressable className="ml-5 p-1 rounded-full bg-neutral-900">
+                <MoreHorizontal size={18} color="lightgray" />
+              </Pressable>
+            ),
           }}
         />
         <Tabs.Screen
           name={Tab.Calls}
           options={{
             tabBarLabel: "Calls",
-            tabBarIcon: ({ color }) => <Phone size={22} color={color} />,
+            tabBarIcon: ({ color }) => <Phone size={20} color={color} />,
           }}
         />
         <Tabs.Screen
           name={Tab.Communities}
           options={{
             tabBarLabel: "Communities",
-            tabBarIcon: ({ color }) => <FontAwesome5 name="users" size={24} color={color} />,
+            tabBarIcon: ({ color }) => <FontAwesome5 name="users" size={20} color={color} />,
           }}
         />
         <Tabs.Screen
           name={Tab.Chats}
           options={{
             tabBarLabel: "Chats",
-            tabBarIcon: ({ color }) => <MessagesSquare size={24} color={color} />,
+            tabBarIcon: ({ color }) => <MessagesSquare size={20} color={color} />,
           }}
         />
         <Tabs.Screen
           name={Tab.Settings}
           options={{
             tabBarLabel: "Settings",
-            tabBarIcon: ({ color }) => <Cog size={24} color={color} />,
+            tabBarIcon: ({ color }) => <Cog size={20} color={color} />,
           }}
         />
       </Tabs>
