@@ -11,9 +11,9 @@ import Animated, {
 // viber-chats-header-animation 🔽
 
 type Props = {
-  offsetY: SharedValue<number>;
+  offsetY?: SharedValue<number>;
   height: number;
-  marginBottomMin: number;
+  marginBottomMin?: number;
   marginBottomMax: number;
   style?: Omit<ViewStyle, "height" | "margin" | "marginBottom">;
 };
@@ -21,13 +21,19 @@ type Props = {
 export const SearchBar: FC<Props> = ({
   offsetY,
   height,
-  marginBottomMin,
+  marginBottomMin = 0,
   marginBottomMax,
   style,
 }) => {
   const rHeightStyle = useAnimatedStyle(() => {
+    if (offsetY === undefined)
+      return {
+        height,
+        marginBottom: marginBottomMax,
+      };
+
     return {
-      height: interpolate(offsetY?.value ?? 0, [0, height], [height, 0], Extrapolation.CLAMP),
+      height: interpolate(offsetY.value, [0, height], [height, 0], Extrapolation.CLAMP),
       marginBottom: interpolate(
         offsetY?.value ?? 0,
         [0, height, height + marginBottomMax - marginBottomMin],
@@ -38,8 +44,13 @@ export const SearchBar: FC<Props> = ({
   });
 
   const rOpacityStyle = useAnimatedStyle(() => {
+    if (offsetY === undefined)
+      return {
+        opacity: 1,
+      };
+
     return {
-      opacity: interpolate(offsetY?.value ?? 0, [0, height / 4], [1, 0], Extrapolation.CLAMP),
+      opacity: interpolate(offsetY.value, [0, height / 4], [1, 0], Extrapolation.CLAMP),
     };
   });
 

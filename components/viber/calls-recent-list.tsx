@@ -2,11 +2,8 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import { CallsListItem } from "./calls-list-item";
-import { useIosHeader } from "../_shared/ios-header/provider";
 
 export const CallsRecentList: FC = () => {
-  const { listPaddingTop } = useIosHeader();
-
   return (
     <Animated.FlatList
       data={[]}
@@ -18,7 +15,6 @@ export const CallsRecentList: FC = () => {
         </View>
       )}
       contentContainerClassName="gap-4 px-5 pt-3"
-      style={{ paddingTop: listPaddingTop }}
     />
   );
 };

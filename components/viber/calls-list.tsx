@@ -1,36 +1,32 @@
 import React, { FC } from "react";
-import { Insets, View } from "react-native";
+import { View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
+  SharedValue,
   useAnimatedScrollHandler,
-  useDerivedValue,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 import { CallsListItem } from "./calls-list-item";
-import { useIosHeader } from "../_shared/ios-header/provider";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export const CallsList: FC = () => {
-  const insets = useSafeAreaInsets();
+type Props = {
+  offsetY: SharedValue<number>;
+  largeTitleHeight: SharedValue<number>;
+};
 
-  const { listOffsetY, headerHeight, listPaddingTop } = useIosHeader();
-
+export const CallsList: FC<Props> = ({ offsetY, largeTitleHeight }) => {
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { y } }) => {
-      listOffsetY.value = y;
+      offsetY.value = y;
     },
   });
 
-  const scrollIndicatorInsets = useDerivedValue<Insets>(() => {
-    if (!headerHeight.value) {
-      return { top: 0 };
-    }
-
+  const rListContainerStyle = useAnimatedStyle(() => {
     return {
-      top: interpolate(
-        listOffsetY.value,
-        [0, headerHeight.value - insets.top],
-        [headerHeight.value - insets.top, 0],
+      paddingTop: interpolate(
+        offsetY.value,
+        [0, largeTitleHeight.value],
+        [0, largeTitleHeight.value],
         Extrapolation.CLAMP
       ),
     };
@@ -41,12 +37,9 @@ export const CallsList: FC = () => {
       data={Array.from({ length: 20 }, (_, index) => index)}
       renderItem={({ item }) => <CallsListItem key={item} />}
       ListHeaderComponent={() => <View className="h-[75px] bg-neutral-900 rounded-2xl" />}
+      style={rListContainerStyle}
       contentContainerClassName="gap-4 p-5 pt-3"
-      style={{
-        paddingTop: listPaddingTop,
-      }}
       indicatorStyle="white"
-      scrollIndicatorInsets={scrollIndicatorInsets}
       scrollEventThrottle={1000 / 60}
       onScroll={scrollHandler}
     />

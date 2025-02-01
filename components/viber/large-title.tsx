@@ -11,6 +11,7 @@ import Animated, {
 import { HeaderTitle as HeaderTitleComponent, HeaderTitleProps } from "@react-navigation/elements";
 import { cn } from "@/utils/cn";
 
+// viber-header-large-title-animation 🔽
 // viber-chats-header-animation 🔽
 
 type Props = {
@@ -77,3 +78,4 @@ export const LargeTitle: FC<Props> = ({
 };
 
 // viber-chats-header-animation 🔼
+// viber-header-large-title-animation 🔼

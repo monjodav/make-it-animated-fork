@@ -4,6 +4,8 @@ import { StatusBar } from "expo-status-bar";
 import { Camera, Ellipsis, LayoutGrid, Phone, SquarePen } from "lucide-react-native";
 import React from "react";
 import { Alert, TouchableOpacity, View } from "react-native";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 enum Tab {
   Chats = "chats",
@@ -62,6 +64,24 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Calls}
           options={{
+            headerRight: () => (
+              <View className="flex-row items-center gap-5 pr-4 pb-1">
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  hitSlop={15}
+                  onPress={() => Alert.alert("Add contact")}
+                >
+                  <FontAwesome6 name="user-plus" size={18} color="#7F61F2" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  hitSlop={15}
+                  onPress={() => Alert.alert("Open keypad")}
+                >
+                  <Ionicons name="keypad" size={18} color="#7F61F2" />
+                </TouchableOpacity>
+              </View>
+            ),
             tabBarLabel: "Calls",
             tabBarIcon: ({ color }) => <Phone size={20} color={color} fill={color} />,
           }}

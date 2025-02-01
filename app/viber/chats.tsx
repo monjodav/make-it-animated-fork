@@ -53,7 +53,7 @@ export default function Chats() {
     };
   });
 
-  const rContainerStyle = useAnimatedStyle(() => {
+  const rListContainerStyle = useAnimatedStyle(() => {
     return {
       paddingTop: interpolate(
         offsetY.value,
@@ -88,7 +88,7 @@ export default function Chats() {
       <Animated.FlatList
         data={Array.from({ length: 20 }, (_, index) => index)}
         renderItem={({ item }) => <ChatListItem key={item} />}
-        style={rContainerStyle}
+        style={rListContainerStyle}
         contentContainerClassName="p-4 gap-4"
         indicatorStyle="white"
         scrollEventThrottle={1000 / 60}
