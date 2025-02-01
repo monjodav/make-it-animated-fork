@@ -1,88 +1,45 @@
-import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { Cog, MessageCircle, MessagesSquare, MoreHorizontal, Phone } from "lucide-react-native";
-import React from "react";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { BlurView } from "expo-blur";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Stack, useRouter } from "expo-router";
+import { Palette, X } from "lucide-react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 
-enum Tab {
-  Updates = "updates",
-  Calls = "calls",
-  Communities = "communities",
-  Chats = "chats",
-  Settings = "settings",
-}
+export default function WhatsAppLayout() {
+  const router = useRouter();
 
-const TabsLayout = () => {
   return (
-    <>
-      <StatusBar style="light" />
-      <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: true,
-          tabBarActiveTintColor: "white",
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle: {
-            borderTopWidth: 0,
-          },
-          tabBarBackground: () => (
-            <View className="absolute inset-0 bg-neutral-950/95">
-              <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="my-status"
+        options={{
+          headerShown: true,
+          headerTitle: "",
+          headerLeft: () => (
+            <Pressable
+              className="w-9 h-9 rounded-full bg-neutral-950/40 items-center justify-center"
+              onPress={router.back}
+            >
+              <X size={22} color="lightgray" />
+            </Pressable>
+          ),
+          headerRight: () => (
+            <View className="flex-row items-center gap-3">
+              <Pressable
+                className="w-9 h-9 rounded-full bg-neutral-950/40 items-center justify-center"
+                onPress={() => Alert.alert("Change typeface")}
+              >
+                <Text className="text-neutral-200 font-bold">T</Text>
+              </Pressable>
+              <Pressable
+                className="w-9 h-9 rounded-full bg-neutral-950/40 items-center justify-center"
+                onPress={() => Alert.alert("Change color")}
+              >
+                <Palette size={18} color="lightgray" />
+              </Pressable>
             </View>
           ),
+          headerTransparent: true,
+          animation: "none",
         }}
-      >
-        <Tabs.Screen
-          name={Tab.Updates}
-          options={{
-            headerShown: true,
-            headerTintColor: "white",
-            headerTransparent: true,
-            tabBarLabel: "Updates",
-            tabBarIcon: ({ color }) => <MessageCircle size={20} color={color} />,
-            headerLeft: () => (
-              <Pressable className="ml-5 p-1 rounded-full bg-neutral-900">
-                <MoreHorizontal size={18} color="lightgray" />
-              </Pressable>
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name={Tab.Calls}
-          options={{
-            tabBarLabel: "Calls",
-            tabBarIcon: ({ color }) => <Phone size={20} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name={Tab.Communities}
-          options={{
-            headerShown: true,
-            headerTintColor: "white",
-            headerTransparent: true,
-            tabBarLabel: "Communities",
-            tabBarIcon: ({ color }) => <FontAwesome5 name="users" size={20} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name={Tab.Chats}
-          options={{
-            tabBarLabel: "Chats",
-            tabBarIcon: ({ color }) => <MessagesSquare size={20} color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name={Tab.Settings}
-          options={{
-            tabBarLabel: "Settings",
-            tabBarIcon: ({ color }) => <Cog size={20} color={color} />,
-          }}
-        />
-      </Tabs>
-    </>
+      />
+    </Stack>
   );
-};
-
-export default TabsLayout;
+}

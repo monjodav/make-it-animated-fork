@@ -10,6 +10,10 @@ export const viber: App = {
       href: "/viber/chats",
     },
     {
+      name: "Header large title animation",
+      href: "/viber/calls",
+    },
+    {
       name: "Calls top tabs animation",
       href: "/viber/calls",
     },
