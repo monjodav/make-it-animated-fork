@@ -22,7 +22,6 @@ const TabsLayout = () => {
             backgroundColor: "black",
           },
           headerTintColor: "white",
-          headerTransparent: true,
           tabBarShowLabel: true,
           tabBarActiveTintColor: "#7F61F2",
           tabBarInactiveTintColor: "gray",
