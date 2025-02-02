@@ -3,12 +3,12 @@ import { StatusBar } from "expo-status-bar";
 import { Redirect } from "expo-router";
 
 export default function Index() {
-  return <Redirect href="/whatsapp/updates" />;
+  // return <Redirect href="/whatsapp/updates" />;
 
-  // return (
-  //   <>
-  //     <StatusBar style="light" />
-  //     <Animations />
-  //   </>
-  // );
+  return (
+    <>
+      <StatusBar style="light" />
+      <Animations />
+    </>
+  );
 }

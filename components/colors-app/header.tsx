@@ -22,9 +22,9 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
     backgroundColor: selectedColor.value,
   }));
 
-  const rSelectedColorTextColor = useDerivedValue(() => {
-    return colorKit.runOnUI().isDark(selectedColor.value) ? "#fff" : "#333";
-  });
+  const rSelectedColorTextStyle = useAnimatedStyle(() => ({
+    color: colorKit.runOnUI().isDark(selectedColor.value) ? "#fff" : "#333",
+  }));
 
   return (
     <View className="h-8 px-4 items-center justify-center">
@@ -39,7 +39,7 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
         </View>
         <View className="w-[2px]" />
         <Animated.View className="w-[80] pl-3 justify-center" style={rSelectedColorContainerStyle}>
-          <ReText text={rSelectedColor} style={[styles.text, { color: rSelectedColorTextColor }]} />
+          <ReText text={rSelectedColor} style={[styles.text, rSelectedColorTextStyle]} />
         </Animated.View>
       </View>
       <TouchableOpacity className="absolute top-0 left-4" onPress={() => Alert.alert("Back")}>

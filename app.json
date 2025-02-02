@@ -15,7 +15,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.make-it-animated.app"
+      "bundleIdentifier": "com.make-it-animated.app",
+      "appleTeamId": "8Q6HG7RGQP"
     },
     "android": {
       "adaptiveIcon": {
