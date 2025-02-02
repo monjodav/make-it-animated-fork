@@ -4,6 +4,7 @@ import { SharedValue } from "react-native-reanimated";
 import { useHeaderBackground } from "@/hooks/whatsapp/use-header-background";
 import { Pencil } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 type Props = {
   offsetY: SharedValue<number>;
@@ -31,7 +32,10 @@ export const UpdatesContent: FC<Props> = ({ offsetY }) => {
         <View className="ml-auto flex-row">
           <View className="h-8 w-8 bg-neutral-900 rounded-full mr-3" />
           <Pressable
-            onPress={() => router.push("/whatsapp/my-status")}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              router.push("/whatsapp/my-status");
+            }}
             className="h-8 w-8 bg-neutral-900 rounded-full items-center justify-center"
           >
             <Pencil size={14} color="white" />

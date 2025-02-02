@@ -41,6 +41,7 @@ export const ColorPanel: FC<Props> = ({ state, lightAccentColor, darkAccentColor
         thumbSize={sharedConfigs.thumbPanelSize}
         centerChannel="saturation"
         thumbShape="ring"
+        thumbStyle={{ overflow: "hidden" }}
       >
         <ExtraThumb
           key="lightAccentBase"

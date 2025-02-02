@@ -89,6 +89,7 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Explore}
           options={{
+            headerShown: false,
             tabBarLabel: "Explore",
             tabBarIcon: ({ color }) => <LayoutGrid size={20} color={color} fill={color} />,
           }}
@@ -96,6 +97,7 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.More}
           options={{
+            headerShown: false,
             tabBarLabel: "More",
             tabBarIcon: ({ color }) => <Ellipsis size={24} color={color} fill={color} />,
           }}

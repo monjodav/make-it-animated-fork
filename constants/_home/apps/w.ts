@@ -10,12 +10,12 @@ export const whatsapp: App = {
       href: "/whatsapp/updates",
     },
     {
-      name: "Header large title animation",
-      href: "/whatsapp/communities",
+      name: "Add status background animation",
+      href: "/whatsapp/updates",
     },
     {
-      name: "Add status background animation",
-      href: "/whatsapp/my-status",
+      name: "Header large title animation",
+      href: "/whatsapp/communities",
     },
   ],
 };
