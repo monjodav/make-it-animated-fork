@@ -5,6 +5,8 @@ import Animated, { useAnimatedStyle, withDelay, withTiming } from "react-native-
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { cn } from "@/utils/cn";
 
+// whatsapp-add-status-background-animation 🔽
+
 const tailwindColors = {
   slate: { darkBg: "bg-slate-950", lightBg: "bg-slate-600" },
   zinc: { darkBg: "bg-zinc-950", lightBg: "bg-zinc-600" },
@@ -28,6 +30,8 @@ const tailwindColors = {
   rose: { darkBg: "bg-rose-950", lightBg: "bg-rose-600" },
 };
 
+const _duration = 200;
+
 export default function MyStatus() {
   const [isMounted, setIsMounted] = useState(false);
   const [randomColor, setRandomColor] = useState<keyof typeof tailwindColors>("indigo");
@@ -35,6 +39,12 @@ export default function MyStatus() {
   const { width, height } = useWindowDimensions();
 
   const headerHeight = useHeaderHeight();
+
+  useEffect(() => {
+    const colorKeys = Object.keys(tailwindColors);
+    const randomIndex = Math.floor(Math.random() * colorKeys.length);
+    setRandomColor(colorKeys[randomIndex] as keyof typeof tailwindColors);
+  }, []);
 
   const rShadowStyle = useAnimatedStyle(() => {
     if (!isMounted)
@@ -45,17 +55,11 @@ export default function MyStatus() {
       };
 
     return {
-      opacity: withTiming(1, { duration: 200 }),
-      transform: [{ scale: withTiming(10, { duration: 200 }) }],
-      height: withDelay(150, withTiming(height, { duration: 150 })),
+      opacity: withTiming(1, { duration: _duration }),
+      transform: [{ scale: withTiming(10, { duration: _duration }) }],
+      height: withDelay(_duration - 50, withTiming(height, { duration: _duration - 50 })),
     };
   });
-
-  useEffect(() => {
-    const colorKeys = Object.keys(tailwindColors);
-    const randomIndex = Math.floor(Math.random() * colorKeys.length);
-    setRandomColor(colorKeys[randomIndex] as keyof typeof tailwindColors);
-  }, []);
 
   return (
     <View
@@ -87,3 +91,5 @@ export default function MyStatus() {
     </View>
   );
 }
+
+// whatsapp-add-status-background-animation 🔼

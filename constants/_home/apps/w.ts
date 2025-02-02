@@ -13,5 +13,9 @@ export const whatsapp: App = {
       name: "Header large title animation",
       href: "/whatsapp/communities",
     },
+    {
+      name: "Add status background animation",
+      href: "/whatsapp/my-status",
+    },
   ],
 };
