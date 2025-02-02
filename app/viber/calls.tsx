@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { TopTabs } from "@/components/viber/top-tabs";
+import { Tab, TopTabs } from "@/components/viber/top-tabs";
 import { CallsList } from "@/components/viber/calls-list";
 import { CallsRecentList } from "@/components/viber/calls-recent-list";
 import Animated, {
@@ -13,11 +13,6 @@ import { LargeTitle } from "@/components/viber/large-title";
 import { SearchBar } from "@/components/viber/search-bar";
 
 // viber-header-large-title-animation 🔽
-
-export enum Tab {
-  Contacts = 0,
-  Recent = 1,
-}
 
 export default function Calls() {
   const [activeTab, setActiveTab] = useState(Tab.Contacts);

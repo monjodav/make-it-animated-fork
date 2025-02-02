@@ -1,4 +1,3 @@
-import { Tab } from "@/app/viber/calls";
 import React, { FC } from "react";
 import { View, Pressable } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
@@ -6,6 +5,11 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 // viber-top-tabs-indicator-animation 🔽
 
 const _padding = 3;
+
+export enum Tab {
+  Contacts = 0,
+  Recent = 1,
+}
 
 type TabItemProps = {
   title: string;
