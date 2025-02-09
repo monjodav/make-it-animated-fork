@@ -24,7 +24,7 @@ export const ControlItem: FC<Props> = ({ controlsPosition, icon, label, onPress 
       style={{ height: _height }}
       onPress={onPress}
     >
-      <View className="w-7 items-center justify-center">{icon}</View>
+      <View className="w-8 items-center justify-center">{icon}</View>
       {label}
     </Pressable>
   );
