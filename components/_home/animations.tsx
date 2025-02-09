@@ -39,7 +39,7 @@ export const Animations: FC = () => {
       <View className="h-2 bg-[#070708]" />
       <View className="flex-row items-center gap-2 px-5 py-4">
         <Image source={section.imageSource} className="w-6 h-6" />
-        <Text className="text-[#9394a1]">{section.title}</Text>
+        <Text className="text-stone-50 text-base">{section.title}</Text>
       </View>
     </View>
   );
@@ -50,8 +50,8 @@ export const Animations: FC = () => {
       onPress={() => router.push(item.href)}
       className="px-5 py-4"
     >
-      <Text className="text-[#cccfd5]">
-        {index + 1}. {item.name}
+      <Text className="text-stone-400 text-sm">
+        <Text className="text-xs">{index + 1}.</Text> {item.name}
       </Text>
     </TouchableOpacity>
   );
@@ -62,7 +62,7 @@ export const Animations: FC = () => {
         <TextInput
           placeholder="Search app..."
           placeholderTextColor="#9394a1"
-          className="flex-1 bg-[#212126] rounded-lg p-3 text-[#cccfd5]"
+          className="flex-1 bg-[#212126] rounded-xl p-3 text-[#cccfd5]"
           value={query}
           onChangeText={setQuery}
         />

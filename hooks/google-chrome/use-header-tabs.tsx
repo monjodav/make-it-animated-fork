@@ -12,8 +12,11 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+// google-chrome-top-tabs-indicator-animation 🔽
+
 const _tabButtonWidth = 60;
 const _tabButtonHeight = 40;
+const _padding = 2;
 
 type TabButtonProps = {
   onPress?: () => void;
@@ -44,7 +47,7 @@ export const useHeaderTabs = ({ listRef, tabIndex }: Props) => {
       left: interpolate(
         tabIndex.value,
         [0, 1, 2],
-        [0, _tabButtonWidth, 2 * _tabButtonWidth],
+        [_padding, _tabButtonWidth, 2 * _tabButtonWidth - _padding],
         Extrapolation.CLAMP
       ),
     };
@@ -141,6 +144,8 @@ const styles = StyleSheet.create({
   },
   indicator: {
     width: _tabButtonWidth,
-    height: _tabButtonHeight - 4,
+    height: _tabButtonHeight - 2 * _padding,
   },
 });
+
+// google-chrome-top-tabs-indicator-animation 🔼

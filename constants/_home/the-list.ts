@@ -7,6 +7,7 @@ import { pinterest } from "./apps/p";
 import { x } from "./apps/x";
 import { viber } from "./apps/v";
 import { whatsapp } from "./apps/w";
+import { googleChrome } from "./apps/g";
 
 type Animation = {
   name: string;
@@ -30,6 +31,7 @@ export const apps: App[] = [
   // E
   // F
   // G
+  googleChrome,
   // H
   // I
   instagram,

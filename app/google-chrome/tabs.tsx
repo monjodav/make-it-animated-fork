@@ -8,6 +8,8 @@ import { GroupsTab } from "@/components/google-chrome/groups-tab";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useHeaderTabs } from "@/hooks/google-chrome/use-header-tabs";
 
+// google-chrome-top-tabs-indicator-animation 🔽
+
 const _tabs = [<IncognitoTab key="incognito" />, <NewTab key="new" />, <GroupsTab key="groups" />];
 
 export default function Tabs() {
@@ -46,3 +48,5 @@ export default function Tabs() {
     />
   );
 }
+
+// google-chrome-top-tabs-indicator-animation 🔼
