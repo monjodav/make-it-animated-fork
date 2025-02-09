@@ -1,26 +1,23 @@
 import { App, apps } from "@/constants/_home/the-list";
 import { useRouter } from "expo-router";
-import React, { FC, useState } from "react";
-import {
-  Image,
-  ListRenderItemInfo,
-  SectionList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { FC } from "react";
+import { Image, ListRenderItemInfo, SectionList, Text, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type AppSection = {
   title: string;
   imageSource: number;
-  data: App["animations"];å
+  data: App["animations"];
 };
 
-export const Animations: FC = () => {
-  const [query, setQuery] = useState("");
+type Props = {
+  query: string;
+};
 
+export const Animations: FC<Props> = ({ query }) => {
   const router = useRouter();
+
+  const insets = useSafeAreaInsets();
 
   const sections: AppSection[] = apps
     .map(
@@ -34,7 +31,7 @@ export const Animations: FC = () => {
 
   const _renderSectionHeader = ({ section }: { section: AppSection }) => (
     <View className="bg-[#131316]">
-      <View className="h-1 rounded-full bg-[#070708]" />
+      <View className="h-[2px] rounded-full mx-2 bg-[#070708]" />
       <View className="flex-row items-center gap-2 px-5 py-4">
         <Image source={section.imageSource} className="w-6 h-6" />
         <Text className="text-stone-50 text-base">{section.title}</Text>
@@ -56,17 +53,8 @@ export const Animations: FC = () => {
 
   return (
     <View className="flex-1 bg-[#131316]">
-      <View className="flex-row items-center gap-2 mb-8">
-        <TextInput
-          placeholder="Search app..."
-          placeholderTextColor="#9394a1"
-          className="flex-1 bg-[#212126] rounded-xl p-3 text-[#cccfd5]"
-          value={query}
-          onChangeText={setQuery}
-        />
-      </View>
       {__DEV__ && (
-        <View className="flex-row items-center gap-2 px-5 pb-5">
+        <View className="flex-row items-center gap-2 px-5 py-5">
           <Text className="text-amber-200 text-sm">
             {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
           </Text>
@@ -81,6 +69,7 @@ export const Animations: FC = () => {
         keyExtractor={(item: App["animations"][number], index: number) => `${item.name}-${index}`}
         renderSectionHeader={_renderSectionHeader}
         renderItem={_renderItem}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 10 }}
         stickySectionHeadersEnabled
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
