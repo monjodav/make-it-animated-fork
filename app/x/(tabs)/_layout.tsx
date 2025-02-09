@@ -10,7 +10,7 @@ import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { FC, PropsWithChildren, useContext, useEffect, useRef } from "react";
-import { Animated as RNAnimated, StyleSheet } from "react-native";
+import { Platform, Animated as RNAnimated, StyleSheet, View } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -115,15 +115,17 @@ const TabsLayout = () => {
             height: tabBarHeight,
             paddingTop: 8,
             paddingBottom: tabBarPaddingBottom,
-            borderTopColor: "#ffffff20",
-            backgroundColor: "#00000000",
+            borderTopWidth: 0.5,
+            borderColor: "rgba(255, 255, 255, 0.1)",
             opacity: tabBarOpacity,
           },
           tabBarBackground: () => (
             <Animated.View style={[StyleSheet.absoluteFillObject, rBlurContainerStyle]}>
-              {/* BlurView is experimental on Android and should be used with caution */}
-              {/* To apply blur effect on Android, you need use experimentalBlurMethod prop */}
-              <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+              {Platform.OS === "ios" ? (
+                <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+              ) : (
+                <View className="absolute inset-0 bg-neutral-950/95" />
+              )}
             </Animated.View>
           ),
         }}
