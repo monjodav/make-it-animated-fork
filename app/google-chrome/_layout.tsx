@@ -15,6 +15,9 @@ export default function TabsLayout() {
               <Search size={18} color="gray" />
             </TouchableOpacity>
           ),
+          // headerStyle: {
+
+          // }
         }}
       />
     </Stack>
