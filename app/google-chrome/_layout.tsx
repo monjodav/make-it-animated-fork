@@ -10,14 +10,12 @@ export default function TabsLayout() {
         options={{
           headerShown: true,
           headerTransparent: true,
+          headerTitleAlign: "center",
           headerLeft: () => (
             <TouchableOpacity>
               <Search size={18} color="gray" />
             </TouchableOpacity>
           ),
-          // headerStyle: {
-
-          // }
         }}
       />
     </Stack>

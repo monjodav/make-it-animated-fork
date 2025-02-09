@@ -85,7 +85,7 @@ export const useHeaderTabs = ({ listRef, tabIndex }: Props) => {
       headerTitle: () => {
         return (
           <View
-            className="self-center flex-row items-center justify-center rounded-2xl bg-neutral-700"
+            className="flex-row items-center justify-center rounded-2xl bg-neutral-700"
             style={styles.borderCurve}
           >
             {/* Tabs */}

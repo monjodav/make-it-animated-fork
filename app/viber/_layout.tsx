@@ -23,6 +23,7 @@ const TabsLayout = () => {
           headerStyle: {
             backgroundColor: "black",
           },
+          headerTitleAlign: "center",
           headerTintColor: "white",
           tabBarShowLabel: true,
           tabBarActiveTintColor: "#7F61F2",

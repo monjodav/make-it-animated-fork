@@ -62,7 +62,7 @@ export const LargeTitle: FC<Props> = ({
         );
       },
     });
-  }, [title, navigation, rTitleOpacityStyle]);
+  }, [title, navigation]);
 
   return (
     <Animated.Text

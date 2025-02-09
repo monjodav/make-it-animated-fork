@@ -21,6 +21,7 @@ const TabsLayout = () => {
       <Tabs
         screenOptions={{
           headerShown: false,
+          headerTitleAlign: "center",
           tabBarShowLabel: true,
           tabBarActiveTintColor: "white",
           tabBarInactiveTintColor: "gray",

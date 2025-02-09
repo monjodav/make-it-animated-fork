@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { SharedValue } from "react-native-reanimated";
 import { useHeaderBackground } from "@/hooks/whatsapp/use-header-background";
 
@@ -25,6 +25,8 @@ export const CommunitiesContent: FC<Props> = ({ offsetY }) => {
       <View className="h-5 w-[50%] bg-stone-900 rounded-full self-center mb-6" />
 
       <View className="h-12 bg-green-500/10 rounded-xl" />
+
+      {Platform.OS === "android" && <View className="h-[500px] w-full" />}
     </View>
   );
 };
