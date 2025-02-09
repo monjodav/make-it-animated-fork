@@ -23,6 +23,7 @@ export const ColorPickerPanel: FC = () => {
           thumbShape="circle"
           sliderThickness={sharedConfigs.sliderThickness}
           thumbSize={sharedConfigs.thumbSliderSize}
+          style={{ zIndex: 999 }}
         />
       </View>
     </View>

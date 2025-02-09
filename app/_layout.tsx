@@ -7,6 +7,7 @@ import { Drawer } from "expo-router/drawer";
 import { DrawerContentComponentProps, DrawerContentScrollView } from "@react-navigation/drawer";
 import "../global.css";
 import { Animations } from "@/components/_home/animations";
+import * as NavigationBar from "expo-navigation-bar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +29,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default function RootLayout() {
+  NavigationBar.setBackgroundColorAsync("black");
+
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
       SplashScreen.hide();
@@ -39,7 +42,7 @@ export default function RootLayout() {
       <KeyboardProvider>
         <Drawer
           drawerContent={(props) => <DrawerContent {...props} />}
-          screenOptions={{ headerShown: false }}
+          screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}
         />
       </KeyboardProvider>
     </GestureHandlerRootView>
