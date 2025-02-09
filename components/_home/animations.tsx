@@ -10,18 +10,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type AppSection = {
   title: string;
   imageSource: number;
-  data: App["animations"];
+  data: App["animations"];å
 };
 
 export const Animations: FC = () => {
   const [query, setQuery] = useState("");
 
-  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   const sections: AppSection[] = apps
@@ -36,7 +34,7 @@ export const Animations: FC = () => {
 
   const _renderSectionHeader = ({ section }: { section: AppSection }) => (
     <View className="bg-[#131316]">
-      <View className="h-2 bg-[#070708]" />
+      <View className="h-1 rounded-full bg-[#070708]" />
       <View className="flex-row items-center gap-2 px-5 py-4">
         <Image source={section.imageSource} className="w-6 h-6" />
         <Text className="text-stone-50 text-base">{section.title}</Text>
@@ -57,8 +55,8 @@ export const Animations: FC = () => {
   );
 
   return (
-    <View className="flex-1 bg-[#131316]" style={{ paddingTop: insets.top + 12 }}>
-      <View className="flex-row items-center gap-2 mb-8 px-5">
+    <View className="flex-1 bg-[#131316]">
+      <View className="flex-row items-center gap-2 mb-8">
         <TextInput
           placeholder="Search app..."
           placeholderTextColor="#9394a1"
@@ -68,9 +66,13 @@ export const Animations: FC = () => {
         />
       </View>
       {__DEV__ && (
-        <View className="px-5 pb-5">
-          <Text className="text-neutral-500">
+        <View className="flex-row items-center gap-2 px-5 pb-5">
+          <Text className="text-amber-200 text-sm">
             {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
+          </Text>
+          <Text className="text-neutral-500 text-sm">|</Text>å
+          <Text className="text-amber-200 text-sm">
+            {sections.length} {sections.length === 1 ? "app" : "apps"}
           </Text>
         </View>
       )}
@@ -81,7 +83,7 @@ export const Animations: FC = () => {
         renderItem={_renderItem}
         stickySectionHeadersEnabled
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 12 }}
+        scrollEnabled={false}
       />
     </View>
   );
