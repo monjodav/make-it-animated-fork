@@ -15,7 +15,7 @@ export default function Index() {
   useEffect(() => {
     setTimeout(() => {
       navigation.dispatch(DrawerActions.openDrawer());
-    }, 300);
+    }, 250);
   }, [navigation]);
 
   return (
