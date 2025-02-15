@@ -8,28 +8,30 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
-  const insets = useSafeAreaInsets();
+  return <Redirect href="/apple-invites/welcome" />;
 
-  const navigation = useNavigation();
+  // const insets = useSafeAreaInsets();
 
-  useEffect(() => {
-    setTimeout(() => {
-      navigation.dispatch(DrawerActions.openDrawer());
-    }, 250);
-  }, [navigation]);
+  // const navigation = useNavigation();
 
-  return (
-    <View className="flex-1 items-center justify-center bg-[#131316]">
-      <StatusBar style="light" backgroundColor="black" />
-      <Image source={Logo} className="size-20" />
-      <TouchableOpacity
-        activeOpacity={0.85}
-        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        className="absolute border border-stone-600 px-4 py-3 rounded-full items-center self-center"
-        style={{ bottom: insets.bottom + 10 }}
-      >
-        <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.dispatch(DrawerActions.openDrawer());
+  //   }, 250);
+  // }, [navigation]);
+
+  // return (
+  //   <View className="flex-1 items-center justify-center bg-[#131316]">
+  //     <StatusBar style="light" backgroundColor="black" />
+  //     <Image source={Logo} className="size-20" />
+  //     <TouchableOpacity
+  //       activeOpacity={0.85}
+  //       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+  //       className="absolute border border-stone-600 px-4 py-3 rounded-full items-center self-center"
+  //       style={{ bottom: insets.bottom + 10 }}
+  //     >
+  //       <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
 }
