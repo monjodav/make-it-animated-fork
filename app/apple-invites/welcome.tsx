@@ -21,6 +21,8 @@ import { Marquee } from "@/components/apple-invites/marquee";
 import { useDebounce } from "use-debounce";
 import { _itemWidth } from "@/components/apple-invites/marquee-item";
 
+// apple-invites-welcome-screen-animation 🔽
+
 const events = [
   {
     id: 1,
@@ -126,3 +128,5 @@ export default function Welcome() {
     </View>
   );
 }
+
+// apple-invites-welcome-screen-animation 🔼

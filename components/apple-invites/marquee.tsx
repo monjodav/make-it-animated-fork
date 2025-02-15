@@ -10,6 +10,8 @@ import {
 } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 
+// apple-invites-welcome-screen-animation 🔽
+
 const _defaultScrollSpeed = 40; // Units per second
 
 type Props = {
@@ -18,7 +20,6 @@ type Props = {
 };
 
 const MarqueeComponent: FC<Props> = ({ events, scrollOffsetX }) => {
-  console.log("🔴 Marquee"); // VS --------- Remove Log
   const scrollSpeed = useSharedValue(_defaultScrollSpeed);
 
   const allItemsWidth = events.length * _itemWidth;
@@ -62,3 +63,5 @@ const MarqueeComponent: FC<Props> = ({ events, scrollOffsetX }) => {
 };
 
 export const Marquee = memo(MarqueeComponent);
+
+// apple-invites-welcome-screen-animation 🔼

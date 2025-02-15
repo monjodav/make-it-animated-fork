@@ -10,6 +10,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 
+// apple-invites-welcome-screen-animation 🔽
+
 const screenWidth = Dimensions.get("screen").width;
 
 export const _itemWidth = screenWidth * 0.6;
@@ -22,8 +24,6 @@ type Props = {
 };
 
 const MarqueeItemComponent: FC<Props> = ({ index, imageSrc, scrollOffsetX, allItemsWidth }) => {
-  console.log("🔴 MarqueeItem"); // VS --------- Remove Log
-
   const shift = (allItemsWidth - screenWidth) / 2;
   const initialLeft = index * _itemWidth - shift;
 
@@ -84,3 +84,5 @@ const MarqueeItemComponent: FC<Props> = ({ index, imageSrc, scrollOffsetX, allIt
 };
 
 export const MarqueeItem = memo(MarqueeItemComponent);
+
+// apple-invites-welcome-screen-animation 🔼
