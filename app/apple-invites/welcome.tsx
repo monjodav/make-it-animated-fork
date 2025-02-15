@@ -75,6 +75,10 @@ export default function Welcome() {
       const shift = width / 2;
       const activeItemIndex = Math.abs(Math.floor((normalizedOffset + shift) / _itemWidth));
 
+      if (activeItemIndex === events.length) {
+        runOnJS(setActiveIndex)(0);
+      }
+
       if (
         activeItemIndex >= 0 &&
         activeItemIndex < events.length &&
