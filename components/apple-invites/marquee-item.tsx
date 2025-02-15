@@ -32,7 +32,7 @@ const MarqueeItemComponent: FC<Props> = ({ index, imageSrc, scrollOffsetX, allIt
       ((scrollOffsetX.value % allItemsWidth) + allItemsWidth) % allItemsWidth;
     const left = ((initialLeft - normalizedOffset) % allItemsWidth) + shift;
 
-    const rotation = interpolate(left, [0, screenWidth - _itemWidth], [-0.5, 0.5]);
+    const rotation = interpolate(left, [0, screenWidth - _itemWidth], [-0.6, 0.6]);
     const translateY = interpolate(
       left,
       [0, (screenWidth - _itemWidth) / 2, screenWidth - _itemWidth],
