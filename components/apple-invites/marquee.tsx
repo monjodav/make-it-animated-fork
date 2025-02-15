@@ -1,10 +1,9 @@
-import React, { FC } from "react";
-import { useWindowDimensions, View } from "react-native";
+import React, { FC, memo } from "react";
+import { View } from "react-native";
 import { _itemWidth, MarqueeItem } from "./marquee-item";
 import {
   Easing,
-  runOnJS,
-  useAnimatedReaction,
+  SharedValue,
   useFrameCallback,
   useSharedValue,
   withTiming,
@@ -15,15 +14,11 @@ const _defaultScrollSpeed = 40; // Units per second
 
 type Props = {
   events: any[];
-  activeIndex: number;
-  setActiveIndex: (index: number) => void;
+  scrollOffsetX: SharedValue<number>;
 };
 
-export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
+const MarqueeComponent: FC<Props> = ({ events, scrollOffsetX }) => {
   console.log("🔴 Marquee"); // VS --------- Remove Log
-  const { width } = useWindowDimensions();
-
-  const scrollOffsetX = useSharedValue(0);
   const scrollSpeed = useSharedValue(_defaultScrollSpeed);
 
   const allItemsWidth = events.length * _itemWidth;
@@ -33,23 +28,6 @@ export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
     const deltaSeconds = (frameInfo?.timeSincePreviousFrame ?? 0) / 1000;
     scrollOffsetX.value += scrollSpeed.value * deltaSeconds;
   });
-
-  useAnimatedReaction(
-    () => scrollOffsetX.value,
-    (currentValue) => {
-      const normalizedOffset = ((currentValue % allItemsWidth) + allItemsWidth) % allItemsWidth;
-      const shift = width / 2;
-      const activeItemIndex = Math.abs(Math.floor((normalizedOffset + shift) / _itemWidth));
-
-      if (
-        activeItemIndex >= 0 &&
-        activeItemIndex < events.length &&
-        activeItemIndex !== activeIndex
-      ) {
-        runOnJS(setActiveIndex)(activeItemIndex);
-      }
-    }
-  );
 
   const gesture = Gesture.Pan()
     .onBegin(() => {
@@ -82,3 +60,5 @@ export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
     </GestureDetector>
   );
 };
+
+export const Marquee = memo(MarqueeComponent);

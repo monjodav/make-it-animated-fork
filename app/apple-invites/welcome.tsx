@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ImageOne from "@/assets/images/apple-invites/1.png";
 import ImageTwo from "@/assets/images/apple-invites/2.png";
@@ -10,9 +10,16 @@ import ImageSeven from "@/assets/images/apple-invites/7.png";
 import ImageEight from "@/assets/images/apple-invites/8.png";
 import { BlurView } from "expo-blur";
 import { useState } from "react";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+} from "react-native-reanimated";
 import { Marquee } from "@/components/apple-invites/marquee";
 import { useDebounce } from "use-debounce";
+import { _itemWidth } from "@/components/apple-invites/marquee-item";
 
 const events = [
   {
@@ -54,6 +61,27 @@ export default function Welcome() {
   const [debouncedActiveIndex] = useDebounce(activeIndex, 250);
 
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+
+  const scrollOffsetX = useSharedValue(0);
+  const allItemsWidth = events.length * _itemWidth;
+
+  useAnimatedReaction(
+    () => scrollOffsetX.value,
+    (currentValue) => {
+      const normalizedOffset = ((currentValue % allItemsWidth) + allItemsWidth) % allItemsWidth;
+      const shift = width / 2;
+      const activeItemIndex = Math.abs(Math.floor((normalizedOffset + shift) / _itemWidth));
+
+      if (
+        activeItemIndex >= 0 &&
+        activeItemIndex < events.length &&
+        activeItemIndex !== activeIndex
+      ) {
+        runOnJS(setActiveIndex)(activeItemIndex);
+      }
+    }
+  );
 
   return (
     <View
@@ -75,7 +103,7 @@ export default function Welcome() {
         />
       </View>
       <View className="basis-[60%] pt-10">
-        <Marquee events={events} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+        <Marquee events={events} scrollOffsetX={scrollOffsetX} />
       </View>
       <View className="basis-[40%] items-center justify-between pt-12 pb-4">
         <View className="w-full items-center justify-center">
