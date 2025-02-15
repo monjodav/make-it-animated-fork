@@ -1,9 +1,14 @@
 import React, { FC } from "react";
 import { Dimensions, Image, View, StyleSheet } from "react-native";
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
-import SkiaBlurImage from "./skia-blur-image";
+import { BlurView } from "expo-blur";
 
 const screenWidth = Dimensions.get("screen").width;
 
@@ -46,21 +51,26 @@ export const MarqueeItem: FC<Props> = ({ index, imageSrc, scrollOffsetX, allItem
       <View className="flex-1 shadow-md">
         <View className="flex-1 rounded-3xl overflow-hidden">
           <Image source={imageSrc} className="h-full w-full" />
-          <View className="absolute bottom-0" style={{ width: _itemWidth, height: "100%" }}>
+          <Animated.View
+            entering={FadeIn}
+            className="absolute bottom-0"
+            style={{ width: _itemWidth, height: "100%" }}
+          >
             <MaskedView
               maskElement={
                 <LinearGradient
                   locations={[0, 0.4, 0.7, 1]}
                   colors={["transparent", "transparent", "black", "black"]}
-                  style={StyleSheet.absoluteFill}
+                  style={StyleSheet.absoluteFillObject}
                 />
               }
-              style={StyleSheet.absoluteFill}
+              style={StyleSheet.absoluteFillObject}
             >
-              <SkiaBlurImage imageSrc={imageSrc} />
+              <Image source={imageSrc} className="h-full w-full" />
+              <BlurView intensity={100} style={StyleSheet.absoluteFillObject} />
             </MaskedView>
-          </View>
-          <View style={StyleSheet.absoluteFill} className="items-center justify-end p-6">
+          </Animated.View>
+          <View style={StyleSheet.absoluteFillObject} className="items-center justify-end p-6">
             <View className="bg-white/30 rounded-full h-8 w-1/2 mb-3" />
             <View className="bg-white/20 rounded-full h-5 w-3/4 mb-1" />
             <View className="bg-white/20 rounded-full h-5 w-1/2" />

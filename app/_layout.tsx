@@ -1,6 +1,6 @@
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, TextInput } from "react-native";
+import { Platform, ScrollView, StyleSheet, TextInput } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
@@ -44,7 +44,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default function RootLayout() {
-  NavigationBar.setBackgroundColorAsync("black");
+  if (Platform.OS === "android") {
+    NavigationBar.setBackgroundColorAsync("black");
+  }
 
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
