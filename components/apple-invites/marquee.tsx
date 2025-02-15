@@ -20,6 +20,7 @@ type Props = {
 };
 
 export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
+  console.log("🔴 Marquee"); // VS --------- Remove Log
   const { width } = useWindowDimensions();
 
   const scrollOffsetX = useSharedValue(0);
@@ -36,9 +37,9 @@ export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
   useAnimatedReaction(
     () => scrollOffsetX.value,
     (currentValue) => {
-      const boundedScrollOffsetX = currentValue % allItemsWidth;
+      const normalizedOffset = ((currentValue % allItemsWidth) + allItemsWidth) % allItemsWidth;
       const shift = width / 2;
-      const activeItemIndex = Math.floor((boundedScrollOffsetX + shift) / _itemWidth);
+      const activeItemIndex = Math.abs(Math.floor((normalizedOffset + shift) / _itemWidth));
 
       if (
         activeItemIndex >= 0 &&

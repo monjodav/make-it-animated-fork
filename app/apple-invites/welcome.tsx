@@ -12,6 +12,7 @@ import { BlurView } from "expo-blur";
 import { useState } from "react";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Marquee } from "@/components/apple-invites/marquee";
+import { useDebounce } from "use-debounce";
 
 const events = [
   {
@@ -50,6 +51,7 @@ const events = [
 
 export default function Welcome() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [debouncedActiveIndex] = useDebounce(activeIndex, 250);
 
   const insets = useSafeAreaInsets();
 
@@ -60,10 +62,10 @@ export default function Welcome() {
     >
       <View style={StyleSheet.absoluteFillObject}>
         <Animated.Image
-          key={events[activeIndex].id}
+          key={events[debouncedActiveIndex].id}
           entering={FadeIn.duration(500)}
           exiting={FadeOut.duration(500)}
-          source={events[activeIndex].image}
+          source={events[debouncedActiveIndex].image}
           className="h-full w-full"
         />
         <BlurView

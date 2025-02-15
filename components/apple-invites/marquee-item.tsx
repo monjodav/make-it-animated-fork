@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import { Dimensions, Image, View, StyleSheet } from "react-native";
 import Animated, {
   FadeIn,
@@ -21,7 +21,9 @@ type Props = {
   allItemsWidth: number;
 };
 
-export const MarqueeItem: FC<Props> = ({ index, imageSrc, scrollOffsetX, allItemsWidth }) => {
+const MarqueeItemComponent: FC<Props> = ({ index, imageSrc, scrollOffsetX, allItemsWidth }) => {
+  console.log("🔴 MarqueeItem"); // VS --------- Remove Log
+
   const shift = (allItemsWidth - screenWidth) / 2;
   const initialLeft = index * _itemWidth - shift;
 
@@ -80,3 +82,5 @@ export const MarqueeItem: FC<Props> = ({ index, imageSrc, scrollOffsetX, allItem
     </Animated.View>
   );
 };
+
+export const MarqueeItem = memo(MarqueeItemComponent);
