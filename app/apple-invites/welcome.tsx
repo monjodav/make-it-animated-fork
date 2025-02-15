@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable, useWindowDimensions } from "react-native";
+import { View, StyleSheet, Pressable, useWindowDimensions, Alert, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ImageOne from "@/assets/images/apple-invites/1.png";
 import ImageTwo from "@/assets/images/apple-invites/2.png";
@@ -9,7 +9,7 @@ import ImageSix from "@/assets/images/apple-invites/6.png";
 import ImageSeven from "@/assets/images/apple-invites/7.png";
 import ImageEight from "@/assets/images/apple-invites/8.png";
 import { BlurView } from "expo-blur";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -84,6 +84,15 @@ export default function Welcome() {
       }
     }
   );
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      Alert.alert(
+        "Note",
+        "The blur effect may not render properly on Android. Consider using a semi-transparent background instead of blur for better visual consistency."
+      );
+    }
+  }, []);
 
   return (
     <View

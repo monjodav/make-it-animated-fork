@@ -1,10 +1,11 @@
-import { View } from "react-native";
+import { Alert, Platform, View } from "react-native";
 
 import { EventItem } from "@/components/luma/event-item";
 import { Header } from "@/components/luma/header";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HeaderImage } from "@/components/luma/header-image";
+import { useEffect } from "react";
 
 // luma-blurred-header-image-animation 🔽
 
@@ -18,6 +19,12 @@ export default function DiscoverCity() {
       scrollY.value = y;
     },
   });
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      Alert.alert("Note", "Bounce effect is not supported on Android. Please try it on iOS.");
+    }
+  }, []);
 
   const _renderHeader = () => <Header />;
 
