@@ -51,7 +51,7 @@ export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
   );
 
   const gesture = Gesture.Pan()
-    .onBegin((event) => {
+    .onBegin(() => {
       scrollSpeed.value = 0;
     })
     .onChange((event) => {
@@ -67,7 +67,7 @@ export const Marquee: FC<Props> = ({ events, activeIndex, setActiveIndex }) => {
 
   return (
     <GestureDetector gesture={gesture}>
-      <View className="h-full flex-row gap-3">
+      <View className="h-full flex-row ">
         {events.map((event, index) => (
           <MarqueeItem
             key={event.id}

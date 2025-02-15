@@ -21,7 +21,9 @@ export const MarqueeItem: FC<Props> = ({ index, imageSrc, scrollOffsetX, allItem
   const initialLeft = index * _itemWidth - shift;
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const left = ((initialLeft - scrollOffsetX.value) % allItemsWidth) + shift;
+    const normalizedOffset =
+      ((scrollOffsetX.value % allItemsWidth) + allItemsWidth) % allItemsWidth;
+    const left = ((initialLeft - normalizedOffset) % allItemsWidth) + shift;
 
     const rotation = interpolate(left, [0, screenWidth - _itemWidth], [-0.5, 0.5]);
     const translateY = interpolate(
