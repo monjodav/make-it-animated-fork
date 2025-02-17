@@ -19,9 +19,10 @@ import Animated, {
 
 type Props = {
   offsetY: SharedValue<number>;
+  title: string;
 };
 
-export const useHeaderTitle = ({ offsetY }: Props) => {
+export const useHeaderTitle = ({ offsetY, title }: Props) => {
   const navigation = useNavigation();
 
   const headerHeight = useHeaderHeight();
@@ -76,13 +77,13 @@ export const useHeaderTitle = ({ offsetY }: Props) => {
         return (
           <View className="py-3 overflow-hidden">
             <Animated.View style={rTitleStyle}>
-              <HeaderTitleComponent {...props}>vvv-sss</HeaderTitleComponent>
+              <HeaderTitleComponent {...props}>{title}</HeaderTitleComponent>
             </Animated.View>
           </View>
         );
       },
     });
-  }, [navigation, rTitleStyle]);
+  }, [navigation, rTitleStyle, title]);
 
   return { triggerRef, isTriggerMounted };
 };
