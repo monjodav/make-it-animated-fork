@@ -8,7 +8,7 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
-  return <Redirect href="/apple-invites/welcome" />;
+  return <Redirect href="/github/profile" />;
 
   // const insets = useSafeAreaInsets();
 
