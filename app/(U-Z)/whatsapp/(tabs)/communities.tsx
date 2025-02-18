@@ -1,8 +1,8 @@
 import React from "react";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { LargeTitle } from "@/components/whatsapp/large-title";
-import { CommunitiesContent } from "@/components/whatsapp/communities-content";
+import { LargeTitle } from "@/components/U-Z/whatsapp/large-title";
+import { CommunitiesContent } from "@/components/U-Z/whatsapp/communities-content";
 
 // whatsapp-header-large-title-animation 🔽
 

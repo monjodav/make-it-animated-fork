@@ -1,4 +1,4 @@
-import { SearchListItem } from "@/components/x/search-list-item";
+import { SearchListItem } from "@/components/U-Z/x/search-list-item";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import { useContext } from "react";
 import { View } from "react-native";

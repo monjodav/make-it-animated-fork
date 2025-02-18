@@ -1,4 +1,4 @@
-import { ListItem } from "@/components/linear/list-item";
+import { ListItem } from "./list-item";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SectionList, View } from "react-native";
 

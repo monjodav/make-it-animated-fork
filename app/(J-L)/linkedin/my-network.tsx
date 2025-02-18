@@ -1,4 +1,4 @@
-import { UserCard } from "@/components/linkedin/user-card";
+import { UserCard } from "@/components/J-L/linkedin/user-card";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

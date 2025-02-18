@@ -1,4 +1,4 @@
-import { _padding, Controls } from "@/components/instagram/controls";
+import { _padding, Controls } from "@/components/G-I/instagram/controls";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { X } from "lucide-react-native";
 import { Alert, Pressable, StyleSheet, View } from "react-native";

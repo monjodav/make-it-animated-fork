@@ -1,5 +1,5 @@
-import { ColorPickerPanel } from "@/components/colors-app/color-picker-panel";
-import { Header } from "@/components/colors-app/header";
+import { ColorPickerPanel } from "@/components/A-C/colors-app/color-picker-panel";
+import { Header } from "@/components/A-C/colors-app/header";
 import { sharedConfigs } from "@/constants/colors-app/color-picker-background-animation";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { useRef } from "react";

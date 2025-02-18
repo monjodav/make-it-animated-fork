@@ -1,10 +1,10 @@
 import { Alert, Platform, View } from "react-native";
 
-import { EventItem } from "@/components/luma/event-item";
-import { Header } from "@/components/luma/header";
+import { EventItem } from "@/components/J-L/luma/event-item";
+import { Header } from "@/components/J-L/luma/header";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HeaderImage } from "@/components/luma/header-image";
+import { HeaderImage } from "@/components/J-L/luma/header-image";
 import { useEffect } from "react";
 
 // luma-blurred-header-image-animation 🔽

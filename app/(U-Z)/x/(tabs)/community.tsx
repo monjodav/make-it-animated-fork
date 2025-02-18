@@ -1,4 +1,4 @@
-import { CommunityPost } from "@/components/x/community-post";
+import { CommunityPost } from "@/components/U-Z/x/community-post";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import { useContext } from "react";
 import { View } from "react-native";

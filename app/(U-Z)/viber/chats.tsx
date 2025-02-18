@@ -6,10 +6,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { ChatListItem } from "@/components/viber/chat-list-item";
-import { LargeTitle } from "@/components/viber/large-title";
-import { SearchBar } from "@/components/viber/search-bar";
-import { ChatsTopTabs } from "@/components/viber/chats-top-tabs";
+import { ChatListItem } from "@/components/U-Z/viber/chat-list-item";
+import { LargeTitle } from "@/components/U-Z/viber/large-title";
+import { SearchBar } from "@/components/U-Z/viber/search-bar";
+import { ChatsTopTabs } from "@/components/U-Z/viber/chats-top-tabs";
 import { View } from "react-native";
 
 // viber-chats-header-animation 🔽

@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 
 import { useHeaderHeight } from "@react-navigation/elements";
-import { IncognitoTab } from "@/components/google-chrome/incognito-tab";
-import { NewTab } from "@/components/google-chrome/new-tab";
-import { GroupsTab } from "@/components/google-chrome/groups-tab";
+import { IncognitoTab } from "@/components/G-I/google-chrome/incognito-tab";
+import { NewTab } from "@/components/G-I/google-chrome/new-tab";
+import { GroupsTab } from "@/components/G-I/google-chrome/groups-tab";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useHeaderTabs } from "@/hooks/google-chrome/use-header-tabs";
 

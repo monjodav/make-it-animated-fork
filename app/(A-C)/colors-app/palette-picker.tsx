@@ -1,4 +1,4 @@
-import { PalettePickerPanel } from "@/components/colors-app/palette-picker-panel";
+import { PalettePickerPanel } from "@/components/A-C/colors-app/palette-picker-panel";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
 import { ArrowLeft } from "lucide-react-native";
 import { useRef } from "react";

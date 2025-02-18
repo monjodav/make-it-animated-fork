@@ -1,4 +1,4 @@
-import { JobSection } from "@/components/linkedin/job-section";
+import { JobSection } from "@/components/J-L/linkedin/job-section";
 import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

@@ -1,5 +1,5 @@
-import { HomeHeader } from "@/components/linkedin/home-header";
-import { HomePost } from "@/components/linkedin/home-post";
+import { HomeHeader } from "@/components/J-L/linkedin/home-header";
+import { HomePost } from "@/components/J-L/linkedin/home-post";
 import { useDragDirection } from "@/hooks/use-drag-direction";
 import { View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";

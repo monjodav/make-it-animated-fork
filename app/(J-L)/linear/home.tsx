@@ -1,5 +1,5 @@
-import { LinearIssues } from "@/components/linear/linear-issues";
-import { TabBar } from "@/components/linear/tab-bar";
+import { LinearIssues } from "@/components/J-L/linear/linear-issues";
+import { TabBar } from "@/components/J-L/linear/tab-bar";
 import { ArrowLeft, MoreHorizontal, SquareArrowOutUpRight } from "lucide-react-native";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

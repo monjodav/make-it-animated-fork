@@ -10,8 +10,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 import { View } from "react-native";
-import { HomeHeader, Scroll_Distance } from "@/components/colors-app/home-header";
-import { Carousel } from "@/components/colors-app/carousel";
+import { HomeHeader, Scroll_Distance } from "@/components/A-C/colors-app/home-header";
+import { Carousel } from "@/components/A-C/colors-app/carousel";
 
 // colorsapp-home-header-animation 🔽
 

@@ -10,9 +10,9 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { LargeTitle } from "@/components/whatsapp/large-title";
-import { SearchBar } from "@/components/whatsapp/search-bar";
-import { UpdatesContent } from "@/components/whatsapp/updates-content";
+import { LargeTitle } from "@/components/U-Z/whatsapp/large-title";
+import { SearchBar } from "@/components/U-Z/whatsapp/search-bar";
+import { UpdatesContent } from "@/components/U-Z/whatsapp/updates-content";
 
 // whatsapp-updates-screen-header-animation 🔽
 

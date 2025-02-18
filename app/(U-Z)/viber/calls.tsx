@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Tab, TopTabs } from "@/components/viber/top-tabs";
-import { CallsList } from "@/components/viber/calls-list";
-import { CallsRecentList } from "@/components/viber/calls-recent-list";
+import { Tab, TopTabs } from "@/components/U-Z/viber/top-tabs";
+import { CallsList } from "@/components/U-Z/viber/calls-list";
+import { CallsRecentList } from "@/components/U-Z/viber/calls-recent-list";
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { LargeTitle } from "@/components/viber/large-title";
-import { SearchBar } from "@/components/viber/search-bar";
+import { LargeTitle } from "@/components/U-Z/viber/large-title";
+import { SearchBar } from "@/components/U-Z/viber/search-bar";
 
 // viber-header-large-title-animation 🔽
 

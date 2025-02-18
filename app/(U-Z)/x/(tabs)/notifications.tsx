@@ -1,4 +1,4 @@
-import { NotificationItem } from "@/components/x/notification-item";
+import { NotificationItem } from "@/components/U-Z/x/notification-item";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import { useContext } from "react";
 import { View } from "react-native";

@@ -1,4 +1,4 @@
-import { NotificationItem } from "@/components/linkedin/notification-item";
+import { NotificationItem } from "@/components/J-L/linkedin/notification-item";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

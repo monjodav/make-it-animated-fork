@@ -1,5 +1,5 @@
-import { HomePostsList } from "@/components/x/home-posts-list";
-import { _homePostsListWidth, Tab, Tabs, TopTabs } from "@/components/x/top-tabs";
+import { HomePostsList } from "@/components/U-Z/x/home-posts-list";
+import { _homePostsListWidth, Tab, Tabs, TopTabs } from "@/components/U-Z/x/top-tabs";
 import { useHeaderAnimation } from "@/hooks/x/use-header-animation";
 import { XTabsContext } from "@/providers/x-tabs-provider";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";

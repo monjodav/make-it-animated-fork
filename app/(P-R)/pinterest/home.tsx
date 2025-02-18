@@ -1,6 +1,6 @@
-import { ListHeader } from "@/components/pinterest/list-header";
-import { MasonryList } from "@/components/pinterest/masonry-list";
-import { TabBar } from "@/components/pinterest/tab-bar";
+import { ListHeader } from "@/components/P-R/pinterest/list-header";
+import { MasonryList } from "@/components/P-R/pinterest/masonry-list";
+import { TabBar } from "@/components/P-R/pinterest/tab-bar";
 import { useMemo, useRef } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";

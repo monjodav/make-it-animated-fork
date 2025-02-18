@@ -17,9 +17,9 @@ import Animated, {
   useAnimatedReaction,
   useSharedValue,
 } from "react-native-reanimated";
-import { Marquee } from "@/components/apple-invites/marquee";
+import { Marquee } from "@/components/A-C/apple-invites/marquee";
 import { useDebounce } from "use-debounce";
-import { _itemWidth } from "@/components/apple-invites/marquee-item";
+import { _itemWidth } from "@/components/A-C/apple-invites/marquee-item";
 
 // apple-invites-welcome-screen-animation 🔽
 
