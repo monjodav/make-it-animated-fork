@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Animated, { type SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import Color from "color";
 
+// github-profile-header-title-animation 🔽
+
 type Props = {
   offsetY: SharedValue<number>;
 };
@@ -35,3 +37,5 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
     });
   }, [navigation, rContainerStyle]);
 };
+
+// github-profile-header-background-animation 🔼

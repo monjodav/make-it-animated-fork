@@ -8,14 +8,14 @@ import type React from "react";
 import { useEffect } from "react";
 import { View } from "react-native";
 import Animated, {
+  Extrapolation,
   interpolate,
-  measure,
   type SharedValue,
-  useAnimatedRef,
   useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
 } from "react-native-reanimated";
+import { useTriggerMeasurement } from "../use-trigger-measurment";
+
+// github-profile-header-title-animation 🔽
 
 type Props = {
   offsetY: SharedValue<number>;
@@ -27,22 +27,7 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
 
   const headerHeight = useHeaderHeight();
 
-  const triggerRef = useAnimatedRef();
-  const isTriggerMounted = useSharedValue(false);
-
-  const triggerMeasurement = useDerivedValue(() => {
-    if (isTriggerMounted.value === false) {
-      return null;
-    }
-
-    const measurement = measure(triggerRef);
-
-    if (measurement === null) {
-      return null;
-    }
-
-    return measurement;
-  });
+  const { triggerRef, onLayout, measurement: triggerMeasurement } = useTriggerMeasurement();
 
   const rTitleStyle = useAnimatedStyle(() => {
     if (triggerMeasurement.value === null) {
@@ -62,9 +47,7 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
             offsetY.value,
             [0, scrollDistance, scrollDistance + triggerHeight],
             [30, 30, 0],
-            {
-              extrapolateRight: "clamp",
-            }
+            Extrapolation.CLAMP
           ),
         },
       ],
@@ -85,5 +68,7 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
     });
   }, [navigation, rTitleStyle, title]);
 
-  return { triggerRef, isTriggerMounted };
+  return { triggerRef, onLayout };
 };
+
+// github-profile-header-title-animation 🔼

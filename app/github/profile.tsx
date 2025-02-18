@@ -4,6 +4,8 @@ import Animated, { useAnimatedRef, useScrollViewOffset } from "react-native-rean
 import { useHeaderBackground } from "@/hooks/github/use-header-background";
 import { useHeaderTitle } from "@/hooks/github/use-header-title";
 
+// github-profile-header-title-animation 🔽
+
 export default function Profile() {
   const headerHeight = useHeaderHeight();
 
@@ -11,7 +13,8 @@ export default function Profile() {
   const scrollOffsetY = useScrollViewOffset(listRef);
 
   useHeaderBackground({ offsetY: scrollOffsetY });
-  const { triggerRef, isTriggerMounted } = useHeaderTitle({
+
+  const { triggerRef, onLayout } = useHeaderTitle({
     offsetY: scrollOffsetY,
     title: "vvv-sss",
   });
@@ -29,15 +32,7 @@ export default function Profile() {
         <View className="w-20 h-20 rounded-full border border-white/15" />
         <View className="flex-1">
           <Text className="text-stone-100 font-bold text-lg">Volodymyr Serbulenko</Text>
-          <Animated.Text
-            ref={triggerRef}
-            className="text-stone-300 text-base"
-            onLayout={() => {
-              if (isTriggerMounted.get() === false) {
-                isTriggerMounted.set(true);
-              }
-            }}
-          >
+          <Animated.Text ref={triggerRef} className="text-stone-300 text-base" onLayout={onLayout}>
             vvv-sss
           </Animated.Text>
         </View>
@@ -69,3 +64,5 @@ export default function Profile() {
     </Animated.ScrollView>
   );
 }
+
+// github-profile-header-title-animation 🔼
