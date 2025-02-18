@@ -1,6 +1,18 @@
+import AdidasImage from "@/assets/images/apps/adidas.png";
 import AppleBooksImage from "@/assets/images/apps/apple-books.png";
 import AppleInvitesImage from "@/assets/images/apps/apple-invites.png";
 import { App } from "../the-list";
+
+export const adidas: App = {
+  name: "Adidas",
+  imageSource: AdidasImage,
+  animations: [
+    {
+      name: "Home header marquee animation",
+      href: "/adidas/home",
+    },
+  ],
+};
 
 export const appleBooks: App = {
   name: "Apple Books",

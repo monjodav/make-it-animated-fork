@@ -13,7 +13,7 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useTriggerMeasurement } from "../use-trigger-measurment";
+import { useTargetMeasurement } from "../use-target-measurment";
 
 // github-profile-header-title-animation 🔽
 
@@ -27,7 +27,11 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
 
   const headerHeight = useHeaderHeight();
 
-  const { triggerRef, onLayout, measurement: triggerMeasurement } = useTriggerMeasurement();
+  const {
+    targetRef: triggerRef,
+    onLayout,
+    measurement: triggerMeasurement,
+  } = useTargetMeasurement();
 
   const rTitleStyle = useAnimatedStyle(() => {
     if (triggerMeasurement.value === null) {
