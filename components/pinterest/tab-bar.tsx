@@ -1,4 +1,4 @@
-import { Tab } from "@/app/pinterest/home";
+import { Tab } from "@/app/(P-R)/pinterest/home";
 import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
 import { useMeasureFlatListTabsLayout } from "@/hooks/use-measure-flat-list-tabs-layout";
 import React, { FC, RefObject } from "react";
