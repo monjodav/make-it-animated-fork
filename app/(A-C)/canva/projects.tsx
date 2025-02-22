@@ -19,6 +19,8 @@ import Animated, {
 import { Ellipsis, Menu, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
+// canva-header-transition-animation 🔽
+
 export default function Projects() {
   const headerHeight = useHeaderHeight();
 
@@ -137,8 +139,30 @@ export default function Projects() {
             <Text className="text-white text-2xl font-bold">Projects</Text>
           </View>
         </Animated.View>
-        <View className="h-[2000px]" />
+        <View className="p-5 pb-40">
+          <View className="flex-row gap-4 mb-8">
+            <View className="w-12 h-12 rounded-lg bg-stone-100" />
+            <View className="w-[80px] h-12 rounded-lg bg-stone-100" />
+            <View className="w-[100px] h-12 rounded-lg bg-stone-100" />
+            <View className="w-[100px] h-12 rounded-lg bg-stone-100" />
+          </View>
+          <View className="w-[150px] h-9 rounded-full bg-stone-100 mb-6" />
+          <View className="flex-row gap-4 mb-8">
+            <View className="w-[110px] aspect-square rounded-xl bg-stone-100" />
+            <View className="w-[110px] aspect-square rounded-xl bg-stone-100" />
+            <View className="w-[110px] aspect-square rounded-xl bg-stone-100" />
+          </View>
+          <View className="w-[120px] h-9 rounded-full bg-stone-100 mb-6" />
+          {Array.from({ length: 4 }).map((_, index) => (
+            <View key={index} className="flex-row gap-4 mb-4 items-center justify-center">
+              <View className="w-[48%] aspect-square rounded-xl bg-stone-100" />
+              <View className="w-[48%] aspect-square rounded-xl bg-stone-100" />
+            </View>
+          ))}
+        </View>
       </Animated.ScrollView>
     </View>
   );
 }
+
+// canva-header-transition-animation 🔼
