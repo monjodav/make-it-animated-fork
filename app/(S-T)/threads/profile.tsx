@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
+  interpolate,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
@@ -43,6 +44,10 @@ export default function Profile() {
   const imageXCoord = useSharedValue(_screenCenterX);
   const imageYCoord = useSharedValue(_screenCenterY);
   const imageSize = useSharedValue(_defaultAvatarSize);
+  const imageScale = useSharedValue(1);
+
+  const startX = useSharedValue(0);
+  const startY = useSharedValue(0);
 
   useAnimatedReaction(
     () => {
@@ -72,6 +77,7 @@ export default function Profile() {
       width: imageSize.value,
       height: imageSize.value,
       opacity: imageState.value === "open" ? 1 : 0,
+      transform: [{ scale: imageScale.value }],
     };
   });
 
@@ -111,12 +117,28 @@ export default function Profile() {
   };
 
   const pan = Gesture.Pan()
+    .onStart(() => {
+      startX.value = imageXCoord.value;
+      startY.value = imageYCoord.value;
+    })
     .onChange((event) => {
       if (imageState.value === "close") return;
+
       imageXCoord.value += event.changeX / 1.5;
       imageYCoord.value += event.changeY / 1.5;
+
+      const deltaX = imageXCoord.value - startX.value;
+      const deltaY = imageYCoord.value - startY.value;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      const scale = interpolate(distance, [0, screenWidth / 2], [1, 0.9], {
+        extrapolateRight: "clamp",
+      });
+
+      imageScale.value = scale;
     })
     .onFinalize(() => {
+      imageScale.value = withTiming(1, _timingConfig);
       open();
     });
 
