@@ -29,7 +29,7 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
 
   const {
     targetRef: triggerRef,
-    onLayout,
+    onTargetLayout: onLayout,
     measurement: triggerMeasurement,
   } = useTargetMeasurement();
 

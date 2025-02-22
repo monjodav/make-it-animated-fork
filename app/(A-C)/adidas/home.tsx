@@ -47,7 +47,7 @@ export default function Home() {
   const listRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffsetY = useScrollViewOffset(listRef);
 
-  const { targetRef, onLayout, measurement } = useTargetMeasurement();
+  const { targetRef, onTargetLayout, measurement } = useTargetMeasurement();
 
   const rTargetContainerStyle = useAnimatedStyle(() => {
     if (measurement.value === null) return { transform: [{ translateY: 0 }] };
@@ -88,7 +88,7 @@ export default function Home() {
         <Animated.View
           ref={targetRef}
           className=" px-4 py-3 border-b border-neutral-200"
-          onLayout={onLayout}
+          onLayout={onTargetLayout}
         >
           <Marquee spacing={48} speed={0.6}>
             <View className="flex-row items-center gap-12">

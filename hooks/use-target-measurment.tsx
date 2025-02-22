@@ -18,11 +18,11 @@ export const useTargetMeasurement = () => {
     return measurement;
   });
 
-  const onLayout = () => {
+  const onTargetLayout = () => {
     if (isTargetMounted.value === false) {
       isTargetMounted.value = true;
     }
   };
 
-  return { measurement, targetRef, onLayout };
+  return { measurement, targetRef, onTargetLayout };
 };

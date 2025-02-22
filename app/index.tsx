@@ -8,7 +8,7 @@ import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
-  return <Redirect href="/canva/projects" />;
+  return <Redirect href="/threads/profile" />;
 
   // const insets = useSafeAreaInsets();
 
