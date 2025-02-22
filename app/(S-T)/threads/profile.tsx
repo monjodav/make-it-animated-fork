@@ -30,7 +30,7 @@ export default function Profile() {
   const _screenCenterX = screenWidth / 2;
   const _screenCenterY = screenHeight / 2;
   const _defaultAvatarSize = 70;
-  const _expandedAvatarSize = screenWidth * 0.6;
+  const _expandedAvatarSize = screenWidth * 0.65;
 
   const insets = useSafeAreaInsets();
 
@@ -45,9 +45,6 @@ export default function Profile() {
   const imageYCoord = useSharedValue(_screenCenterY);
   const imageSize = useSharedValue(_defaultAvatarSize);
   const imageScale = useSharedValue(1);
-
-  const startX = useSharedValue(0);
-  const startY = useSharedValue(0);
 
   useAnimatedReaction(
     () => {
@@ -64,6 +61,12 @@ export default function Profile() {
     }
   );
 
+  const rImagePlaceholderStyle = useAnimatedStyle(() => {
+    return {
+      opacity: imageState.value === "open" ? 0 : 1,
+    };
+  });
+
   const rImageContainerStyle = useAnimatedStyle(() => {
     return {
       pointerEvents: imageState.value === "open" ? "auto" : "none",
@@ -78,12 +81,6 @@ export default function Profile() {
       height: imageSize.value,
       opacity: imageState.value === "open" ? 1 : 0,
       transform: [{ scale: imageScale.value }],
-    };
-  });
-
-  const rImagePlaceholderStyle = useAnimatedStyle(() => {
-    return {
-      opacity: imageState.value === "open" ? 0 : 1,
     };
   });
 
@@ -116,19 +113,22 @@ export default function Profile() {
     imageYCoord.value = withTiming(y - listOffsetX.value, _timingConfig);
   };
 
+  const panStartX = useSharedValue(0);
+  const panStartY = useSharedValue(0);
+
   const pan = Gesture.Pan()
     .onStart(() => {
-      startX.value = imageXCoord.value;
-      startY.value = imageYCoord.value;
+      panStartX.value = imageXCoord.value;
+      panStartY.value = imageYCoord.value;
     })
     .onChange((event) => {
       if (imageState.value === "close") return;
 
-      imageXCoord.value += event.changeX / 1.5;
-      imageYCoord.value += event.changeY / 1.5;
+      imageXCoord.value += event.changeX / 2;
+      imageYCoord.value += event.changeY / 2;
 
-      const deltaX = imageXCoord.value - startX.value;
-      const deltaY = imageYCoord.value - startY.value;
+      const deltaX = imageXCoord.value - panStartX.value;
+      const deltaY = imageYCoord.value - panStartY.value;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
       const scale = interpolate(distance, [0, screenWidth / 2], [1, 0.9], {
@@ -138,8 +138,17 @@ export default function Profile() {
       imageScale.value = scale;
     })
     .onFinalize(() => {
+      const deltaX = imageXCoord.value - panStartX.value;
+      const deltaY = imageYCoord.value - panStartY.value;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
       imageScale.value = withTiming(1, _timingConfig);
-      open();
+
+      if (distance > _expandedAvatarSize / 2) {
+        close();
+      } else {
+        open();
+      }
     });
 
   return (
