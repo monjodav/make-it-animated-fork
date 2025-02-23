@@ -1,5 +1,4 @@
 import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
 import { View, Text, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -16,6 +15,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useTargetMeasurement } from "@/hooks/use-target-measurment";
+import { Image } from "expo-image";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -160,9 +160,9 @@ export default function Profile() {
         contentContainerStyle={{ paddingTop: insets.top + 30 }}
       >
         <View className="flex-row items-end justify-between mb-6">
-          <View>
-            <Text className="text-stone-200 text-2xl font-bold">volo_serb</Text>
-            <Text className="text-stone-300 text-base">volo_serb</Text>
+          <View className="gap-1">
+            <View className="w-[80px] h-6 rounded-full bg-neutral-900" />
+            <View className="w-[60px] h-4 rounded-full bg-neutral-900" />
           </View>
           {/* Placeholder for measurement of initial image coords */}
           <Animated.View ref={targetRef} onLayout={onTargetLayout}>
@@ -174,30 +174,30 @@ export default function Profile() {
               ]}
               onPress={open}
             >
-              <LinearGradient
-                colors={["#fff7ed", "#e7e5e4", "#fed7aa"]}
+              <Image
+                placeholder={{ blurhash: "LIJu4L-;F|IU00W=tlRj?^t6rX%2" }}
                 style={StyleSheet.absoluteFill}
               />
             </AnimatedPressable>
           </Animated.View>
         </View>
         <View className="flex-row gap-4 mb-6">
-          <View className="w-[60px] h-6 rounded-full bg-neutral-900" />
-          <View className="w-[80px] h-6 rounded-full bg-neutral-900" />
+          <View className="w-[60px] h-4 rounded-full bg-neutral-900" />
+          <View className="w-[80px] h-4 rounded-full bg-neutral-900" />
         </View>
         <View className="flex-row gap-4 mb-6">
           <View className="flex-1 h-10 rounded-lg bg-neutral-900" />
           <View className="flex-1 h-10 rounded-lg bg-neutral-900" />
         </View>
         <View className="flex-row gap-4 mb-8">
-          <View className="flex-1 h-8 rounded-full bg-neutral-900" />
-          <View className="flex-1 h-8 rounded-full bg-neutral-900" />
-          <View className="flex-1 h-8 rounded-full bg-neutral-900" />
-          <View className="flex-1 h-8 rounded-full bg-neutral-900" />
+          <View className="flex-1 h-4 rounded-full bg-neutral-900" />
+          <View className="flex-1 h-4 rounded-full bg-neutral-900" />
+          <View className="flex-1 h-4 rounded-full bg-neutral-900" />
+          <View className="flex-1 h-4 rounded-full bg-neutral-900" />
         </View>
         <View className="flex-row justify-between mb-6">
-          <View className="w-[120px] h-8 rounded-full bg-neutral-900" />
-          <View className="w-[60px] h-8 rounded-full bg-neutral-900" />
+          <View className="w-[120px] h-4 rounded-full bg-neutral-900" />
+          <View className="w-[60px] h-4 rounded-full bg-neutral-900" />
         </View>
         <View className="flex-row gap-2 mb-[500px]">
           <View className="flex-1 aspect-square rounded-2xl bg-neutral-900" />
@@ -219,8 +219,8 @@ export default function Profile() {
             className="absolute rounded-full overflow-hidden"
             style={[rImageStyle, { transformOrigin: "center" }]}
           >
-            <LinearGradient
-              colors={["#fff7ed", "#e7e5e4", "#fed7aa"]}
+            <Image
+              placeholder={{ blurhash: "LIJu4L-;F|IU00W=tlRj?^t6rX%2" }}
               style={StyleSheet.absoluteFill}
             />
           </AnimatedPressable>
