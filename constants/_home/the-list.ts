@@ -8,6 +8,7 @@ import { x } from "./apps/x";
 import { viber } from "./apps/v";
 import { whatsapp } from "./apps/w";
 import { github, googleChrome } from "./apps/g";
+import { queue } from "./apps/q";
 
 type Animation = {
   name: string;
@@ -51,6 +52,7 @@ export const apps: App[] = [
   // P
   pinterest,
   // Q
+  queue,
   // R
   // S
   // T
