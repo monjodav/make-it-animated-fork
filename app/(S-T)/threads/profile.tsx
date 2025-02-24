@@ -16,6 +16,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useTargetMeasurement } from "@/hooks/use-target-measurment";
 import { Image } from "expo-image";
+import { X } from "lucide-react-native";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -89,6 +90,12 @@ export default function Profile() {
   const backdropAnimatedProps = useAnimatedProps(() => {
     return {
       intensity: blurIntensity.value,
+    };
+  });
+
+  const rCloseBtnStyle = useAnimatedStyle(() => {
+    return {
+      opacity: imageState.value === "open" ? withDelay(_duration, withTiming(1)) : withTiming(0),
     };
   });
 
@@ -215,6 +222,12 @@ export default function Profile() {
             style={StyleSheet.absoluteFill}
             animatedProps={backdropAnimatedProps}
           />
+          <Animated.View
+            className="absolute left-4 bg-black/50 p-1 rounded-full"
+            style={[rCloseBtnStyle, { top: insets.top + 16 }]}
+          >
+            <X size={22} color="white" />
+          </Animated.View>
           <AnimatedPressable
             className="absolute rounded-full overflow-hidden"
             style={[rImageStyle, { transformOrigin: "center" }]}
