@@ -34,7 +34,7 @@ export const Animations: FC<Props> = ({ query }) => {
       <View className="h-[2px] rounded-full mx-2 bg-[#070708]" />
       <View className="flex-row items-center gap-2 px-5 py-4">
         <Image source={section.imageSource} className="w-6 h-6" />
-        <Text className="text-stone-50 text-base">{section.title}</Text>
+        <Text className="text-stone-50 text-base font-medium">{section.title}</Text>
       </View>
     </View>
   );
@@ -45,7 +45,7 @@ export const Animations: FC<Props> = ({ query }) => {
       onPress={() => router.push(item.href)}
       className="px-5 py-4"
     >
-      <Text className="text-stone-400 text-sm">
+      <Text className="text-stone-400 text-base">
         <Text className="text-xs">{index + 1}.</Text> {item.name}
       </Text>
     </TouchableOpacity>

@@ -29,7 +29,7 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
           style={[
             rContainerStyle,
             {
-              borderColor: Color("white").alpha(0.15).string(),
+              borderColor: Color("#ffffff").alpha(0.05).string(),
             },
           ]}
         />

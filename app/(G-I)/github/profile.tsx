@@ -3,10 +3,12 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import Animated, { useAnimatedRef, useScrollViewOffset } from "react-native-reanimated";
 import { useHeaderBackground } from "@/hooks/github/use-header-background";
 import { useHeaderTitle } from "@/hooks/github/use-header-title";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // github-profile-header-title-animation 🔽
 
 export default function Profile() {
+  const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
   const listRef = useAnimatedRef<Animated.ScrollView>();
@@ -24,7 +26,7 @@ export default function Profile() {
       ref={listRef}
       className="flex-1 bg-black"
       contentContainerClassName="px-5"
-      contentContainerStyle={{ paddingTop: headerHeight + 16 }}
+      contentContainerStyle={{ paddingTop: headerHeight + 16, paddingBottom: insets.bottom }}
       scrollEventThrottle={1000 / 60}
       indicatorStyle="white"
     >
