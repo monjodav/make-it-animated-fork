@@ -9,6 +9,16 @@ import "../global.css";
 import { Animations } from "@/components/_home/animations";
 import * as NavigationBar from "expo-navigation-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { NotificationProvider } from "@/providers/notification-provider";
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 SplashScreen.preventAutoHideAsync();
 
@@ -56,12 +66,14 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
-      <KeyboardProvider>
-        <Drawer
-          drawerContent={(props) => <DrawerContent {...props} />}
-          screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}
-        />
-      </KeyboardProvider>
+      <NotificationProvider>
+        <KeyboardProvider>
+          <Drawer
+            drawerContent={(props) => <DrawerContent {...props} />}
+            screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}
+          />
+        </KeyboardProvider>
+      </NotificationProvider>
     </GestureHandlerRootView>
   );
 }

@@ -9,9 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.make-it-animated.app",
-      "appleTeamId": "8Q6HG7RGQP"
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,6 +21,7 @@
         "backgroundColor": "#131316"
       },
       "package": "com.makeitanimated.app",
+      "googleServicesFile": "./google-services.json"
     },
     "plugins": [
       "expo-router",
@@ -41,6 +44,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "cb26971b-9cd8-4f46-ba13-809821a5015e"
+      }
+    },
+    "owner": "volodymyr_serbulenko"
   }
 }
