@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "APP_VARIANT=development expo start -c",
     "android": "APP_VARIANT=development expo run:android --device",
-    "ios": "APP_VARIANT=development expo run:ios --device"
+    "ios": "APP_VARIANT=development expo run:ios --device",
+    "submit:ios": "eas build --platform ios --profile production --auto-submit",
+    "submit:android": "eas build --platform android --profile production --auto-submit"
   },
   "jest": {
     "preset": "jest-expo"

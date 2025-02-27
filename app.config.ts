@@ -46,10 +46,10 @@ export default ({ config }: { config: ExpoConfig }) => ({
       ...config.ios,
       supportsTablet: false,
       bundleIdentifier: getEnvironmentValues().bundleIdentifier,
-      infoPlist: {
-        ITSAppUsesNonExemptEncryption: false,
-      },
       icon: "./assets/images/icon-ios.png",
+      config: {
+        usesNonExemptEncryption: false,
+      },
     },
     android: {
       ...config.android,

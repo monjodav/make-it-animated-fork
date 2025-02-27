@@ -53,7 +53,7 @@ export const Animations: FC<Props> = ({ query }) => {
 
   return (
     <View className="flex-1 bg-[#131316]">
-      {__DEV__ ? (
+      {!__DEV__ ? (
         <View className="flex-row items-center gap-2 px-5 py-5">
           <Text className="text-amber-200 text-sm">
             {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
