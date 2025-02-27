@@ -38,7 +38,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
     slug: "make-it-animated",
     version: "1.0.0",
     orientation: "portrait",
-    scheme: "make-it-animated",
+    scheme: "miaapp",
     userInterfaceStyle: "automatic",
     icon: "./assets/images/icon-ios.png",
     newArchEnabled: true,
