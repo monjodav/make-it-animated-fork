@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
+import { View, StyleSheet, useWindowDimensions, Pressable, Platform, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -17,6 +17,7 @@ import Animated, {
 import { useTargetMeasurement } from "@/hooks/use-target-measurment";
 import { Image } from "expo-image";
 import { X } from "lucide-react-native";
+import { useEffect } from "react";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -170,6 +171,15 @@ export default function Profile() {
         open();
       }
     });
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      Alert.alert(
+        "Note",
+        "Blur effect is an experimental feature on Android and may not work as expected."
+      );
+    }
+  }, []);
 
   return (
     <>
