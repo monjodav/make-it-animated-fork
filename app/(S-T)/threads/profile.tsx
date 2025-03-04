@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import { View, Text, StyleSheet, useWindowDimensions, Pressable } from "react-native";
+import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -48,12 +48,14 @@ export default function Profile() {
   const { targetRef, onTargetLayout, measurement } = useTargetMeasurement();
 
   const imageState = useSharedValue<"open" | "close">("close");
-
   const imageXCoord = useSharedValue(_screenCenterX);
   const imageYCoord = useSharedValue(_screenCenterY);
   const imageSize = useSharedValue(_defaultAvatarSize);
   const imageScale = useSharedValue(1);
+  const blurIntensity = useSharedValue(0);
   const closeBtnOpacity = useSharedValue(0);
+  const panStartX = useSharedValue(0);
+  const panStartY = useSharedValue(0);
 
   useAnimatedReaction(
     () => {
@@ -93,8 +95,6 @@ export default function Profile() {
     };
   });
 
-  const blurIntensity = useSharedValue(0);
-
   const backdropAnimatedProps = useAnimatedProps(() => {
     return {
       intensity: blurIntensity.value,
@@ -129,9 +129,6 @@ export default function Profile() {
     imageYCoord.value = withTiming(y - listOffsetX.value, _timingConfig);
     closeBtnOpacity.value = withTiming(0, { duration: _duration });
   };
-
-  const panStartX = useSharedValue(0);
-  const panStartY = useSharedValue(0);
 
   const pan = Gesture.Pan()
     .onStart(() => {
