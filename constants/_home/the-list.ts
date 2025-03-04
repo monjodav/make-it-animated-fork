@@ -9,6 +9,7 @@ import { viber } from "./apps/v";
 import { whatsapp } from "./apps/w";
 import { github, googleChrome } from "./apps/g";
 import { queue } from "./apps/q";
+import { threads } from "./apps/t";
 
 type Animation = {
   name: string;
@@ -56,6 +57,7 @@ export const apps: App[] = [
   // R
   // S
   // T
+  threads,
   // U
   // V
   viber,

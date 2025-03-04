@@ -19,6 +19,8 @@ import { Image } from "expo-image";
 import { X } from "lucide-react-native";
 import { useEffect } from "react";
 
+// threads-profile-picture-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 Animated.addWhitelistedNativeProps({ intensity: true });
@@ -259,3 +261,5 @@ export default function Profile() {
     </>
   );
 }
+
+// threads-profile-picture-animation 🔼
