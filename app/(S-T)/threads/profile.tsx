@@ -25,6 +25,13 @@ Animated.addWhitelistedNativeProps({ intensity: true });
 const _duration = 250;
 const _timingConfig = { duration: _duration, easing: Easing.out(Easing.quad) };
 
+const Avatar = () => (
+  <Image
+    placeholder={{ blurhash: "LIJu4L-;F|IU00W=tlRj?^t6rX%2" }}
+    style={StyleSheet.absoluteFill}
+  />
+);
+
 export default function Profile() {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
@@ -46,6 +53,7 @@ export default function Profile() {
   const imageYCoord = useSharedValue(_screenCenterY);
   const imageSize = useSharedValue(_defaultAvatarSize);
   const imageScale = useSharedValue(1);
+  const closeBtnOpacity = useSharedValue(0);
 
   useAnimatedReaction(
     () => {
@@ -95,7 +103,7 @@ export default function Profile() {
 
   const rCloseBtnStyle = useAnimatedStyle(() => {
     return {
-      opacity: imageState.value === "open" ? withDelay(_duration, withTiming(1)) : withTiming(0),
+      opacity: closeBtnOpacity.value,
     };
   });
 
@@ -106,6 +114,7 @@ export default function Profile() {
     imageSize.value = withTiming(_expandedAvatarSize, _timingConfig);
     imageXCoord.value = withTiming(_screenCenterX - _expandedAvatarSize / 2, _timingConfig);
     imageYCoord.value = withTiming(_screenCenterY - _expandedAvatarSize / 2, _timingConfig);
+    closeBtnOpacity.value = withDelay(_duration, withTiming(1));
   };
 
   const close = () => {
@@ -118,6 +127,7 @@ export default function Profile() {
     imageSize.value = withTiming(_defaultAvatarSize, _timingConfig);
     imageXCoord.value = withTiming(x, _timingConfig);
     imageYCoord.value = withTiming(y - listOffsetX.value, _timingConfig);
+    closeBtnOpacity.value = withTiming(0, { duration: _duration });
   };
 
   const panStartX = useSharedValue(0);
@@ -127,6 +137,7 @@ export default function Profile() {
     .onStart(() => {
       panStartX.value = imageXCoord.value;
       panStartY.value = imageYCoord.value;
+      closeBtnOpacity.value = withTiming(0, { duration: 200 });
     })
     .onChange((event) => {
       if (imageState.value === "close") return;
@@ -142,7 +153,12 @@ export default function Profile() {
         extrapolateRight: "clamp",
       });
 
+      const blur = interpolate(distance, [0, screenWidth / 2], [100, 0], {
+        extrapolateRight: "clamp",
+      });
+
       imageScale.value = scale;
+      blurIntensity.value = blur;
     })
     .onFinalize(() => {
       const deltaX = imageXCoord.value - panStartX.value;
@@ -181,10 +197,7 @@ export default function Profile() {
               ]}
               onPress={open}
             >
-              <Image
-                placeholder={{ blurhash: "LIJu4L-;F|IU00W=tlRj?^t6rX%2" }}
-                style={StyleSheet.absoluteFill}
-              />
+              <Avatar />
             </AnimatedPressable>
           </Animated.View>
         </View>
@@ -218,7 +231,7 @@ export default function Profile() {
           className="pointer-events-none"
         >
           <AnimatedBlurView
-            tint="dark"
+            tint="systemChromeMaterialDark"
             style={StyleSheet.absoluteFill}
             animatedProps={backdropAnimatedProps}
           />
@@ -232,10 +245,7 @@ export default function Profile() {
             className="absolute rounded-full overflow-hidden"
             style={[rImageStyle, { transformOrigin: "center" }]}
           >
-            <Image
-              placeholder={{ blurhash: "LIJu4L-;F|IU00W=tlRj?^t6rX%2" }}
-              style={StyleSheet.absoluteFill}
-            />
+            <Avatar />
           </AnimatedPressable>
         </AnimatedPressable>
       </GestureDetector>
