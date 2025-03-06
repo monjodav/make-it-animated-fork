@@ -1,6 +1,6 @@
 import { HomeHeader } from "@/components/J-L/linkedin/home-header";
 import { HomePost } from "@/components/J-L/linkedin/home-post";
-import { useDragDirection } from "@/hooks/use-drag-direction";
+import { useRelativeScrollDirection } from "@/hooks/use-relative-scroll-direction";
 import { View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,22 +13,25 @@ const _renderItemSeparator = () => <View className="h-2 bg-black" />;
 export default function Home() {
   const insets = useSafeAreaInsets();
 
-  const { dragDirection, handleDragDirectionOnBeginDrag, handleDragDirectionOnScroll } =
-    useDragDirection({ upThreshold: 75 });
+  const {
+    scrollDirection,
+    onBeginDrag,
+    onScroll: scrollDirectionOnScroll,
+  } = useRelativeScrollDirection({ topThreshold: 75 });
 
   const listOffsetY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: handleDragDirectionOnBeginDrag,
+    onBeginDrag,
     onScroll: (e) => {
       listOffsetY.value = e.contentOffset.y;
-      handleDragDirectionOnScroll(e);
+      scrollDirectionOnScroll(e);
     },
   });
 
   return (
     <View className="flex-1 bg-linkedin-back" style={{ paddingTop: insets.top }}>
-      <HomeHeader dragDirection={dragDirection} />
+      <HomeHeader scrollDirection={scrollDirection} />
       <Animated.FlatList
         data={Array.from({ length: 10 })}
         keyExtractor={(_, index) => index.toString()}

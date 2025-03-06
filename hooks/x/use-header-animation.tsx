@@ -10,7 +10,7 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { ScrollDirection } from "../use-scroll-direction";
+import { ScrollDirection } from "../use-absolute-scroll-direction";
 
 const _onEndDragAnimDuration = 100;
 
@@ -85,7 +85,7 @@ export const useHeaderAnimation = ({
       if (
         listOffsetY.value > headerHeight &&
         headerTransition.value === true &&
-        scrollDirection.value === "down"
+        scrollDirection.value === "to-bottom"
       ) {
         headerOpacity.value = withTiming(0, { duration: _onEndDragAnimDuration });
         headerTranslateY.value = withTiming(-headerHeight, { duration: _onEndDragAnimDuration });
@@ -96,7 +96,7 @@ export const useHeaderAnimation = ({
       if (
         listOffsetY.value > headerHeight &&
         headerTransition.value === true &&
-        scrollDirection.value === "up"
+        scrollDirection.value === "to-top"
       ) {
         headerOpacity.value = withTiming(1, { duration: _onEndDragAnimDuration });
         headerTranslateY.value = withTiming(0, { duration: _onEndDragAnimDuration });
@@ -109,7 +109,7 @@ export const useHeaderAnimation = ({
   const rHeaderStyle = useAnimatedStyle(() => {
     if (
       listOffsetY.value > 0 &&
-      scrollDirection.value === "down" &&
+      scrollDirection.value === "to-bottom" &&
       isListDragging.value === true
     ) {
       if (headerState.value === "hidden") {
@@ -133,7 +133,11 @@ export const useHeaderAnimation = ({
       );
     }
 
-    if (listOffsetY.value > 0 && scrollDirection.value === "up" && isListDragging.value === true) {
+    if (
+      listOffsetY.value > 0 &&
+      scrollDirection.value === "to-top" &&
+      isListDragging.value === true
+    ) {
       if (headerState.value === "visible") {
         return {
           opacity: 1,

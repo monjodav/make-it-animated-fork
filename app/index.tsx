@@ -9,8 +9,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotification } from "@/providers/notification-provider";
 
 export default function Index() {
-  return <Redirect href="/threads/profile" />;
-  
+  return <Redirect href="/gmail/home" />;
+
   // const insets = useSafeAreaInsets();
 
   // const navigation = useNavigation();

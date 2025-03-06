@@ -1,7 +1,7 @@
-import { DragDirection } from "@/hooks/use-drag-direction";
+import { ScrollDirectionValue } from "@/hooks/use-relative-scroll-direction";
 import { MessageSquareMore, Search, SquarePen } from "lucide-react-native";
 import { Text, View } from "react-native";
-import Animated, { SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // linkedin-header-on-scroll-animation 🔽
@@ -10,26 +10,31 @@ export const _headerHeight = 45;
 const _animDuration = 250;
 
 type Props = {
-  dragDirection: SharedValue<DragDirection>;
+  scrollDirection: ScrollDirectionValue;
 };
 
-export const HomeHeader = ({ dragDirection }: Props) => {
+export const HomeHeader = ({ scrollDirection }: Props) => {
   const insets = useSafeAreaInsets();
 
   const rHeaderPlaceholderStyle = useAnimatedStyle(() => ({
-    height: withTiming(dragDirection.value === "down" ? 0 : _headerHeight, {
+    height: withTiming(scrollDirection.value === "to-bottom" ? 0 : _headerHeight, {
       duration: _animDuration,
     }),
   }));
 
   const rHeaderStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(dragDirection.value === "down" ? 0 : 1, { duration: _animDuration }),
+      opacity: withTiming(scrollDirection.value === "to-bottom" ? 0 : 1, {
+        duration: _animDuration,
+      }),
       transform: [
         {
-          translateY: withTiming(dragDirection.value === "down" ? -_headerHeight - insets.top : 0, {
-            duration: _animDuration,
-          }),
+          translateY: withTiming(
+            scrollDirection.value === "to-bottom" ? -_headerHeight - insets.top : 0,
+            {
+              duration: _animDuration,
+            }
+          ),
         },
       ],
     };
