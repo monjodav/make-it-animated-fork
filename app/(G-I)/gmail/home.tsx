@@ -3,6 +3,8 @@ import { AnimatedListProvider } from "@/components/G-I/gmail/lib/animated-list-p
 import { ContentList } from "@/components/G-I/gmail/lib/content-list";
 import { View } from "react-native";
 
+// gmail-header-scroll-animation 🔽
+
 export default function Home() {
   return (
     <AnimatedListProvider>
@@ -13,3 +15,5 @@ export default function Home() {
     </AnimatedListProvider>
   );
 }
+
+// gmail-header-scroll-animation 🔼

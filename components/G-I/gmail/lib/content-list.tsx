@@ -5,15 +5,18 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "./hooks/use-header-height";
 import { useAnimatedList } from "./animated-list-provider";
 
+// gmail-header-scroll-animation 🔽
+
 export const ContentList: FC = () => {
   const insets = useSafeAreaInsets();
 
-  const { headerHeight } = useHeaderHeight();
+  const { headerHeight, searchBarHeight } = useHeaderHeight();
 
-  const { scrollHandler } = useAnimatedList();
+  const { listRef, scrollHandler } = useAnimatedList();
 
   return (
     <Animated.FlatList
+      ref={listRef}
       data={Array.from({ length: 40 })}
       renderItem={() => (
         <View className="flex-row gap-6">
@@ -35,6 +38,9 @@ export const ContentList: FC = () => {
       }}
       onScroll={scrollHandler}
       scrollEventThrottle={1000 / 60}
+      scrollIndicatorInsets={{ top: searchBarHeight }}
     />
   );
 };
+
+// gmail-header-scroll-animation 🔼

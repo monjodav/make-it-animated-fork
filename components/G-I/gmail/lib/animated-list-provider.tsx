@@ -2,7 +2,8 @@ import {
   ScrollDirectionValue,
   useAbsoluteScrollDirection,
 } from "@/hooks/use-absolute-scroll-direction";
-import { createContext, FC, PropsWithChildren, useContext } from "react";
+import { createContext, FC, PropsWithChildren, useContext, useRef } from "react";
+import { FlatList } from "react-native";
 import {
   ScrollHandlerProcessed,
   SharedValue,
@@ -10,7 +11,10 @@ import {
   useSharedValue,
 } from "react-native-reanimated";
 
+// gmail-header-scroll-animation 🔽
+
 type AnimatedListContextType = {
+  listRef: React.RefObject<FlatList<any>>;
   listOffsetY: SharedValue<number>;
   isDragging: SharedValue<boolean>;
   scrollDirection: ScrollDirectionValue;
@@ -20,6 +24,8 @@ type AnimatedListContextType = {
 const AnimatedListContext = createContext<AnimatedListContextType>({} as AnimatedListContextType);
 
 export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
+  const listRef = useRef<FlatList>(null);
+
   const listOffsetY = useSharedValue(0);
   const isDragging = useSharedValue(false);
 
@@ -41,6 +47,7 @@ export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <AnimatedListContext.Provider
       value={{
+        listRef,
         listOffsetY,
         isDragging,
         scrollDirection,
@@ -61,3 +68,5 @@ export const useAnimatedList = () => {
 
   return context;
 };
+
+// gmail-header-scroll-animation 🔼

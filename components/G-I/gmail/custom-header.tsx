@@ -4,6 +4,7 @@ import { View, TextInput } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -11,12 +12,14 @@ import Animated, {
 import { useHeaderHeight } from "./lib/hooks/use-header-height";
 import { useAnimatedList } from "./lib/animated-list-provider";
 
+// gmail-header-scroll-animation 🔽
+
 const _thresholdBase = 150;
 
 export const CustomHeader: FC = () => {
   const { safeAreaHeight, searchBarHeight } = useHeaderHeight();
 
-  const { listOffsetY, scrollDirection, isDragging } = useAnimatedList();
+  const { listRef, listOffsetY, scrollDirection, isDragging } = useAnimatedList();
 
   const listOffsetYAnchor = useSharedValue(0);
   const opacity = useSharedValue(1);
@@ -48,6 +51,26 @@ export const CustomHeader: FC = () => {
         threshold.value = _thresholdBase;
       } else if (currentOffset <= _thresholdBase && threshold.value !== 0 && !isDragging.value) {
         threshold.value = 0;
+      }
+    }
+  );
+
+  const scrollTo = (offset: number) => {
+    listRef.current?.scrollToOffset({ offset, animated: true });
+  };
+
+  useAnimatedReaction(
+    () => isDragging.value,
+    (current, previous) => {
+      if (!current && previous) {
+        const isSearchbarVisible = opacity.value > 0 && opacity.value < 1;
+
+        if (scrollDirection.value === "to-top" && isSearchbarVisible) {
+          runOnJS(scrollTo)(listOffsetY.value - searchBarHeight);
+        }
+        if (scrollDirection.value === "to-bottom" && isSearchbarVisible) {
+          runOnJS(scrollTo)(listOffsetY.value + searchBarHeight);
+        }
       }
     }
   );
@@ -111,8 +134,10 @@ export const CustomHeader: FC = () => {
         <View className="absolute left-8">
           <Menu size={24} color="lightgray" />
         </View>
-        <View className="absolute right-8 w-8 h-8 rounded-full bg-neutral-700" />
+        <View className="absolute right-8 w-8 h-8 rounded-full bg-yellow-300/25" />
       </Animated.View>
     </View>
   );
 };
+
+// gmail-header-scroll-animation 🔼
