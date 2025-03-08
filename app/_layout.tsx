@@ -11,6 +11,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NotificationProvider } from "@/providers/notification-provider";
 import * as Notifications from "expo-notifications";
+import { StatusBar } from "expo-status-bar";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -68,6 +69,9 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
       <NotificationProvider>
         <KeyboardProvider>
+          {Platform.OS === "android" && (
+            <StatusBar style="light" backgroundColor="black" translucent={false} />
+          )}
           <Drawer
             drawerContent={(props) => <DrawerContent {...props} />}
             screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}

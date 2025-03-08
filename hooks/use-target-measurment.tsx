@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { measure, useAnimatedRef, useDerivedValue, useSharedValue } from "react-native-reanimated";
 
 export const useTargetMeasurement = () => {
@@ -11,16 +12,18 @@ export const useTargetMeasurement = () => {
 
     const measurement = measure(targetRef);
 
-    if (measurement === null) {
-      return null;
-    }
-
     return measurement;
   });
 
   const onTargetLayout = () => {
     if (isTargetMounted.value === false) {
-      isTargetMounted.value = true;
+      if (Platform.OS === "ios") {
+        isTargetMounted.value = true;
+      } else {
+        setTimeout(() => {
+          isTargetMounted.value = true;
+        }, 500);
+      }
     }
   };
 

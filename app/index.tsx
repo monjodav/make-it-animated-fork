@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { Redirect, useRouter } from "expo-router";
-import { Platform, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import { TouchableOpacity } from "react-native";
 import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { useEffect } from "react";
@@ -19,13 +18,12 @@ export default function Index() {
   useEffect(() => {
     setTimeout(() => {
       // navigation.dispatch(DrawerActions.openDrawer());
-      router.push("/viber/chats");
+      router.push("/github/profile");
     }, 250);
   }, [navigation]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
-      {Platform.OS === "android" && <StatusBar style="light" backgroundColor="black" />}
       <Image source={Logo} className="size-20" />
       <TouchableOpacity
         activeOpacity={0.85}
