@@ -1,6 +1,6 @@
 import { HomeHeader } from "@/components/J-L/linkedin/home-header";
 import { HomePost } from "@/components/J-L/linkedin/home-post";
-import { useRelativeScrollDirection } from "@/hooks/use-relative-scroll-direction";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,23 +15,28 @@ export default function Home() {
 
   const {
     scrollDirection,
+    offsetYAnchorOnBeginDrag,
     onBeginDrag,
     onScroll: scrollDirectionOnScroll,
-  } = useRelativeScrollDirection({ topThreshold: 75 });
+  } = useScrollDirection();
 
-  const listOffsetY = useSharedValue(0);
+  const offsetY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag,
     onScroll: (e) => {
-      listOffsetY.value = e.contentOffset.y;
+      offsetY.value = e.contentOffset.y;
       scrollDirectionOnScroll(e);
     },
   });
 
   return (
     <View className="flex-1 bg-linkedin-back" style={{ paddingTop: insets.top }}>
-      <HomeHeader scrollDirection={scrollDirection} />
+      <HomeHeader
+        scrollDirection={scrollDirection}
+        offsetY={offsetY}
+        offsetYAnchorOnBeginDrag={offsetYAnchorOnBeginDrag}
+      />
       <Animated.FlatList
         data={Array.from({ length: 10 })}
         keyExtractor={(_, index) => index.toString()}

@@ -1,40 +1,78 @@
-import { ScrollDirectionValue } from "@/hooks/use-relative-scroll-direction";
+import { ScrollDirectionValue } from "@/hooks/use-scroll-direction";
 import { MessageSquareMore, Search, SquarePen } from "lucide-react-native";
 import { Text, View } from "react-native";
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // linkedin-header-on-scroll-animation 🔽
 
 export const _headerHeight = 45;
+const _threshold = 75;
 const _animDuration = 250;
 
 type Props = {
   scrollDirection: ScrollDirectionValue;
+  offsetY: SharedValue<number>;
+  offsetYAnchorOnBeginDrag: SharedValue<number>;
 };
 
-export const HomeHeader = ({ scrollDirection }: Props) => {
+export const HomeHeader = ({ scrollDirection, offsetY, offsetYAnchorOnBeginDrag }: Props) => {
   const insets = useSafeAreaInsets();
 
+  // Track the previous header state to maintain hidden state when appropriate
+  const prevHeaderState = useSharedValue<"hidden" | "visible">("visible");
+
+  const headerState = useDerivedValue(() => {
+    // Always show at the very top
+    if (offsetY.value <= 0) {
+      return "visible";
+    }
+
+    // Hide when scrolling down
+    if (scrollDirection.value === "to-bottom" && offsetY.value > offsetYAnchorOnBeginDrag.value) {
+      prevHeaderState.value = "hidden";
+      return "hidden";
+    }
+
+    // Only show when scrolling up AND passed the threshold
+    if (scrollDirection.value === "to-top") {
+      const scrollUpDistance = offsetYAnchorOnBeginDrag.value - offsetY.value;
+      if (scrollUpDistance >= _threshold) {
+        prevHeaderState.value = "visible";
+        return "visible";
+      } else {
+        // Still scrolling up but haven't reached threshold yet
+        // Keep previous state (which is likely hidden)
+        return prevHeaderState.value;
+      }
+    }
+
+    // For any other case, return the previous state
+    return prevHeaderState.value;
+  });
+
   const rHeaderPlaceholderStyle = useAnimatedStyle(() => ({
-    height: withTiming(scrollDirection.value === "to-bottom" ? 0 : _headerHeight, {
+    height: withTiming(headerState.value === "hidden" ? 0 : _headerHeight, {
       duration: _animDuration,
     }),
   }));
 
   const rHeaderStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(scrollDirection.value === "to-bottom" ? 0 : 1, {
+      opacity: withTiming(headerState.value === "hidden" ? 0 : 1, {
         duration: _animDuration,
       }),
       transform: [
         {
-          translateY: withTiming(
-            scrollDirection.value === "to-bottom" ? -_headerHeight - insets.top : 0,
-            {
-              duration: _animDuration,
-            }
-          ),
+          translateY: withTiming(headerState.value === "hidden" ? -_headerHeight - insets.top : 0, {
+            duration: _animDuration,
+          }),
         },
       ],
     };
