@@ -1,4 +1,4 @@
-import { sharedConfigs } from "@/constants/colors-app/palette-picker-color-change-animation";
+import { sharedConfigs } from "@/src/apps/A-C/colors-app/lib/constants/palette-picker-color-change-animation";
 import React, { FC } from "react";
 
 import { useWindowDimensions } from "react-native";
