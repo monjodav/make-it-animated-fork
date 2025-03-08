@@ -10,7 +10,15 @@ export type ScrollDirectionValue = SharedValue<ScrollDirection>;
  */
 export const useAbsoluteScrollDirection = () => {
   const scrollDirection = useSharedValue<ScrollDirection>("idle");
-  const scrollDirectionRefY = useSharedValue(0);
+  const prevOffsetY = useSharedValue(0);
+  const offsetYAnchorOnBeginDrag = useSharedValue(0);
+  const offsetYAnchorOnChangeDirection = useSharedValue(0);
+
+  // Place it inside the list animated scroll handler onBeginDrag
+  const onBeginDrag = (e: ReanimatedScrollEvent) => {
+    "worklet";
+    offsetYAnchorOnBeginDrag.value = e.contentOffset.y;
+  };
 
   // Place it inside the list animated scroll handler onScroll
   const onScroll = (e: ReanimatedScrollEvent) => {
@@ -19,26 +27,31 @@ export const useAbsoluteScrollDirection = () => {
     const offsetY = e.contentOffset.y;
 
     const positiveOffsetY = Math.max(offsetY, 0);
-    const positivePrevOffsetY = Math.max(scrollDirectionRefY.value, 0);
+    const positivePrevOffsetY = Math.max(prevOffsetY.value, 0);
 
     if (
       positivePrevOffsetY - positiveOffsetY < 0 &&
       (scrollDirection.value === "idle" || scrollDirection.value === "to-top")
     ) {
       scrollDirection.value = "to-bottom";
+      offsetYAnchorOnChangeDirection.value = offsetY;
     }
     if (
       positivePrevOffsetY - positiveOffsetY >= 0 &&
       (scrollDirection.value === "idle" || scrollDirection.value === "to-bottom")
     ) {
       scrollDirection.value = "to-top";
+      offsetYAnchorOnChangeDirection.value = offsetY;
     }
 
-    scrollDirectionRefY.value = offsetY;
+    prevOffsetY.value = offsetY;
   };
 
   return {
     scrollDirection,
+    offsetYAnchorOnBeginDrag,
+    offsetYAnchorOnChangeDirection,
+    onBeginDrag,
     onScroll,
   };
 };

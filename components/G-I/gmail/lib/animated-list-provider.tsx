@@ -18,6 +18,8 @@ type AnimatedListContextType = {
   listOffsetY: SharedValue<number>;
   isDragging: SharedValue<boolean>;
   scrollDirection: ScrollDirectionValue;
+  offsetYAnchorOnBeginDrag: SharedValue<number>;
+  offsetYAnchorOnChangeDirection: SharedValue<number>;
   scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>;
 };
 
@@ -29,11 +31,18 @@ export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
   const listOffsetY = useSharedValue(0);
   const isDragging = useSharedValue(false);
 
-  const { scrollDirection, onScroll: scrollDirectionOnScroll } = useAbsoluteScrollDirection();
+  const {
+    scrollDirection,
+    offsetYAnchorOnBeginDrag,
+    offsetYAnchorOnChangeDirection,
+    onBeginDrag: scrollDirectionOnBeginDrag,
+    onScroll: scrollDirectionOnScroll,
+  } = useAbsoluteScrollDirection();
 
   const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: () => {
+    onBeginDrag: (e) => {
       isDragging.value = true;
+      scrollDirectionOnBeginDrag(e);
     },
     onScroll: (e) => {
       listOffsetY.value = e.contentOffset.y;
@@ -51,6 +60,8 @@ export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
         listOffsetY,
         isDragging,
         scrollDirection,
+        offsetYAnchorOnBeginDrag,
+        offsetYAnchorOnChangeDirection,
         scrollHandler,
       }}
     >

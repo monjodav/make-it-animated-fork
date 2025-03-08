@@ -19,9 +19,9 @@ const _thresholdBase = 150;
 export const CustomHeader: FC = () => {
   const { safeAreaHeight, searchBarHeight } = useHeaderHeight();
 
-  const { listRef, listOffsetY, scrollDirection, isDragging } = useAnimatedList();
+  const { listRef, listOffsetY, isDragging, scrollDirection, offsetYAnchorOnChangeDirection } =
+    useAnimatedList();
 
-  const listOffsetYAnchor = useSharedValue(0);
   const opacity = useSharedValue(1);
   const opacityAnchor = useSharedValue(1);
   const translateY = useSharedValue(0);
@@ -31,7 +31,6 @@ export const CustomHeader: FC = () => {
   useAnimatedReaction(
     () => scrollDirection.value,
     (current, previous) => {
-      listOffsetYAnchor.value = listOffsetY.value;
       opacityAnchor.value = opacity.value;
       translateYAnchor.value = translateY.value;
       if (isDragging.value && previous === "to-top" && current === "to-bottom") {
@@ -77,7 +76,10 @@ export const CustomHeader: FC = () => {
 
   const rSearchBarStyle = useAnimatedStyle(() => {
     if (scrollDirection.value === "to-bottom") {
-      const inputRange = [listOffsetYAnchor.value, listOffsetYAnchor.value + searchBarHeight];
+      const inputRange = [
+        offsetYAnchorOnChangeDirection.value,
+        offsetYAnchorOnChangeDirection.value + searchBarHeight,
+      ];
 
       opacity.value = interpolate(
         listOffsetY.value,
@@ -95,9 +97,9 @@ export const CustomHeader: FC = () => {
 
     if (scrollDirection.value === "to-top") {
       const inputRange = [
-        listOffsetYAnchor.value - threshold.value - searchBarHeight,
-        listOffsetYAnchor.value - threshold.value,
-        listOffsetYAnchor.value,
+        offsetYAnchorOnChangeDirection.value - threshold.value - searchBarHeight,
+        offsetYAnchorOnChangeDirection.value - threshold.value,
+        offsetYAnchorOnChangeDirection.value,
       ];
 
       opacity.value = interpolate(
