@@ -1,3 +1,3 @@
-import Home from "@/src/apps/A-C/adidas/routes/home";
+import Home from "@/src/apps/(a-c)/adidas/routes/home";
 
 export default Home;

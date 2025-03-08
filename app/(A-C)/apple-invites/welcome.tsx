@@ -1,3 +1,3 @@
-import Welcome from "@/src/apps/A-C/apple-invites/routes/welcome";
+import Welcome from "@/src/apps/(a-c)/apple-invites/routes/welcome";
 
 export default Welcome;

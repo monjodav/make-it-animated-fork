@@ -1,3 +1,3 @@
-import ColorPicker from "@/src/apps/A-C/colors-app/routes/color-picker";
+import ColorPicker from "@/src/apps/(a-c)/colors-app/routes/color-picker";
 
 export default ColorPicker;

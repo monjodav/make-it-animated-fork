@@ -1,4 +1,4 @@
-import { sharedConfigs } from "@/src/apps/A-C/colors-app/lib/constants/color-picker-background-animation";
+import { sharedConfigs } from "../lib/constants/color-picker-background-animation";
 import React, { FC } from "react";
 
 import { useWindowDimensions, View } from "react-native";

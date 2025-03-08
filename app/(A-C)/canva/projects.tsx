@@ -1,3 +1,3 @@
-import Projects from "@/src/apps/A-C/canva/routes/projects";
+import Projects from "@/src/apps/(a-c)/canva/routes/projects";
 
 export default Projects;
