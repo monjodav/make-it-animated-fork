@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Pressable, useWindowDimensions, StatusBar } from "react-native";
+import { Pressable, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -54,7 +54,6 @@ const TabsLayout = () => {
 
   return (
     <>
-      <StatusBar barStyle="light-content" />
       <Tabs
         initialRouteName={Tab.Home}
         screenOptions={{

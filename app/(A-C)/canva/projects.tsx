@@ -1,6 +1,6 @@
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert, StatusBar } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import {
   HeaderTitle as HeaderTitleComponent,
   HeaderTitleProps,
@@ -123,7 +123,6 @@ export default function Projects() {
 
   return (
     <View className="flex-1 bg-white">
-      <StatusBar barStyle="light-content" />
       <Animated.ScrollView ref={listRef} bounces={false}>
         <Animated.View
           style={[{ paddingTop: headerHeight }, rImageHeaderStyle]}

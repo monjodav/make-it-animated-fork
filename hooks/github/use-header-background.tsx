@@ -2,7 +2,7 @@ import { useNavigation } from "expo-router";
 import type React from "react";
 import { useEffect } from "react";
 import Animated, { type SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import Color from "color";
+import { colorKit } from "reanimated-color-picker";
 
 // github-profile-header-title-animation 🔽
 
@@ -29,7 +29,7 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
           style={[
             rContainerStyle,
             {
-              borderColor: Color("#ffffff").alpha(0.05).string(),
+              borderColor: colorKit.setAlpha("#ffffff", 0.1).hex(),
             },
           ]}
         />

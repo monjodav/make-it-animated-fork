@@ -21,7 +21,6 @@
     "@shopify/react-native-skia": "1.5.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
-    "color": "^5.0.0",
     "expo": "~52.0.4",
     "expo-blur": "^14.0.3",
     "expo-constants": "~17.0.7",

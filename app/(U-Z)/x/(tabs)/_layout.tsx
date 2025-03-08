@@ -8,7 +8,6 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Octicons from "@expo/vector-icons/Octicons";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React, { FC, PropsWithChildren, useContext, useEffect, useRef } from "react";
 import { Platform, Animated as RNAnimated, StyleSheet, View } from "react-native";
 import Animated, {
@@ -98,7 +97,6 @@ const TabsLayout = () => {
 
   return (
     <>
-      <StatusBar style="light" />
       <Tabs
         initialRouteName={Tab.Home}
         screenOptions={{

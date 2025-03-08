@@ -26,11 +26,14 @@ export const SearchBar: FC<Props> = ({
   style,
 }) => {
   const rHeightStyle = useAnimatedStyle(() => {
-    if (offsetY === undefined)
+    if (offsetY === undefined) {
       return {
         height,
         marginBottom: marginBottomMax,
       };
+    }
+
+    console.log("🔴", offsetY.value); // VS --------- Remove Log
 
     return {
       height: interpolate(offsetY.value, [0, height], [height, 0], Extrapolation.CLAMP),
