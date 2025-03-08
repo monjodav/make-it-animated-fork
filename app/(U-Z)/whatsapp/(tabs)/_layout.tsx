@@ -33,6 +33,9 @@ const TabsLayout = () => {
               <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
             </View>
           ),
+          tabBarButton: (props) => (
+            <Pressable {...props} android_ripple={{ color: "transparent" }} />
+          ),
         }}
       >
         <Tabs.Screen

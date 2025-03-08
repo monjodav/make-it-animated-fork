@@ -2,9 +2,8 @@ import Entypo from "@expo/vector-icons/Entypo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { useWindowDimensions } from "react-native";
+import { Pressable, useWindowDimensions, StatusBar } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -47,7 +46,7 @@ const TabsLayout = () => {
   const rAnimatedBarStyle = useAnimatedStyle(() => {
     return {
       left: withTiming(left[currentTab.value], {
-        duration: 300,
+        duration: 200,
         easing: Easing.inOut(Easing.quad),
       }),
     };
@@ -55,7 +54,7 @@ const TabsLayout = () => {
 
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar barStyle="light-content" />
       <Tabs
         initialRouteName={Tab.Home}
         screenOptions={{
@@ -70,6 +69,9 @@ const TabsLayout = () => {
             borderTopColor: "#ffffff20",
             backgroundColor: "#21262E",
           },
+          tabBarButton: (props) => (
+            <Pressable {...props} android_ripple={{ color: "transparent" }} />
+          ),
         }}
         screenListeners={{
           tabPress: (e) => {

@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Camera, Ellipsis, LayoutGrid, Phone, SquarePen } from "lucide-react-native";
 import React from "react";
-import { Alert, TouchableOpacity, View } from "react-native";
+import { Alert, Pressable, TouchableOpacity, View } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
@@ -33,6 +33,9 @@ const TabsLayout = () => {
             borderTopWidth: 0.5,
             backgroundColor: "black",
           },
+          tabBarButton: (props) => (
+            <Pressable {...props} android_ripple={{ color: "transparent" }} />
+          ),
         }}
       >
         <Tabs.Screen
