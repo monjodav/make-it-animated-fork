@@ -123,7 +123,7 @@ export default function Projects() {
 
   return (
     <View className="flex-1 bg-white">
-      <Animated.ScrollView ref={listRef} bounces={false}>
+      <Animated.ScrollView ref={listRef} bounces={false} showsVerticalScrollIndicator={false}>
         <Animated.View
           style={[{ paddingTop: headerHeight }, rImageHeaderStyle]}
           onLayout={(e) => rImageHeaderHeight.set(e.nativeEvent.layout.height)}

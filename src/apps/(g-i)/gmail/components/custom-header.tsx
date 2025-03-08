@@ -9,8 +9,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { useHeaderHeight } from "./lib/hooks/use-header-height";
-import { useAnimatedList } from "./lib/animated-list-provider";
+import { useHeaderHeight } from "../lib/hooks/use-header-height";
+import { useAnimatedList } from "../lib/providers/animated-list-provider";
 
 // gmail-header-scroll-animation 🔽
 

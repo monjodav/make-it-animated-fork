@@ -5,6 +5,7 @@ import { TouchableOpacity } from "react-native";
 export default function TabsLayout() {
   return (
     <Stack>
+      {/* google-chrome-top-tabs-indicator-animation 🔽 */}
       <Stack.Screen
         name="tabs"
         options={{
@@ -18,6 +19,7 @@ export default function TabsLayout() {
           ),
         }}
       />
+      {/* google-chrome-top-tabs-indicator-animation 🔼 */}
     </Stack>
   );
 }

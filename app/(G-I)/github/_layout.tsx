@@ -3,6 +3,8 @@ import { Settings } from "lucide-react-native";
 import { TouchableOpacity, View } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 
+// github-profile-header-title-animation 🔽
+
 export default function ProfileLayout() {
   return (
     <Stack>
@@ -29,3 +31,5 @@ export default function ProfileLayout() {
     </Stack>
   );
 }
+
+// github-profile-header-title-animation 🔼

@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useHeaderHeight } from "./lib/hooks/use-header-height";
-import { useAnimatedList } from "./lib/animated-list-provider";
+import { useHeaderHeight } from "../lib/hooks/use-header-height";
+import { useAnimatedList } from "../lib/providers/animated-list-provider";
 
 // gmail-header-scroll-animation 🔽
 
