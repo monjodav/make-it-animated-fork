@@ -9,7 +9,7 @@ import "../global.css";
 import { Animations } from "@/components/_home/animations";
 import * as NavigationBar from "expo-navigation-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { NotificationProvider } from "@/providers/notification-provider";
+import { NotificationProvider } from "@/src/lib/providers/notification-provider";
 import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 

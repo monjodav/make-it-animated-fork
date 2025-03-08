@@ -1,4 +1,4 @@
-import { ScrollDirectionValue, useScrollDirection } from "@/hooks/use-scroll-direction";
+import { ScrollDirectionValue, useScrollDirection } from "@/src/lib/hooks/use-scroll-direction";
 import { createContext, FC, PropsWithChildren, useContext, useRef } from "react";
 import { FlatList } from "react-native";
 import {

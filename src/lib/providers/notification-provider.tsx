@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import * as Notifications from "expo-notifications";
-import { registerForPushNotificationsAsync } from "@/utils/register-for-push-notifications-async";
+import { registerForPushNotificationsAsync } from "@/src/lib/utils/register-for-push-notifications-async";
 
 interface NotificationContextType {
   expoPushToken: string | null;

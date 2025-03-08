@@ -13,7 +13,7 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useTargetMeasurement } from "../use-target-measurment";
+import { useTargetMeasurement } from "../../src/lib/hooks/use-target-measurment";
 
 // github-profile-header-title-animation 🔽
 

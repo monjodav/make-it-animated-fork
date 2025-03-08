@@ -1,4 +1,4 @@
-import { ScrollDirectionValue } from "@/hooks/use-scroll-direction";
+import { ScrollDirectionValue } from "@/src/lib/hooks/use-scroll-direction";
 import { MessageSquareMore, Search, SquarePen } from "lucide-react-native";
 import { Text, View } from "react-native";
 import Animated, {

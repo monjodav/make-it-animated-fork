@@ -3,7 +3,7 @@ import { Keyboard, Platform, Pressable, TextInput, useWindowDimensions, View } f
 import { useHeaderHeight } from "@react-navigation/elements";
 import Animated, { useAnimatedStyle, withDelay, withTiming } from "react-native-reanimated";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { cn } from "@/utils/cn";
+import { cn } from "@/src/lib/utils/cn";
 
 // whatsapp-add-status-background-animation 🔽
 

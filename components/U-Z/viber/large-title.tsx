@@ -9,7 +9,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { HeaderTitle as HeaderTitleComponent, HeaderTitleProps } from "@react-navigation/elements";
-import { cn } from "@/utils/cn";
+import { cn } from "@/src/lib/utils/cn";
 
 // viber-header-large-title-animation 🔽
 // viber-chats-header-animation 🔽

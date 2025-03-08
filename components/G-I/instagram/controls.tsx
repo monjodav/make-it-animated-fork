@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/src/lib/utils/cn";
 import Feather from "@expo/vector-icons/Feather";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeftRight, ChevronDown, CircleStop, Infinity } from "lucide-react-native";

@@ -1,4 +1,4 @@
-import { ScrollDirection, useScrollDirection } from "@/hooks/use-scroll-direction";
+import { ScrollDirection, useScrollDirection } from "@/src/lib/hooks/use-scroll-direction";
 import type { FC, PropsWithChildren } from "react";
 import React, { createContext, useState } from "react";
 import { runOnJS, SharedValue } from "react-native-reanimated";

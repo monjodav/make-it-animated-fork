@@ -1,6 +1,6 @@
 import { HomeHeader } from "@/components/J-L/linkedin/home-header";
 import { HomePost } from "@/components/J-L/linkedin/home-post";
-import { useScrollDirection } from "@/hooks/use-scroll-direction";
+import { useScrollDirection } from "@/src/lib/hooks/use-scroll-direction";
 import { View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

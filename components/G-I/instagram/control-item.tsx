@@ -1,4 +1,4 @@
-import { cn } from "@/utils/cn";
+import { cn } from "@/src/lib/utils/cn";
 import React, { FC } from "react";
 import { Pressable, View } from "react-native";
 import { Position } from "./controls";
