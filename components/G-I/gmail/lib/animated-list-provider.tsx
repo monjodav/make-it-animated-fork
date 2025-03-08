@@ -1,7 +1,4 @@
-import {
-  ScrollDirectionValue,
-  useAbsoluteScrollDirection,
-} from "@/hooks/use-absolute-scroll-direction";
+import { ScrollDirectionValue, useScrollDirection } from "@/hooks/use-scroll-direction";
 import { createContext, FC, PropsWithChildren, useContext, useRef } from "react";
 import { FlatList } from "react-native";
 import {
@@ -37,7 +34,7 @@ export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
     offsetYAnchorOnChangeDirection,
     onBeginDrag: scrollDirectionOnBeginDrag,
     onScroll: scrollDirectionOnScroll,
-  } = useAbsoluteScrollDirection();
+  } = useScrollDirection();
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: (e) => {

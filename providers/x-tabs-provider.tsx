@@ -1,4 +1,4 @@
-import { ScrollDirection, useAbsoluteScrollDirection } from "@/hooks/use-absolute-scroll-direction";
+import { ScrollDirection, useScrollDirection } from "@/hooks/use-scroll-direction";
 import type { FC, PropsWithChildren } from "react";
 import React, { createContext, useState } from "react";
 import { runOnJS, SharedValue } from "react-native-reanimated";
@@ -31,7 +31,7 @@ export const XTabsProvider: FC<PropsWithChildren> = ({ children }) => {
   const tabBarPaddingBottom = insets.bottom + 16;
   const tabBarHeight = tabBarPaddingBottom + TAB_BAR_HEIGHT_WITHOUT_INSET;
 
-  const { scrollDirection, onScroll: handleScrollDirectionOnScroll } = useAbsoluteScrollDirection();
+  const { scrollDirection, onScroll: handleScrollDirectionOnScroll } = useScrollDirection();
 
   const handleXTabsOnScroll = (e: ReanimatedScrollEvent) => {
     "worklet";

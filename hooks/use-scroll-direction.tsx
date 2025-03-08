@@ -4,11 +4,7 @@ import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/ho
 export type ScrollDirection = "to-top" | "to-bottom" | "idle";
 export type ScrollDirectionValue = SharedValue<ScrollDirection>;
 
-/**
- * "Absolute" in this context means that the scroll direction changes on user drag gesture,
- * rather than being relative to previous scroll position.
- */
-export const useAbsoluteScrollDirection = () => {
+export const useScrollDirection = () => {
   const scrollDirection = useSharedValue<ScrollDirection>("idle");
   const prevOffsetY = useSharedValue(0);
   const offsetYAnchorOnBeginDrag = useSharedValue(0);

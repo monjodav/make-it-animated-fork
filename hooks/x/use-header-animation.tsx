@@ -10,7 +10,7 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { ScrollDirection } from "../use-absolute-scroll-direction";
+import { ScrollDirection } from "../use-scroll-direction";
 
 const _onEndDragAnimDuration = 100;
 
