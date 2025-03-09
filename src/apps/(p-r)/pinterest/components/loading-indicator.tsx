@@ -1,4 +1,3 @@
-import { sharedConfigs } from "@/constants/pinterest/pull-to-refresh-animation";
 import React, { FC } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -12,6 +11,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
 

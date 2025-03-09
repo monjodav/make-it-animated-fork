@@ -1,6 +1,4 @@
-import { Tab } from "@/app/(p-r)/pinterest/home";
-import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
-import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
+import { Tab } from "../routes/home";
 import React, { FC, RefObject } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 import Animated, {
@@ -14,6 +12,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { TabIndicator } from "./tab-indicator";
 import { TabItem } from "./tab-item";
+import { sharedConfigs } from "../lib/constants/navigation-between-boards-animation";
+import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
 
 // pinterest-navigation-between-boards-animation 🔽
 

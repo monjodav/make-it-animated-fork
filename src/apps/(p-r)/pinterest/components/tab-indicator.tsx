@@ -1,4 +1,3 @@
-import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
 import React, { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
@@ -7,6 +6,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+import { sharedConfigs } from "../lib/constants/navigation-between-boards-animation";
 
 // pinterest-navigation-between-boards-animation 🔽
 

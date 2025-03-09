@@ -1,4 +1,4 @@
-import { sharedConfigs } from "@/constants/pinterest/pull-to-refresh-animation";
+import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
 import React, { FC, PropsWithChildren } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
