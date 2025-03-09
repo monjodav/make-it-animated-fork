@@ -1,4 +1,4 @@
-import { sharedConfigs } from "@/src/apps/(p-r)/pinterest/lib/constants/navigation-between-boards-animation";
+import { sharedConfigs } from "../../lib/constants/top-tabs-indicator-animation";
 import React, { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {

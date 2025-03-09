@@ -1,4 +1,4 @@
-import { XTabsContext } from "@/providers/x-tabs-provider";
+import { XTabsContext } from "../lib/providers/x-tabs-provider";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { usePathname } from "expo-router";

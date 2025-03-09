@@ -1,8 +1,8 @@
+import { ScrollDirectionValue } from "@/src/shared/lib/hooks/use-scroll-direction";
 import {
   Extrapolation,
   interpolate,
   ScrollEvent,
-  SharedValue,
   useAnimatedReaction,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -10,13 +10,12 @@ import {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { ScrollDirection } from "../../src/lib/hooks/use-scroll-direction";
 
 const _onEndDragAnimDuration = 100;
 
 type Params = {
   headerHeight: number;
-  scrollDirection: SharedValue<ScrollDirection>;
+  scrollDirection: ScrollDirectionValue;
   handleXTabsOnScroll: (e: ScrollEvent) => void;
 };
 

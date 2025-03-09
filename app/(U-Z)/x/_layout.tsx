@@ -1,4 +1,4 @@
-import { XTabsProvider } from "@/providers/x-tabs-provider";
+import { XTabsProvider } from "@/src/apps/(u-z)/x/lib/providers/x-tabs-provider";
 import { Slot } from "expo-router";
 
 // x-bottom-tabs-background-animation 🔽
