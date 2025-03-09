@@ -54,18 +54,18 @@ make-it-animated/
 ### Key Directories Explained
 
 - **app/**: Contains all the Expo Router navigation setup. Each folder corresponds to a route group.
-- **src/apps/**: Contains the actual implementation code for each animation, grouped alphabetically.
+- **src/apps/**: Contains the actual implementation code for each app animation, grouped alphabetically.
 - **src/shared/**: Contains reusable components, hooks, and utilities used across the app.
 
-### Animation Structure
+### App Animation Structure
 
-Each animation typically follows this structure:
+Each app (e.g src/apps/(g-i)/gmail) typically follows this structure:
 
 ```
-animation-name/
-├── components/           # Components specific to this animation (optional)
-├── lib/                  # Hooks, utils, providers, constants for this animation (optional)
-└── routes/               # Route files for the animation which will be used by Expo Router
+app-name/
+├── components/           # Components specific to this app (optional)
+├── lib/                  # Hooks, utils, providers, constants for this app (optional)
+└── routes/               # Route files for the app which will be used by Expo Router
 ```
 
 ## Need Help?
