@@ -33,8 +33,6 @@ export const SearchBar: FC<Props> = ({
       };
     }
 
-    console.log("🔴", offsetY.value); // VS --------- Remove Log
-
     return {
       height: interpolate(offsetY.value, [0, height], [height, 0], Extrapolation.CLAMP),
       marginBottom: interpolate(

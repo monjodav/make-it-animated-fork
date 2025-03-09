@@ -18,7 +18,7 @@ export default function Index() {
   useEffect(() => {
     setTimeout(() => {
       // navigation.dispatch(DrawerActions.openDrawer());
-      router.push("/gmail/home");
+      router.push("/threads/profile");
     }, 250);
   }, [navigation]);
 

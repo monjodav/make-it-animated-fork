@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Keyboard, Platform, Pressable, TextInput, useWindowDimensions, View } from "react-native";
+import { Keyboard, Pressable, TextInput, useWindowDimensions, View } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
 import Animated, { useAnimatedStyle, withDelay, withTiming } from "react-native-reanimated";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
@@ -72,10 +72,7 @@ export default function MyStatus() {
         style={[{ width: width / 4, top: width / 2, left: -width / 8 }, rShadowStyle]}
       />
       <View className="absolute inset-0 bg-black/50" />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
-      >
+      <KeyboardAvoidingView behavior="padding" className="flex-1">
         <Pressable className="flex-1 items-center justify-center" onPress={Keyboard.dismiss}>
           <View className="p-4">
             <TextInput
