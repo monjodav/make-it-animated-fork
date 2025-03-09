@@ -1,4 +1,4 @@
-import { cn } from "@/src/lib/utils/cn";
+import { cn } from "@/src/shared/lib/utils/cn";
 import React, { FC, PropsWithChildren } from "react";
 import { View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";

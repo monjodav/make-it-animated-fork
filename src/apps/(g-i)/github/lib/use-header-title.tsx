@@ -1,3 +1,4 @@
+import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
 import {
   HeaderTitle as HeaderTitleComponent,
   HeaderTitleProps,
@@ -13,7 +14,6 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useTargetMeasurement } from "../../../../lib/hooks/use-target-measurment";
 
 // github-profile-header-title-animation 🔽
 

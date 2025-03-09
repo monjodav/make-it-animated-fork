@@ -9,8 +9,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Marquee } from "@animatereactnative/marquee";
-import { cn } from "@/src/lib/utils/cn";
-import { useTargetMeasurement } from "@/src/lib/hooks/use-target-measurment";
+import { cn } from "@/src/shared/lib/utils/cn";
+import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
 
 // adidas-home-header-marquee-animation 🔽
 

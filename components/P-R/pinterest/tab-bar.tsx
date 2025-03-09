@@ -1,6 +1,6 @@
-import { Tab } from "@/app/(P-R)/pinterest/home";
+import { Tab } from "@/app/(p-r)/pinterest/home";
 import { sharedConfigs } from "@/constants/pinterest/navigation-between-boards-animation";
-import { useMeasureFlatListTabsLayout } from "@/src/lib/hooks/use-measure-flat-list-tabs-layout";
+import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
 import React, { FC, RefObject } from "react";
 import { FlatList, useWindowDimensions, View } from "react-native";
 import Animated, {

@@ -14,7 +14,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from "react-native-reanimated";
-import { useTargetMeasurement } from "@/src/lib/hooks/use-target-measurment";
+import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
 import { Image } from "expo-image";
 import { X } from "lucide-react-native";
 import { useEffect } from "react";

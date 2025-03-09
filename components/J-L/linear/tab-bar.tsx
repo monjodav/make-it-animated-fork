@@ -1,4 +1,4 @@
-import { useMeasureFlatListTabsLayout } from "@/src/lib/hooks/use-measure-flat-list-tabs-layout";
+import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
 import { CircleDashed, CircleMinus, CirclePlay, Copy, Folders } from "lucide-react-native";
 import React, { FC, useRef, useState } from "react";
 import { FlatList, View, ViewToken } from "react-native";

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Pressable, View } from "react-native";
 import { Position } from "./controls";
-import { cn } from "@/src/lib/utils/cn";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 // instagram-story-controls-animation 🔽
 

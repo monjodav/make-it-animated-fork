@@ -5,7 +5,7 @@ import { Image, Text, View } from "react-native";
 import { useEffect } from "react";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNotification } from "@/src/lib/providers/notification-provider";
+import { useNotification } from "@/src/shared/lib/providers/notification-provider";
 
 export default function Index() {
   const insets = useSafeAreaInsets();

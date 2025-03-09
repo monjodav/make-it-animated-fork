@@ -13,7 +13,7 @@ import {
   HeaderTitleProps,
   useHeaderHeight,
 } from "@react-navigation/elements";
-import { cn } from "@/src/lib/utils/cn";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 // whatsapp-header-large-title-animation 🔽
 // whatsapp-updates-screen-header-animation 🔽

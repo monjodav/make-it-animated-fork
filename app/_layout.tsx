@@ -6,10 +6,10 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import "../global.css";
-import { Animations } from "@/src/components/animations";
+import { Animations } from "@/src/shared/components/animations";
 import * as NavigationBar from "expo-navigation-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { NotificationProvider } from "@/src/lib/providers/notification-provider";
+import { NotificationProvider } from "@/src/shared/lib/providers/notification-provider";
 import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 
