@@ -1,6 +1,3 @@
-import React from "react";
-import { View } from "react-native";
+import More from "@/src/apps/(u-z)/viber/routes/more";
 
-export default function More() {
-  return <View className="flex-1 bg-black" />;
-}
+export default More;

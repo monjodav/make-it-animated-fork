@@ -1,6 +1,3 @@
-import React from "react";
-import { View } from "react-native";
+import Explore from "@/src/apps/(u-z)/viber/routes/explore";
 
-export default function Explore() {
-  return <View className="flex-1 bg-black" />;
-}
+export default Explore;
