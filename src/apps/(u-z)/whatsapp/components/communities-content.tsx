@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Platform, View } from "react-native";
 import { SharedValue } from "react-native-reanimated";
-import { useHeaderBackground } from "@/hooks/whatsapp/use-header-background";
+import { useHeaderBackground } from "../lib/hooks/use-header-background";
 
 type Props = {
   offsetY: SharedValue<number>;

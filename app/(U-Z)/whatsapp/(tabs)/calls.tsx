@@ -1,6 +1,3 @@
-import React from "react";
-import { View } from "react-native";
+import Calls from "@/src/apps/(u-z)/whatsapp/routes/calls";
 
-export default function Calls() {
-  return <View className="flex-1 bg-neutral-950" />;
-}
+export default Calls;

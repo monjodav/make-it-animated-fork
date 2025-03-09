@@ -1,6 +1,3 @@
-import React from "react";
-import { View } from "react-native";
+import Settings from "@/src/apps/(u-z)/whatsapp/routes/settings";
 
-export default function Settings() {
-  return <View className="flex-1 bg-neutral-950" />;
-}
+export default Settings;

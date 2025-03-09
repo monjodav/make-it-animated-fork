@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Pressable, View } from "react-native";
 import { SharedValue } from "react-native-reanimated";
-import { useHeaderBackground } from "@/hooks/whatsapp/use-header-background";
+import { useHeaderBackground } from "../lib/hooks/use-header-background";
 import { Pencil } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
