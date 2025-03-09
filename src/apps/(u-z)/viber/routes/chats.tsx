@@ -11,6 +11,7 @@ import { LargeTitle } from "../components/large-title";
 import { SearchBar } from "../components/search-bar";
 import { ChatsTopTabs } from "../components/chats-top-tabs";
 import { View } from "react-native";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // viber-chats-header-animation 🔽
 
@@ -23,6 +24,10 @@ const _searchBarMarginBottomDistance = _searchBarMarginBottomMax - _searchBarMar
 const _searchBarAnimationDistance = _searchBarHeight + _searchBarMarginBottomDistance;
 
 export default function Chats() {
+  useAndroidNote(
+    "This animation has performance issues on some android devices. I am working on it."
+  );
+
   const offsetY = useSharedValue(0);
 
   const listHeaderHeight = useSharedValue(0);

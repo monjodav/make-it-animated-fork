@@ -1,3 +1,4 @@
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 import { ListHeader } from "../components/list-header";
 import { MasonryList } from "../components/masonry-list";
 import { TabBar } from "../components/tab-bar";
@@ -58,6 +59,10 @@ const boards: Board[] = [
 ];
 
 export default function Home() {
+  useAndroidNote(
+    "Activity indicator animation is not supported yet on Android. I am working on it."
+  );
+
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 

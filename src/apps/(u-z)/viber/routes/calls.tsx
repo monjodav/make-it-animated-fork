@@ -11,10 +11,15 @@ import Animated, {
 import { LargeTitle } from "../components/large-title";
 import { SearchBar } from "../components/search-bar";
 import { Tab, TopTabs } from "../components/top-tabs";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // viber-header-large-title-animation 🔽
 
 export default function Calls() {
+  useAndroidNote(
+    "This animation has performance issues on some android devices. I am working on it."
+  );
+
   const [activeTab, setActiveTab] = useState(Tab.Contacts);
 
   const offsetY = useSharedValue(0);

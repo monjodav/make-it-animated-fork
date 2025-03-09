@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur";
-import { View, StyleSheet, useWindowDimensions, Pressable, Platform, Alert } from "react-native";
+import { View, StyleSheet, useWindowDimensions, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -16,8 +16,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { X } from "lucide-react-native";
-import { useEffect } from "react";
 import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // threads-profile-picture-animation 🔽
 
@@ -36,6 +36,8 @@ const Avatar = () => (
 );
 
 export default function Profile() {
+  useAndroidNote("Blur effect is an experimental feature on Android and may not work as expected.");
+
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const _screenCenterX = screenWidth / 2;
@@ -173,15 +175,6 @@ export default function Profile() {
         open();
       }
     });
-
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      Alert.alert(
-        "Note",
-        "Blur effect is an experimental feature on Android and may not work as expected."
-      );
-    }
-  }, []);
 
   return (
     <>
