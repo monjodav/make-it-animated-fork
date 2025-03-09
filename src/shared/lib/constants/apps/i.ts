@@ -1,5 +1,5 @@
 import InstagramImage from "@/assets/images/apps/instagram.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const instagram: App = {
   name: "Instagram",

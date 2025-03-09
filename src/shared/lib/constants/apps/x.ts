@@ -1,5 +1,5 @@
 import XImage from "@/assets/images/apps/x.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const x: App = {
   name: "X",

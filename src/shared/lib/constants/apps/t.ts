@@ -1,5 +1,5 @@
 import ThreadsImage from "@/assets/images/apps/threads.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const threads: App = {
   name: "Threads",

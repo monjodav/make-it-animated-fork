@@ -1,6 +1,6 @@
 import ColorsAppImage from "@/assets/images/apps/colors-app.png";
 import CanvaImage from "@/assets/images/apps/canva.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const canva: App = {
   name: "Canva",

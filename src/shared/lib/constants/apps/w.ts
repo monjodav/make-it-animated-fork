@@ -1,5 +1,5 @@
 import WhatsappImage from "@/assets/images/apps/whatsapp.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const whatsapp: App = {
   name: "Whatsapp",

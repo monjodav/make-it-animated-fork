@@ -1,7 +1,7 @@
 import LinearImage from "@/assets/images/apps/linear.png";
 import LinkedinImage from "@/assets/images/apps/linkedin.png";
 import LumaImage from "@/assets/images/apps/luma.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const linear: App = {
   name: "Linear",

@@ -1,4 +1,4 @@
-import { App, apps } from "../lib/constants/_home/the-list";
+import { App, apps } from "../lib/constants/apps-list";
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { Image, ListRenderItemInfo, SectionList, Text, TouchableOpacity, View } from "react-native";

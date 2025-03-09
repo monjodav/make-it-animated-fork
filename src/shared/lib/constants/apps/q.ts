@@ -1,5 +1,5 @@
 import QueueImage from "@/assets/images/apps/queue.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const queue: App = {
   name: "Queue",

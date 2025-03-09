@@ -1,6 +1,6 @@
 import GoogleChromeImage from "@/assets/images/apps/google-chrome.png";
 import GithubImage from "@/assets/images/apps/github.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const googleChrome: App = {
   name: "Google Chrome",

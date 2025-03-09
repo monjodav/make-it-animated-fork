@@ -1,5 +1,5 @@
 import PinterestImage from "@/assets/images/apps/pinterest.png";
-import { App } from "../the-list";
+import { App } from "../apps-list";
 
 export const pinterest: App = {
   name: "Pinterest",
