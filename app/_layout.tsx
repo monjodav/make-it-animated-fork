@@ -12,6 +12,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NotificationProvider } from "@/src/shared/lib/providers/notification-provider";
 import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
+import * as Sentry from "@sentry/react-native";
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+});
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

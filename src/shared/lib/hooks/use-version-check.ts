@@ -4,6 +4,7 @@ import { getAppInfoFromTheStore, shouldUpdateApp } from "../utils/version-check"
 import { Platform } from "react-native";
 import { STORE_LINKS } from "../constants/store-links";
 import * as Linking from "expo-linking";
+import { MANUAL_ERROR_CAPTURE } from "../utils/sentry";
 
 export const useVersionCheck = () => {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
@@ -18,7 +19,10 @@ export const useVersionCheck = () => {
           setIsUpdateAvailable(true);
         }
       } catch (error) {
-        console.error(error);
+        MANUAL_ERROR_CAPTURE({
+          title: "useVersionCheck > Failed",
+          error,
+        });
       }
     };
 

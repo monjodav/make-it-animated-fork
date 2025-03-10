@@ -78,6 +78,14 @@ export default ({ config }: { config: ExpoConfig }) => ({
           backgroundColor: "#131316",
         },
       ],
+      [
+        "@sentry/react-native/expo",
+        {
+          url: "https://sentry.io/",
+          project: "react-native",
+          organization: "make-it-animated",
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,

@@ -24,3 +24,5 @@ expo-env.d.ts
 google-services.json
 google-service-account-key-for-fcm-v1.json
 make-it-animated-service-account.json
+
+.env.local
