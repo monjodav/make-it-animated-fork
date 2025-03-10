@@ -26,6 +26,7 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
   const listOffsetYOnEndDrag = useSharedValue(0);
   const refreshing = useSharedValue(false);
   const isRefreshed = useSharedValue(false);
+  const isHapticTriggered = useSharedValue(false);
 
   const refresh = async () => {
     refreshing.value = true;
@@ -36,6 +37,7 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
 
   const handleHaptics = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    isHapticTriggered.value = true;
   };
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -50,8 +52,13 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
       const y = event.contentOffset.y;
       listOffsetY.value = y;
 
-      if (listOffsetY.value < -sharedConfigs.refreshingTriggerOffset) {
+      if (listOffsetY.value < -sharedConfigs.refreshingTriggerOffset && !isHapticTriggered.value) {
         runOnJS(handleHaptics)();
+      } else if (
+        isHapticTriggered.value &&
+        Math.abs(listOffsetY.value) < sharedConfigs.refreshingTriggerOffset
+      ) {
+        isHapticTriggered.value = false;
       }
     },
     onEndDrag: (event) => {
@@ -111,6 +118,7 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
         estimatedItemSize={200}
         scrollEventThrottle={1000 / 60}
         onScroll={scrollHandler}
+        showsVerticalScrollIndicator={false}
       />
     </WithPullToRefresh>
   );
