@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotification } from "@/src/shared/lib/providers/notification-provider";
+import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
+import { Rocket } from "lucide-react-native";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
@@ -13,12 +15,14 @@ export default function Index() {
   const navigation = useNavigation();
   const router = useRouter();
 
+  const { isUpdateAvailable, linkToStore } = useVersionCheck();
+
   const { expoPushToken, notification, error } = useNotification();
 
   useEffect(() => {
     setTimeout(() => {
       // navigation.dispatch(DrawerActions.openDrawer());
-      router.push("/viber/chats");
+      // router.push("/viber/chats");
     }, 250);
   }, [navigation]);
 
@@ -33,6 +37,23 @@ export default function Index() {
       >
         <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
       </TouchableOpacity>
+      {isUpdateAvailable && (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={linkToStore}
+          className="absolute left-4 right-4 p-4 rounded-2xl bg-stone-800 flex-row items-center gap-4"
+          style={{ top: insets.top + 16 }}
+        >
+          <Rocket color="gray" strokeWidth={1.5} />
+          <View className="gap-1 flex-1">
+            <Text className="text-white text-base">New Version Available</Text>
+            <Text className="text-white text-sm font-light">
+              Please update the app to get the latest animations and features.{" "}
+              <Text className="underline">Download now.</Text>
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
