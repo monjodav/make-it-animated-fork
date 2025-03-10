@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import Animated, {
-  Extrapolation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -11,7 +10,6 @@ import { LargeTitle } from "../components/large-title";
 import { SearchBar } from "../components/search-bar";
 import { ChatsTopTabs } from "../components/chats-top-tabs";
 import { View } from "react-native";
-import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // viber-chats-header-animation 🔽
 
@@ -24,13 +22,9 @@ const _searchBarMarginBottomDistance = _searchBarMarginBottomMax - _searchBarMar
 const _searchBarAnimationDistance = _searchBarHeight + _searchBarMarginBottomDistance;
 
 export default function Chats() {
-  useAndroidNote(
-    "This animation has performance issues on some android devices. I am working on it."
-  );
+  const [listHeaderHeight, setListHeaderHeight] = useState(0);
 
   const offsetY = useSharedValue(0);
-
-  const listHeaderHeight = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { y } }) => {
@@ -39,47 +33,35 @@ export default function Chats() {
   });
 
   const rListHeaderStyle = useAnimatedStyle(() => {
-    if (!listHeaderHeight.value) return {};
-
     return {
-      marginTop: interpolate(
-        offsetY.value,
-        [0, _searchBarAnimationDistance, listHeaderHeight.value],
-        [0, 0, -listHeaderHeight.value],
-        Extrapolation.CLAMP
-      ),
       transform: [
         {
-          translateY: interpolate(offsetY.value, [-100, 0], [100, 0], {
-            extrapolateRight: "clamp",
-          }),
+          translateY: interpolate(
+            offsetY.value,
+            [-100, 0, _searchBarAnimationDistance, listHeaderHeight + _searchBarAnimationDistance],
+            [100, 0, 0, -listHeaderHeight],
+            { extrapolateRight: "clamp" }
+          ),
         },
       ],
-    };
-  });
-
-  const rListContainerStyle = useAnimatedStyle(() => {
-    return {
-      paddingTop: interpolate(
-        offsetY.value,
-        [0, listHeaderHeight.value],
-        [0, listHeaderHeight.value],
-        Extrapolation.CLAMP
-      ),
     };
   });
 
   return (
     <View className="flex-1 bg-black">
       <Animated.View
-        className="px-4"
         style={rListHeaderStyle}
-        onLayout={({ nativeEvent }) => listHeaderHeight.set(nativeEvent.layout.height)}
+        className="absolute top-0 left-0 right-0 px-4"
+        onLayout={(e) => {
+          if (listHeaderHeight === 0) {
+            setListHeaderHeight(e.nativeEvent.layout.height);
+          }
+        }}
       >
         <LargeTitle
           title="Chats"
           offsetY={offsetY}
-          searchBarAnimationDistance={_searchBarAnimationDistance - 16}
+          searchBarAnimationDistance={_searchBarAnimationDistance}
           className="mb-4 pt-4"
         />
         <SearchBar
@@ -93,9 +75,9 @@ export default function Chats() {
       <Animated.FlatList
         data={Array.from({ length: 20 }, (_, index) => index)}
         renderItem={({ item }) => <ChatListItem key={item} />}
-        style={rListContainerStyle}
         contentContainerClassName="p-4 gap-4"
-        indicatorStyle="white"
+        contentContainerStyle={{ paddingTop: listHeaderHeight + 16 }}
+        showsVerticalScrollIndicator={false}
         scrollEventThrottle={1000 / 60}
         onScroll={scrollHandler}
       />

@@ -3,7 +3,11 @@ import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import { CallsListItem } from "./calls-list-item";
 
-export const CallsRecentList: FC = () => {
+type Props = {
+  headerHeight: number;
+};
+
+export const CallsRecentList: FC<Props> = ({ headerHeight }) => {
   return (
     <Animated.FlatList
       data={[]}
@@ -15,6 +19,7 @@ export const CallsRecentList: FC = () => {
         </View>
       )}
       contentContainerClassName="gap-4 px-5 pt-3"
+      contentContainerStyle={{ paddingTop: headerHeight + 16 }}
     />
   );
 };

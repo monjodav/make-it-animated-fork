@@ -18,7 +18,7 @@ export default function Index() {
   useEffect(() => {
     setTimeout(() => {
       // navigation.dispatch(DrawerActions.openDrawer());
-      router.push("/threads/profile");
+      router.push("/viber/chats");
     }, 250);
   }, [navigation]);
 
