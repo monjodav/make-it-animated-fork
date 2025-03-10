@@ -1,6 +1,6 @@
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback, useState } from "react";
-import { Platform, ScrollView, StyleSheet, TextInput } from "react-native";
+import { Platform, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
@@ -13,6 +13,7 @@ import { NotificationProvider } from "@/src/shared/lib/providers/notification-pr
 import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
+import { VisitWebsite } from "@/src/shared/components/visit-website";
 
 if (!__DEV__) {
   Sentry.init({
@@ -44,8 +45,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
     <>
       <TextInput
         placeholder="Search app..."
-        placeholderTextColor="#9394a1"
-        className="bg-[#212126] rounded-xl p-3 text-[#cccfd5] mb-4 mx-4"
+        placeholderTextColor="#a8a29e"
+        className="bg-[#212126] rounded-xl p-3 text-stone-400 mb-4 mx-4"
         style={{ marginTop: insets.top + 16 }}
         value={query}
         onChangeText={setQuery}
@@ -57,6 +58,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       >
         <Animations query={query} />
       </ScrollView>
+      <View className="absolute bottom-0 left-0 right-0">
+        <VisitWebsite />
+      </View>
     </>
   );
 };

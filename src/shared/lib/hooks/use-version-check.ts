@@ -2,9 +2,9 @@ import Constants from "expo-constants";
 import { useEffect, useState } from "react";
 import { getAppInfoFromTheStore, shouldUpdateApp } from "../utils/version-check";
 import { Platform } from "react-native";
-import { STORE_LINKS } from "../constants/store-links";
 import * as Linking from "expo-linking";
 import { MANUAL_ERROR_CAPTURE } from "../utils/sentry";
+import { APP_STORE_URL, PLAY_MARKET_URL } from "../constants/links";
 
 export const useVersionCheck = () => {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
@@ -31,8 +31,8 @@ export const useVersionCheck = () => {
 
   const linkToStore = () => {
     const storeLink = Platform.select({
-      ios: STORE_LINKS.IOS,
-      android: STORE_LINKS.ANDROID,
+      ios: APP_STORE_URL,
+      android: PLAY_MARKET_URL,
     });
 
     if (storeLink) {

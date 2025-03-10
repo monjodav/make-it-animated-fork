@@ -8,9 +8,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotification } from "@/src/shared/lib/providers/notification-provider";
 import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
 import { Rocket } from "lucide-react-native";
+import * as WebBrowser from "expo-web-browser";
+import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
+import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
+import { WebBrowserPresentationStyle } from "expo-web-browser";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
+
+  useWarmUpBrowser();
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -28,7 +34,16 @@ export default function Index() {
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
-      <Image source={Logo} className="size-20" />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() =>
+          WebBrowser.openBrowserAsync(WEBSITE_URL, {
+            presentationStyle: WebBrowserPresentationStyle.FORM_SHEET,
+          })
+        }
+      >
+        <Image source={Logo} className="size-20" />
+      </TouchableOpacity>
       <TouchableOpacity
         activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
