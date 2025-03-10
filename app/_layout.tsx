@@ -14,9 +14,11 @@ import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 
-Sentry.init({
-  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-});
+if (!__DEV__) {
+  Sentry.init({
+    dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  });
+}
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
