@@ -13,7 +13,7 @@ import {
 
 // gmail-header-scroll-animation 🔽
 
-type AnimatedListContextType = {
+type AnimatedScrollListContextType = {
   listRef: React.RefObject<FlatList<any>>;
   listOffsetY: SharedValue<number>;
   isDragging: SharedValue<boolean>;
@@ -23,9 +23,11 @@ type AnimatedListContextType = {
   scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>;
 };
 
-const AnimatedListContext = createContext<AnimatedListContextType>({} as AnimatedListContextType);
+const AnimatedScrollListContext = createContext<AnimatedScrollListContextType>(
+  {} as AnimatedScrollListContextType
+);
 
-export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
+export const AnimatedScrollListProvider: FC<PropsWithChildren> = ({ children }) => {
   const listRef = useRef<FlatList>(null);
 
   const listOffsetY = useSharedValue(0);
@@ -54,7 +56,7 @@ export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
   });
 
   return (
-    <AnimatedListContext.Provider
+    <AnimatedScrollListContext.Provider
       value={{
         listRef,
         listOffsetY,
@@ -66,15 +68,15 @@ export const AnimatedListProvider: FC<PropsWithChildren> = ({ children }) => {
       }}
     >
       {children}
-    </AnimatedListContext.Provider>
+    </AnimatedScrollListContext.Provider>
   );
 };
 
-export const useAnimatedList = () => {
-  const context = useContext(AnimatedListContext);
+export const useAnimatedScrollList = () => {
+  const context = useContext(AnimatedScrollListContext);
 
   if (!context) {
-    throw new Error("useAnimatedList must be used within an AnimatedListProvider");
+    throw new Error("useAnimatedScrollList must be used within an AnimatedScrollListProvider");
   }
 
   return context;

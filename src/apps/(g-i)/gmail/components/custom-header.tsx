@@ -10,7 +10,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "../lib/hooks/use-header-height";
-import { useAnimatedList } from "../lib/providers/animated-list-provider";
+import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-provider";
 
 // gmail-header-scroll-animation 🔽
 
@@ -20,7 +20,7 @@ export const CustomHeader: FC = () => {
   const { safeAreaHeight, searchBarHeight } = useHeaderHeight();
 
   const { listRef, listOffsetY, isDragging, scrollDirection, offsetYAnchorOnChangeDirection } =
-    useAnimatedList();
+    useAnimatedScrollList();
 
   const opacity = useSharedValue(1);
   const opacityAnchor = useSharedValue(1);
@@ -136,7 +136,7 @@ export const CustomHeader: FC = () => {
         <View className="absolute left-8">
           <Menu size={24} color="lightgray" />
         </View>
-        <View className="absolute right-8 w-8 h-8 rounded-full bg-yellow-300/25" />
+        <View className="absolute right-8 w-8 h-8 rounded-full bg-[#e9967a]/25" />
       </Animated.View>
     </View>
   );

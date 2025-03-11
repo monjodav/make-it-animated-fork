@@ -1,18 +1,17 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useHeaderHeight } from "../lib/hooks/use-header-height";
-import { useAnimatedList } from "../lib/providers/animated-list-provider";
+import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-provider";
+import { useBottomTabBarHeight } from "../lib/hooks/use-bottom-tab-bar-height";
 
 // gmail-header-scroll-animation 🔽
 
 export const ContentList: FC = () => {
-  const insets = useSafeAreaInsets();
-
   const { headerHeight, searchBarHeight } = useHeaderHeight();
+  const { grossHeight } = useBottomTabBarHeight();
 
-  const { listRef, scrollHandler } = useAnimatedList();
+  const { listRef, scrollHandler } = useAnimatedScrollList();
 
   return (
     <Animated.FlatList
@@ -34,11 +33,12 @@ export const ContentList: FC = () => {
       contentContainerClassName="gap-8 px-5"
       contentContainerStyle={{
         paddingTop: headerHeight + 28,
-        paddingBottom: insets.bottom + 16,
+        paddingBottom: grossHeight + 16,
       }}
       onScroll={scrollHandler}
       scrollEventThrottle={1000 / 60}
       scrollIndicatorInsets={{ top: searchBarHeight }}
+      indicatorStyle="white"
     />
   );
 };

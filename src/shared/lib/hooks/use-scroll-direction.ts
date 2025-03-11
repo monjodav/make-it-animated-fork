@@ -33,7 +33,7 @@ export const useScrollDirection = () => {
       offsetYAnchorOnChangeDirection.value = offsetY;
     }
     if (
-      positivePrevOffsetY - positiveOffsetY >= 0 &&
+      positivePrevOffsetY - positiveOffsetY > 0 &&
       (scrollDirection.value === "idle" || scrollDirection.value === "to-bottom")
     ) {
       scrollDirection.value = "to-top";
