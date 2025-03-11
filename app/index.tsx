@@ -1,8 +1,6 @@
-import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
-import { useEffect } from "react";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotification } from "@/src/shared/lib/providers/notification-provider";
@@ -19,18 +17,10 @@ export default function Index() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
-  const router = useRouter();
 
   const { isUpdateAvailable, linkToStore } = useVersionCheck();
 
   const { expoPushToken, notification, error } = useNotification();
-
-  useEffect(() => {
-    setTimeout(() => {
-      // navigation.dispatch(DrawerActions.openDrawer());
-      router.push("/gmail/inbox");
-    }, 250);
-  }, [navigation]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">

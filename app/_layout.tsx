@@ -14,6 +14,7 @@ import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
+import { useUpdate } from "@/src/shared/lib/hooks/use-update";
 
 if (!__DEV__) {
   Sentry.init({
@@ -75,6 +76,8 @@ export default function RootLayout() {
       SplashScreen.hide();
     }, 500);
   }, []);
+
+  useUpdate();
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>

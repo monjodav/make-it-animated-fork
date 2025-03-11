@@ -42,6 +42,12 @@ export default ({ config }: { config: ExpoConfig }) => ({
     userInterfaceStyle: "automatic",
     icon: "./assets/images/icon-ios.png",
     newArchEnabled: true,
+    updates: {
+      url: "https://u.expo.dev/cb26971b-9cd8-4f46-ba13-809821a5015e",
+    },
+    runtimeVersion: {
+      policy: "appVersion",
+    },
     ios: {
       ...config.ios,
       supportsTablet: false,
