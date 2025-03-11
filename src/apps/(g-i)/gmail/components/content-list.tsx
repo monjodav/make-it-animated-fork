@@ -6,6 +6,7 @@ import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-pro
 import { useBottomTabBarHeight } from "../lib/hooks/use-bottom-tab-bar-height";
 
 // gmail-header-scroll-animation 🔽
+// gmail-bottom-tab-bar-and-fab-animation 🔽
 
 export const ContentList: FC = () => {
   const { headerHeight, searchBarHeight } = useHeaderHeight();
@@ -43,4 +44,5 @@ export const ContentList: FC = () => {
   );
 };
 
+// gmail-bottom-tab-bar-and-fab-animation 🔼
 // gmail-header-scroll-animation 🔼

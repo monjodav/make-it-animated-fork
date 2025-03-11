@@ -1,13 +1,11 @@
 import { Tabs } from "expo-router";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { CustomTabBar } from "@/src/apps/(g-i)/gmail/components/custom-tab-bar";
+import { CustomTabBar, Tab } from "@/src/apps/(g-i)/gmail/components/custom-tab-bar";
 import { AnimatedScrollListProvider } from "@/src/apps/(g-i)/gmail/lib/providers/animated-scroll-list-provider";
 
-export enum Tab {
-  Inbox = "inbox",
-  Meet = "meet",
-}
+// gmail-header-scroll-animation 🔽
+// gmail-bottom-tab-bar-and-fab-animation 🔽
 
 const TabsLayout = () => {
   return (
@@ -27,3 +25,6 @@ const TabsLayout = () => {
 };
 
 export default TabsLayout;
+
+// gmail-bottom-tab-bar-and-fab-animation 🔼
+// gmail-header-scroll-animation 🔼

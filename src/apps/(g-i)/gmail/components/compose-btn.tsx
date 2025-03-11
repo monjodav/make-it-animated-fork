@@ -5,6 +5,8 @@ import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-pro
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useBottomTabBarHeight } from "../lib/hooks/use-bottom-tab-bar-height";
 
+// gmail-bottom-tab-bar-and-fab-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(TouchableOpacity);
 
 const _btnWidth = 125;
@@ -64,3 +66,5 @@ export const ComposeBtn: FC = () => {
     </AnimatedPressable>
   );
 };
+
+// gmail-bottom-tab-bar-and-fab-animation 🔼

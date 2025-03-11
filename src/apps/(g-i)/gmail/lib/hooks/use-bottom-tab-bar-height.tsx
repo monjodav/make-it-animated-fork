@@ -1,5 +1,7 @@
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// gmail-bottom-tab-bar-and-fab-animation 🔽
+
 export const useBottomTabBarHeight = () => {
   const insets = useSafeAreaInsets();
 
@@ -8,3 +10,5 @@ export const useBottomTabBarHeight = () => {
     grossHeight: insets.bottom + 60,
   };
 };
+
+// gmail-bottom-tab-bar-and-fab-animation 🔼

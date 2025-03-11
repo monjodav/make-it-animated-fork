@@ -3,9 +3,15 @@ import { Pressable } from "react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useBottomTabBarHeight } from "../lib/hooks/use-bottom-tab-bar-height";
 import { Mail, Video } from "lucide-react-native";
-import { Tab } from "@/app/(g-i)/gmail/_layout";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-provider";
+
+// gmail-bottom-tab-bar-and-fab-animation 🔽
+
+export enum Tab {
+  Inbox = "inbox",
+  Meet = "meet",
+}
 
 const _duration = 200;
 
@@ -51,3 +57,5 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
     </Animated.View>
   );
 };
+
+// gmail-bottom-tab-bar-and-fab-animation 🔼

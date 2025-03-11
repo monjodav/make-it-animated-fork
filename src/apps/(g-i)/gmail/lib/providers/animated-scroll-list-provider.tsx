@@ -12,6 +12,7 @@ import {
 } from "react-native-reanimated";
 
 // gmail-header-scroll-animation 🔽
+// gmail-bottom-tab-bar-and-fab-animation 🔽
 
 type AnimatedScrollListContextType = {
   listRef: React.RefObject<FlatList<any>>;
@@ -82,4 +83,5 @@ export const useAnimatedScrollList = () => {
   return context;
 };
 
+// gmail-bottom-tab-bar-and-fab-animation 🔼
 // gmail-header-scroll-animation 🔼

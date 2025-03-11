@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { ComposeBtn } from "../components/compose-btn";
 
 // gmail-header-scroll-animation 🔽
+// gmail-bottom-tab-bar-and-fab-animation 🔽
 
 export default function Inbox() {
   return (
@@ -15,4 +16,5 @@ export default function Inbox() {
   );
 }
 
+// gmail-bottom-tab-bar-and-fab-animation 🔼
 // gmail-header-scroll-animation 🔼
