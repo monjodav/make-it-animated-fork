@@ -17,13 +17,12 @@ export const useTargetMeasurement = () => {
 
   const onTargetLayout = () => {
     if (isTargetMounted.value === false) {
-      if (Platform.OS === "ios") {
-        isTargetMounted.value = true;
-      } else {
+      if (Platform.OS === "android") {
         setTimeout(() => {
           isTargetMounted.value = true;
         }, 500);
       }
+      isTargetMounted.value = true;
     }
   };
 
