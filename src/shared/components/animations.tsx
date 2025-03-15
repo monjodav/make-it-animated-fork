@@ -45,9 +45,7 @@ export const Animations: FC<Props> = ({ query }) => {
       onPress={() => router.push(item.href)}
       className="px-5 py-4"
     >
-      <Text className="text-stone-400 text-base">
-        {index + 1}. {item.name}
-      </Text>
+      <Text className="text-stone-400 text-base">{item.name}</Text>
     </TouchableOpacity>
   );
 

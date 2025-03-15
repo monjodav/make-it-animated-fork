@@ -1,28 +1,40 @@
-import { Platform } from "react-native";
-import { measure, useAnimatedRef, useDerivedValue, useSharedValue } from "react-native-reanimated";
+import { useEffect, useState } from "react";
+import {
+  measure,
+  MeasuredDimensions,
+  runOnUI,
+  useAnimatedRef,
+  useSharedValue,
+} from "react-native-reanimated";
 
 export const useTargetMeasurement = () => {
+  const [isTargetMounted, setIsTargetMounted] = useState(false);
   const targetRef = useAnimatedRef();
-  const isTargetMounted = useSharedValue(false);
 
-  const measurement = useDerivedValue(() => {
-    if (isTargetMounted.value === false) {
-      return null;
+  const measurement = useSharedValue<MeasuredDimensions | null>(null);
+
+  const handleMeasurement = () => {
+    runOnUI(() => {
+      const result = measure(targetRef);
+      if (result === null) {
+        return;
+      }
+      measurement.value = result;
+    })();
+  };
+
+  useEffect(() => {
+    if (isTargetMounted) {
+      setTimeout(() => {
+        handleMeasurement();
+      }, 1000); // Wait for sure the target to be mounted
     }
-
-    const measurement = measure(targetRef);
-
-    return measurement;
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTargetMounted]);
 
   const onTargetLayout = () => {
-    if (isTargetMounted.value === false) {
-      if (Platform.OS === "android") {
-        setTimeout(() => {
-          isTargetMounted.value = true;
-        }, 500);
-      }
-      isTargetMounted.value = true;
+    if (isTargetMounted === false) {
+      setIsTargetMounted(true);
     }
   };
 

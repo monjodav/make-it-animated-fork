@@ -41,7 +41,9 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
     const triggerHeight = triggerMeasurement.value.height;
     const triggerPageY = triggerMeasurement.value.pageY;
 
-    const scrollDistance = triggerPageY - headerHeight;
+    const scrollDistance = triggerPageY - 2 * headerHeight;
+    // Kinda bug and reanimated measure add headerHeight to pageY if router header is enabled
+    // That's why we need to subtract 2 * headerHeight
 
     return {
       opacity: 1,

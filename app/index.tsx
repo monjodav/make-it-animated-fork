@@ -10,6 +10,9 @@ import * as WebBrowser from "expo-web-browser";
 import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
 import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
+import Animated, { FadeIn } from "react-native-reanimated";
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function Index() {
   const insets = useSafeAreaInsets();
@@ -32,16 +35,17 @@ export default function Index() {
           })
         }
       >
-        <Image source={Logo} className="size-20" />
+        <Image source={Logo} className="size-[100px]" />
       </TouchableOpacity>
-      <TouchableOpacity
+      <AnimatedTouchable
+        entering={FadeIn}
         activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        className="absolute border border-stone-600 px-4 py-3 rounded-full items-center self-center"
+        className="absolute border border-stone-600 px-6 py-4 rounded-full items-center self-center"
         style={{ bottom: insets.bottom + 10 }}
       >
         <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
-      </TouchableOpacity>
+      </AnimatedTouchable>
       {isUpdateAvailable && (
         <TouchableOpacity
           activeOpacity={0.8}

@@ -34,9 +34,9 @@ export default function Profile() {
         <View className="w-20 h-20 rounded-full border border-white/15" />
         <View className="flex-1">
           <Text className="text-stone-100 font-bold text-lg">Volodymyr Serbulenko</Text>
-          <Animated.Text ref={triggerRef} className="text-stone-300 text-base" onLayout={onLayout}>
-            vvv-sss
-          </Animated.Text>
+          <Animated.View ref={triggerRef} onLayout={onLayout}>
+            <Animated.Text className="text-stone-300 text-base">vvv-sss</Animated.Text>
+          </Animated.View>
         </View>
       </View>
 
