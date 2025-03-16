@@ -30,7 +30,7 @@ export default function Index() {
     if (action === "openDrawer") {
       setTimeout(() => {
         navigation.dispatch(DrawerActions.openDrawer());
-      }, 1000);
+      }, 500);
     }
   }, [action, navigation]);
 

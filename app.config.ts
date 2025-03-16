@@ -56,11 +56,6 @@ export default ({ config }: { config: ExpoConfig }) => ({
       config: {
         usesNonExemptEncryption: false,
       },
-      infoPlist: {
-        NSUserNotificationUsageDescription:
-          "Stay updated with our latest content! Enable notifications to be the first to know when exciting new animations are available.",
-        UIBackgroundModes: ["remote-notification"],
-      },
     },
     android: {
       ...config.android,
