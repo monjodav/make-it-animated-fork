@@ -11,7 +11,12 @@
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production"
+      "channel": "production",
+      "environment": "production",
+      "env": {
+        "EXPO_PUBLIC_SENTRY_DSN": "https://2a0c3c1b545dc9fe5e2cd30f14cbc835@o4508903018725376.ingest.de.sentry.io/4508954972061776",
+        "EXPO_PUBLIC_ONE_SIGNAL_APP_ID": "87134ab7-8318-4433-9344-e6252615e453"
+      }
     }
   },
   "submit": {
