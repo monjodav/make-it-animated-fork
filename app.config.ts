@@ -56,6 +56,11 @@ export default ({ config }: { config: ExpoConfig }) => ({
       config: {
         usesNonExemptEncryption: false,
       },
+      infoPlist: {
+        NSUserNotificationUsageDescription:
+          "Stay updated with our latest content! Enable notifications to be the first to know when exciting new animations are available.",
+        UIBackgroundModes: ["remote-notification"],
+      },
     },
     android: {
       ...config.android,
@@ -65,6 +70,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
       },
       package: getEnvironmentValues().package,
       googleServicesFile: getGoogleServicesFile(),
+      permissions: ["NOTIFICATIONS"],
     },
     plugins: [
       "expo-router",
@@ -90,6 +96,12 @@ export default ({ config }: { config: ExpoConfig }) => ({
           url: "https://sentry.io/",
           project: "react-native",
           organization: "make-it-animated",
+        },
+      ],
+      [
+        "onesignal-expo-plugin",
+        {
+          mode: "development",
         },
       ],
     ],

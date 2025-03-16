@@ -3,7 +3,6 @@ import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNotification } from "@/src/shared/lib/providers/notification-provider";
 import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
 import { Rocket } from "lucide-react-native";
 import * as WebBrowser from "expo-web-browser";
@@ -11,10 +10,14 @@ import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
 import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function Index() {
+  const { action } = useLocalSearchParams<{ action: string }>();
+
   const insets = useSafeAreaInsets();
 
   useWarmUpBrowser();
@@ -23,7 +26,13 @@ export default function Index() {
 
   const { isUpdateAvailable, linkToStore } = useVersionCheck();
 
-  const { expoPushToken, notification, error } = useNotification();
+  useEffect(() => {
+    if (action === "openDrawer") {
+      setTimeout(() => {
+        navigation.dispatch(DrawerActions.openDrawer());
+      }, 1000);
+    }
+  }, [action, navigation]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
@@ -42,7 +51,7 @@ export default function Index() {
         activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         className="absolute border border-stone-600 px-6 py-4 rounded-full items-center self-center"
-        style={{ bottom: insets.bottom + 10 }}
+        style={{ bottom: insets.bottom + 24 }}
       >
         <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
       </AnimatedTouchable>

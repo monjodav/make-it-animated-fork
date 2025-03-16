@@ -9,26 +9,21 @@ import "../global.css";
 import { Animations } from "@/src/shared/components/animations";
 import * as NavigationBar from "expo-navigation-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { NotificationProvider } from "@/src/shared/lib/providers/notification-provider";
-import * as Notifications from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
 import { useUpdate } from "@/src/shared/lib/hooks/use-update";
+import { LogLevel, OneSignal } from "react-native-onesignal";
 
 if (!__DEV__) {
+  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+  OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID!);
+  OneSignal.Notifications.requestPermission(true);
+
   Sentry.init({
     dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   });
 }
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
 
 SplashScreen.preventAutoHideAsync();
 
@@ -81,17 +76,15 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
-      <NotificationProvider>
-        <KeyboardProvider>
-          {Platform.OS === "android" && (
-            <StatusBar style="light" backgroundColor="black" translucent={false} />
-          )}
-          <Drawer
-            drawerContent={(props) => <DrawerContent {...props} />}
-            screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}
-          />
-        </KeyboardProvider>
-      </NotificationProvider>
+      <KeyboardProvider>
+        {Platform.OS === "android" && (
+          <StatusBar style="light" backgroundColor="black" translucent={false} />
+        )}
+        <Drawer
+          drawerContent={(props) => <DrawerContent {...props} />}
+          screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}
+        />
+      </KeyboardProvider>
     </GestureHandlerRootView>
   );
 }
