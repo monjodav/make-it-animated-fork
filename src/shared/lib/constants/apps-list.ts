@@ -32,9 +32,11 @@ export const apps: App[] = [
   // C
   canva,
   colorsApp,
+  //------------------------
   // D
   // E
   // F
+  //------------------------
   // G
   googleChrome,
   gmail,
@@ -42,23 +44,28 @@ export const apps: App[] = [
   // H
   // I
   instagram,
+  //------------------------
   // J
   // K
   // L
   linear,
   linkedin,
   luma,
+  //------------------------
   // M
   // N
   // O
+  //------------------------
   // P
   pinterest,
   // Q
   queue,
   // R
+  // -----------------------
   // S
   // T
   threads,
+  //------------------------
   // U
   // V
   viber,
