@@ -62,9 +62,9 @@ export default function Calls() {
           <LargeTitle title="Calls" offsetY={offsetY} className="mb-4 pt-4" />
         </View>
         <SearchBar height={36} marginBottomMax={16} />
-        {/* viber-top-tabs-indicator-animation 🔽 */}
+        {/* viber-calls-top-tabs-animation 🔽 */}
         <TopTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-        {/* viber-top-tabs-indicator-animation 🔼 */}
+        {/* viber-calls-top-tabs-animation 🔼 */}
         <View className="h-px bg-neutral-800/75 mt-3 mb-2 -mx-5" />
         {activeTab === Tab.Contacts && <View className="h-[75px] bg-neutral-900 rounded-2xl" />}
       </Animated.View>

@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { View, Pressable } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
-// viber-top-tabs-indicator-animation 🔽
+// viber-calls-top-tabs-animation 🔽
 
 const _padding = 3;
 
@@ -82,4 +82,4 @@ export const TopTabs: FC<Props> = ({ activeTab, setActiveTab }) => {
   );
 };
 
-// viber-top-tabs-indicator-animation 🔼
+// viber-calls-top-tabs-animation 🔼

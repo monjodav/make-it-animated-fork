@@ -31,6 +31,7 @@ export const UpdatesContent: FC<Props> = ({ offsetY }) => {
         </View>
         <View className="ml-auto flex-row">
           <View className="h-8 w-8 bg-neutral-900 rounded-full mr-3" />
+          {/* whatsapp-add-status-background-animation 🔽 */}
           <Pressable
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -40,6 +41,7 @@ export const UpdatesContent: FC<Props> = ({ offsetY }) => {
           >
             <Pencil size={14} color="white" />
           </Pressable>
+          {/* whatsapp-add-status-background-animation 🔼 */}
         </View>
       </View>
       <View className="mb-4">
