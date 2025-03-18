@@ -14,24 +14,24 @@ export const canva: App = {
 };
 
 export const colorsApp: App = {
-  name: "Colors App",
+  name: "ColorsApp",
   imageSource: ColorsAppImage,
   animations: [
     {
       name: "Color picker background animation",
-      href: "/colors-app/color-picker",
+      href: "/colorsapp/color-picker",
     },
     {
       name: "Palette picker color change animation",
-      href: "/colors-app/palette-picker",
+      href: "/colorsapp/palette-picker",
     },
     {
       name: "Home header animation",
-      href: "/colors-app/home",
+      href: "/colorsapp/home",
     },
     {
       name: "Card blurry circles animation",
-      href: "/colors-app/home",
+      href: "/colorsapp/home",
     },
   ],
 };
