@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { Image, ListRenderItemInfo, SectionList, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { NewAnimations } from "./new-animations";
 
 type AppSection = {
   title: string;
@@ -29,6 +30,8 @@ export const Animations: FC<Props> = ({ query }) => {
     )
     .filter((section: AppSection) => section.title.toLowerCase().includes(query.toLowerCase()));
 
+  const _renderListHeader = () => <NewAnimations />;
+
   const _renderSectionHeader = ({ section }: { section: AppSection }) => (
     <View className="bg-[#131316]">
       <View className="h-[2px] rounded-full mx-2 bg-[#070708]" />
@@ -41,7 +44,7 @@ export const Animations: FC<Props> = ({ query }) => {
 
   const _renderItem = ({ item, index }: ListRenderItemInfo<App["animations"][number]>) => (
     <TouchableOpacity
-      activeOpacity={0.5}
+      activeOpacity={0.75}
       onPress={() => router.push(item.href)}
       className="px-5 py-4"
     >
@@ -69,6 +72,7 @@ export const Animations: FC<Props> = ({ query }) => {
         keyExtractor={(item: App["animations"][number], index: number) => `${item.name}-${index}`}
         renderSectionHeader={_renderSectionHeader}
         renderItem={_renderItem}
+        // ListHeaderComponent={_renderListHeader}
         contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
         stickySectionHeadersEnabled
         showsVerticalScrollIndicator={false}
