@@ -50,7 +50,7 @@ export default function Index() {
         entering={FadeIn}
         activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        className="absolute border border-stone-600 px-6 py-4 rounded-full items-center self-center"
+        className="absolute border border-stone-600 px-6 py-4 rounded-full items-center self-center bg-stone-900"
         style={{ bottom: insets.bottom + 24 }}
       >
         <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
