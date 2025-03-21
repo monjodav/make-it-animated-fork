@@ -72,7 +72,7 @@ export const Animations: FC<Props> = ({ query }) => {
         keyExtractor={(item: App["animations"][number], index: number) => `${item.name}-${index}`}
         renderSectionHeader={_renderSectionHeader}
         renderItem={_renderItem}
-        ListHeaderComponent={_renderListHeader}
+        // ListHeaderComponent={_renderListHeader}
         contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
         stickySectionHeadersEnabled
         showsVerticalScrollIndicator={false}
