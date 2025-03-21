@@ -18,7 +18,6 @@ import { LogLevel, OneSignal } from "react-native-onesignal";
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
   OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID!);
-  OneSignal.Notifications.requestPermission(true);
 
   Sentry.init({
     dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -69,6 +68,7 @@ export default function RootLayout() {
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
       SplashScreen.hide();
+      OneSignal.Notifications.requestPermission(true);
     }, 500);
   }, []);
 

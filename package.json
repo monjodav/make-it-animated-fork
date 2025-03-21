@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "APP_VARIANT=development expo start -c",
     "ios": "APP_VARIANT=development expo run:ios --device",
+    "build:ios": "eas build --platform ios --profile production",
     "submit:ios": "eas build --platform ios --profile production --auto-submit",
     "android": "APP_VARIANT=development expo run:android --device",
     "submit:android": "eas build --platform android --profile production --auto-submit"
