@@ -15,7 +15,7 @@ export const VisitWebsite = () => {
 
   return (
     <TouchableOpacity
-      activeOpacity={0.8}
+      activeOpacity={0.95}
       onPress={() =>
         WebBrowser.openBrowserAsync(WEBSITE_URL, {
           presentationStyle: WebBrowserPresentationStyle.FORM_SHEET,
