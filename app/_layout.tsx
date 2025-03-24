@@ -68,8 +68,10 @@ export default function RootLayout() {
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
       SplashScreen.hide();
-      OneSignal.Notifications.requestPermission(true);
     }, 500);
+    setTimeout(() => {
+      OneSignal.Notifications.requestPermission(true);
+    }, 1000);
   }, []);
 
   useUpdate();
