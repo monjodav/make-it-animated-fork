@@ -35,7 +35,7 @@ export default function Index() {
           })
         }
       >
-        <Image source={Logo} className="size-[100px]" />
+        <Image source={Logo} className="size-[100px] opacity-50" />
       </TouchableOpacity>
       <AnimatedTouchable
         entering={FadeIn}
