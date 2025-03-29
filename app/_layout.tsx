@@ -12,7 +12,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
-import { useUpdate } from "@/src/shared/lib/hooks/use-update";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 
 if (!__DEV__) {
@@ -73,8 +72,6 @@ export default function RootLayout() {
       OneSignal.Notifications.requestPermission(true);
     }, 1000);
   }, []);
-
-  useUpdate();
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>

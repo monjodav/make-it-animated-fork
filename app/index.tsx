@@ -12,6 +12,7 @@ import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
+import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -25,6 +26,8 @@ export default function Index() {
   const navigation = useNavigation();
 
   const { isUpdateAvailable, linkToStore } = useVersionCheck();
+
+  useOtaUpdate();
 
   useEffect(() => {
     if (action === "openDrawer") {
