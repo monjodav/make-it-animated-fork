@@ -10,15 +10,11 @@ import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
 import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 export default function Index() {
-  const { action } = useLocalSearchParams<{ action: string }>();
-
   const insets = useSafeAreaInsets();
 
   useWarmUpBrowser();
@@ -28,14 +24,6 @@ export default function Index() {
   const { isUpdateAvailable, linkToStore } = useVersionCheck();
 
   useOtaUpdate();
-
-  useEffect(() => {
-    if (action === "openDrawer") {
-      setTimeout(() => {
-        navigation.dispatch(DrawerActions.openDrawer());
-      }, 500);
-    }
-  }, [action, navigation]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
@@ -53,16 +41,16 @@ export default function Index() {
         entering={FadeIn}
         activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        className="absolute border border-stone-600 px-6 py-4 rounded-full items-center self-center bg-stone-900"
+        className="absolute px-6 py-4 rounded-full items-center self-center bg-stone-100"
         style={{ bottom: insets.bottom + 24 }}
       >
-        <Text className="text-stone-300 text-sm font-semibold">Explore animations</Text>
+        <Text className="text-stone-900 text-base font-semibold">Explore animations</Text>
       </AnimatedTouchable>
       {isUpdateAvailable && (
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={linkToStore}
-          className="absolute left-4 right-4 p-4 rounded-2xl bg-stone-800 flex-row items-center gap-4"
+          className="absolute left-4 right-4 p-4 rounded-2xl bg-[#212126] flex-row items-center gap-4"
           style={{ top: insets.top + 16 }}
         >
           <Rocket color="gray" strokeWidth={1.5} />
