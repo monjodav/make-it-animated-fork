@@ -99,6 +99,12 @@ export default ({ config }: { config: ExpoConfig }) => ({
           mode: "development",
         },
       ],
+      [
+        "expo-notifications",
+        {
+          sounds: ["assets/sounds/cash.wav"],
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
