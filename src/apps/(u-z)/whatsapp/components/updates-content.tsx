@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Pressable, View } from "react-native";
-import { SharedValue } from "react-native-reanimated";
+import Animated, { SharedValue } from "react-native-reanimated";
 import { useHeaderBackground } from "../lib/hooks/use-header-background";
 import { Pencil } from "lucide-react-native";
 import { useRouter } from "expo-router";
@@ -12,17 +12,18 @@ type Props = {
 
 export const UpdatesContent: FC<Props> = ({ offsetY }) => {
   // whatsapp-updates-screen-header-animation 🔽
-  const { contentOffsetY } = useHeaderBackground({ offsetY });
+  const { targetRef, onTargetLayout } = useHeaderBackground({ offsetY });
   // whatsapp-updates-screen-header-animation 🔼
 
   const router = useRouter();
 
   return (
-    <View
-      className="opacity-75"
-      onLayout={({ nativeEvent }) => contentOffsetY.set(nativeEvent.layout.y)}
-    >
-      <View className="h-7 w-[80px] bg-neutral-900 rounded-full mb-6" />
+    <View className="opacity-75">
+      <Animated.View
+        ref={targetRef}
+        onLayout={onTargetLayout}
+        className="h-7 w-[80px] bg-neutral-900 rounded-full mb-6"
+      />
       <View className="flex-row items-center mb-8">
         <View className="h-14 w-14 rounded-full bg-neutral-900 mr-3" />
         <View>

@@ -1,14 +1,10 @@
 import { useNavigation } from "expo-router";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import Animated, {
-  SharedValue,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { BlurView } from "expo-blur";
+import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
 
 type Props = {
   offsetY: SharedValue<number>;
@@ -19,12 +15,12 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
 
   const headerHeight = useHeaderHeight();
 
-  const contentOffsetY = useSharedValue(0);
+  const { measurement, targetRef, onTargetLayout } = useTargetMeasurement();
 
   const rBgStyle = useAnimatedStyle(() => {
-    if (contentOffsetY.value <= 0) return { backgroundColor: "#0a0a0a" };
+    if (measurement.value === null) return { backgroundColor: "#0a0a0a" };
 
-    const scrollDistance = contentOffsetY.value - headerHeight;
+    const scrollDistance = measurement.value.pageY - headerHeight;
 
     return {
       backgroundColor: offsetY.value > scrollDistance ? "#0a0a0a80" : "#0a0a0a",
@@ -32,9 +28,9 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
   });
 
   const rBlurStyle = useAnimatedStyle(() => {
-    if (contentOffsetY.value <= 0) return { opacity: 0 };
+    if (measurement.value === null) return { opacity: 0 };
 
-    const scrollDistance = contentOffsetY.value - headerHeight;
+    const scrollDistance = measurement.value.pageY - headerHeight;
 
     return {
       opacity: withTiming(offsetY.value > scrollDistance ? 1 : 0, { duration: 150 }),
@@ -59,5 +55,5 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
     });
   }, [navigation, rBgStyle, rBlurStyle]);
 
-  return { contentOffsetY };
+  return { targetRef, onTargetLayout };
 };
