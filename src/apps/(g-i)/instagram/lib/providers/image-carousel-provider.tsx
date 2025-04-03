@@ -1,32 +1,27 @@
-import { createContext, FC, PropsWithChildren, useContext, useState } from "react";
-import { SharedValue, useSharedValue } from "react-native-reanimated";
+import { createContext, FC, PropsWithChildren, useContext, useRef, useState } from "react";
+import { FlatList } from "react-native";
 
 type ContextValue = {
   images: number[];
-  totalImages: number;
-  index: number;
-  setIndex: (index: number) => void;
-  activeImageIndex: SharedValue<number>;
-  prevImageIndex: SharedValue<number>;
+  imageIndex: number;
+  setImageIndex: (index: number) => void;
+  dotsListRef: React.RefObject<FlatList<any>>;
 };
 
 const ImageCarouselContext = createContext<ContextValue>({} as ContextValue);
 
 export const ImageCarouselProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [index, setIndex] = useState(0); // This state is for demo only
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const dotsListRef = useRef<FlatList>(null);
 
   const images = Array.from({ length: 10 }).map((_, index) => index);
 
-  const activeImageIndex = useSharedValue(0);
-  const prevImageIndex = useSharedValue(0);
-
   const value = {
     images,
-    totalImages: images.length,
-    index,
-    setIndex,
-    activeImageIndex,
-    prevImageIndex,
+    imageIndex,
+    setImageIndex,
+    dotsListRef,
   };
 
   return <ImageCarouselContext.Provider value={value}>{children}</ImageCarouselContext.Provider>;

@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Cog, MessagesSquare, Phone } from "lucide-react-native";
+import { Home, PlaySquare, PlusSquare, Search, UserCircle } from "lucide-react-native";
 import React from "react";
 import { Pressable } from "react-native";
 
@@ -29,31 +29,31 @@ const TabsLayout = () => {
       <Tabs.Screen
         name={Tab.Home}
         options={{
-          tabBarIcon: ({ color }) => <Phone size={20} color={color} />,
+          tabBarIcon: ({ color }) => <Home size={20} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Search}
         options={{
-          tabBarIcon: ({ color }) => <Phone size={20} color={color} />,
+          tabBarIcon: ({ color }) => <Search size={20} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.AddContent}
         options={{
-          tabBarIcon: ({ color }) => <Phone size={20} color={color} />,
+          tabBarIcon: ({ color }) => <PlusSquare size={20} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Reels}
         options={{
-          tabBarIcon: ({ color }) => <MessagesSquare size={20} color={color} />,
+          tabBarIcon: ({ color }) => <PlaySquare size={20} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Account}
         options={{
-          tabBarIcon: ({ color }) => <Cog size={20} color={color} />,
+          tabBarIcon: ({ color }) => <UserCircle size={20} color={color} />,
         }}
       />
     </Tabs>

@@ -1,11 +1,13 @@
-import React, { FC } from "react";
-import { View, Text, FlatList, useWindowDimensions } from "react-native";
+import React, { FC, useRef } from "react";
+import { View, FlatList, useWindowDimensions, Text } from "react-native";
 import { useImageCarousel } from "../lib/providers/image-carousel-provider";
 
 export const ImageCarousel: FC = () => {
-  const { images, index, setIndex, activeImageIndex, prevImageIndex } = useImageCarousel();
+  const { images, imageIndex, setImageIndex, dotsListRef } = useImageCarousel();
 
   const { width } = useWindowDimensions();
+
+  const refIndex = useRef(0);
 
   return (
     <View className="aspect-square" style={{ width }}>
@@ -13,21 +15,35 @@ export const ImageCarousel: FC = () => {
         data={images}
         renderItem={() => (
           <View className="bg-neutral-900 items-center justify-center" style={{ width }}>
-            <Text className="text-neutral-500 text-3xl">{index}</Text>
+            <Text className="text-neutral-500 text-3xl">{imageIndex}</Text>
           </View>
         )}
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
         viewabilityConfig={{
-          itemVisiblePercentThreshold: 60,
+          itemVisiblePercentThreshold: 55,
         }}
         onViewableItemsChanged={({ viewableItems }) => {
           if (viewableItems.length > 0) {
-            prevImageIndex.value = activeImageIndex.value;
-            activeImageIndex.value = viewableItems[0].index ?? 0;
-            setIndex(viewableItems[0].index ?? 0);
-            console.log("🔴 as", viewableItems[0].index); // VS --------- Remove Log
+            const currentIndex = viewableItems[0].index ?? 0;
+            setImageIndex(currentIndex);
+
+            if (currentIndex - refIndex.current === 3) {
+              refIndex.current = currentIndex - 2;
+              dotsListRef.current?.scrollToIndex({
+                animated: true,
+                index: currentIndex - 2,
+              });
+            }
+
+            if (currentIndex - refIndex.current === -1) {
+              refIndex.current = currentIndex;
+              dotsListRef.current?.scrollToIndex({
+                animated: true,
+                index: currentIndex,
+              });
+            }
           }
         }}
       />

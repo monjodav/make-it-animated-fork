@@ -1,105 +1,71 @@
-import React, { memo, type FC } from "react";
+import React, { type FC } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
-  type SharedValue,
-  useAnimatedReaction,
+  Extrapolation,
+  interpolate,
+  SharedValue,
   useAnimatedStyle,
-  useSharedValue,
-  withTiming,
 } from "react-native-reanimated";
-import type { ScrollType } from ".";
-import { cn } from "@/src/shared/lib/utils/cn";
-import { useImageCarousel } from "../../lib/providers/image-carousel-provider";
 
-export const _numberOfDots = 9;
+export const _numberOfVisibleDots = 7;
 export const _dotSize = 6;
 const _gap = 4;
 export const _dotContainerWidth = _dotSize + _gap;
-const _allDotsWidth = _dotContainerWidth * _numberOfDots;
-export const _visibleDotsWidth = _allDotsWidth - 2 * _dotContainerWidth;
-
-const _dotScales = [0.001, 0.41, 0.71, 1.01, 1.02, 1.03, 0.72, 0.42, 0.002];
-export const _dotMidRangeScale = 0.7;
-
-export const _duration = 250;
 
 type Props = {
   index: number;
+  listOffsetX: SharedValue<number>;
+  isActive: boolean;
+  totalImages: number;
   defaultDotColor: string;
-  scroll?: SharedValue<ScrollType>;
+  activeDotColor: string;
 };
 
-const Dot: FC<Props> = ({ index, scroll, defaultDotColor }) => {
-  const { totalImages } = useImageCarousel();
-
-  const left = useSharedValue(index * _dotContainerWidth - _dotContainerWidth);
-  const scale = useSharedValue(_dotScales[index]);
-
-  useAnimatedReaction(
-    () => scroll?.value,
-    (scroll) => {
-      if (!scroll) return;
-      const currentScaleIndex = _dotScales.findIndex((scaleValue) => scaleValue === scale.value);
-
-      if (scroll === "right") {
-        if (currentScaleIndex === 0) {
-          scale.value = _dotScales[_numberOfDots - 1];
-        } else {
-          scale.value = withTiming(_dotScales[currentScaleIndex - 1], {
-            duration: _duration,
-          });
-        }
-
-        left.value -= _dotContainerWidth;
-      }
-      if (scroll === "left") {
-        if (currentScaleIndex === _dotScales.length - 1) {
-          scale.value = _dotScales[0];
-        } else {
-          scale.value = withTiming(_dotScales[currentScaleIndex + 1], {
-            duration: _duration,
-          });
-        }
-
-        left.value += _dotContainerWidth;
-      }
-    }
-  );
-
+export const Dot: FC<Props> = ({
+  index,
+  listOffsetX,
+  defaultDotColor,
+  isActive,
+  totalImages,
+  activeDotColor,
+}) => {
   const rDotStyle = useAnimatedStyle(() => {
-    if (left.value < -_dotContainerWidth) {
-      left.value = _visibleDotsWidth;
-    }
+    const hideDot =
+      index === 0 || index === 1 || index === totalImages + 2 || index === totalImages + 3;
 
-    if (left.value > _visibleDotsWidth) {
-      left.value = -_dotContainerWidth;
-    }
+    const scale = interpolate(
+      _dotContainerWidth * index - listOffsetX.value,
+      [
+        0,
+        _dotContainerWidth,
+        _dotContainerWidth * 2,
+        _dotContainerWidth * 3,
+        _dotContainerWidth * 4,
+        _dotContainerWidth * 5,
+        _dotContainerWidth * 6,
+      ],
+      [0.3, 0.7, 1, 1, 1, 0.7, 0.3],
+      Extrapolation.CLAMP
+    );
 
     return {
-      left: withTiming(left.value, { duration: _duration }),
-      transform: [{ scale: scale.value }],
+      opacity: hideDot ? 0 : 1,
+      transform: [
+        {
+          scale,
+        },
+      ],
     };
   });
 
-  if (totalImages > 1 && totalImages < 6) {
-    return (
-      <View className="items-center justify-center" style={styles.dotContainer}>
-        <View style={[styles.dot, { backgroundColor: defaultDotColor }]} className="rounded-full" />
-      </View>
-    );
-  }
-
   return (
-    <View
-      className={cn(
-        "absolute items-center justify-center",
-        totalImages === 6 && index < 3 && "opacity-0",
-        totalImages === 7 && index > 0 && index < 3 && "opacity-0"
-      )}
-      style={styles.dotContainer}
-    >
+    <View className="items-center justify-center" style={styles.dotContainer}>
       <Animated.View
-        style={[rDotStyle, styles.dot, { backgroundColor: defaultDotColor }]}
+        style={[
+          styles.dot,
+          rDotStyle,
+          { backgroundColor: isActive ? activeDotColor : defaultDotColor },
+        ]}
         className="rounded-full"
       />
     </View>
@@ -115,5 +81,3 @@ const styles = StyleSheet.create({
     height: _dotSize,
   },
 });
-
-export default memo(Dot);
