@@ -17,19 +17,19 @@ export default function Home() {
       {/* instagram-pagination-dots-animation 🔽 */}
       <ImageCarouselProvider images={Array.from({ length: 8 }).map((_, index) => index)}>
         <ImageCarousel />
-        <View className="p-4 items-center">
+        <View className="p-3 items-center">
           <PaginationDots />
         </View>
       </ImageCarouselProvider>
       <ImageCarouselProvider images={Array.from({ length: 11 }).map((_, index) => index)}>
         <ImageCarousel />
-        <View className="p-4 items-center">
+        <View className="p-3 items-center">
           <PaginationDots />
         </View>
       </ImageCarouselProvider>
       <ImageCarouselProvider images={Array.from({ length: 4 }).map((_, index) => index)}>
         <ImageCarousel />
-        <View className="p-4 items-center">
+        <View className="p-3 items-center">
           <PaginationDots />
         </View>
       </ImageCarouselProvider>

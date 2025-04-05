@@ -1,5 +1,5 @@
 import React, { type FC } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Platform } from "react-native";
 import { Dot, _dotContainerWidth } from "./dot";
 import { useImageCarousel } from "../../lib/providers/image-carousel-provider";
 import Animated, {
@@ -60,7 +60,10 @@ export const PaginationDots: FC<Props> = ({
 
     setImageIndex(index);
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (Platform.OS === "ios") {
+      //NOTE: You can play with haptics on Android but it feels overwhelming
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
 
     if (index >= 0 && index < images.length) {
       carouselRef.current?.scrollToIndex({
