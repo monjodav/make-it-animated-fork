@@ -15,7 +15,7 @@ export const ImageCarouselProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const dotsListRef = useRef<FlatList>(null);
 
-  const images = Array.from({ length: 10 }).map((_, index) => index);
+  const images = Array.from({ length: 20 }).map((_, index) => index);
 
   const value = {
     images,

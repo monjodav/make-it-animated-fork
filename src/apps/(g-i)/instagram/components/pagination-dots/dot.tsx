@@ -7,7 +7,6 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-export const _numberOfVisibleDots = 7;
 export const _dotSize = 6;
 const _gap = 4;
 export const _dotContainerWidth = _dotSize + _gap;
@@ -30,6 +29,17 @@ export const Dot: FC<Props> = ({
   activeDotColor,
 }) => {
   const rDotStyle = useAnimatedStyle(() => {
+    if (totalImages < 6) {
+      return {
+        opacity: 1,
+        transform: [
+          {
+            scale: 1,
+          },
+        ],
+      };
+    }
+
     const hideDot =
       index === 0 || index === 1 || index === totalImages + 2 || index === totalImages + 3;
 
