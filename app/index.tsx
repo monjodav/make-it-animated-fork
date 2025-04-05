@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
@@ -11,9 +11,8 @@ import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
-import { Redirect } from "expo-router";
 
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
 export default function Index() {
   const insets = useSafeAreaInsets();
@@ -25,9 +24,6 @@ export default function Index() {
   const { isUpdateAvailable, linkToStore } = useVersionCheck();
 
   useOtaUpdate();
-
-  // VS -------------------
-  return <Redirect href="/instagram" />;
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
@@ -43,7 +39,6 @@ export default function Index() {
       </TouchableOpacity>
       <AnimatedTouchable
         entering={FadeIn}
-        activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         className="absolute px-6 py-4 rounded-full items-center self-center bg-stone-300"
         style={{ bottom: insets.bottom + 24 }}
