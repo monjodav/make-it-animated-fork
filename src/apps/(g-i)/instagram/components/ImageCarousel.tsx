@@ -1,14 +1,13 @@
-import React, { FC, useRef } from "react";
+import React, { FC } from "react";
 import { View, FlatList, useWindowDimensions, Text } from "react-native";
 import { useImageCarousel } from "../lib/providers/image-carousel-provider";
 
+// instagram-image-carousel-animation 🔽
+
 export const ImageCarousel: FC = () => {
-  const { images, imageIndex, setImageIndex, carouselRef, dotsListRef, isDotsPressed } =
-    useImageCarousel();
+  const { images, carouselRef, onViewableItemsChanged, onScrollToIndexFailed } = useImageCarousel();
 
   const { width } = useWindowDimensions();
-
-  const refIndex = useRef(0);
 
   return (
     <View className="aspect-square" style={{ width }}>
@@ -26,38 +25,11 @@ export const ImageCarousel: FC = () => {
         viewabilityConfig={{
           itemVisiblePercentThreshold: 55,
         }}
-        onViewableItemsChanged={({ viewableItems }) => {
-          if (viewableItems.length > 0) {
-            const currentIndex = viewableItems[0].index ?? 0;
-
-            if (!isDotsPressed) {
-              setImageIndex(currentIndex);
-            }
-
-            if (currentIndex - refIndex.current > 2) {
-              refIndex.current = currentIndex - 2;
-              dotsListRef.current?.scrollToIndex({
-                animated: true,
-                index: currentIndex - 2,
-              });
-            }
-
-            if (currentIndex - refIndex.current < 0) {
-              refIndex.current = currentIndex;
-              dotsListRef.current?.scrollToIndex({
-                animated: true,
-                index: currentIndex,
-              });
-            }
-          }
-        }}
-        onScrollToIndexFailed={() =>
-          carouselRef.current?.scrollToIndex({
-            animated: false,
-            index: imageIndex,
-          })
-        }
+        onViewableItemsChanged={onViewableItemsChanged}
+        onScrollToIndexFailed={onScrollToIndexFailed}
       />
     </View>
   );
 };
+
+// instagram-image-carousel-animation 🔼

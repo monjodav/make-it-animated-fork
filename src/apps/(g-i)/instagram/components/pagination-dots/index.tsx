@@ -13,6 +13,8 @@ import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { colorKit } from "reanimated-color-picker";
 
+// instagram-pagination-dots-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const _containerDefaultBgColor = colorKit.setAlpha("#fff", 0).hex();
@@ -24,8 +26,8 @@ type Props = {
 };
 
 export const PaginationDots: FC<Props> = ({
-  defaultDotColor = "gray",
-  activeDotColor = "white",
+  defaultDotColor = "#525252",
+  activeDotColor = "#3b82f6",
 }) => {
   const {
     images,
@@ -165,3 +167,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// instagram-pagination-dots-animation 🔼

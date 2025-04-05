@@ -7,6 +7,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+// instagram-pagination-dots-animation 🔽
+
 export const _dotSize = 6;
 const _gap = 4;
 export const _dotContainerWidth = _dotSize + _gap;
@@ -91,3 +93,5 @@ const styles = StyleSheet.create({
     height: _dotSize,
   },
 });
+
+// instagram-pagination-dots-animation 🔼
