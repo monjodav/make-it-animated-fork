@@ -6,8 +6,12 @@ export const instagram: App = {
   imageSource: InstagramImage,
   animations: [
     {
+      name: "Pagination dots animation",
+      href: "/instagram/home",
+    },
+    {
       name: "Story controls animation",
-      href: "/instagram/story",
+      href: "/instagram/add-content",
     },
   ],
 };

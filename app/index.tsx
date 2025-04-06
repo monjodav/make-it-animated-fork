@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
@@ -12,7 +12,7 @@ import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 
-const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
 export default function Index() {
   const insets = useSafeAreaInsets();
@@ -39,7 +39,6 @@ export default function Index() {
       </TouchableOpacity>
       <AnimatedTouchable
         entering={FadeIn}
-        activeOpacity={0.85}
         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         className="absolute px-6 py-4 rounded-full items-center self-center bg-stone-300"
         style={{ bottom: insets.bottom + 24 }}

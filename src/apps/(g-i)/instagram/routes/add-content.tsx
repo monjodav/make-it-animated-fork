@@ -4,17 +4,16 @@ import { X } from "lucide-react-native";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// instagram-story-controls-animation 🔽
+
 const _iconSize = 24;
 const _iconColor = "#fff";
 
-export default function Story() {
+export default function AddContent() {
   const insets = useSafeAreaInsets();
 
   return (
-    <View
-      className="flex-1  bg-instagram-back px-2"
-      style={{ paddingTop: insets.top + 12, paddingBottom: insets.bottom }}
-    >
+    <View className="flex-1  bg-instagram-back px-2" style={{ paddingTop: insets.top + 12 }}>
       <View
         className="flex-1 justify-between rounded-3xl bg-gray-500 overflow-hidden"
         style={styles.container}
@@ -35,9 +34,7 @@ export default function Story() {
             <View className="h-[60px] w-[60px] rounded-full bg-white/50 border border-white/90" />
           </Pressable>
         </View>
-        {/* instagram-story-controls-animation 🔽 */}
         <Controls />
-        {/* instagram-story-controls-animation 🔼 */}
       </View>
       <View className="flex-row items-center justify-between p-4">
         <View className="h-9 w-9 rounded-lg bg-instagram-front" />
@@ -57,3 +54,5 @@ const styles = StyleSheet.create({
     padding: _padding,
   },
 });
+
+// instagram-story-controls-animation 🔼
