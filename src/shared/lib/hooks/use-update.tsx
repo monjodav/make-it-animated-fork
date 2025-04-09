@@ -12,7 +12,7 @@ export const useOtaUpdate = () => {
         .then(() =>
           Alert.alert(
             "Update Available",
-            "We've added new animations that are ready for you to use! The app needs a quick refresh to load these animations (no download required).",
+            "We've added new animations or important updates that are ready for you to use! The app needs a quick refresh to load these animations (no download required).",
             [
               {
                 text: "Refresh",
