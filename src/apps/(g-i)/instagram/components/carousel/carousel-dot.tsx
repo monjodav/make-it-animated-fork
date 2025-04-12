@@ -3,26 +3,26 @@ import { StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
 
 // instagram-pagination-dots-animation 🔽
 
-export const _dotSize = 6;
-const _gap = 4;
-export const _dotContainerWidth = _dotSize + _gap;
+const DOT_SIZE = 6;
+const DOT_GAP = 4;
+const DOT_CONTAINER_WIDTH = DOT_SIZE + DOT_GAP;
 
-type Props = {
+interface CarouselDotProps {
   index: number;
   listOffsetX: SharedValue<number>;
   isActive: boolean;
   totalImages: number;
   defaultDotColor: string;
   activeDotColor: string;
-};
+}
 
-export const Dot: FC<Props> = ({
+export const CarouselDot: FC<CarouselDotProps> = ({
   index,
   listOffsetX,
   defaultDotColor,
@@ -46,15 +46,15 @@ export const Dot: FC<Props> = ({
       index === 0 || index === 1 || index === totalImages + 2 || index === totalImages + 3;
 
     const scale = interpolate(
-      _dotContainerWidth * index - listOffsetX.value,
+      DOT_CONTAINER_WIDTH * index - listOffsetX.value,
       [
         0,
-        _dotContainerWidth,
-        _dotContainerWidth * 2,
-        _dotContainerWidth * 3,
-        _dotContainerWidth * 4,
-        _dotContainerWidth * 5,
-        _dotContainerWidth * 6,
+        DOT_CONTAINER_WIDTH,
+        DOT_CONTAINER_WIDTH * 2,
+        DOT_CONTAINER_WIDTH * 3,
+        DOT_CONTAINER_WIDTH * 4,
+        DOT_CONTAINER_WIDTH * 5,
+        DOT_CONTAINER_WIDTH * 6,
       ],
       [0.3, 0.7, 1, 1, 1, 0.7, 0.3],
       Extrapolation.CLAMP
@@ -86,12 +86,14 @@ export const Dot: FC<Props> = ({
 
 const styles = StyleSheet.create({
   dotContainer: {
-    width: _dotContainerWidth,
+    width: DOT_CONTAINER_WIDTH,
   },
   dot: {
-    width: _dotSize,
-    height: _dotSize,
+    width: DOT_SIZE,
+    height: DOT_SIZE,
   },
 });
+
+export { DOT_SIZE, DOT_GAP, DOT_CONTAINER_WIDTH };
 
 // instagram-pagination-dots-animation 🔼

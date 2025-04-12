@@ -1,7 +1,8 @@
-import React, { type FC } from "react";
-import { View, StyleSheet, Pressable, Platform } from "react-native";
-import { Dot, _dotContainerWidth } from "./dot";
-import { useImageCarousel } from "../../lib/providers/image-carousel-provider";
+import * as Haptics from "expo-haptics";
+import type { FC } from "react";
+import React from "react";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
   useAnimatedScrollHandler,
@@ -9,8 +10,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { GestureDetector, Gesture } from "react-native-gesture-handler";
-import * as Haptics from "expo-haptics";
+import { CarouselDot, DOT_CONTAINER_WIDTH } from "./carousel-dot";
+import { useCarousel } from "./index";
 import { colorKit } from "reanimated-color-picker";
 
 // instagram-pagination-dots-animation 🔽
@@ -20,24 +21,24 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const _containerDefaultBgColor = colorKit.setAlpha("#fff", 0).hex();
 const _containerPressedBgColor = colorKit.setAlpha("#fff", 0.1).hex();
 
-type Props = {
+interface CarouselPaginationProps {
   defaultDotColor?: string;
   activeDotColor?: string;
-};
+}
 
-export const PaginationDots: FC<Props> = ({
+export const CarouselPagination: FC<CarouselPaginationProps> = ({
   defaultDotColor = "#525252",
   activeDotColor = "#3b82f6",
 }) => {
   const {
     images,
-    imageIndex,
-    setImageIndex,
+    currentIndex,
+    setCurrentIndex,
     carouselRef,
     dotsListRef,
     isDotsPressed,
     setIsDotsPressed,
-  } = useImageCarousel();
+  } = useCarousel();
 
   const listOffsetX = useSharedValue(0);
 
@@ -48,20 +49,19 @@ export const PaginationDots: FC<Props> = ({
   });
 
   const translateXStep = images.length > 10 ? 12 : 15;
-
   const prevTranslateX = useSharedValue(0);
 
   const handleImageIndexChange = (action: "increase" | "decrease") => {
-    const index = action === "increase" ? imageIndex + 1 : imageIndex - 1;
+    const index = action === "increase" ? currentIndex + 1 : currentIndex - 1;
 
     if (index < 0 || index >= images.length) {
       return;
     }
 
-    setImageIndex(index);
+    setCurrentIndex(index);
 
     if (Platform.OS === "ios") {
-      //NOTE: You can play with haptics on Android but it feels overwhelming
+      // Only use haptics on iOS as it can feel overwhelming on Android
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
@@ -116,8 +116,8 @@ export const PaginationDots: FC<Props> = ({
     };
   });
 
-  if (images.length === 1) {
-    return <></>;
+  if (images.length <= 1) {
+    return null;
   }
 
   return (
@@ -133,21 +133,20 @@ export const PaginationDots: FC<Props> = ({
       >
         <View
           style={{
-            width: _dotContainerWidth * (images.length > 5 ? 7 : images.length),
+            width: DOT_CONTAINER_WIDTH * (images.length > 5 ? 7 : images.length),
           }}
         >
           <Animated.FlatList
             ref={dotsListRef}
-            // NOTE: we adding +4 dots to have 2 shallow dots on the left and 2 shallow dots on the right
-            data={Array.from({ length: images.length > 5 ? images.length + 4 : images.length }).map(
-              (_, index) => index
-            )}
+            // Adding extra dots for visual effect when there are more than 5 images
+            data={Array.from({
+              length: images.length > 5 ? images.length + 4 : images.length,
+            }).map((_, index) => index)}
             renderItem={({ item }) => (
-              <Dot
+              <CarouselDot
                 index={item}
                 listOffsetX={listOffsetX}
-                // NOTE: we adding +2 as we have 2 shallow dots on the left
-                isActive={images.length > 5 ? item === imageIndex + 2 : item === imageIndex}
+                isActive={images.length > 5 ? item === currentIndex + 2 : item === currentIndex}
                 totalImages={images.length}
                 defaultDotColor={defaultDotColor}
                 activeDotColor={activeDotColor}
