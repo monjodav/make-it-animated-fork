@@ -28,6 +28,10 @@ export default function ProfileLayout() {
           ),
         }}
       />
+      <Stack.Screen
+        name="achievements"
+        options={{ headerShown: false, animation: "slide_from_bottom" }}
+      />
     </Stack>
   );
 }
