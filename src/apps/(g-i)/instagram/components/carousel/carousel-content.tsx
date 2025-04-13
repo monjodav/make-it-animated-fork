@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View, FlatList, ListRenderItem } from "react-native";
-import { CarouselImage, useCarousel } from ".";
+import { CarouselImage, useCarousel } from "./carousel-context";
 
 // instagram-pagination-dots-animation 🔽
 
