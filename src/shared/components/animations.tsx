@@ -56,11 +56,11 @@ export const Animations: FC<Props> = ({ query }) => {
     <View className="flex-1 bg-[#131316]">
       {__DEV__ ? (
         <View className="flex-row items-center gap-2 px-5 py-5">
-          <Text className="text-orange-200 text-sm">
+          <Text className="text-orange-200/50 text-sm">
             {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
           </Text>
           <Text className="text-neutral-500 text-sm">|</Text>
-          <Text className="text-orange-200 text-sm">
+          <Text className="text-orange-200/50 text-sm">
             {sections.length} {sections.length === 1 ? "app" : "apps"}
           </Text>
         </View>
@@ -72,7 +72,7 @@ export const Animations: FC<Props> = ({ query }) => {
         keyExtractor={(item: App["animations"][number], index: number) => `${item.name}-${index}`}
         renderSectionHeader={_renderSectionHeader}
         renderItem={_renderItem}
-        // ListHeaderComponent={_renderListHeader}
+        ListHeaderComponent={_renderListHeader}
         contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
         stickySectionHeadersEnabled
         showsVerticalScrollIndicator={false}

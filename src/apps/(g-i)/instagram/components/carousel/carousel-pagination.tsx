@@ -11,7 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { CarouselDot, DOT_CONTAINER_WIDTH } from "./carousel-dot";
-import { useCarousel } from "./index";
+import { useCarousel } from "./carousel-context";
 import { colorKit } from "reanimated-color-picker";
 
 // instagram-pagination-dots-animation 🔽

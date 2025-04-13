@@ -37,5 +37,9 @@ export const github: App = {
       name: "Profile header title animation",
       href: "/github/profile",
     },
+    {
+      name: "Achievements carousel animation",
+      href: "/github/achievements",
+    },
   ],
 };

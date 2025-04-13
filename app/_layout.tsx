@@ -79,6 +79,7 @@ export default function RootLayout() {
         {Platform.OS === "android" && (
           <StatusBar style="light" backgroundColor="black" translucent={false} />
         )}
+
         <Drawer
           drawerContent={(props) => <DrawerContent {...props} />}
           screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}

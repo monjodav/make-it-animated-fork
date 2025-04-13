@@ -4,6 +4,7 @@ import Animated, { useAnimatedRef, useScrollViewOffset } from "react-native-rean
 import { useHeaderBackground } from "../lib/use-header-background";
 import { useHeaderTitle } from "../lib/use-header-title";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AchievementsButton } from "../components/achievements-button";
 
 // github-profile-header-title-animation 🔽
 
@@ -47,11 +48,8 @@ export default function Profile() {
 
       <View className="w-32 h-4 bg-neutral-900 rounded-md mb-4" />
 
-      <View className="flex-row items-center gap-1 mb-6">
-        <View className="w-4 h-4 rounded-full bg-neutral-900" />
-        <View className="w-16 h-4 bg-neutral-900 rounded-md" />
-        <View className="w-4 h-4 rounded-full bg-neutral-900" />
-        <View className="w-20 h-4 bg-neutral-900 rounded-md" />
+      <View className="mb-6">
+        <AchievementsButton />
       </View>
       <View className="gap-[2px] mb-10">
         <View className="w-full h-12 bg-neutral-900 rounded-lg" />
