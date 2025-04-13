@@ -75,11 +75,11 @@ export default function Achievements() {
       <Animated.FlatList
         ref={horizontalListRef}
         data={data}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <ScrollView style={{ width }} contentContainerStyle={{ paddingTop: insets.top + 45 }}>
             <View className="flex-1 items-center">
               <AchievementBadge
-                index={data.indexOf(item)}
+                index={index}
                 imageSource={item.imageSource}
                 scrollOffsetX={scrollX}
               />
