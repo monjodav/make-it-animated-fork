@@ -3,6 +3,8 @@ import { View } from "react-native";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { colorKit } from "reanimated-color-picker";
 
+// github-achievements-carousel-animation 🔽
+
 const _containerDefaultDotColor = colorKit.setAlpha("#fff", 0.2).hex();
 const _containerActiveDotColor = "#fff";
 
@@ -45,3 +47,5 @@ export const AchievementPagination: FC<Props> = ({ currentIndex, total }) => {
     </View>
   );
 };
+
+// github-achievements-carousel-animation 🔼

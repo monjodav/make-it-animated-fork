@@ -3,11 +3,10 @@ import { Settings } from "lucide-react-native";
 import { TouchableOpacity, View } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 
-// github-profile-header-title-animation 🔽
-
 export default function ProfileLayout() {
   return (
     <Stack>
+      {/* github-profile-header-title-animation 🔽 */}
       <Stack.Screen
         name="profile"
         options={{
@@ -28,12 +27,13 @@ export default function ProfileLayout() {
           ),
         }}
       />
+      {/* github-profile-header-title-animation 🔼 */}
+      {/* github-achievements-carousel-animation 🔽 */}
       <Stack.Screen
         name="achievements"
-        options={{ headerShown: false, animation: "slide_from_bottom" }}
+        options={{ headerShown: false, animation: "slide_from_bottom", animationDuration: 250 }}
       />
+      {/* github-achievements-carousel-animation 🔼 */}
     </Stack>
   );
 }
-
-// github-profile-header-title-animation 🔼

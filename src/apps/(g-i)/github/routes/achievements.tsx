@@ -1,5 +1,5 @@
 import { X } from "lucide-react-native";
-import { FlatList, ScrollView, useWindowDimensions, View } from "react-native";
+import { FlatList, Pressable, ScrollView, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   interpolateColor,
@@ -9,9 +9,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { useMemo, useRef, useState } from "react";
 import { AchievementBadge } from "../components/achievment-badge";
-import AchievementImage1 from "@/assets/images/misc/github-achievement-1.png";
-import AchievementImage2 from "@/assets/images/misc/github-achievement-2.png";
+import PairExtraordinaireImage from "@/assets/images/misc/github-achievement-1.png";
+import PullSharkImage from "@/assets/images/misc/github-achievement-2.png";
 import { AchievementPagination } from "../components/achievement-pagination";
+import { useRouter } from "expo-router";
+
+// github-achievements-carousel-animation 🔽
 
 type Achievement = {
   bgColor: string;
@@ -21,16 +24,18 @@ type Achievement = {
 const achievements: Achievement[] = [
   {
     bgColor: "#18600B",
-    imageSource: AchievementImage1,
+    imageSource: PairExtraordinaireImage,
   },
   {
     bgColor: "#012A60",
-    imageSource: AchievementImage2,
+    imageSource: PullSharkImage,
   },
 ];
 
 export default function Achievements() {
   const [currentIndex, setCurrentIndex] = useState(1);
+
+  const router = useRouter();
 
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -135,12 +140,15 @@ export default function Achievements() {
         <View className="h-12 w-full rounded-2xl bg-white/20" />
       </View>
       {/* Close Button */}
-      <View
+      <Pressable
         className="absolute right-4 w-8 h-8 rounded-full bg-white/20 items-center justify-center"
         style={{ top: insets.top + 16 }}
+        onPress={router.back}
       >
         <X size={16} color="lightgray" />
-      </View>
+      </Pressable>
     </Animated.View>
   );
 }
+
+// github-achievements-carousel-animation 🔼

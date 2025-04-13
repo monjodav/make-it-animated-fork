@@ -8,6 +8,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+// github-achievements-carousel-animation 🔽
+
 type Props = {
   index: number;
   imageSource: number;
@@ -41,3 +43,5 @@ export const AchievementBadge: FC<Props> = ({ index, imageSource, scrollOffsetX 
     </Animated.View>
   );
 };
+
+// github-achievements-carousel-animation 🔼

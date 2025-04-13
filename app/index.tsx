@@ -11,7 +11,6 @@ import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
-import { Redirect } from "expo-router";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
@@ -25,9 +24,6 @@ export default function Index() {
   const { isUpdateAvailable, linkToStore } = useVersionCheck();
 
   useOtaUpdate();
-
-  // VS --------------
-  return <Redirect href="/github/achievements" />;
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
