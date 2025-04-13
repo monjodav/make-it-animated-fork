@@ -1,7 +1,8 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { canva } from "@/src/shared/lib/constants/apps/c";
+import { instagram } from "@/src/shared/lib/constants/apps/i";
+import { github } from "@/src/shared/lib/constants/apps/g";
 import { App } from "../lib/constants/apps-list";
 
 type AnimationItemProps = {
@@ -16,8 +17,8 @@ const AnimationItem = ({ label, onPress }: AnimationItemProps) => {
       onPress={onPress}
       className="flex-row items-center gap-2"
     >
-      <View className="rounded-full bg-lime-600/20 px-2 py-1">
-        <Text className="text-lime-600 text-xs">New</Text>
+      <View className="rounded-full bg-lime-300 px-1.5 py-0.5">
+        <Text className="text-lime-900 text-xs font-semibold">New</Text>
       </View>
       <Text className="text-stone-400 text-base flex-1" numberOfLines={1}>
         {label}
@@ -42,8 +43,12 @@ export const NewAnimations: FC = () => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
-        label={getItemProps(canva, 0).label}
-        onPress={getItemProps(canva, 0).onPress}
+        label={getItemProps(instagram, 0).label}
+        onPress={getItemProps(instagram, 0).onPress}
+      />
+      <AnimationItem
+        label={getItemProps(github, 1).label}
+        onPress={getItemProps(github, 1).onPress}
       />
     </View>
   );
