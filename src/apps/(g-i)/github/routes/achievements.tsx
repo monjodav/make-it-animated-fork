@@ -132,6 +132,7 @@ export default function Achievements() {
           }
         }}
         showsHorizontalScrollIndicator={false}
+        scrollEnabled={data.length > 3}
       />
       {/* Pagination */}
       <AchievementPagination currentIndex={currentIndex - 1} total={data.length - 2} />
