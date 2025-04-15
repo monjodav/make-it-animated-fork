@@ -30,11 +30,16 @@ export const Animations: FC<Props> = ({ query }) => {
     )
     .filter((section: AppSection) => section.title.toLowerCase().includes(query.toLowerCase()));
 
-  const _renderListHeader = () => <NewAnimations />;
+  const _renderListHeader = () => {
+    if (query.trim()) return <></>;
+    return <NewAnimations />;
+  };
 
   const _renderSectionHeader = ({ section }: { section: AppSection }) => (
     <View className="bg-[#131316]">
-      <View className="h-[2px] rounded-full mx-2 bg-[#070708]" />
+      {section.title !== sections[0].title && (
+        <View className="h-[2px] rounded-full mx-2 bg-[#070708]" />
+      )}
       <View className="flex-row items-center gap-2 px-5 py-4">
         <Image source={section.imageSource} className="w-6 h-6" />
         <Text className="text-stone-50 text-base font-medium">{section.title}</Text>
@@ -42,7 +47,7 @@ export const Animations: FC<Props> = ({ query }) => {
     </View>
   );
 
-  const _renderItem = ({ item, index }: ListRenderItemInfo<App["animations"][number]>) => (
+  const _renderItem = ({ item }: ListRenderItemInfo<App["animations"][number]>) => (
     <TouchableOpacity
       activeOpacity={0.75}
       onPress={() => router.push(item.href)}
@@ -52,9 +57,15 @@ export const Animations: FC<Props> = ({ query }) => {
     </TouchableOpacity>
   );
 
+  const _renderEmptyListComponent = () => (
+    <View className="flex-1 items-center justify-center">
+      <Text className="text-stone-400 text-base">No animations found</Text>
+    </View>
+  );
+
   return (
     <View className="flex-1 bg-[#131316]">
-      {__DEV__ ? (
+      {!__DEV__ ? (
         <View className="flex-row items-center gap-2 px-5 py-5">
           <Text className="text-orange-200/50 text-sm">
             {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
@@ -73,6 +84,7 @@ export const Animations: FC<Props> = ({ query }) => {
         renderSectionHeader={_renderSectionHeader}
         renderItem={_renderItem}
         ListHeaderComponent={_renderListHeader}
+        ListEmptyComponent={_renderEmptyListComponent}
         contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
         stickySectionHeadersEnabled
         showsVerticalScrollIndicator={false}
