@@ -7,7 +7,7 @@ import { MANUAL_ERROR_CAPTURE } from "../utils/sentry";
 import { APP_STORE_URL, PLAY_MARKET_URL } from "../constants/links";
 
 export const useVersionCheck = () => {
-  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+  const [isNewVersionAvailable, setIsNewVersionAvailable] = useState(false);
 
   useEffect(() => {
     const checkForUpdate = async () => {
@@ -16,7 +16,7 @@ export const useVersionCheck = () => {
         const newestVersion = result?.version;
         const installedVersion = Constants.expoConfig?.version;
         if (installedVersion && newestVersion && shouldUpdateApp(installedVersion, newestVersion)) {
-          setIsUpdateAvailable(true);
+          setIsNewVersionAvailable(true);
         }
       } catch (error) {
         MANUAL_ERROR_CAPTURE({
@@ -40,5 +40,5 @@ export const useVersionCheck = () => {
     }
   };
 
-  return { isUpdateAvailable, linkToStore };
+  return { isNewVersionAvailable, linkToStore };
 };
