@@ -3,8 +3,7 @@ import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
-import { Bell, Rocket } from "lucide-react-native";
+import { Bell } from "lucide-react-native";
 import * as WebBrowser from "expo-web-browser";
 import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
 import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
@@ -21,8 +20,6 @@ export default function Index() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
-
-  const { isNewVersionAvailable, linkToStore } = useVersionCheck();
 
   const { isUpdateAvailable } = useOtaUpdate();
 
@@ -47,22 +44,6 @@ export default function Index() {
         <Text className="text-stone-900 text-base font-semibold">Explore animations</Text>
       </AnimatedTouchable>
       <View className="absolute left-4 right-4 gap-4" style={{ top: insets.top + 16 }}>
-        {isNewVersionAvailable && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={linkToStore}
-            className="p-4 rounded-2xl bg-[#212126] flex-row items-center gap-4"
-          >
-            <Rocket color="gray" strokeWidth={1.5} />
-            <View className="gap-1 flex-1">
-              <Text className="text-white text-base">New Version Available</Text>
-              <Text className="text-white text-sm font-light">
-                Please update the app to get the latest animations and features.{" "}
-                <Text className="underline text-orange-200">Download now.</Text>
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
         {isUpdateAvailable && (
           <TouchableOpacity
             activeOpacity={0.8}

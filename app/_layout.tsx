@@ -13,6 +13,7 @@ import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
 import { LogLevel, OneSignal } from "react-native-onesignal";
+import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -34,6 +35,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const [query, setQuery] = useState("");
 
   const insets = useSafeAreaInsets();
+
+  useVersionCheck();
 
   return (
     <>
