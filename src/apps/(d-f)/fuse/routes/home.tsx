@@ -1,73 +1,46 @@
-import React, { FC, useEffect, useState } from "react";
-import { View, Text, useWindowDimensions, StyleSheet } from "react-native";
+import React, { FC, useRef } from "react";
+import { FlatList, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Coins } from "../components/coins";
 import { NFTs } from "../components/nfts";
 import { Dashboard } from "../components/dashboard";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedProps,
-  useAnimatedScrollHandler,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { ContentBlur } from "../components/content-blur";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { BlurView } from "expo-blur";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { HomeListItemContainer } from "../components/home-list-item-container";
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
-
-type TabValue = "dashboard" | "coins" | "nfts";
-
-type Tab = {
-  value: TabValue;
-  content: React.ReactNode;
-};
+import { TopTabs } from "../components/top-tabs";
+import { Tab, TabValue } from "../lib/types";
 
 const tabs: Tab[] = [
-  { value: "dashboard", content: <Dashboard /> },
-  { value: "coins", content: <Coins /> },
-  { value: "nfts", content: <NFTs /> },
+  { label: "Dashboard", value: TabValue.Dashboard, content: <Dashboard /> },
+  { label: "Coins", value: TabValue.Coins, content: <Coins /> },
+  { label: "NFTs", value: TabValue.NFTs, content: <NFTs /> },
 ];
 
-type Props = {};
-
-export const Home: FC<Props> = ({}) => {
-  const [currentTabIndex, setCurrentTabIndex] = useState(0);
+export const Home: FC = () => {
+  const horizontalListRef = useRef<FlatList>(null);
 
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
-  const listOffsetX = useSharedValue(0);
-
-  const blurAnimatedProps = useAnimatedProps(() => {
-    const intensity = interpolate(
-      listOffsetX.value,
-      [
-        currentTabIndex * width,
-        currentTabIndex * width + width / 2,
-        currentTabIndex * width + width,
-      ],
-      [0, 50, 0],
-      Extrapolation.CLAMP
-    );
-
-    return {
-      intensity,
-    };
-  });
+  const horizontalListOffsetX = useSharedValue(0);
+  const isHorizontalListScrollingX = useSharedValue(false);
+  const activeTabIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {
+      isHorizontalListScrollingX.value = true;
+    },
     onScroll: (event) => {
-      listOffsetX.value = event.contentOffset.x;
+      horizontalListOffsetX.value = event.contentOffset.x;
+    },
+    onMomentumEnd: (event) => {
+      isHorizontalListScrollingX.value = false;
+      activeTabIndex.value = Math.round(event.contentOffset.x / width);
     },
   });
 
   const _renderItem = ({ item, index }: { item: Tab; index: number }) => {
     return (
-      <HomeListItemContainer index={index} listOffsetX={listOffsetX}>
+      <HomeListItemContainer index={index} horizontalListOffsetX={horizontalListOffsetX}>
         {item.content}
       </HomeListItemContainer>
     );
@@ -75,7 +48,7 @@ export const Home: FC<Props> = ({}) => {
 
   return (
     <View className="flex-1 bg-neutral-200" style={{ paddingTop: insets.top + 8 }}>
-      <View className="flex-row items-center px-7">
+      <View className="flex-row items-center px-7 mb-4">
         <View className="flex-1 flex-row items-center gap-3">
           <View className="w-12 h-12 rounded-full bg-neutral-300" />
           <View className="gap-1.5">
@@ -85,11 +58,19 @@ export const Home: FC<Props> = ({}) => {
         </View>
         <View className="w-6 h-6 rounded-full border-[2px] border-neutral-300" />
       </View>
+      <TopTabs
+        tabs={tabs}
+        horizontalListRef={horizontalListRef}
+        horizontalListOffsetX={horizontalListOffsetX}
+        isHorizontalListScrollingX={isHorizontalListScrollingX}
+        activeTabIndex={activeTabIndex}
+      />
       <View className="flex-1">
         <Animated.FlatList
+          ref={horizontalListRef}
           data={tabs}
           renderItem={_renderItem}
-          keyExtractor={(item) => item.value}
+          keyExtractor={(item) => item.value.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -97,14 +78,7 @@ export const Home: FC<Props> = ({}) => {
           onScroll={scrollHandler}
           scrollEventThrottle={16}
           bounces={false}
-          onMomentumScrollEnd={() => {
-            setCurrentTabIndex(Math.round(listOffsetX.value / width));
-          }}
         />
-        {/* <AnimatedBlurView
-          style={[StyleSheet.absoluteFill, { pointerEvents: "none" }]}
-          animatedProps={blurAnimatedProps}
-        /> */}
       </View>
     </View>
   );

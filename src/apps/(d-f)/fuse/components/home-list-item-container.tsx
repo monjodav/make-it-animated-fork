@@ -16,18 +16,18 @@ const _translateYGap = 5;
 
 type Props = {
   index: number;
-  listOffsetX: SharedValue<number>;
+  horizontalListOffsetX: SharedValue<number>;
 };
 
 export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
   children,
   index,
-  listOffsetX,
+  horizontalListOffsetX,
 }) => {
   const { width } = useWindowDimensions();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const progress = listOffsetX.value / width;
+    const progress = horizontalListOffsetX.value / width;
 
     const fadeOut = interpolate(progress, [index, index + 0.7], [1, 0], Extrapolation.CLAMP);
     const fadeIn = interpolate(progress, [index - 0.3, index], [0, 1], Extrapolation.CLAMP);
@@ -73,7 +73,7 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
 
   const blurAnimatedProps = useAnimatedProps(() => {
     const intensity = interpolate(
-      listOffsetX.value,
+      horizontalListOffsetX.value,
       [(index - 1) * width, index * width, (index + 1) * width],
       [100, 0, 100],
       Extrapolation.CLAMP
