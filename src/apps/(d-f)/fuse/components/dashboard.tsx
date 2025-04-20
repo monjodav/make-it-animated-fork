@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
-import { BalanceChange } from "./balance-change";
+import { BalanceChangeToggle } from "./balance-change-toggle";
 
 type ActionButtonProps = {
   label: string;
@@ -35,7 +35,7 @@ export const Dashboard: FC = () => {
             <Text className="text-neutral-900 text-5xl font-bold">0</Text>
             <Text className="text-neutral-500 text-5xl font-bold">.00</Text>
           </View>
-          <BalanceChange />
+          <BalanceChangeToggle />
         </View>
         <View className="flex-row gap-2">
           <ActionButton label="Receive" onPress={() => Alert.alert("Receive")} />

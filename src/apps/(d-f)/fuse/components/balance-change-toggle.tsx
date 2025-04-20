@@ -14,7 +14,7 @@ const _duration = 250;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const BalanceChange: FC = () => {
+export const BalanceChangeToggle: FC = () => {
   const [isPercent, setIsPercent] = useState(false);
 
   const handlePress = () => {
