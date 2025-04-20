@@ -8,6 +8,7 @@ import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native
 import { HomeListItemContainer } from "../components/home-list-item-container";
 import { TopTabs } from "../components/top-tabs";
 import { Tab, TabValue } from "../lib/types";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // fuse-home-tabs-transition-animation 🔽
 
@@ -18,6 +19,10 @@ const tabs: Tab[] = [
 ];
 
 export const Home: FC = () => {
+  useAndroidNote(
+    "Performance of tabs transition animation is not optimal. There is a safe fallback for android platform until I found a better solution."
+  );
+
   const horizontalListRef = useRef<FlatList>(null);
 
   const insets = useSafeAreaInsets();

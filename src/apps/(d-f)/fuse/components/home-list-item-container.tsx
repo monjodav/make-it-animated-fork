@@ -1,6 +1,6 @@
 import { BlurView } from "expo-blur";
 import React, { FC, PropsWithChildren } from "react";
-import { useWindowDimensions, StyleSheet } from "react-native";
+import { useWindowDimensions, StyleSheet, Platform } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedProps,
@@ -35,6 +35,10 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
   const { width } = useWindowDimensions();
 
   const rContainerStyle = useAnimatedStyle(() => {
+    if (Platform.OS === "android") {
+      return {};
+    }
+
     if (
       Math.abs(activeTabIndex.value - prevActiveTabIndex.value) > 1 &&
       index !== activeTabIndex.value &&
