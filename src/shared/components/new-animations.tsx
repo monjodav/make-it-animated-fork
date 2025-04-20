@@ -1,8 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { instagram } from "@/src/shared/lib/constants/apps/i";
-import { github } from "@/src/shared/lib/constants/apps/g";
+import { fuse } from "@/src/shared/lib/constants/apps/f";
 import { App } from "../lib/constants/apps-list";
 
 type AnimationItemProps = {
@@ -42,14 +41,8 @@ export const NewAnimations: FC = () => {
 
   return (
     <View className="px-5 gap-5 py-5">
-      <AnimationItem
-        label={getItemProps(instagram, 0).label}
-        onPress={getItemProps(instagram, 0).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(github, 1).label}
-        onPress={getItemProps(github, 1).onPress}
-      />
+      <AnimationItem label={getItemProps(fuse, 0).label} onPress={getItemProps(fuse, 0).onPress} />
+      <AnimationItem label={getItemProps(fuse, 1).label} onPress={getItemProps(fuse, 1).onPress} />
     </View>
   );
 };

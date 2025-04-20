@@ -10,6 +10,7 @@ import { whatsapp } from "./apps/w";
 import { github, gmail, googleChrome } from "./apps/g";
 import { queue } from "./apps/q";
 import { threads } from "./apps/t";
+import { fuse } from "./apps/f";
 
 type Animation = {
   name: string;
@@ -36,6 +37,7 @@ export const apps: App[] = [
   // D
   // E
   // F
+  fuse,
   //------------------------
   // G
   googleChrome,
