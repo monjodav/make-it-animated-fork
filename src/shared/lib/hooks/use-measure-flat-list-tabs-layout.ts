@@ -7,6 +7,15 @@ type Props = {
 };
 
 export const useMeasureFlatListTabsLayout = ({ tabsLength, sidePadding, gap }: Props) => {
+  // NOTE: you need to measure widths of the items onLayout:
+  // onLayout={(event) => {
+  //   const { width } = event.nativeEvent.layout;
+  //   tabWidths.modify((value) => {
+  //     "worklet";
+  //     value[index] = width;
+  //     return value;
+  //   });
+  // }}
   const tabWidths = useSharedValue<number[]>(new Array(tabsLength).fill(0));
 
   const tabOffsets = useDerivedValue(() => {
