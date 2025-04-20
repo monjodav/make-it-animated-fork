@@ -10,6 +10,8 @@ import Animated, {
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
+// fuse-balance-change-toggle-animation 🔽
+
 const _duration = 250;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -51,3 +53,5 @@ export const BalanceChangeToggle: FC = () => {
     </AnimatedPressable>
   );
 };
+
+// fuse-balance-change-toggle-animation 🔼

@@ -1,5 +1,5 @@
 import React, { FC, RefObject, useRef } from "react";
-import { Dimensions, FlatList, View } from "react-native";
+import { FlatList, View } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedScrollHandler,
@@ -9,8 +9,9 @@ import { TabIndicator } from "./tab-indicator";
 import { TabItem } from "./tab-item";
 import { Tab } from "../../lib/types";
 import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
+import * as Haptics from "expo-haptics";
 
-export const _homePostsListWidth = Dimensions.get("window").width;
+// fuse-home-tabs-transition-animation 🔽
 
 const _sidePadding = 16;
 const _gap = 8;
@@ -21,6 +22,7 @@ type Props = {
   horizontalListOffsetX: SharedValue<number>;
   isHorizontalListScrollingX: SharedValue<boolean>;
   activeTabIndex: SharedValue<number>;
+  prevActiveTabIndex: SharedValue<number>;
 };
 
 export const TopTabs: FC<Props> = ({
@@ -29,6 +31,7 @@ export const TopTabs: FC<Props> = ({
   horizontalListOffsetX,
   isHorizontalListScrollingX,
   activeTabIndex,
+  prevActiveTabIndex,
 }) => {
   const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
     tabsLength: tabs.length,
@@ -52,8 +55,13 @@ export const TopTabs: FC<Props> = ({
         index={index}
         label={item.label}
         horizontalListOffsetX={horizontalListOffsetX}
-        onPress={() => {
+        onPressIn={() => (prevActiveTabIndex.value = activeTabIndex.value)}
+        onPressOut={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
           activeTabIndex.value = item.value;
+          setTimeout(() => {
+            prevActiveTabIndex.value = item.value;
+          }, 300);
           tabsListRef.current?.scrollToIndex({ index, animated: true });
           horizontalListRef.current?.scrollToIndex({ index, animated: true });
         }}
@@ -89,7 +97,10 @@ export const TopTabs: FC<Props> = ({
         onScroll={scrollHandler}
         scrollEventThrottle={1000 / 60}
         contentContainerStyle={{ paddingHorizontal: _sidePadding, gap: _gap }}
+        bounces={false}
       />
     </View>
   );
 };
+
+// fuse-home-tabs-transition-animation 🔼

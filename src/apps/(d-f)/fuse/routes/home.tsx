@@ -9,6 +9,8 @@ import { HomeListItemContainer } from "../components/home-list-item-container";
 import { TopTabs } from "../components/top-tabs";
 import { Tab, TabValue } from "../lib/types";
 
+// fuse-home-tabs-transition-animation 🔽
+
 const tabs: Tab[] = [
   { label: "Dashboard", value: TabValue.Dashboard, content: <Dashboard /> },
   { label: "Coins", value: TabValue.Coins, content: <Coins /> },
@@ -23,6 +25,7 @@ export const Home: FC = () => {
 
   const horizontalListOffsetX = useSharedValue(0);
   const isHorizontalListScrollingX = useSharedValue(false);
+  const prevActiveTabIndex = useSharedValue(0);
   const activeTabIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -40,7 +43,13 @@ export const Home: FC = () => {
 
   const _renderItem = ({ item, index }: { item: Tab; index: number }) => {
     return (
-      <HomeListItemContainer index={index} horizontalListOffsetX={horizontalListOffsetX}>
+      <HomeListItemContainer
+        index={index}
+        activeTabIndex={activeTabIndex}
+        prevActiveTabIndex={prevActiveTabIndex}
+        horizontalListOffsetX={horizontalListOffsetX}
+        isHorizontalListScrollingX={isHorizontalListScrollingX}
+      >
         {item.content}
       </HomeListItemContainer>
     );
@@ -64,6 +73,7 @@ export const Home: FC = () => {
         horizontalListOffsetX={horizontalListOffsetX}
         isHorizontalListScrollingX={isHorizontalListScrollingX}
         activeTabIndex={activeTabIndex}
+        prevActiveTabIndex={prevActiveTabIndex}
       />
       <View className="flex-1">
         <Animated.FlatList
@@ -83,3 +93,5 @@ export const Home: FC = () => {
     </View>
   );
 };
+
+// fuse-home-tabs-transition-animation 🔼

@@ -7,6 +7,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+// fuse-home-tabs-transition-animation 🔽
+
 const _duration = 250;
 
 type Props = {
@@ -70,3 +72,5 @@ export const TabIndicator: FC<Props> = ({
     />
   );
 };
+
+// fuse-home-tabs-transition-animation 🔼

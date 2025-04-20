@@ -28,14 +28,16 @@ export const Dashboard: FC = () => {
   return (
     <View className="flex-1" style={{ paddingBottom: insets.bottom + 30 }}>
       <View className="flex-1 p-5">
-        <Text className="text-neutral-500 mb-4">Balance</Text>
+        <Text className="text-neutral-400 font-medium mb-4">Balance</Text>
         <View className="flex-row items-center justify-between mb-5">
           <View className="flex-row">
-            <Text className="text-neutral-900 text-2xl font-bold">$</Text>
-            <Text className="text-neutral-900 text-5xl font-bold">0</Text>
-            <Text className="text-neutral-500 text-5xl font-bold">.00</Text>
+            <Text className="text-neutral-900 text-3xl font-bold">$</Text>
+            <Text className="text-neutral-900 text-6xl font-bold">0</Text>
+            <Text className="text-neutral-400 text-6xl font-bold">.00</Text>
           </View>
+          {/* fuse-balance-change-toggle-animation 🔽 */}
           <BalanceChangeToggle />
+          {/* fuse-balance-change-toggle-animation 🔼 */}
         </View>
         <View className="flex-row gap-2">
           <ActionButton label="Receive" onPress={() => Alert.alert("Receive")} />
