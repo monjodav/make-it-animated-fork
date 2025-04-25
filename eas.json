@@ -19,7 +19,7 @@
     "production": {
       "android": {
         "serviceAccountKeyPath": "./make-it-animated-service-account.json",
-        "track": "internal",
+        "track": "production",
         "releaseStatus": "draft"
       }
     }

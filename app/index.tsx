@@ -11,6 +11,7 @@ import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { updateAlert, useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
+import { Redirect } from "expo-router";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
@@ -22,6 +23,9 @@ export default function Index() {
   const navigation = useNavigation();
 
   const { isUpdateAvailable } = useOtaUpdate();
+
+  // VS -------------
+  return <Redirect href="/pinterest/home/123" />;
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
