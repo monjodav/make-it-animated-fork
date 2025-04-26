@@ -8,10 +8,10 @@ import Reanimated, {
   useSharedValue,
   scrollTo,
 } from "react-native-reanimated";
-import { useEffect } from "react";
 import { TabIndicator } from "./tab-indicator";
 import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
 import { NavigationRoute, ParamListBase } from "@react-navigation/native";
+import { useReanimatedTopTabsIndex } from "@/src/shared/lib/hooks/use-reanimated-top-tabs-index";
 
 // pinterest-navigation-between-boards-animation 🔽
 
@@ -39,29 +39,10 @@ export function TabBar({ state, descriptors, navigation, position }: Props) {
     gap: TAB_BAR_GAP,
   });
 
-  /*---------------------------------------------*
-   * Here we listen to Animated position
-   * and Reanimated update active tab index
-   *---------------------------------------------*/
-  const activeTabIndex = useSharedValue(0);
-
-  // We need it to trigger update of Animated position
-  const inputRange = state.routes.map((_, i) => i);
-  const outputRange = state.routes.map(() => 1);
-  const opacity = position.interpolate({
-    inputRange,
-    outputRange,
+  const { activeTabIndex, dummyOpacity } = useReanimatedTopTabsIndex({
+    position,
+    state,
   });
-
-  useEffect(() => {
-    const id = position.addListener(({ value }) => {
-      activeTabIndex.value = value;
-    });
-
-    return () => {
-      position.removeListener(id);
-    };
-  }, []);
 
   /*---------------------------------------------*
    * Here keep tab bar scroll in sync with tabs
@@ -151,7 +132,7 @@ export function TabBar({ state, descriptors, navigation, position }: Props) {
    * And finally we have tab bar
    *---------------------------------------------*/
   return (
-    <Animated.View style={{ opacity }} className="h-8 mb-3">
+    <Animated.View style={{ opacity: dummyOpacity }} className="h-8 mb-3">
       <Reanimated.FlatList
         ref={listAnimatedRef}
         data={state.routes}

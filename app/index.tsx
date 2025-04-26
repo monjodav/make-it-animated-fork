@@ -24,6 +24,9 @@ export default function Index() {
 
   const { isUpdateAvailable } = useOtaUpdate();
 
+  // VS----------
+  return <Redirect href="/threads/home" />;
+
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
       <TouchableOpacity
