@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
-import { Home, PlaySquare, Search, UserCircle } from "lucide-react-native";
+import { MessageCircleMore, Plus, Search } from "lucide-react-native";
 import React from "react";
 import { Pressable } from "react-native";
+import Foundation from "@expo/vector-icons/Foundation";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 enum Tab {
@@ -30,31 +31,31 @@ const TabsLayout = () => {
       <Tabs.Screen
         name={Tab.Home}
         options={{
-          tabBarIcon: ({ color }) => <Home size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Foundation name="home" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Search}
         options={{
-          tabBarIcon: ({ color }) => <Search size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Search size={22} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Add}
         options={{
-          tabBarIcon: ({ color }) => <FontAwesome name="plus-square-o" size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Plus size={26} color={color} strokeWidth={3} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Updates}
         options={{
-          tabBarIcon: ({ color }) => <PlaySquare size={24} color={color} />,
+          tabBarIcon: ({ color }) => <MessageCircleMore size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name={Tab.Account}
         options={{
-          tabBarIcon: ({ color }) => <UserCircle size={24} color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color={color} />,
         }}
       />
     </Tabs>

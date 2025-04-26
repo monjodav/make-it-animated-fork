@@ -24,9 +24,6 @@ export default function Index() {
 
   const { isUpdateAvailable } = useOtaUpdate();
 
-  // VS -------------
-  return <Redirect href="/pinterest/home/123" />;
-
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
       <TouchableOpacity
