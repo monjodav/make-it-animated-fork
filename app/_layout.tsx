@@ -36,8 +36,6 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   const insets = useSafeAreaInsets();
 
-  useVersionCheck();
-
   return (
     <>
       <TextInput
@@ -67,6 +65,8 @@ export default function RootLayout() {
     NavigationBar.setBackgroundColorAsync("black");
   }
 
+  useVersionCheck();
+
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
       SplashScreen.hide();
@@ -85,7 +85,14 @@ export default function RootLayout() {
 
         <Drawer
           drawerContent={(props) => <DrawerContent {...props} />}
-          screenOptions={{ headerShown: false, drawerStyle: { backgroundColor: "#131316" } }}
+          screenOptions={{
+            headerShown: false,
+            drawerStyle: {
+              backgroundColor: "#131316",
+              borderTopRightRadius: 0,
+              borderTopLeftRadius: 0,
+            },
+          }}
         />
       </KeyboardProvider>
     </GestureHandlerRootView>

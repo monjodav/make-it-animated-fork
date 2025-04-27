@@ -13,7 +13,7 @@ export const AnimatedScrollView: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Animated.ScrollView
       ref={listRef}
-      className="bg-black"
+      className="bg-neutral-950"
       contentContainerClassName="px-4"
       contentContainerStyle={{ paddingTop: insets.top + 30 }}
     >

@@ -1,32 +1,51 @@
-import { MasonryFlashList } from "@shopify/flash-list";
+import { FlashList, MasonryFlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
-import React, { FC } from "react";
-import { View } from "react-native";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
 import Animated, {
+  FadeInDown,
   runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { WithPullToRefresh } from "./with-pull-to-refresh";
-import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
+import { WithPullToRefresh } from "../with-pull-to-refresh";
+import { sharedConfigs } from "../../lib/constants/pull-to-refresh-animation";
+import { Board } from "../../lib/types";
+import { useScrollToTop } from "@react-navigation/native";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
 
 const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 
-const _data = Array.from({ length: 20 }).map((_, index) => ({ id: index }));
-
 type Props = {
-  listHeader?: React.ReactNode;
+  board: Board;
 };
 
-export const MasonryList: FC<Props> = ({ listHeader }) => {
+export const MasonryList: FC<Props> = ({ board }) => {
+  const [data, setData] = useState<number[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    setData(board.pins);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const listOffsetY = useSharedValue(0);
   const isDragging = useSharedValue(false);
   const listOffsetYOnEndDrag = useSharedValue(0);
   const refreshing = useSharedValue(false);
   const isRefreshed = useSharedValue(false);
   const isHapticTriggered = useSharedValue(false);
+
+  const listRef = useRef<FlashList<Board>>(null);
+
+  useScrollToTop(listRef);
 
   const refresh = async () => {
     refreshing.value = true;
@@ -73,7 +92,17 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
   });
 
   const _renderListHeader = () => {
-    return listHeader;
+    if (board.slug === "all") return <></>;
+
+    return (
+      <View className="flex-row items-center gap-3 px-5 pb-4">
+        <View className="w-12 h-12 rounded-xl bg-neutral-900" />
+        <View className="flex-1 gap-1">
+          <View className="h-4 w-[30%] rounded-full bg-neutral-900" />
+          <View className="h-3 w-[15%] rounded-full bg-neutral-900" />
+        </View>
+      </View>
+    );
   };
 
   const _renderItem = ({ index }: { index: number }) => {
@@ -101,6 +130,14 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
     return <View className="h-3" />;
   };
 
+  if (loading) {
+    return (
+      <View className="pt-[65px]">
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
     <WithPullToRefresh
       listOffsetY={listOffsetY}
@@ -110,15 +147,18 @@ export const MasonryList: FC<Props> = ({ listHeader }) => {
       isRefreshed={isRefreshed}
     >
       <AnimatedList
-        data={_data}
+        ref={listRef}
+        entering={FadeInDown}
+        data={data}
         numColumns={2}
         ListHeaderComponent={_renderListHeader}
         renderItem={_renderItem}
         ItemSeparatorComponent={_renderItemSeparator}
         estimatedItemSize={200}
-        scrollEventThrottle={1000 / 60}
         onScroll={scrollHandler}
+        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 6 }}
       />
     </WithPullToRefresh>
   );
