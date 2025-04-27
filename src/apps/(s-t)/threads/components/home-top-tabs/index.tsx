@@ -6,6 +6,8 @@ import { TabItem } from "./tab-item";
 import { Logo } from "../logo";
 import { TabIndicator } from "./tab-indicator";
 
+// threads-home-header-tabs-animation 🔽
+
 const TABS_HORIZONTAL_PADDING = 16;
 
 type Props = MaterialTopTabBarProps;
@@ -72,3 +74,5 @@ export function HomeTopTabs({ state, descriptors, navigation, position }: Props)
     </Animated.View>
   );
 }
+
+// threads-home-header-tabs-animation 🔼

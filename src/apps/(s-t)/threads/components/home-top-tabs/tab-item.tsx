@@ -7,6 +7,8 @@ import Reanimated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+// threads-home-header-tabs-animation 🔽
+
 type Props = {
   index: number;
   activeTabIndex: SharedValue<number>;
@@ -50,3 +52,5 @@ export const TabItem: FC<Props> = ({
     </TouchableOpacity>
   );
 };
+
+// threads-home-header-tabs-animation 🔼

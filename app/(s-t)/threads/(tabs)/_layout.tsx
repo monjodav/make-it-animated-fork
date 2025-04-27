@@ -4,6 +4,7 @@ import React from "react";
 import { Pressable, View } from "react-native";
 import Foundation from "@expo/vector-icons/Foundation";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { useBottomTabsStore } from "@/src/apps/(s-t)/threads/lib/store/bottom-tabs";
 
 enum Tab {
   Home = "home",
@@ -14,6 +15,8 @@ enum Tab {
 }
 
 const TabsLayout = () => {
+  const isBottomTabsHidden = useBottomTabsStore.use.isBottomTabsHidden();
+
   return (
     <Tabs
       screenOptions={{
@@ -22,6 +25,8 @@ const TabsLayout = () => {
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
+          position: "absolute",
+          opacity: isBottomTabsHidden ? 0 : 1,
           borderTopWidth: 0,
           backgroundColor: "#0a0a0a",
         },

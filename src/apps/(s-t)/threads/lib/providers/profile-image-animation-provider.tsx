@@ -4,6 +4,7 @@ import { useWindowDimensions } from "react-native";
 import Animated, {
   AnimatedRef,
   Easing,
+  runOnJS,
   SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
@@ -12,6 +13,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from "react-native-reanimated";
+import { useBottomTabsStore } from "../store/bottom-tabs";
 
 // threads-profile-picture-animation 🔽
 
@@ -39,6 +41,8 @@ const ProfileImageAnimationContext = createContext<ContextValue>({} as ContextVa
 
 export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  const setIsBottomTabsHidden = useBottomTabsStore.use.setIsBottomTabsHidden();
 
   const screenCenterX = screenWidth / 2;
   const screenCenterY = screenHeight / 2;
@@ -74,6 +78,8 @@ export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children 
 
   const open = () => {
     "worklet";
+
+    runOnJS(setIsBottomTabsHidden)(true);
     imageState.value = "open";
     blurIntensity.value = withTiming(100, _timingConfig);
     imageSize.value = withTiming(expandedProfileImageSize, _timingConfig);
@@ -84,6 +90,9 @@ export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children 
 
   const close = () => {
     "worklet";
+
+    runOnJS(setIsBottomTabsHidden)(false);
+
     const x = measurement.value?.pageX ?? 0;
     const y = measurement.value?.pageY ?? 0;
 

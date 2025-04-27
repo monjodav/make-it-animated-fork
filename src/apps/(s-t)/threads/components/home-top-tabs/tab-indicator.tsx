@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
-// pinterest-navigation-between-boards-animation 🔽
+// threads-home-header-tabs-animation 🔽
 
 type Props = {
   activeTabIndex: SharedValue<number>;
@@ -32,4 +32,4 @@ export const TabIndicator: FC<Props> = ({
   return <Animated.View className="h-px rounded-full bg-white" style={rIndicatorStyle} />;
 };
 
-// pinterest-navigation-between-boards-animation 🔼
+// threads-home-header-tabs-animation 🔼

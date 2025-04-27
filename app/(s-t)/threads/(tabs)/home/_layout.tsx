@@ -7,6 +7,8 @@ import {
 import { withLayoutContext } from "expo-router";
 import { HomeTopTabs } from "@/src/apps/(s-t)/threads/components/home-top-tabs";
 
+// threads-home-header-tabs-animation 🔽
+
 const { Navigator } = createMaterialTopTabNavigator();
 
 const Tabs = withLayoutContext<
@@ -28,3 +30,5 @@ export default function HomeLayout() {
     </Tabs>
   );
 }
+
+// threads-home-header-tabs-animation 🔼
