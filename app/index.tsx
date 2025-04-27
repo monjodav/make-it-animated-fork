@@ -1,7 +1,8 @@
-import { Pressable, TouchableOpacity } from "react-native";
+import { Keyboard, Pressable, TouchableOpacity } from "react-native";
 import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
+import { useDrawerStatus } from "@react-navigation/drawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Bell } from "lucide-react-native";
 import * as WebBrowser from "expo-web-browser";
@@ -11,6 +12,8 @@ import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { updateAlert, useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
+import { useKeyboardState } from "react-native-keyboard-controller";
+import { useEffect } from "react";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
@@ -22,6 +25,15 @@ export default function Index() {
   const navigation = useNavigation();
 
   const { isUpdateAvailable } = useOtaUpdate();
+
+  const keyboardStatus = useKeyboardState();
+  const drawerStatus = useDrawerStatus();
+
+  useEffect(() => {
+    if (keyboardStatus.isVisible && drawerStatus === "closed") {
+      Keyboard.dismiss();
+    }
+  }, [keyboardStatus, drawerStatus]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">

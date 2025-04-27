@@ -1,5 +1,5 @@
 import React, { FC, memo } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { BlurView } from "expo-blur";
 
@@ -20,11 +20,15 @@ const ImageBg: FC<Props> = ({ itemKey, source }) => {
         source={source}
         className="h-full w-full"
       />
-      <BlurView
-        intensity={100}
-        tint="systemChromeMaterialDark"
-        style={StyleSheet.absoluteFillObject}
-      />
+      {Platform.OS === "ios" ? (
+        <BlurView
+          intensity={100}
+          tint="systemChromeMaterialDark"
+          style={StyleSheet.absoluteFillObject}
+        />
+      ) : (
+        <View className="absolute inset-0 bg-neutral-700/95" />
+      )}
     </View>
   );
 };
