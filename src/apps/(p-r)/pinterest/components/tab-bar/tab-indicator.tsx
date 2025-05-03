@@ -1,5 +1,10 @@
 import React, { FC } from "react";
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 // pinterest-navigation-between-boards-animation 🔽
 
@@ -17,16 +22,18 @@ export const TabIndicator: FC<Props> = ({
   tabBarOffsetX,
 }) => {
   const rIndicatorStyle = useAnimatedStyle(() => {
-    const left = interpolate(
-      activeTabIndex.value,
-      Object.keys(tabOffsets.value).map(Number),
-      tabOffsets.value
+    const left = withTiming(
+      interpolate(
+        activeTabIndex.value,
+        Object.keys(tabOffsets.value).map(Number),
+        tabOffsets.value
+      ),
+      { duration: 50 }
     );
 
-    const width = interpolate(
-      activeTabIndex.value,
-      Object.keys(tabWidths.value).map(Number),
-      tabWidths.value
+    const width = withTiming(
+      interpolate(activeTabIndex.value, Object.keys(tabWidths.value).map(Number), tabWidths.value),
+      { duration: 50 }
     );
 
     return {

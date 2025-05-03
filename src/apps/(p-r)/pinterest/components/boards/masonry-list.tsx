@@ -27,7 +27,7 @@ export const MasonryList: FC<Props> = ({ board }) => {
 
   const fetchData = async () => {
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setData(board.pins);
     setLoading(false);
   };
