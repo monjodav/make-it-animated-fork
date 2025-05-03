@@ -14,6 +14,7 @@ import { updateAlert, useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
+import { Redirect, usePathname } from "expo-router";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
@@ -23,6 +24,7 @@ export default function Index() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
+  const pathname = usePathname();
 
   const { isUpdateAvailable } = useOtaUpdate();
 
@@ -30,49 +32,52 @@ export default function Index() {
   const drawerStatus = useDrawerStatus();
 
   useEffect(() => {
-    if (keyboardStatus.isVisible && drawerStatus === "closed") {
+    if (keyboardStatus.isVisible && drawerStatus === "closed" && pathname === "/") {
       Keyboard.dismiss();
     }
-  }, [keyboardStatus, drawerStatus]);
+  }, [keyboardStatus, drawerStatus, pathname]);
 
-  return (
-    <View className="flex-1 items-center justify-center bg-[#131316]">
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() =>
-          WebBrowser.openBrowserAsync(WEBSITE_URL, {
-            presentationStyle: WebBrowserPresentationStyle.FORM_SHEET,
-          })
-        }
-      >
-        <Image source={Logo} className="size-[100px] opacity-50" />
-      </TouchableOpacity>
-      <AnimatedTouchable
-        entering={FadeIn}
-        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        className="absolute px-6 py-4 rounded-full items-center self-center bg-stone-200"
-        style={{ bottom: insets.bottom + 24 }}
-      >
-        <Text className="text-stone-900 text-base font-semibold">Explore animations</Text>
-      </AnimatedTouchable>
-      <View className="absolute left-4 right-4 gap-4" style={{ top: insets.top + 16 }}>
-        {isUpdateAvailable && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => Updates.reloadAsync()}
-            className="p-4 rounded-2xl bg-[#212126] flex-row items-center gap-4"
-          >
-            <Bell color="gray" strokeWidth={1.5} />
-            <View className="gap-1 flex-1">
-              <Text className="text-white text-base">{updateAlert.title}</Text>
-              <Text className="text-white text-sm font-light">
-                {updateAlert.message}{" "}
-                <Text className="underline text-orange-200">Refresh now.</Text>
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
+  // VS -----------------
+  return <Redirect href="raycast/home" />;
+
+  // return (
+  //   <View className="flex-1 items-center justify-center bg-[#131316]">
+  //     <TouchableOpacity
+  //       activeOpacity={0.8}
+  //       onPress={() =>
+  //         WebBrowser.openBrowserAsync(WEBSITE_URL, {
+  //           presentationStyle: WebBrowserPresentationStyle.FORM_SHEET,
+  //         })
+  //       }
+  //     >
+  //       <Image source={Logo} className="size-[100px] opacity-50" />
+  //     </TouchableOpacity>
+  //     <AnimatedTouchable
+  //       entering={FadeIn}
+  //       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+  //       className="absolute px-6 py-4 rounded-full items-center self-center bg-stone-200"
+  //       style={{ bottom: insets.bottom + 24 }}
+  //     >
+  //       <Text className="text-stone-900 text-base font-semibold">Explore animations</Text>
+  //     </AnimatedTouchable>
+  //     <View className="absolute left-4 right-4 gap-4" style={{ top: insets.top + 16 }}>
+  //       {isUpdateAvailable && (
+  //         <TouchableOpacity
+  //           activeOpacity={0.8}
+  //           onPress={() => Updates.reloadAsync()}
+  //           className="p-4 rounded-2xl bg-[#212126] flex-row items-center gap-4"
+  //         >
+  //           <Bell color="gray" strokeWidth={1.5} />
+  //           <View className="gap-1 flex-1">
+  //             <Text className="text-white text-base">{updateAlert.title}</Text>
+  //             <Text className="text-white text-sm font-light">
+  //               {updateAlert.message}{" "}
+  //               <Text className="underline text-orange-200">Refresh now.</Text>
+  //             </Text>
+  //           </View>
+  //         </TouchableOpacity>
+  //       )}
+  //     </View>
+  //   </View>
+  // );
 }
