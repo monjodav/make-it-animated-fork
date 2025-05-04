@@ -14,6 +14,8 @@ import Animated, {
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "../../lib/hooks/use-header-height";
+import { useSingleHapticOnScroll } from "@/src/shared/lib/hooks/use-single-haptic-on-scroll";
+import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 
 type FavoriteItemProps = {
   iconClassName?: string;
@@ -33,9 +35,21 @@ export const Favorites = () => {
   const insets = useSafeAreaInsets();
   const { grossHeight } = useHeaderHeight();
 
-  const { screenView, offsetY, blurIntensity, onGoToCommands } = useHomeAnimation();
+  const { screenView, offsetY, isListDragging, blurIntensity, onGoToCommands } = useHomeAnimation();
+
+  const { onScroll: scrollDirectionOnScroll, scrollDirection } =
+    useScrollDirection("include-negative");
+
+  const { singleHapticOnScroll } = useSingleHapticOnScroll({
+    isListDragging,
+    scrollDirection,
+    triggerOffset: TRIGGER_DRAG_DISTANCE,
+  });
 
   const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {
+      isListDragging.value = true;
+    },
     onScroll: (event) => {
       const offsetYValue = event.contentOffset.y;
 
@@ -49,8 +63,12 @@ export const Favorites = () => {
           Extrapolation.CLAMP
         );
       }
+
+      scrollDirectionOnScroll(event);
+      singleHapticOnScroll(event);
     },
     onEndDrag: (event) => {
+      isListDragging.value = false;
       const scrollY = event.contentOffset.y;
       if (scrollY < TRIGGER_DRAG_DISTANCE) {
         runOnJS(onGoToCommands)();

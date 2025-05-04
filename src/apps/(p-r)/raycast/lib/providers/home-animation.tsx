@@ -32,6 +32,7 @@ type ContextValue = {
   setScreenView: (view: ScreenView) => void;
   inputRef: RefObject<TextInput>;
   offsetY: SharedValue<number>;
+  isListDragging: SharedValue<boolean>;
   blurIntensity: SharedValue<number>;
   onGoToCommands: () => void;
   onGoToFavorites: () => void;
@@ -45,6 +46,7 @@ export const HomeAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
   const inputRef = useRef<TextInput>(null);
 
   const offsetY = useSharedValue(0);
+  const isListDragging = useSharedValue(false);
   const blurIntensity = useSharedValue(0);
 
   const onGoToCommands = useCallback(() => {
@@ -64,6 +66,7 @@ export const HomeAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
     setScreenView,
     inputRef,
     offsetY,
+    isListDragging,
     blurIntensity,
     onGoToCommands,
     onGoToFavorites,
