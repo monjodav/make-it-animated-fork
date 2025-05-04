@@ -14,6 +14,7 @@ import { updateAlert, useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
+import { usePathname } from "expo-router";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
@@ -23,6 +24,7 @@ export default function Index() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
+  const pathname = usePathname();
 
   const { isUpdateAvailable } = useOtaUpdate();
 
@@ -30,10 +32,10 @@ export default function Index() {
   const drawerStatus = useDrawerStatus();
 
   useEffect(() => {
-    if (keyboardStatus.isVisible && drawerStatus === "closed") {
+    if (keyboardStatus.isVisible && drawerStatus === "closed" && pathname === "/") {
       Keyboard.dismiss();
     }
-  }, [keyboardStatus, drawerStatus]);
+  }, [keyboardStatus, drawerStatus, pathname]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">

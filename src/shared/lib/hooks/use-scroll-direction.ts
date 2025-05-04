@@ -4,7 +4,7 @@ import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/ho
 export type ScrollDirection = "to-top" | "to-bottom" | "idle";
 export type ScrollDirectionValue = SharedValue<ScrollDirection>;
 
-export const useScrollDirection = () => {
+export const useScrollDirection = (param?: "include-negative") => {
   const scrollDirection = useSharedValue<ScrollDirection>("idle");
   const prevOffsetY = useSharedValue(0);
   const offsetYAnchorOnBeginDrag = useSharedValue(0);
@@ -22,8 +22,9 @@ export const useScrollDirection = () => {
 
     const offsetY = e.contentOffset.y;
 
-    const positiveOffsetY = Math.max(offsetY, 0);
-    const positivePrevOffsetY = Math.max(prevOffsetY.value, 0);
+    const positiveOffsetY = param === "include-negative" ? offsetY : Math.max(offsetY, 0);
+    const positivePrevOffsetY =
+      param === "include-negative" ? prevOffsetY.value : Math.max(prevOffsetY.value, 0);
 
     if (
       positivePrevOffsetY - positiveOffsetY < 0 &&
