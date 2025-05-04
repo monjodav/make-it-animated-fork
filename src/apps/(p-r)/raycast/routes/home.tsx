@@ -10,8 +10,13 @@ import { Searchbar } from "../components/home/searchbar";
 import { CancelButton } from "../components/home/cancel-button";
 import { useHeaderHeight } from "../lib/hooks/use-header-height";
 import { AnimatedChevron } from "../components/home/animated-chevron";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 export const Home: FC = () => {
+  useAndroidNote(
+    "Android doesn't support scroll in negative direction, so the animation is limited. Blur is still experimental on Android; to avoid performance issues, use a solid background color instead of blur."
+  );
+
   const insets = useSafeAreaInsets();
   const { insetTop } = useHeaderHeight();
 

@@ -19,6 +19,7 @@ export const AnimatedBlur = () => {
       tint="dark"
       style={[StyleSheet.absoluteFill, styles.container]}
       animatedProps={backdropAnimatedProps}
+      experimentalBlurMethod="dimezisBlurView"
     />
   );
 };
