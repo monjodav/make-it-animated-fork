@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
 import { useHomeAnimation } from "../../lib/providers/home-animation";
 
+// raycast-home-search-transition-animation 🔽
+
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export const AnimatedBlur = () => {
@@ -29,3 +31,5 @@ const styles = StyleSheet.create({
     pointerEvents: "none",
   },
 });
+
+// raycast-home-search-transition-animation 🔼

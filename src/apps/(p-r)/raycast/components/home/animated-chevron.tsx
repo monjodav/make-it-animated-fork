@@ -5,6 +5,8 @@ import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-na
 import { TRIGGER_DRAG_DISTANCE, useHomeAnimation } from "../../lib/providers/home-animation";
 import { View } from "react-native";
 
+// raycast-home-search-transition-animation 🔽
+
 export const AnimatedChevron = () => {
   const { grossHeight } = useHeaderHeight();
 
@@ -32,3 +34,5 @@ export const AnimatedChevron = () => {
     </Animated.View>
   );
 };
+
+// raycast-home-search-transition-animation 🔼

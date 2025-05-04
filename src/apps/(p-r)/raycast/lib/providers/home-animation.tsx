@@ -10,6 +10,8 @@ import {
 import { Dimensions, TextInput } from "react-native";
 import { SharedValue, useSharedValue, withTiming } from "react-native-reanimated";
 
+// raycast-home-search-transition-animation 🔽
+
 export const SEARCHBAR_HEIGHT = 40;
 export const EDIT_HOME_CONTAINER_WIDTH = 65;
 export const SETTINGS_CONTAINER_WIDTH = 65;
@@ -79,3 +81,5 @@ export const useHomeAnimation = () => {
 
   return context;
 };
+
+// raycast-home-search-transition-animation 🔼

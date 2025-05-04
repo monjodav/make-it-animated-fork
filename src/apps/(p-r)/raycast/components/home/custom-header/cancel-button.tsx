@@ -5,7 +5,9 @@ import {
   CANCEL_CONTAINER_WIDTH,
   SETTINGS_CONTAINER_WIDTH,
   useHomeAnimation,
-} from "../../lib/providers/home-animation";
+} from "../../../lib/providers/home-animation";
+
+// raycast-home-search-transition-animation 🔽
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -32,3 +34,5 @@ export const CancelButton: FC = () => {
     </AnimatedPressable>
   );
 };
+
+// raycast-home-search-transition-animation 🔼

@@ -1,10 +1,22 @@
 import React from "react";
-import { View, FlatList, Pressable, Alert } from "react-native";
+import { View, FlatList, Pressable, Alert, StyleSheet } from "react-native";
 import { useHeaderHeight } from "../../lib/hooks/use-header-height";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { FULL_DRAG_DISTANCE, useHomeAnimation } from "../../lib/providers/home-animation";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
+import {
+  FULL_DRAG_DISTANCE,
+  TRIGGER_DRAG_DISTANCE,
+  useHomeAnimation,
+} from "../../lib/providers/home-animation";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { TopGradient } from "./top-gradient";
+
+// raycast-home-search-transition-animation 🔽
 
 const CommandItem = () => {
   const randomWidth = React.useMemo(() => Math.floor(Math.random() * 151) + 50, []);
@@ -40,6 +52,15 @@ export const CommandsList = () => {
     };
   });
 
+  const rTopGradientStyle = useAnimatedStyle(() => {
+    return {
+      opacity:
+        screenView.value === "commands" && offsetY.value > TRIGGER_DRAG_DISTANCE
+          ? withTiming(1, { duration: 1000 })
+          : 0,
+    };
+  });
+
   return (
     <Animated.View className="absolute w-full h-full" style={rContainerStyle}>
       <KeyboardAvoidingView behavior="padding" className="flex-1">
@@ -57,6 +78,13 @@ export const CommandsList = () => {
           scrollIndicatorInsets={{ top: netHeight + 16 }}
         />
       </KeyboardAvoidingView>
+      <Animated.View
+        style={[rTopGradientStyle, StyleSheet.absoluteFillObject, { height: grossHeight }]}
+      >
+        <TopGradient />
+      </Animated.View>
     </Animated.View>
   );
 };
+
+// raycast-home-search-transition-animation 🔼

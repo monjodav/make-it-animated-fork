@@ -11,6 +11,7 @@ import { github, gmail, googleChrome } from "./apps/g";
 import { queue } from "./apps/q";
 import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
+import { raycast } from "./apps/r";
 
 type Animation = {
   name: string;
@@ -63,6 +64,7 @@ export const apps: App[] = [
   // Q
   queue,
   // R
+  raycast,
   // -----------------------
   // S
   // T

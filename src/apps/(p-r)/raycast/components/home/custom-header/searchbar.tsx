@@ -8,7 +8,9 @@ import {
   SEARCHBAR_HEIGHT,
   TRIGGER_DRAG_DISTANCE,
   useHomeAnimation,
-} from "../../lib/providers/home-animation";
+} from "../../../lib/providers/home-animation";
+
+// raycast-home-search-transition-animation 🔽
 
 export const Searchbar: FC = () => {
   const { screenView, offsetY, isListDragging, inputRef, onGoToCommands } = useHomeAnimation();
@@ -58,3 +60,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// raycast-home-search-transition-animation 🔼

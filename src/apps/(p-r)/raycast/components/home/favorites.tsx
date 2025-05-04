@@ -13,10 +13,14 @@ import Animated, {
   runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
+  withTiming,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "../../lib/hooks/use-header-height";
 import { useSingleHapticOnScroll } from "@/src/shared/lib/hooks/use-single-haptic-on-scroll";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
+import { TopGradient } from "./top-gradient";
+
+// raycast-home-search-transition-animation 🔽
 
 type FavoriteItemProps = {
   iconClassName?: string;
@@ -83,34 +87,44 @@ export const Favorites = () => {
     };
   });
 
+  const rTopGradientStyle = useAnimatedStyle(() => {
+    return {
+      opacity: offsetY.value < 0 ? 0 : screenView.value === "favorites" ? withTiming(1) : 0,
+    };
+  });
+
   return (
-    <Animated.ScrollView
-      className="px-5"
-      style={[
-        {
+    <View className="flex-1" style={rContainerStyle}>
+      <Animated.ScrollView
+        className="px-5"
+        style={{
           paddingBottom: insets.bottom + 8,
           paddingTop: grossHeight + 40,
-        },
-        rContainerStyle,
-      ]}
-      scrollEventThrottle={16}
-      onScroll={scrollHandler}
-    >
-      <View className="flex-row mb-10">
-        <FavoriteItem iconClassName="bg-rose-950" />
-        <FavoriteItem iconClassName="bg-orange-900" labelClassName="w-10" />
-        <FavoriteItem iconClassName="bg-indigo-900" labelClassName="w-16" />
-        <FavoriteItem iconClassName="bg-sky-800" labelClassName="w-14" />
-      </View>
-      <View className="h-3 w-20 rounded-full bg-neutral-200/10 mb-10" />
-      <View className="h-8 w-full rounded-xl bg-neutral-700/5 mb-1" />
-      <View className="h-8 w-full rounded-xl bg-neutral-700/5 mb-10" />
-      <View className="items-center">
-        <View className="h-3 w-3/4 rounded-full bg-neutral-200/10 mb-2" />
-        <View className="h-3 w-1/2 rounded-full bg-neutral-200/10 mb-4" />
-        <View className="h-8 w-32 rounded-xl bg-neutral-200/10 mb-2" />
-      </View>
-    </Animated.ScrollView>
+        }}
+        scrollEventThrottle={16}
+        onScroll={scrollHandler}
+      >
+        <View className="flex-row mb-10">
+          <FavoriteItem iconClassName="bg-rose-950" />
+          <FavoriteItem iconClassName="bg-orange-900" labelClassName="w-10" />
+          <FavoriteItem iconClassName="bg-indigo-900" labelClassName="w-16" />
+          <FavoriteItem iconClassName="bg-sky-800" labelClassName="w-14" />
+        </View>
+        <View className="h-3 w-20 rounded-full bg-neutral-200/10 mb-10" />
+        <View className="h-8 w-full rounded-xl bg-neutral-700/5 mb-1" />
+        <View className="h-8 w-full rounded-xl bg-neutral-700/5 mb-10" />
+        <View className="items-center">
+          <View className="h-3 w-3/4 rounded-full bg-neutral-200/10 mb-2" />
+          <View className="h-3 w-1/2 rounded-full bg-neutral-200/10 mb-4" />
+          <View className="h-8 w-32 rounded-xl bg-neutral-200/10 mb-2" />
+        </View>
+      </Animated.ScrollView>
+      <Animated.View
+        style={[rTopGradientStyle, StyleSheet.absoluteFillObject, { height: grossHeight }]}
+      >
+        <TopGradient />
+      </Animated.View>
+    </View>
   );
 };
 
@@ -119,3 +133,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// raycast-home-search-transition-animation 🔼
