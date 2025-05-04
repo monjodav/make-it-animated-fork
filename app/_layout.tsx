@@ -1,5 +1,5 @@
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Platform, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -14,6 +14,7 @@ import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
+import * as Linking from "expo-linking";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -66,6 +67,14 @@ export default function RootLayout() {
   }
 
   useVersionCheck();
+
+  const url = Linking.useLinkingURL();
+
+  useEffect(() => {
+    if (url && url.includes("miaapp://")) {
+      Linking.openURL(url);
+    }
+  }, [url]);
 
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
