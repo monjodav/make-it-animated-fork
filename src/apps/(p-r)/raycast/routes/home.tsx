@@ -9,6 +9,7 @@ import { CommandsList } from "../components/home/commands-list";
 import { Searchbar } from "../components/home/searchbar";
 import { CancelButton } from "../components/home/cancel-button";
 import { useHeaderHeight } from "../lib/hooks/use-header-height";
+import { AnimatedChevron } from "../components/home/animated-chevron";
 
 export const Home: FC = () => {
   const insets = useSafeAreaInsets();
@@ -32,6 +33,7 @@ export const Home: FC = () => {
           <Searchbar />
           <CancelButton />
         </View>
+        <AnimatedChevron />
       </View>
     </HomeAnimationProvider>
   );
