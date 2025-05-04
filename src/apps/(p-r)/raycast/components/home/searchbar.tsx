@@ -1,27 +1,36 @@
 import { Search } from "lucide-react-native";
 import React, { FC } from "react";
 import { View, TextInput, StyleSheet } from "react-native";
-import Animated, { useAnimatedStyle, withSpring } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, withSpring, withTiming } from "react-native-reanimated";
 import {
   SEARCHBAR_COMMANDS_WIDTH,
   SEARCHBAR_FAVORITES_WIDTH,
   SEARCHBAR_HEIGHT,
+  TRIGGER_DRAG_DISTANCE,
   useHomeAnimation,
 } from "../../lib/providers/home-animation";
 
 export const Searchbar: FC = () => {
-  const { screenView, inputRef, onGoToCommands } = useHomeAnimation();
+  const { screenView, offsetY, isListDragging, inputRef, onGoToCommands } = useHomeAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
+    if (isListDragging.value && offsetY.value < 0 && offsetY.value < TRIGGER_DRAG_DISTANCE) {
+      return {
+        transformOrigin: "center",
+        transform: [{ scale: withTiming(1.05) }],
+      };
+    }
+
     return {
       width: withSpring(
-        screenView === "favorites" ? SEARCHBAR_FAVORITES_WIDTH : SEARCHBAR_COMMANDS_WIDTH,
+        screenView.value === "favorites" ? SEARCHBAR_FAVORITES_WIDTH : SEARCHBAR_COMMANDS_WIDTH,
         {
           mass: 0.2,
           damping: 15,
         }
       ),
-      transformOrigin: "right",
+      transform: [{ scale: withTiming(1) }],
+      transformOrigin: isListDragging.value ? "center" : "right",
     };
   });
 

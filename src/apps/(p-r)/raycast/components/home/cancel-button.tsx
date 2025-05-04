@@ -15,10 +15,10 @@ export const CancelButton: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       width: withTiming(
-        screenView === "commands" ? CANCEL_CONTAINER_WIDTH : SETTINGS_CONTAINER_WIDTH
+        screenView.value === "commands" ? CANCEL_CONTAINER_WIDTH : SETTINGS_CONTAINER_WIDTH
       ),
-      opacity: screenView === "commands" ? withTiming(1) : 0,
-      pointerEvents: screenView === "commands" ? "auto" : "none",
+      opacity: screenView.value === "commands" ? withTiming(1) : 0,
+      pointerEvents: screenView.value === "commands" ? "auto" : "none",
     };
   });
 

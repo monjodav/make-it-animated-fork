@@ -12,6 +12,7 @@ import Animated, {
   interpolate,
   runOnJS,
   useAnimatedScrollHandler,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "../../lib/hooks/use-header-height";
 import { useSingleHapticOnScroll } from "@/src/shared/lib/hooks/use-single-haptic-on-scroll";
@@ -55,7 +56,7 @@ export const Favorites = () => {
 
       offsetY.value = offsetYValue;
 
-      if (screenView === "favorites") {
+      if (screenView.value === "favorites") {
         blurIntensity.value = interpolate(
           offsetYValue,
           [0, FULL_DRAG_DISTANCE],
@@ -76,14 +77,22 @@ export const Favorites = () => {
     },
   });
 
+  const rContainerStyle = useAnimatedStyle(() => {
+    return {
+      pointerEvents: screenView.value === "commands" ? "none" : "auto",
+    };
+  });
+
   return (
     <Animated.ScrollView
       className="px-5"
-      style={{
-        paddingBottom: insets.bottom + 8,
-        paddingTop: grossHeight + 40,
-        pointerEvents: screenView === "commands" ? "none" : "auto",
-      }}
+      style={[
+        {
+          paddingBottom: insets.bottom + 8,
+          paddingTop: grossHeight + 40,
+        },
+        rContainerStyle,
+      ]}
       scrollEventThrottle={16}
       onScroll={scrollHandler}
     >

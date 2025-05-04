@@ -27,7 +27,7 @@ export const CommandsList = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       opacity:
-        screenView === "commands"
+        screenView.value === "commands"
           ? 1
           : interpolate(
               offsetY.value,
@@ -36,7 +36,7 @@ export const CommandsList = () => {
               Extrapolation.CLAMP
             ),
       transform: [{ translateY: -offsetY.value }],
-      pointerEvents: screenView === "commands" ? "auto" : "none",
+      pointerEvents: screenView.value === "commands" ? "auto" : "none",
     };
   });
 

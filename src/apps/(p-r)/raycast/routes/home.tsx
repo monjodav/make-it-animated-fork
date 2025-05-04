@@ -28,7 +28,7 @@ export const Home: FC = () => {
         <CommandsList />
         <View
           className="absolute w-full flex-row items-center justify-end"
-          style={{ top: insetTop }}
+          style={{ top: insetTop, pointerEvents: "box-none" }}
         >
           <Searchbar />
           <CancelButton />

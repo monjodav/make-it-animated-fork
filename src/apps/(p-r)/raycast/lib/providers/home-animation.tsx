@@ -6,7 +6,6 @@ import {
   useCallback,
   useContext,
   useRef,
-  useState,
 } from "react";
 import { Dimensions, TextInput } from "react-native";
 import { SharedValue, useSharedValue, withTiming } from "react-native-reanimated";
@@ -28,11 +27,10 @@ export const FULL_DRAG_DISTANCE = -200;
 type ScreenView = "favorites" | "commands";
 
 type ContextValue = {
-  screenView: ScreenView;
-  setScreenView: (view: ScreenView) => void;
   inputRef: RefObject<TextInput>;
-  offsetY: SharedValue<number>;
+  screenView: SharedValue<ScreenView>;
   isListDragging: SharedValue<boolean>;
+  offsetY: SharedValue<number>;
   blurIntensity: SharedValue<number>;
   onGoToCommands: () => void;
   onGoToFavorites: () => void;
@@ -41,32 +39,30 @@ type ContextValue = {
 const HomeAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const HomeAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [screenView, setScreenView] = useState<ScreenView>("favorites");
-
   const inputRef = useRef<TextInput>(null);
 
+  const screenView = useSharedValue<ScreenView>("favorites");
   const offsetY = useSharedValue(0);
   const isListDragging = useSharedValue(false);
   const blurIntensity = useSharedValue(0);
 
   const onGoToCommands = useCallback(() => {
-    setScreenView("commands");
+    screenView.value = "commands";
     blurIntensity.value = withTiming(100);
     inputRef.current?.focus();
   }, []);
 
   const onGoToFavorites = useCallback(() => {
-    setScreenView("favorites");
+    screenView.value = "favorites";
     blurIntensity.value = withTiming(0);
     inputRef.current?.blur();
   }, []);
 
   const value = {
-    screenView,
-    setScreenView,
     inputRef,
-    offsetY,
+    screenView,
     isListDragging,
+    offsetY,
     blurIntensity,
     onGoToCommands,
     onGoToFavorites,
