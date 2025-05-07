@@ -10,11 +10,12 @@ import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
 import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { updateAlert, useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
+import { updateAlert } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
 import { usePathname } from "expo-router";
+import { useAppStore } from "@/src/shared/lib/store/app";
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 
@@ -26,7 +27,7 @@ export default function Index() {
   const navigation = useNavigation();
   const pathname = usePathname();
 
-  const { isUpdateAvailable } = useOtaUpdate();
+  const isOtaUpdateAvailable = useAppStore.use.isOtaUpdateAvailable();
 
   const keyboardStatus = useKeyboardState();
   const drawerStatus = useDrawerStatus();
@@ -58,7 +59,7 @@ export default function Index() {
         <Text className="text-stone-900 text-base font-semibold">Explore animations</Text>
       </AnimatedTouchable>
       <View className="absolute left-4 right-4 gap-4" style={{ top: insets.top + 16 }}>
-        {isUpdateAvailable && (
+        {isOtaUpdateAvailable && (
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => Updates.reloadAsync()}

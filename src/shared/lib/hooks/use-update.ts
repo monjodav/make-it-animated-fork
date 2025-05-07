@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import * as Updates from "expo-updates";
 import { MANUAL_ERROR_CAPTURE } from "../utils/sentry";
 import { Alert, AppState } from "react-native";
+import { useAppStore } from "../store/app";
 
 export const updateAlert = {
   title: "Update available",
@@ -10,20 +11,22 @@ export const updateAlert = {
 };
 
 export const useOtaUpdate = () => {
-  const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
+  const isVersionChecked = useAppStore.use.isVersionChecked();
+  const isNewVersionAvailable = useAppStore.use.isNewVersionAvailable();
+  const setIsOtaUpdateAvailable = useAppStore.use.setIsOtaUpdateAvailable();
 
-  const { isUpdateAvailable: isOtaUpdateAvailable } = Updates.useUpdates();
+  const { isUpdateAvailable } = Updates.useUpdates();
 
   const appState = useRef(AppState.currentState);
 
   const handleUpdate = useCallback(async () => {
-    if (isOtaUpdateAvailable) {
+    if (isUpdateAvailable && isVersionChecked && !isNewVersionAvailable) {
       Updates.fetchUpdateAsync()
         .then(() =>
           Alert.alert(updateAlert.title, updateAlert.message, [
             {
               text: "Later",
-              onPress: () => setIsUpdateAvailable(true),
+              onPress: () => setIsOtaUpdateAvailable(true),
             },
             {
               text: "Refresh",
@@ -39,24 +42,28 @@ export const useOtaUpdate = () => {
           });
         });
     }
-  }, [isOtaUpdateAvailable]);
+  }, [isUpdateAvailable, setIsOtaUpdateAvailable, isNewVersionAvailable, isVersionChecked]);
+
+  useEffect(() => {
+    handleUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUpdateAvailable, isVersionChecked, isNewVersionAvailable]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (appState.current.match(/inactive|background/) && nextAppState === "active") {
-        setIsUpdateAvailable(false);
+        setIsOtaUpdateAvailable(false);
         handleUpdate();
       }
 
       appState.current = nextAppState;
     });
 
-    handleUpdate();
-
     return () => {
       subscription.remove();
     };
-  }, [isOtaUpdateAvailable, handleUpdate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { isUpdateAvailable };
 };

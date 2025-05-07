@@ -15,6 +15,7 @@ import { VisitWebsite } from "@/src/shared/components/visit-website";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
 import * as Linking from "expo-linking";
+import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -67,6 +68,7 @@ export default function RootLayout() {
   }
 
   useVersionCheck();
+  useOtaUpdate();
 
   const url = Linking.useLinkingURL();
 
