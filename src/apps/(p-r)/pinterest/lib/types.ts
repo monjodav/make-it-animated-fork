@@ -1,5 +1,4 @@
 export type Board = {
-  slug: string;
-  title: string;
+  name: string;
   pins: number[];
 };

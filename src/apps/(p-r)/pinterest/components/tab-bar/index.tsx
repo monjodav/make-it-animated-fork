@@ -1,13 +1,4 @@
-import {
-  Text,
-  Platform,
-  Pressable,
-  FlatList,
-  Animated,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { MaterialTopTabBarProps } from "@react-navigation/material-top-tabs";
+import { Text, Platform, Pressable, FlatList, useWindowDimensions, View } from "react-native";
 import Reanimated, {
   interpolate,
   useAnimatedRef,
@@ -18,8 +9,6 @@ import Reanimated, {
 } from "react-native-reanimated";
 import { TabIndicator } from "./tab-indicator";
 import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
-import { NavigationRoute, ParamListBase } from "@react-navigation/native";
-import { useReanimatedTopTabsIndex } from "@/src/shared/lib/hooks/use-reanimated-top-tabs-index";
 import { TabBarProps } from "react-native-collapsible-tab-view";
 import { TabName } from "react-native-collapsible-tab-view/lib/typescript/src/types";
 
@@ -61,6 +50,7 @@ export function TabBar({
   /*---------------------------------------------*
    * Here keep tab bar scroll in sync with tabs
    *---------------------------------------------*/
+
   useDerivedValue(() => {
     const tabsCenter = tabNames.map(
       (_, index) => tabOffsets.value[index] + tabWidths.value[index] / 2

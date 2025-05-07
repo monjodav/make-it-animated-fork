@@ -8,9 +8,9 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { WithPullToRefresh } from "../with-pull-to-refresh";
-import { sharedConfigs } from "../../lib/constants/pull-to-refresh-animation";
-import { Board } from "../../lib/types";
+import { WithPullToRefresh } from "./with-pull-to-refresh";
+import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
+import { Board } from "../lib/types";
 import { useScrollToTop } from "@react-navigation/native";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
@@ -49,7 +49,7 @@ export const MasonryList: FC<Props> = ({ board }) => {
 
   const refresh = async () => {
     refreshing.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     refreshing.value = false;
     isRefreshed.value = true;
   };
@@ -92,7 +92,7 @@ export const MasonryList: FC<Props> = ({ board }) => {
   });
 
   const _renderListHeader = () => {
-    if (board.slug === "all") return <></>;
+    if (board.name === "All" || data.length === 0) return <></>;
 
     return (
       <View className="flex-row items-center gap-3 px-5 pb-4">
@@ -158,7 +158,7 @@ export const MasonryList: FC<Props> = ({ board }) => {
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: 6 }}
+        contentContainerStyle={{ paddingTop: 50 }}
       />
     </WithPullToRefresh>
   );
