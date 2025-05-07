@@ -1,5 +1,5 @@
 import { X } from "lucide-react-native";
-import { FlatList, Pressable, ScrollView, useWindowDimensions, View } from "react-native";
+import { FlatList, Platform, Pressable, ScrollView, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   interpolateColor,
@@ -119,12 +119,26 @@ export default function Achievements() {
         })}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
-        onStartReached={() =>
-          horizontalListRef.current?.scrollToIndex({ index: data.length - 2, animated: false })
-        }
-        onEndReached={() => horizontalListRef.current?.scrollToIndex({ index: 1, animated: false })}
+        onStartReached={() => {
+          if (Platform.OS === "android") {
+            setTimeout(() => {
+              horizontalListRef.current?.scrollToIndex({ index: data.length - 2, animated: false });
+            }, 100);
+          } else {
+            horizontalListRef.current?.scrollToIndex({ index: data.length - 2, animated: false });
+          }
+        }}
+        onEndReached={() => {
+          if (Platform.OS === "android") {
+            setTimeout(() => {
+              horizontalListRef.current?.scrollToIndex({ index: 1, animated: false });
+            }, 100);
+          } else {
+            horizontalListRef.current?.scrollToIndex({ index: 1, animated: false });
+          }
+        }}
         viewabilityConfig={{
-          itemVisiblePercentThreshold: 100,
+          itemVisiblePercentThreshold: 99,
         }}
         onViewableItemsChanged={(info) => {
           if (typeof info.viewableItems[0]?.index === "number") {
