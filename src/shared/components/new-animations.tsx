@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { threads } from "@/src/shared/lib/constants/apps/t";
-import { fuse } from "@/src/shared/lib/constants/apps/f";
+import { raycast } from "@/src/shared/lib/constants/apps/r";
 import { App } from "../lib/constants/apps-list";
 
 type AnimationItemProps = {
@@ -43,10 +43,13 @@ export const NewAnimations: FC = () => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
+        label={getItemProps(raycast, 0).label}
+        onPress={getItemProps(raycast, 0).onPress}
+      />
+      <AnimationItem
         label={getItemProps(threads, 0).label}
         onPress={getItemProps(threads, 0).onPress}
       />
-      <AnimationItem label={getItemProps(fuse, 0).label} onPress={getItemProps(fuse, 0).onPress} />
     </View>
   );
 };

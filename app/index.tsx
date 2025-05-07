@@ -10,12 +10,14 @@ import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
 import { WEBSITE_URL } from "@/src/shared/lib/constants/links";
 import { WebBrowserPresentationStyle } from "expo-web-browser";
 import Animated, { FadeIn } from "react-native-reanimated";
-import { updateAlert, useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
+import { updateAlert } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
 import { Redirect } from "expo-router";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
+import { usePathname } from "expo-router";
+import { useAppStore } from "@/src/shared/lib/store/app";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -30,17 +32,18 @@ export default function Index() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
+  const pathname = usePathname();
 
-  const { isUpdateAvailable } = useOtaUpdate();
+  const isOtaUpdateAvailable = useAppStore.use.isOtaUpdateAvailable();
 
   const keyboardStatus = useKeyboardState();
   const drawerStatus = useDrawerStatus();
 
   useEffect(() => {
-    if (keyboardStatus.isVisible && drawerStatus === "closed") {
+    if (keyboardStatus.isVisible && drawerStatus === "closed" && pathname === "/") {
       Keyboard.dismiss();
     }
-  }, [keyboardStatus, drawerStatus]);
+  }, [keyboardStatus, drawerStatus, pathname]);
 
   // VS ------------
   return <Redirect href="pinterest/home" />;
@@ -66,7 +69,7 @@ export default function Index() {
   //       <Text className="text-stone-900 text-base font-semibold">Explore animations</Text>
   //     </AnimatedTouchable>
   //     <View className="absolute left-4 right-4 gap-4" style={{ top: insets.top + 16 }}>
-  //       {isUpdateAvailable && (
+  //       {isOtaUpdateAvailable && (
   //         <TouchableOpacity
   //           activeOpacity={0.8}
   //           onPress={() => Updates.reloadAsync()}

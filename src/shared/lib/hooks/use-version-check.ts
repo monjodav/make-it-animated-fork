@@ -5,8 +5,12 @@ import { Alert, Platform } from "react-native";
 import * as Linking from "expo-linking";
 import { MANUAL_ERROR_CAPTURE } from "../utils/sentry";
 import { APP_STORE_URL, PLAY_MARKET_URL } from "../constants/links";
+import { useAppStore } from "../store/app";
 
 export const useVersionCheck = () => {
+  const setIsVersionChecked = useAppStore.use.setIsVersionChecked();
+  const setIsNewVersionAvailable = useAppStore.use.setIsNewVersionAvailable();
+
   const linkToStore = () => {
     const storeLink = Platform.select({
       ios: APP_STORE_URL,
@@ -24,6 +28,8 @@ export const useVersionCheck = () => {
       const newestVersion = result?.version;
       const installedVersion = Constants.expoConfig?.version;
       if (installedVersion && newestVersion && shouldUpdateApp(installedVersion, newestVersion)) {
+        setIsNewVersionAvailable(true);
+
         if (__DEV__) {
           Alert.alert(
             "New Version Available",
@@ -55,10 +61,13 @@ export const useVersionCheck = () => {
         title: "useVersionCheck > Failed",
         error,
       });
+    } finally {
+      setIsVersionChecked(true);
     }
   };
 
   useEffect(() => {
     checkForUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
