@@ -16,7 +16,7 @@ import { TabName } from "react-native-collapsible-tab-view/lib/typescript/src/ty
 // pinterest-navigation-between-boards-animation 🔽
 
 const TAB_BAR_HORIZONTAL_PADDING = 16;
-const TAB_BAR_GAP = 16;
+const TAB_BAR_GAP = 24;
 
 type Props = TabBarProps<TabName>;
 
@@ -124,7 +124,7 @@ export function TabBar({ focusedTab, indexDecimal, onTabPress, tabNames }: Props
    * And finally we have tab bar
    *---------------------------------------------*/
   return (
-    <View className="pb-2 bg-neutral-950">
+    <View className="pb-2 bg-black">
       <Reanimated.FlatList
         ref={listAnimatedRef}
         data={tabNames}
