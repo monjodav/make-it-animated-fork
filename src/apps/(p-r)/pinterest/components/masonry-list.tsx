@@ -1,7 +1,7 @@
 import { FlashList, MasonryFlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
-import React, { FC, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import React, { FC, memo, useRef } from "react";
+import { View } from "react-native";
 import Animated, {
   FadeInDown,
   runOnJS,
@@ -12,30 +12,18 @@ import { WithPullToRefresh } from "./with-pull-to-refresh";
 import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
 import { Board } from "../lib/types";
 import { useScrollToTop } from "@react-navigation/native";
+import { Tabs } from "react-native-collapsible-tab-view";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
 
 const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
 
 type Props = {
-  board: Board;
+  boardName: string;
+  data: number[];
 };
 
-export const MasonryList: FC<Props> = ({ board }) => {
-  const [data, setData] = useState<number[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchData = async () => {
-    setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setData(board.pins);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+const MasonryList: FC<Props> = ({ boardName, data }) => {
   const listOffsetY = useSharedValue(0);
   const isDragging = useSharedValue(false);
   const listOffsetYOnEndDrag = useSharedValue(0);
@@ -92,7 +80,7 @@ export const MasonryList: FC<Props> = ({ board }) => {
   });
 
   const _renderListHeader = () => {
-    if (board.name === "All" || data.length === 0) return <></>;
+    if (boardName === "All" || data.length === 0) return <></>;
 
     return (
       <View className="flex-row items-center gap-3 px-5 pb-4">
@@ -130,14 +118,6 @@ export const MasonryList: FC<Props> = ({ board }) => {
     return <View className="h-3" />;
   };
 
-  if (loading) {
-    return (
-      <View className="pt-[65px]">
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
   return (
     <WithPullToRefresh
       listOffsetY={listOffsetY}
@@ -163,5 +143,7 @@ export const MasonryList: FC<Props> = ({ board }) => {
     </WithPullToRefresh>
   );
 };
+
+export default memo(MasonryList);
 
 // pinterest-pull-to-refresh-loading-animation 🔼

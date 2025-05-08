@@ -6,6 +6,7 @@ import Reanimated, {
   useDerivedValue,
   useSharedValue,
   scrollTo,
+  runOnUI,
 } from "react-native-reanimated";
 import { TabIndicator } from "./tab-indicator";
 import { useMeasureFlatListTabsLayout } from "@/src/shared/lib/hooks/use-measure-flat-list-tabs-layout";
@@ -19,21 +20,15 @@ const TAB_BAR_GAP = 16;
 
 type Props = TabBarProps<TabName>;
 
-export function TabBar({
-  containerRef,
-  focusedTab,
-  index,
-  indexDecimal,
-  onTabPress,
-  tabNames,
-  tabProps,
-  width,
-}: Props) {
+export function TabBar({ focusedTab, indexDecimal, onTabPress, tabNames }: Props) {
   const { width: tabWidth } = useWindowDimensions();
 
   const listAnimatedRef = useAnimatedRef<FlatList>();
 
   const tabBarOffsetX = useSharedValue(0);
+
+  const pressStartIndex = useSharedValue<number>(0);
+  const pressEndIndex = useSharedValue<number | null>(null);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -52,24 +47,37 @@ export function TabBar({
    *---------------------------------------------*/
 
   useDerivedValue(() => {
+    "worklet";
     const tabsCenter = tabNames.map(
       (_, index) => tabOffsets.value[index] + tabWidths.value[index] / 2
     );
-
     const firstTabIndexCanBeCentered = tabNames.findIndex(
       (_, index) => tabsCenter[index] > tabWidth / 2
     );
-
     const outputRange = tabsCenter.map((center, index) => {
       if (index < firstTabIndexCanBeCentered) {
         return 0;
       }
       return center - tabWidth / 2;
     });
-
-    const offsetX = interpolate(indexDecimal.value, Object.keys(tabNames).map(Number), outputRange);
-
-    scrollTo(listAnimatedRef, offsetX, 0, false);
+    if (pressEndIndex.value !== null) {
+      const startIndex = pressStartIndex.value;
+      const targetIndex = pressEndIndex.value;
+      const inputRange = [startIndex, targetIndex];
+      const output = [outputRange[startIndex], outputRange[targetIndex]];
+      const offsetX = interpolate(indexDecimal.value, inputRange, output);
+      scrollTo(listAnimatedRef, offsetX, 0, false);
+      if (indexDecimal.value === targetIndex) {
+        pressEndIndex.value = null;
+      }
+    } else {
+      const offsetX = interpolate(
+        indexDecimal.value,
+        Object.keys(tabNames).map(Number),
+        outputRange
+      );
+      scrollTo(listAnimatedRef, offsetX, 0, false);
+    }
   });
 
   /*---------------------------------------------*
@@ -77,6 +85,11 @@ export function TabBar({
    *---------------------------------------------*/
   const _renderItem = ({ item, index }: { item: TabName; index: number }) => {
     const onPress = () => {
+      runOnUI(() => {
+        "worklet";
+        pressEndIndex.value = index;
+        pressStartIndex.value = indexDecimal.value;
+      })();
       onTabPress(item);
     };
 

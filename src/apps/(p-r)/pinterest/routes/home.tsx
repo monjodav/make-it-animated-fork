@@ -4,8 +4,8 @@ import { Board } from "../lib/types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Tabs } from "react-native-collapsible-tab-view";
 import { useScrollToTop } from "@react-navigation/native";
-import { MasonryList } from "../components/masonry-list";
 import { TabBar } from "../components/tab-bar";
+import { TabContent } from "../components/tab-content";
 
 // pinterest-navigation-between-boards-animation 🔽
 
@@ -66,7 +66,7 @@ export const Home: FC = () => {
       >
         {boards.map((board) => (
           <Tabs.Tab key={board.name} name={board.name}>
-            <MasonryList board={board} />
+            <TabContent board={board} />
           </Tabs.Tab>
         ))}
       </Tabs.Container>

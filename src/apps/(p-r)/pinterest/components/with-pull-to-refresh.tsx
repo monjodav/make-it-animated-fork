@@ -66,7 +66,7 @@ export const WithPullToRefresh: FC<PropsWithChildren<Props>> = ({
   return (
     <Animated.View className="flex-1" style={rContainerStyle}>
       <Animated.View
-        className="top-0 left-0 right-0 items-center justify-center"
+        className="top-[50px] left-0 right-0 items-center justify-center"
         style={rWrapperStyle}
       >
         <LoadingIndicator
