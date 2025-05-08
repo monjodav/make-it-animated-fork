@@ -1,65 +1,75 @@
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { View } from "react-native";
 import { Board } from "../lib/types";
-import { Boards } from "../components/boards";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Tabs } from "react-native-collapsible-tab-view";
+import { useScrollToTop } from "@react-navigation/native";
+import { TabBar } from "../components/tab-bar";
+import { TabContent } from "../components/tab-content";
 
 // pinterest-navigation-between-boards-animation 🔽
 
 const boards: Board[] = [
   {
-    slug: "all",
-    title: "All",
+    name: "All",
     pins: Array.from({ length: 24 }),
   },
   {
-    slug: "colorsapp",
-    title: "ColorsApp",
+    name: "ColorsApp",
     pins: Array.from({ length: 31 }),
   },
   {
-    slug: "project-1",
-    title: "project 1",
+    name: "project-1",
     pins: Array.from({ length: 26 }),
   },
   {
-    slug: "cafe-design-ideas",
-    title: "Cafe Design Ideas",
+    name: "Cafe Design Ideas",
     pins: Array.from({ length: 14 }),
   },
   {
-    slug: "furniture",
-    title: "furniture",
+    name: "furniture",
     pins: Array.from({ length: 7 }),
   },
   {
-    slug: "cafe-decoration",
-    title: "Cafe decoration",
+    name: "Cafe decoration",
     pins: Array.from({ length: 10 }),
   },
   {
-    slug: "wild-room-coffee-place",
-    title: "wild room coffee place",
+    name: "wild room coffee place",
     pins: Array.from({ length: 20 }),
   },
   {
-    slug: "food-and-drinks",
-    title: "Food and drinks",
+    name: "Food and drinks",
     pins: Array.from({ length: 30 }),
   },
   {
-    slug: "logo",
-    title: "Logo",
+    name: "Logo",
     pins: Array.from({ length: 17 }),
   },
 ];
 
 export const Home: FC = () => {
+  const containerRef = useRef(null);
+  useScrollToTop(containerRef);
+
   const insets = useSafeAreaInsets();
 
   return (
     <View className="flex-1 bg-black" style={{ paddingTop: insets.top }}>
-      <Boards boards={boards} />
+      <Tabs.Container
+        ref={containerRef}
+        headerContainerStyle={{
+          backgroundColor: "black",
+        }}
+        renderTabBar={(props) => <TabBar {...props} />}
+        initialTabName="All"
+      >
+        {boards.map((board) => (
+          <Tabs.Tab key={board.name} name={board.name}>
+            <TabContent board={board} />
+          </Tabs.Tab>
+        ))}
+      </Tabs.Container>
     </View>
   );
 };

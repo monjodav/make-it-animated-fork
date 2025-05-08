@@ -5,26 +5,21 @@ import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-nati
 // threads-home-header-tabs-animation 🔽
 
 type Props = {
-  activeTabIndex: SharedValue<number>;
+  indexDecimal: SharedValue<number>;
   numberOfTabs: number;
   tabsHorizontalPadding: number;
 };
 
-export const TabIndicator: FC<Props> = ({
-  activeTabIndex,
-  numberOfTabs,
-  tabsHorizontalPadding,
-}) => {
+export const TabIndicator: FC<Props> = ({ indexDecimal, numberOfTabs, tabsHorizontalPadding }) => {
   const { width } = useWindowDimensions();
 
-  const tabWidth = (width - tabsHorizontalPadding * 2) / numberOfTabs;
+  const tabBarItemWidth = (width - tabsHorizontalPadding * 2) / numberOfTabs;
 
   const rIndicatorStyle = useAnimatedStyle(() => {
-    const width = interpolate(activeTabIndex.value, [-1, 0, 1, 2], [0, tabWidth, tabWidth, 0]);
-    const translateX = interpolate(activeTabIndex.value, [0, 1], [0, tabWidth]);
+    const translateX = interpolate(indexDecimal.value, [0, 1], [0, tabBarItemWidth]);
 
     return {
-      width,
+      width: tabBarItemWidth,
       transform: [{ translateX: translateX + tabsHorizontalPadding }],
     };
   });

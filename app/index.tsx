@@ -14,8 +14,14 @@ import { updateAlert } from "@/src/shared/lib/hooks/use-update";
 import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
+import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
 import { usePathname } from "expo-router";
 import { useAppStore } from "@/src/shared/lib/store/app";
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
 

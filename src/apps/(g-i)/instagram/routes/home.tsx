@@ -38,7 +38,7 @@ export default function Home() {
                 className="bg-neutral-900 items-center justify-center aspect-square"
                 style={{ width }}
               >
-                <Text className="text-neutral-500 text-3xl">{item}</Text>
+                <Text className="text-neutral-600 text-5xl">{item}</Text>
               </View>
             )}
           />

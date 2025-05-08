@@ -25,6 +25,7 @@ const TabsLayout = () => {
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
+          paddingTop: 4,
           position: "absolute",
           opacity: isBottomTabsHidden ? 0 : 1,
           borderTopWidth: 0,
