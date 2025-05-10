@@ -1,27 +1,43 @@
 import { cn } from "@/src/shared/lib/utils/cn";
-import React, { FC } from "react";
-import { View, StyleSheet, Pressable, Platform } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import React, { FC, memo } from "react";
+import { View, StyleSheet, Pressable, Platform, useWindowDimensions } from "react-native";
+import Animated, { FadeIn, LinearTransition, ZoomOut } from "react-native-reanimated";
 import { X } from "lucide-react-native";
 import { BlurView } from "expo-blur";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = {
   index: number;
   isActive: boolean;
   activeColor?: string;
+  onItemPress: () => void;
+  onRemovePress?: () => void;
 };
 
-export const TabItem: FC<Props> = ({ index, isActive, activeColor = "#60a5fa" }) => {
+const TabItem: FC<Props> = ({
+  index,
+  isActive,
+  activeColor = "#60a5fa",
+  onItemPress,
+  onRemovePress,
+}) => {
+  const { width } = useWindowDimensions();
+
   return (
-    <Pressable
-      className={cn("h-[220px] basis-1/2", index % 2 === 0 ? "pl-4 pr-2" : "pr-4 pl-2")}
-      style={styles.borderCurve}
+    <AnimatedPressable
+      entering={FadeIn}
+      exiting={ZoomOut}
+      layout={LinearTransition}
+      className={cn("aspect-[0.85] py-2", index % 2 === 0 ? "pl-4 pr-2" : "pr-4 pl-2")}
+      style={[styles.borderCurve, { width: width / 2 }]}
+      onPress={onItemPress}
     >
       {isActive && (
         <Animated.View
           entering={FadeIn}
           className={cn(
-            "absolute -top-1 -bottom-1 rounded-[26px]",
+            "absolute top-1 bottom-1 rounded-[26px]",
             index % 2 === 0 ? "right-1 left-3" : "left-1 right-3"
           )}
           style={[styles.borderCurve, { backgroundColor: activeColor }]}
@@ -39,13 +55,13 @@ export const TabItem: FC<Props> = ({ index, isActive, activeColor = "#60a5fa" })
           )}
           <View className="w-5 h-5 rounded-full bg-neutral-900/90" />
           <View className="flex-1 h-2 rounded-full bg-neutral-900/75" />
-          <Pressable hitSlop={10}>
+          <Pressable hitSlop={10} onPress={onRemovePress}>
             <X size={18} color="gray" />
           </Pressable>
         </View>
         <View className="flex-1 bg-neutral-900">{/* Place for image */}</View>
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 };
 
@@ -58,3 +74,5 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
+export default memo(TabItem);

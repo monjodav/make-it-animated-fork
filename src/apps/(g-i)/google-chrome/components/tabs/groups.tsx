@@ -37,7 +37,15 @@ export const Groups: FC = () => {
         setFocusedTabContentHeight(TabName.Groups, h);
       }}
     >
-      <View className="h-20 w-full rounded-xl bg-neutral-900 mb-8" />
+      <View className="p-4 w-full rounded-2xl bg-neutral-900 mb-8">
+        <View className="flex-row items-center gap-2">
+          <View className="w-14 h-14 rounded-xl bg-neutral-950" />
+          <View>
+            <View className="h-5 w-20 bg-neutral-800/75 rounded-full" />
+            <View className="h-3 w-40 bg-neutral-800/75 rounded-full mt-2" />
+          </View>
+        </View>
+      </View>
     </Animated.ScrollView>
   );
 };
