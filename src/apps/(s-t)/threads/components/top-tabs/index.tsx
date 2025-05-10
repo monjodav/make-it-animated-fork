@@ -9,7 +9,7 @@ const TABS_HORIZONTAL_PADDING = 16;
 
 type Props = TabBarProps<string>;
 
-export function TopTabs({ tabNames, indexDecimal, onTabPress, containerRef, index, width }: Props) {
+export function TopTabs({ tabNames, indexDecimal, onTabPress }: Props) {
   return (
     <View>
       <View className="flex-row pb-2" style={{ paddingHorizontal: TABS_HORIZONTAL_PADDING }}>

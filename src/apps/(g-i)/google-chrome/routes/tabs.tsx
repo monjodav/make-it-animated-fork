@@ -1,51 +1,49 @@
-import React, { useRef } from "react";
-import { FlatList, useWindowDimensions, View } from "react-native";
+import React from "react";
+import { View } from "react-native";
 
-import { useHeaderHeight } from "@react-navigation/elements";
-import { IncognitoTab } from "../components/incognito-tab";
-import { NewTab } from "../components/new-tab";
-import { GroupsTab } from "../components/groups-tab";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
-import { useHeaderTabs } from "../lib/hooks/use-header-tabs";
+import { Incognito } from "../components/tabs/incognito";
+import { Main } from "../components/tabs/main";
+import { Groups } from "../components/tabs/groups";
+import { Tabs as ScreenTabs } from "react-native-collapsible-tab-view";
+import { TabName } from "../lib/types";
+import { CustomHeader } from "../components/tabs/custom-header";
+import { TabsScreenAnimatedProvider } from "../lib/providers/tabs-screen-animated-provider";
+import { CustomFooter } from "../components/tabs/custom-footer";
+import { useTabsStore } from "../lib/store/tabs";
 
 // google-chrome-top-tabs-indicator-animation 🔽
 
-const _tabs = [<IncognitoTab key="incognito" />, <NewTab key="new" />, <GroupsTab key="groups" />];
-
 export default function Tabs() {
-  const { width, height } = useWindowDimensions();
-
-  const headerHeight = useHeaderHeight();
-
-  const listRef = useRef<FlatList>(null);
-
-  const listOffsetX = useSharedValue(0);
-  const tabIndex = useSharedValue(0);
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: ({ contentOffset: { x } }) => {
-      listOffsetX.value = x;
-      tabIndex.value = x / width;
-    },
-  });
-
-  useHeaderTabs({ listRef, tabIndex });
+  const setFocusedTabName = useTabsStore.use.setFocusedTabName();
 
   return (
-    <Animated.FlatList
-      ref={listRef}
-      data={_tabs}
-      renderItem={({ item }) => (
-        <View style={{ width, height: height - headerHeight }}>{item}</View>
-      )}
-      className="bg-black"
-      contentContainerStyle={{ paddingTop: headerHeight }}
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      pagingEnabled
-      onScroll={scrollHandler}
-      scrollEventThrottle={1000 / 60}
-    />
+    <TabsScreenAnimatedProvider>
+      <View className="flex-1 bg-neutral-950">
+        <ScreenTabs.Container
+          headerContainerStyle={{
+            backgroundColor: "transparent",
+            shadowColor: "transparent",
+          }}
+          renderHeader={(props) => <CustomHeader {...props} />}
+          renderTabBar={() => null}
+          initialTabName={TabName.Main}
+          onTabChange={(data) => {
+            setFocusedTabName(data.tabName as TabName);
+          }}
+        >
+          <ScreenTabs.Tab name={TabName.Incognito}>
+            <Incognito />
+          </ScreenTabs.Tab>
+          <ScreenTabs.Tab name={TabName.Main}>
+            <Main />
+          </ScreenTabs.Tab>
+          <ScreenTabs.Tab name={TabName.Groups}>
+            <Groups />
+          </ScreenTabs.Tab>
+        </ScreenTabs.Container>
+        <CustomFooter />
+      </View>
+    </TabsScreenAnimatedProvider>
   );
 }
 
