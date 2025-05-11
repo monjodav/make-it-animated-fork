@@ -53,7 +53,7 @@ export const useOtaUpdate = () => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (appState.current.match(/inactive|background/) && nextAppState === "active") {
         setIsOtaUpdateAvailable(false);
-        handleUpdate();
+        Updates.checkForUpdateAsync().then(() => handleUpdate());
       }
 
       appState.current = nextAppState;
