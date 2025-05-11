@@ -4,6 +4,8 @@ import { useTabsScreenAnimated } from "../providers/tabs-screen-animated-provide
 import { TabName } from "../types";
 import { useSharedValue } from "react-native-reanimated";
 
+// google-chrome-header-background-animation 🔽
+
 export const useUpdateOffsetOnTabChange = (tabName: TabName) => {
   const focusedTab = useFocusedTab();
 
@@ -22,3 +24,5 @@ export const useUpdateOffsetOnTabChange = (tabName: TabName) => {
     lastOffsetY,
   };
 };
+
+// google-chrome-header-background-animation 🔼

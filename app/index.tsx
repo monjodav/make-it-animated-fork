@@ -17,7 +17,6 @@ import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
 import { usePathname } from "expo-router";
 import { useAppStore } from "@/src/shared/lib/store/app";
-import { Redirect } from "expo-router";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -44,9 +43,6 @@ export default function Index() {
       Keyboard.dismiss();
     }
   }, [keyboardStatus, drawerStatus, pathname]);
-
-  // VS -----------------
-  return <Redirect href="/google-chrome/tabs" />;
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">

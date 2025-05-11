@@ -8,6 +8,8 @@ import { useFooterHeight } from "../../lib/hooks/use-footer-height";
 import TabItem from "./tab-item";
 import { useTabsStore } from "../../lib/store/tabs";
 
+// google-chrome-tab-item-layout-animation 🔽
+
 export const Incognito: FC = () => {
   const scrollRef = useRef<Animated.ScrollView>(null);
 
@@ -62,3 +64,5 @@ export const Incognito: FC = () => {
     </Animated.ScrollView>
   );
 };
+
+// google-chrome-tab-item-layout-animation 🔼

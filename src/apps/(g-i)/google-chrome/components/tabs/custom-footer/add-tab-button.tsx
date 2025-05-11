@@ -5,6 +5,8 @@ import { useTabsStore } from "../../../lib/store/tabs";
 import { Plus } from "lucide-react-native";
 import { TabName } from "../../../lib/types";
 
+// google-chrome-footer-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const AddTabButton = () => {
@@ -52,3 +54,5 @@ export const AddTabButton = () => {
     </AnimatedPressable>
   );
 };
+
+// google-chrome-footer-animation 🔼

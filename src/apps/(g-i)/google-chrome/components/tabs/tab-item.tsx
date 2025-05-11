@@ -5,6 +5,8 @@ import Animated, { FadeIn, LinearTransition, ZoomOut } from "react-native-reanim
 import { X } from "lucide-react-native";
 import { BlurView } from "expo-blur";
 
+// google-chrome-tab-item-layout-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = {
@@ -76,3 +78,5 @@ const styles = StyleSheet.create({
 });
 
 export default memo(TabItem);
+
+// google-chrome-tab-item-layout-animation 🔼

@@ -11,7 +11,13 @@ type ContextValue = {
 const TabsScreenAnimatedContext = createContext<ContextValue>({} as ContextValue);
 
 export const TabsScreenAnimatedProvider: FC<PropsWithChildren> = ({ children }) => {
+  // google-chrome-header-background-animation 🔽
+  // google-chrome-footer-animation 🔽
   const offsetY = useSharedValue(0);
+  // google-chrome-footer-animation 🔼
+  // google-chrome-header-background-animation 🔼
+
+  // google-chrome-footer-animation 🔽
   const contentHeight = useSharedValue<Record<TabName, number>>({
     [TabName.Incognito]: 0,
     [TabName.Main]: 0,
@@ -28,6 +34,7 @@ export const TabsScreenAnimatedProvider: FC<PropsWithChildren> = ({ children }) 
     },
     [contentHeight]
   );
+  // google-chrome-footer-animation 🔼
 
   const value = { offsetY, contentHeight, setFocusedTabContentHeight };
 

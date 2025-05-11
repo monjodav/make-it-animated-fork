@@ -14,6 +14,8 @@ import { TabName } from "../../../lib/types";
 import { BlurView } from "expo-blur";
 import { cn } from "@/src/shared/lib/utils/cn";
 
+// google-chrome-top-tabs-indicator-animation 🔽
+
 const _tabButtonWidth = 60;
 const _tabButtonHeight = 42;
 const _padding = 2;
@@ -142,3 +144,5 @@ const styles = StyleSheet.create({
     height: _tabButtonHeight - 2 * _padding,
   },
 });
+
+// google-chrome-top-tabs-indicator-animation 🔼

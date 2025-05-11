@@ -9,12 +9,19 @@ import {
   Platform,
 } from "react-native";
 import { useTabsScreenAnimated } from "../../../lib/providers/tabs-screen-animated-provider";
-import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  withDelay,
+  withTiming,
+} from "react-native-reanimated";
 import { BlurView } from "expo-blur";
 import { AddTabButton } from "./add-tab-button";
 import { EditButton } from "./edit-button";
 import { useTabsStore } from "../../../lib/store/tabs";
 import { useFooterHeight } from "../../../lib/hooks/use-footer-height";
+
+// google-chrome-footer-animation 🔽
 
 export const CustomFooter: FC = () => {
   const { height: screenHeight } = useWindowDimensions();
@@ -41,12 +48,12 @@ export const CustomFooter: FC = () => {
   const rColorBgStyle = useAnimatedStyle(() => {
     if (Platform.OS === "android") {
       return {
-        backgroundColor: "#0a0a0a",
+        opacity: 1,
       };
     }
 
     return {
-      backgroundColor: withTiming(showBlur.value ? "transparent" : "#0a0a0a", { duration: 50 }),
+      opacity: showBlur.value ? withDelay(50, withTiming(0)) : 1,
     };
   });
 
@@ -56,7 +63,10 @@ export const CustomFooter: FC = () => {
       style={{ paddingBottom: bottomInset }}
     >
       <View style={StyleSheet.absoluteFill}>
-        <Animated.View style={[StyleSheet.absoluteFill, rColorBgStyle]} />
+        <Animated.View
+          className="bg-neutral-950"
+          style={[StyleSheet.absoluteFill, rColorBgStyle]}
+        />
         {Platform.OS === "ios" && (
           <Animated.View style={[StyleSheet.absoluteFill, rBlurStyle]}>
             <BlurView tint="systemThickMaterialDark" style={StyleSheet.absoluteFill} />
@@ -73,3 +83,5 @@ export const CustomFooter: FC = () => {
     </View>
   );
 };
+
+// google-chrome-footer-animation 🔼

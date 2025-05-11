@@ -11,6 +11,18 @@ export const googleChrome: App = {
       name: "Top tabs indicator animation",
       href: "/google-chrome/tabs",
     },
+    {
+      name: "Header background animation",
+      href: "/google-chrome/tabs",
+    },
+    {
+      name: "Footer animation",
+      href: "/google-chrome/tabs",
+    },
+    {
+      name: "Tab item layout animation",
+      href: "/google-chrome/tabs",
+    },
   ],
 };
 

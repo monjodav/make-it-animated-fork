@@ -4,6 +4,8 @@ import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useTabsStore } from "../../../lib/store/tabs";
 import { TabName } from "../../../lib/types";
 
+// google-chrome-footer-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const EditButton = () => {
@@ -36,3 +38,5 @@ export const EditButton = () => {
     </AnimatedPressable>
   );
 };
+
+// google-chrome-footer-animation 🔼
