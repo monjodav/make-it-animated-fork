@@ -6,7 +6,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import "../global.css";
-import { Animations } from "@/src/shared/components/animations";
+import Animations from "@/src/shared/components/animations";
 import * as NavigationBar from "expo-navigation-bar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
