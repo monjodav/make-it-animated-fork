@@ -1,4 +1,4 @@
-import { FlashList, MasonryFlashList } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 import * as Haptics from "expo-haptics";
 import React, { FC, memo, useRef } from "react";
 import { View } from "react-native";
@@ -12,11 +12,10 @@ import { WithPullToRefresh } from "./with-pull-to-refresh";
 import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
 import { Board } from "../lib/types";
 import { useScrollToTop } from "@react-navigation/native";
-import { Tabs } from "react-native-collapsible-tab-view";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
 
-const AnimatedList = Animated.createAnimatedComponent(MasonryFlashList);
+const AnimatedList = Animated.createAnimatedComponent(FlashList);
 
 type Props = {
   boardName: string;
@@ -93,23 +92,15 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
     );
   };
 
-  const _renderItem = ({ index }: { index: number }) => {
+  const _renderItem = () => {
     const height = Math.floor(Math.random() * 200) + 100;
 
     return (
-      <View
-        style={
-          index % 2 === 0
-            ? {
-                paddingRight: 4,
-              }
-            : {
-                paddingLeft: 4,
-              }
-        }
-        className="px-3"
-      >
-        <View className="w-full rounded-2xl bg-neutral-900" style={{ height }} />
+      <View className="px-1.5">
+        <View
+          className="w-full rounded-2xl bg-neutral-900 items-center justify-center"
+          style={{ height }}
+        />
       </View>
     );
   };
@@ -131,10 +122,12 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
         entering={FadeInDown}
         data={data}
         numColumns={2}
+        columnWrapperClassName="px-3"
+        masonry
+        horizontal={false}
         ListHeaderComponent={_renderListHeader}
         renderItem={_renderItem}
         ItemSeparatorComponent={_renderItemSeparator}
-        estimatedItemSize={200}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}

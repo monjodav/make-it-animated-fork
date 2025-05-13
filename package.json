@@ -19,7 +19,7 @@
     "@react-navigation/drawer": "^7.3.12",
     "@react-navigation/material-top-tabs": "^7.2.13",
     "@sentry/react-native": "~6.10.0",
-    "@shopify/flash-list": "1.7.6",
+    "@shopify/flash-list": "^2.0.0-alpha.10",
     "@shopify/react-native-skia": "^2.0.0",
     "clsx": "^2.1.1",
     "expo": "^53.0.9",
