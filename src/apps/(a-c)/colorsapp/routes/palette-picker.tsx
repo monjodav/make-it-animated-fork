@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ColorPicker, { ColorPickerRef, returnedResults } from "reanimated-color-picker";
+import ColorPicker, { ColorFormatsObject, ColorPickerRef } from "reanimated-color-picker";
 
 // colorsapp-palette-picker-color-change-animation 🔽
 
@@ -45,9 +45,10 @@ export default function PalettePicker() {
         style={styles.palettePicker}
         value={primaryColor.value}
         onComplete={() => {
+          "worklet";
           state.value = "idle";
         }}
-        onChange={(colors: returnedResults) => {
+        onChange={(colors: ColorFormatsObject) => {
           "worklet";
           primaryColor.value = colors.hex;
         }}

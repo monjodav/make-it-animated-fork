@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 
 import { ArrowLeft } from "lucide-react-native";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, { SharedValue, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 import { ReText } from "react-native-redash";
 import { colorKit } from "reanimated-color-picker";
@@ -39,7 +39,11 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
         </View>
         <View className="w-[2px]" />
         <Animated.View className="w-[80] pl-3 justify-center" style={rSelectedColorContainerStyle}>
-          <ReText text={rSelectedColor} style={[styles.text, rSelectedColorTextStyle]} />
+          <ReText
+            text={rSelectedColor}
+            style={[styles.text, styles.selectedColorText, rSelectedColorTextStyle]}
+            verticalAlign="middle"
+          />
         </Animated.View>
       </View>
       <TouchableOpacity className="absolute top-0 left-4" onPress={() => Alert.alert("Back")}>
@@ -52,6 +56,9 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 12,
+  },
+  selectedColorText: {
+    lineHeight: Platform.OS === "ios" ? 14 : 6,
   },
 });
 

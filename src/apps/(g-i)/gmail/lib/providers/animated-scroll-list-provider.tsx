@@ -15,7 +15,7 @@ import {
 // gmail-bottom-tab-bar-and-fab-animation 🔽
 
 type AnimatedScrollListContextType = {
-  listRef: React.RefObject<FlatList<any>>;
+  listRef: React.RefObject<FlatList<any> | null>;
   listOffsetY: SharedValue<number>;
   isDragging: SharedValue<boolean>;
   scrollDirection: ScrollDirectionValue;

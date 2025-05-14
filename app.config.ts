@@ -36,7 +36,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
   expo: {
     name: getEnvironmentValues().name,
     slug: "make-it-animated",
-    version: "1.1.4",
+    version: "1.1.5",
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",

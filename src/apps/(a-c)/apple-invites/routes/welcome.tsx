@@ -11,10 +11,10 @@ import ImageEight from "@/assets/images/apple-invites/8.png";
 import { useState } from "react";
 import { runOnJS, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { Marquee } from "../components/marquee";
-import { useDebounce } from "use-debounce";
 import { _itemWidth } from "../components/marquee-item";
 import ImageBg from "../components/image-bg";
 import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
+import useDebounce from "@/src/shared/lib/hooks/use-debounce";
 
 // apple-invites-welcome-screen-animation 🔽
 

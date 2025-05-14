@@ -18,7 +18,7 @@ const _gap = 8;
 
 type Props = {
   tabs: Tab[];
-  horizontalListRef: RefObject<FlatList>;
+  horizontalListRef: RefObject<FlatList<any> | null>;
   horizontalListOffsetX: SharedValue<number>;
   isHorizontalListScrollingX: SharedValue<boolean>;
   activeTabIndex: SharedValue<number>;

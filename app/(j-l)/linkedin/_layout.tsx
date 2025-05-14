@@ -69,7 +69,13 @@ const TabsLayout = () => {
             backgroundColor: "#21262E",
           },
           tabBarButton: (props) => (
-            <Pressable {...props} android_ripple={{ color: "transparent" }} />
+            <Pressable
+              onPress={props.onPress}
+              style={props.style}
+              android_ripple={{ color: "transparent" }}
+            >
+              {props.children}
+            </Pressable>
           ),
         }}
         screenListeners={{

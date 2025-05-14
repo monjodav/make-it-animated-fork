@@ -8,9 +8,9 @@ import Animated, {
   useScrollViewOffset,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Marquee } from "@animatereactnative/marquee";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
+import { Marquee } from "@/src/shared/components/marquee";
 
 // adidas-home-header-marquee-animation 🔽
 
