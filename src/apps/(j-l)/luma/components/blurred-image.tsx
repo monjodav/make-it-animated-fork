@@ -1,9 +1,8 @@
-import { View, useWindowDimensions, StyleSheet, Platform } from "react-native";
+import { View, useWindowDimensions, StyleSheet } from "react-native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { FC } from "react";
 import { Image } from "expo-image";
-import { BlurView } from "expo-blur";
 
 // luma-blurred-header-image-animation 🔽
 
@@ -21,18 +20,18 @@ export const BlurredImage: FC<Props> = ({ imageSource }) => {
         <MaskedView
           maskElement={
             <LinearGradient
-              locations={[0, 0.4, 0.55, 1]}
+              locations={[0, 0.4, 0.58, 1]}
               colors={["transparent", "transparent", "black", "black"]}
               style={StyleSheet.absoluteFill}
             />
           }
           style={StyleSheet.absoluteFill}
         >
-          <BlurView
-            intensity={100}
-            tint={Platform.OS === "ios" ? "systemThinMaterial" : "systemUltraThinMaterialDark"}
+          <Image
+            source={imageSource}
+            contentFit="cover"
             style={{ width, height }}
-            experimentalBlurMethod="dimezisBlurView"
+            blurRadius={100}
           />
         </MaskedView>
       </View>
