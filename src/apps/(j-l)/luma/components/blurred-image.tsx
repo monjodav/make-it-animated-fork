@@ -16,7 +16,7 @@ export const BlurredImage: FC<Props> = ({ imageSource }) => {
 
   return (
     <View style={{ width, height }}>
-      <Image source={imageSource} resizeMode="cover" style={{ width, height }} />
+      <Image source={imageSource} contentFit="cover" style={{ width, height }} />
       <View className="absolute bottom-0" style={{ width, height }}>
         <MaskedView
           maskElement={

@@ -6,7 +6,7 @@ import { useRef } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ColorPickerComponent, { ColorPickerRef, returnedResults } from "reanimated-color-picker";
+import ColorPickerComponent, { ColorFormatsObject, ColorPickerRef } from "reanimated-color-picker";
 
 // colorsapp-color-picker-background-animation 🔽
 
@@ -23,11 +23,6 @@ export default function ColorPicker() {
   const gradientColors = useDerivedValue(() => {
     return [selectedColor.value, "#27272a"];
   }, []);
-
-  const handleColorChange = (hex: string) => {
-    "worklet";
-    selectedColor.value = hex;
-  };
 
   return (
     <View
@@ -48,9 +43,9 @@ export default function ColorPicker() {
         value={selectedColor.value}
         thumbSize={sharedConfigs.thumbPanelSize}
         thumbShape="ring"
-        onChange={(colors: returnedResults) => {
-          const hex = colors.hex;
-          handleColorChange(hex);
+        onChange={(colors: ColorFormatsObject) => {
+          "worklet";
+          selectedColor.value = colors.hex;
         }}
       >
         <Header inputColor={_inputColor} selectedColor={selectedColor} />
