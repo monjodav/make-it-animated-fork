@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect } from "react";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, useWindowDimensions, View, Text } from "react-native";
+import { StyleSheet, useWindowDimensions, View, Text, ColorValue } from "react-native";
 
 import { ColorCircleOne } from "./color-circle-one";
 import { ColorCircleTwo } from "./color-circle-two";
@@ -89,7 +89,7 @@ export const CarouselItem: FC<Props> = ({ color, text1, text2, colorAnimationVar
       }}
     >
       <LinearGradient
-        colors={colors[color]}
+        colors={colors[color] as [ColorValue, ColorValue, ...ColorValue[]]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={StyleSheet.absoluteFillObject}

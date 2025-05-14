@@ -4,7 +4,8 @@ import React, { FC, memo, useCallback, useMemo } from "react";
 import { FlatList, Image, ListRenderItemInfo, Text, View, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NewAnimations } from "./new-animations";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Pressable } from "react-native-gesture-handler";
+import * as Haptics from "expo-haptics";
 
 type AppSection = {
   title: string;
@@ -88,15 +89,15 @@ const Animations: FC<Props> = ({ query }) => {
         return _renderSectionHeader({ section: item.section });
       }
       return (
-        <TouchableOpacity
-          activeOpacity={0.75}
+        <Pressable
           onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             router.push(item.animation.href);
           }}
           style={styles.listItem}
         >
           <Text className="text-stone-400 text-base">{item.animation.name}</Text>
-        </TouchableOpacity>
+        </Pressable>
       );
     },
     [router, _renderSectionHeader]

@@ -62,7 +62,7 @@ function CollapsibleTabNavigator({
     initialRouteName,
   });
 
-  const ref = useRef<CollapsibleRef<TabName>>();
+  const ref = useRef<CollapsibleRef<TabName>>(null);
 
   const onTabChange = React.useCallback(
     ({ tabName }: { tabName: TabName }) => {

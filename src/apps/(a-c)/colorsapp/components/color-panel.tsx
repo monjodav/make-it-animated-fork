@@ -8,7 +8,7 @@ import Animated, {
   RotateInDownRight,
   SharedValue,
 } from "react-native-reanimated";
-import { colorKit, ExtraThumb, Panel3, returnedResults } from "reanimated-color-picker";
+import { colorKit, ExtraThumb, Panel3, ColorFormatsObject } from "reanimated-color-picker";
 import colors from "tailwindcss/colors";
 
 // colorsapp-palette-picker-color-change-animation 🔽
@@ -49,7 +49,7 @@ export const ColorPanel: FC<Props> = ({ state, lightAccentColor, darkAccentColor
           thumbSize={sharedConfigs.thumbSliderSize * 0.75}
           thumbColor={colorKit.setAlpha(colors.zinc[800], 0.25).hex()}
           hueTransform={120}
-          onChange={(colors: returnedResults) => {
+          onChange={(colors: ColorFormatsObject) => {
             "worklet";
             lightAccentColor.value = colors.hex;
           }}
@@ -60,7 +60,7 @@ export const ColorPanel: FC<Props> = ({ state, lightAccentColor, darkAccentColor
           thumbSize={sharedConfigs.thumbSliderSize * 0.75}
           thumbColor={colorKit.setAlpha(colors.zinc[800], 0.25).hex()}
           hueTransform={240}
-          onChange={(colors: returnedResults) => {
+          onChange={(colors: ColorFormatsObject) => {
             "worklet";
             darkAccentColor.value = colors.hex;
           }}
