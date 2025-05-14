@@ -1,7 +1,7 @@
 {
   "name": "make-it-animated",
   "main": "expo-router/entry",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "scripts": {
     "dev": "APP_VARIANT=development expo start -c",
     "ios": "APP_VARIANT=development expo run:ios --device",
@@ -69,11 +69,19 @@
       "react": {
         "optional": true
       }
+    },
+    "react-native-collapsible-tab-view": {
+      "@shopify/flash-list": {
+        "optional": true
+      }
     }
   },
   "overrides": {
     "lucide-react-native": {
       "react": "19.0.0"
+    },
+    "react-native-collapsible-tab-view": {
+      "@shopify/flash-list": "^2.0.0-alpha.10"
     }
   },
   "devDependencies": {
