@@ -54,10 +54,6 @@ const events = [
 ];
 
 export default function Welcome() {
-  useAndroidNote(
-    "The blur effect may not render properly on Android. Consider using a semi-transparent background instead of blur for better visual consistency."
-  );
-
   const [activeIndex, setActiveIndex] = useState(0);
   const [debouncedActiveIndex] = useDebounce(activeIndex, 500);
 

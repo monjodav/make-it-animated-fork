@@ -1,9 +1,11 @@
 import React, { FC, memo } from "react";
-import { View, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { BlurView } from "expo-blur";
+import { Image } from "expo-image";
 
 // apple-invites-welcome-screen-animation 🔽
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 type Props = {
   itemKey: string;
@@ -12,23 +14,16 @@ type Props = {
 
 const ImageBg: FC<Props> = ({ itemKey, source }) => {
   return (
-    <View style={StyleSheet.absoluteFillObject}>
-      <Animated.Image
+    <View style={StyleSheet.absoluteFill}>
+      <AnimatedImage
         key={itemKey}
         entering={FadeIn.duration(500)}
         exiting={FadeOut.duration(500)}
         source={source}
-        className="h-full w-full"
+        style={StyleSheet.absoluteFill}
+        blurRadius={100}
       />
-      {Platform.OS === "ios" ? (
-        <BlurView
-          intensity={100}
-          tint="systemChromeMaterialDark"
-          style={StyleSheet.absoluteFillObject}
-        />
-      ) : (
-        <View className="absolute inset-0 bg-neutral-700/95" />
-      )}
+      <View style={StyleSheet.absoluteFill} className="bg-neutral-800/50" />
     </View>
   );
 };
