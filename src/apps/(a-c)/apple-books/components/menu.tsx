@@ -17,7 +17,7 @@ export const Menu: FC = () => {
       style={[
         StyleSheet.absoluteFillObject,
         {
-          bottom: insets.bottom,
+          bottom: insets.bottom + 16,
         },
       ]}
       className={cn(
