@@ -8,7 +8,6 @@ export default function CanvaLayout() {
         options={{
           headerShown: true,
           headerTransparent: true,
-          headerTitleAlign: "center",
           headerTintColor: "black",
         }}
       />
