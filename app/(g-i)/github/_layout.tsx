@@ -12,9 +12,6 @@ export default function ProfileLayout() {
         options={{
           headerShown: true,
           headerTransparent: true,
-          headerTitleAlign: "center",
-          title: "",
-          headerTintColor: "white",
           headerRight: () => (
             <View className="flex-row items-center gap-4">
               <TouchableOpacity>
