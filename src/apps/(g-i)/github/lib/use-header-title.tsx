@@ -39,7 +39,6 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
     if (triggerMeasurement.value === null) {
       return { opacity: 0 };
     }
-
     const triggerHeight = triggerMeasurement.value.height;
     const triggerPageY = triggerMeasurement.value.pageY;
 

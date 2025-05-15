@@ -7,6 +7,9 @@ import {
   useSharedValue,
 } from "react-native-reanimated";
 
+// Looks like there is a global issue with measure method
+// https://github.com/software-mansion/react-native-reanimated/issues/7079
+
 export const useTargetMeasurement = () => {
   const [isTargetMounted, setIsTargetMounted] = useState(false);
   const targetRef = useAnimatedRef();
@@ -27,7 +30,7 @@ export const useTargetMeasurement = () => {
     if (isTargetMounted) {
       setTimeout(() => {
         handleMeasurement();
-      }, 1000); // Wait for sure the target to be mounted
+      }, 500); // Wait for sure the target to be mounted
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isTargetMounted]);

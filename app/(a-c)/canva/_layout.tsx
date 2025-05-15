@@ -9,7 +9,6 @@ export default function CanvaLayout() {
           headerShown: true,
           headerTransparent: true,
           headerTitleAlign: "center",
-          title: "",
           headerTintColor: "black",
         }}
       />

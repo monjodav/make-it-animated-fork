@@ -36,7 +36,7 @@ export default function Profile() {
         <View className="flex-1">
           <Text className="text-stone-100 font-bold text-lg">Volodymyr Serbulenko</Text>
           <Animated.View ref={triggerRef} onLayout={onLayout}>
-            <Animated.Text className="text-stone-300 text-base">vvv-sss</Animated.Text>
+            <Text className="text-stone-300 text-base">vvv-sss</Text>
           </Animated.View>
         </View>
       </View>
