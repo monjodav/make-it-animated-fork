@@ -1,9 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
 import { BalanceChangeToggle } from "./balance-change-toggle";
+import { Balance } from "./balance";
+import { BalanceAnimationProvider } from "../lib/providers/balance-animation-provider";
 
 type ActionButtonProps = {
   label: string;
@@ -30,14 +32,12 @@ export const Dashboard: FC = () => {
       <View className="flex-1 p-5">
         <Text className="text-neutral-400 font-medium mb-4">Balance</Text>
         <View className="flex-row items-center justify-between mb-5">
-          <View className="flex-row">
-            <Text className="text-neutral-900 text-3xl font-bold">$</Text>
-            <Text className="text-neutral-900 text-6xl font-bold">0</Text>
-            <Text className="text-neutral-400 text-6xl font-bold">.00</Text>
-          </View>
-          {/* fuse-balance-change-toggle-animation 🔽 */}
-          <BalanceChangeToggle />
-          {/* fuse-balance-change-toggle-animation 🔼 */}
+          <BalanceAnimationProvider>
+            <Balance />
+            {/* fuse-balance-change-toggle-animation 🔽 */}
+            <BalanceChangeToggle />
+            {/* fuse-balance-change-toggle-animation 🔼 */}
+          </BalanceAnimationProvider>
         </View>
         <View className="flex-row gap-2">
           <ActionButton label="Receive" onPress={() => Alert.alert("Receive")} />
