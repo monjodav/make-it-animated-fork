@@ -12,7 +12,6 @@ export const DrawerToggleButton: FC = () => {
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    navigation.dispatch(DrawerActions.closeDrawer());
     opacity.value = withSequence(
       withTiming(1, { duration: 300 }),
       withTiming(1, { duration: 1000 }),

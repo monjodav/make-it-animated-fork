@@ -16,6 +16,7 @@ import { Pressable } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { Home } from "lucide-react-native";
 import { useDrawer } from "../lib/providers/drawer-provider";
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
 
 type AppSection = {
   title: string;
@@ -27,7 +28,9 @@ type FlatDataItem =
   | { type: "header"; section: AppSection }
   | { type: "item"; animation: App["animations"][number] };
 
-const Animations: FC = () => {
+type Props = DrawerContentComponentProps;
+
+const Animations: FC<Props> = ({ state, navigation, descriptors }) => {
   const [query, setQuery] = useState("");
 
   const { drawerTextInputRef } = useDrawer();
@@ -102,6 +105,7 @@ const Animations: FC = () => {
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             router.push(item.animation.href);
+            navigation.closeDrawer();
           }}
           style={styles.listItem}
         >
@@ -109,7 +113,7 @@ const Animations: FC = () => {
         </Pressable>
       );
     },
-    [router, _renderSectionHeader]
+    [router, _renderSectionHeader, navigation]
   );
 
   return (

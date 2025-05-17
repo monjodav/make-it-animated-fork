@@ -3,7 +3,6 @@ import { Platform, View, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import "../global.css";
 import Animations from "@/src/shared/components/animations";
 import * as NavigationBar from "expo-navigation-bar";
@@ -16,6 +15,7 @@ import * as Linking from "expo-linking";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import { useCallback, useEffect } from "react";
 import { DrawerProvider } from "@/src/shared/lib/providers/drawer-provider";
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -33,10 +33,10 @@ SplashScreen.setOptions({
   fade: true,
 });
 
-const DrawerContent = () => {
+const DrawerContent = (props: DrawerContentComponentProps) => {
   return (
     <>
-      <Animations />
+      <Animations {...props} />
       <View className="absolute bottom-0 left-0 right-0">
         <VisitWebsite />
       </View>
@@ -77,7 +77,7 @@ export default function RootLayout() {
         )}
         <DrawerProvider>
           <Drawer
-            drawerContent={() => <DrawerContent />}
+            drawerContent={(props: DrawerContentComponentProps) => <DrawerContent {...props} />}
             screenOptions={{
               headerShown: false,
               drawerStyle: {
