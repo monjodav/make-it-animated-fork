@@ -17,5 +17,9 @@ export const fuse: App = {
       name: "Balance change toggle animation",
       href: "/fuse/home",
     },
+    {
+      name: "Info cards carousel animation",
+      href: "/fuse/home",
+    },
   ],
 };

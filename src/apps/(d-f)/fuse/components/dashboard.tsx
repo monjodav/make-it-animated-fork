@@ -6,6 +6,7 @@ import { colorKit } from "reanimated-color-picker";
 import { BalanceChangeToggle } from "./balance-view/balance-change-toggle";
 import { Balance } from "./balance-view/balance";
 import { BalanceAnimationProvider } from "../lib/providers/balance-animation-provider";
+import { InfoCarousel } from "./info-carousel";
 
 type ActionButtonProps = {
   label: string;
@@ -48,7 +49,7 @@ export const Dashboard: FC = () => {
         </View>
       </View>
       <View className="h-[2px] bg-neutral-700" />
-      <View className="flex-1 justify-end p-5">
+      <View className="flex-1 justify-end">
         <LinearGradient
           colors={[colorKit.setAlpha("#000", 0.1).hex(), colorKit.setAlpha("#000", 0).hex()]}
           style={StyleSheet.absoluteFill}
@@ -58,7 +59,9 @@ export const Dashboard: FC = () => {
             <View key={index} className="w-9 h-6 rounded-full bg-neutral-300" />
           ))}
         </View>
-        <View className="w-full h-20 bg-neutral-300 rounded-2xl" />
+        {/* fuse-info-cards-carousel-animation 🔽 */}
+        <InfoCarousel />
+        {/* fuse-info-cards-carousel-animation 🔼 */}
       </View>
     </View>
   );

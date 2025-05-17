@@ -15,7 +15,7 @@ import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
-import { Redirect, usePathname } from "expo-router";
+import { usePathname } from "expo-router";
 import { useAppStore } from "@/src/shared/lib/store/app";
 
 configureReanimatedLogger({
@@ -43,9 +43,6 @@ export default function Index() {
       Keyboard.dismiss();
     }
   }, [keyboardStatus, drawerStatus, pathname]);
-
-  // VS ---------------
-  return <Redirect href="/fuse/home" />;
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
