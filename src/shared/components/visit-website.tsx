@@ -31,7 +31,7 @@ export const VisitWebsite = () => {
         style={StyleSheet.absoluteFill}
       />
       <View className="flex-row items-center gap-2">
-        <Text className="text-orange-200 font-semibold text-base">Visit the website</Text>
+        <Text className="text-orange-200 font-semibold text-base">Visit website</Text>
         <ExternalLink size={14} color="#fed7aa" />
       </View>
     </TouchableOpacity>

@@ -1,11 +1,21 @@
 import { App, apps } from "../lib/constants/apps-list";
 import { useRouter } from "expo-router";
-import React, { FC, memo, useCallback, useMemo } from "react";
-import { FlatList, Image, ListRenderItemInfo, Text, View, StyleSheet } from "react-native";
+import React, { FC, memo, useCallback, useMemo, useState } from "react";
+import {
+  FlatList,
+  Image,
+  ListRenderItemInfo,
+  Text,
+  View,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NewAnimations } from "./new-animations";
 import { Pressable } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
+import { Home } from "lucide-react-native";
+import { useDrawer } from "../lib/providers/drawer-provider";
 
 type AppSection = {
   title: string;
@@ -13,15 +23,15 @@ type AppSection = {
   data: App["animations"];
 };
 
-type Props = {
-  query: string;
-};
-
 type FlatDataItem =
   | { type: "header"; section: AppSection }
   | { type: "item"; animation: App["animations"][number] };
 
-const Animations: FC<Props> = ({ query }) => {
+const Animations: FC = () => {
+  const [query, setQuery] = useState("");
+
+  const { drawerTextInputRef } = useDrawer();
+
   const router = useRouter();
 
   const insets = useSafeAreaInsets();
@@ -44,16 +54,14 @@ const Animations: FC<Props> = ({ query }) => {
   const _renderSectionHeader = useCallback(
     ({ section }: { section: AppSection }) => (
       <View className="bg-[#131316]">
-        {section.title !== sections[0].title && (
-          <View className="h-[2px] rounded-full mx-2 bg-[#070708]" />
-        )}
         <View className="flex-row items-center gap-2 px-5 py-4">
           <Image source={section.imageSource} className="w-6 h-6" />
           <Text className="text-stone-50 text-base font-medium">{section.title}</Text>
+          <View className="h-[2px] flex-1 rounded-full bg-[#212126]" />
         </View>
       </View>
     ),
-    [sections]
+    []
   );
 
   const _renderEmptyListComponent = () => (
@@ -74,6 +82,7 @@ const Animations: FC<Props> = ({ query }) => {
   }, [sections]);
 
   const headerComponentCount = query.trim() ? 0 : 1;
+
   const stickyHeaderIndices = useMemo(() => {
     return flatData.reduce((acc: number[], entry, index) => {
       if (entry.type === "header") {
@@ -104,20 +113,37 @@ const Animations: FC<Props> = ({ query }) => {
   );
 
   return (
-    <View className="flex-1 bg-[#131316]">
-      {__DEV__ ? (
-        <View className="flex-row items-center gap-2 px-5 py-5">
-          <Text className="text-orange-200/50 text-sm">
-            {sections.reduce((acc, section) => acc + section.data.length, 0)} animations
+    <View className="flex-1 bg-[#131316]" style={{ paddingTop: insets.top + 16 }}>
+      <View className="flex-row items-center justify-between gap-2 px-5 pb-5">
+        <Pressable
+          hitSlop={20}
+          style={{ flexDirection: "row", gap: 4, alignItems: "flex-end" }}
+          onPress={() => router.replace("/")}
+        >
+          <Home size={16} color="#fafaf9" strokeWidth={1.5} />
+          <Text className="text-stone-50 text-sm/4">Home</Text>
+        </Pressable>
+        <View className="flex-row items-center gap-2">
+          <Text className="text-stone-400 text-sm">
+            <Text className="text-stone-50">
+              {sections.reduce((acc, section) => acc + section.data.length, 0)}
+            </Text>{" "}
+            animations
           </Text>
-          <Text className="text-neutral-500 text-sm">|</Text>
-          <Text className="text-orange-200/50 text-sm">
-            {sections.length} {sections.length === 1 ? "app" : "apps"}
+          <Text className="text-stone-400 text-sm">
+            <Text className="text-stone-50">{sections.length}</Text>{" "}
+            {sections.length === 1 ? "app" : "apps"}
           </Text>
         </View>
-      ) : (
-        <></>
-      )}
+      </View>
+      <TextInput
+        ref={drawerTextInputRef}
+        placeholder="Search app..."
+        placeholderTextColor="#a8a29e"
+        className="bg-[#212126] rounded-xl p-3 text-stone-400 mb-4 mx-4"
+        value={query}
+        onChangeText={setQuery}
+      />
       <FlatList
         data={flatData}
         keyExtractor={(entry, index) =>
@@ -131,7 +157,6 @@ const Animations: FC<Props> = ({ query }) => {
         contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
         stickyHeaderIndices={stickyHeaderIndices}
         showsVerticalScrollIndicator={false}
-        scrollEnabled={false}
       />
     </View>
   );

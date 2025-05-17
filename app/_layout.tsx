@@ -1,6 +1,5 @@
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect, useState } from "react";
-import { Platform, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { Platform, View, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
@@ -8,7 +7,6 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import "../global.css";
 import Animations from "@/src/shared/components/animations";
 import * as NavigationBar from "expo-navigation-bar";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
@@ -16,6 +14,8 @@ import { LogLevel, OneSignal } from "react-native-onesignal";
 import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
 import * as Linking from "expo-linking";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
+import { useCallback, useEffect } from "react";
+import { DrawerProvider } from "@/src/shared/lib/providers/drawer-provider";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -33,28 +33,10 @@ SplashScreen.setOptions({
   fade: true,
 });
 
-const DrawerContent = (props: DrawerContentComponentProps) => {
-  const [query, setQuery] = useState("");
-
-  const insets = useSafeAreaInsets();
-
+const DrawerContent = () => {
   return (
     <>
-      <TextInput
-        placeholder="Search app..."
-        placeholderTextColor="#a8a29e"
-        className="bg-[#212126] rounded-xl p-3 text-stone-400 mb-4 mx-4"
-        style={{ marginTop: insets.top + 16 }}
-        value={query}
-        onChangeText={setQuery}
-      />
-      <ScrollView
-        style={{ backgroundColor: "#131316" }}
-        showsVerticalScrollIndicator={false}
-        {...props}
-      >
-        <Animations query={query} />
-      </ScrollView>
+      <Animations />
       <View className="absolute bottom-0 left-0 right-0">
         <VisitWebsite />
       </View>
@@ -93,18 +75,18 @@ export default function RootLayout() {
         {Platform.OS === "android" && (
           <StatusBar style="light" backgroundColor="black" translucent={false} />
         )}
-
-        <Drawer
-          drawerContent={(props) => <DrawerContent {...props} />}
-          screenOptions={{
-            headerShown: false,
-            drawerStyle: {
-              backgroundColor: "#131316",
-              borderTopRightRadius: 0,
-              borderTopLeftRadius: 0,
-            },
-          }}
-        />
+        <DrawerProvider>
+          <Drawer
+            drawerContent={() => <DrawerContent />}
+            screenOptions={{
+              headerShown: false,
+              drawerStyle: {
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0,
+              },
+            }}
+          />
+        </DrawerProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>
   );

@@ -35,9 +35,10 @@ The project is organized as follows:
 ```
 make-it-animated/
 ├── app/                  # Expo Router navigation structure
-│   ├── (a-c)/            # Alphabetically grouped app routes
-│   ├── (d-f)/            # Alphabetically grouped app routes
-│   ├── ...               # More route groups
+│   ├── (apps)/           # Group containing individual animation routes
+│   │   ├── (a-c)/        # Alphabetically grouped app routes
+│   │   ├── (d-f)/        # Alphabetically grouped app routes
+│   │   └── ...           # More route groups
 │   ├── _layout.tsx       # Main layout for the app
 │   └── index.tsx         # Entry point/home screen
 ├── assets/               # Images, fonts, and other static resources
