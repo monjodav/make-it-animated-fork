@@ -3,8 +3,8 @@ import React, { FC } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
-import { BalanceChangeToggle } from "./balance-change-toggle";
-import { Balance } from "./balance";
+import { BalanceChangeToggle } from "./balance-view/balance-change-toggle";
+import { Balance } from "./balance-view/balance";
 import { BalanceAnimationProvider } from "../lib/providers/balance-animation-provider";
 
 type ActionButtonProps = {

@@ -2,7 +2,10 @@ import { Asterisk } from "lucide-react-native";
 import React, { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import Animated, { Easing, Keyframe, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { LONG_PRESS_DELAY, useBalanceAnimation } from "../lib/providers/balance-animation-provider";
+import {
+  LONG_PRESS_DELAY,
+  useBalanceAnimation,
+} from "../../lib/providers/balance-animation-provider";
 import * as Haptics from "expo-haptics";
 
 // fuse-balance-secure-view-toggle-animation 🔽

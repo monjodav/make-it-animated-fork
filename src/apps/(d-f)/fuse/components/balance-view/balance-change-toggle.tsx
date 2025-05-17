@@ -13,7 +13,10 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { LONG_PRESS_DELAY, useBalanceAnimation } from "../lib/providers/balance-animation-provider";
+import {
+  LONG_PRESS_DELAY,
+  useBalanceAnimation,
+} from "../../lib/providers/balance-animation-provider";
 
 // fuse-balance-secure-view-toggle-animation 🔽
 // fuse-balance-change-toggle-animation 🔽
