@@ -13,8 +13,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { useBalanceAnimation } from "../lib/providers/balance-animation-provider";
+import { LONG_PRESS_DELAY, useBalanceAnimation } from "../lib/providers/balance-animation-provider";
 
+// fuse-balance-secure-view-toggle-animation 🔽
 // fuse-balance-change-toggle-animation 🔽
 
 const DURATION = 250;
@@ -68,13 +69,13 @@ export const BalanceChangeToggle: FC = () => {
       transform: [
         {
           translateY: withTiming(isBalanceSecureTouched.value ? -2 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           translateX: withTiming(isBalanceSecureTouched.value ? 0.5 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
@@ -100,13 +101,13 @@ export const BalanceChangeToggle: FC = () => {
       transform: [
         {
           translateY: withTiming(isBalanceInsecureTouched.value ? 2 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           translateX: withTiming(isBalanceInsecureTouched.value ? -0.5 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
@@ -155,3 +156,4 @@ export const BalanceChangeToggle: FC = () => {
 };
 
 // fuse-balance-change-toggle-animation 🔼
+// fuse-balance-secure-view-toggle-animation 🔼

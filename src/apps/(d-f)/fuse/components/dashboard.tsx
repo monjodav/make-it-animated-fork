@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
@@ -32,12 +32,14 @@ export const Dashboard: FC = () => {
       <View className="flex-1 p-5">
         <Text className="text-neutral-400 font-medium mb-4">Balance</Text>
         <View className="flex-row items-center justify-between mb-5">
+          {/* fuse-balance-secure-view-toggle-animation 🔽 */}
           <BalanceAnimationProvider>
             <Balance />
             {/* fuse-balance-change-toggle-animation 🔽 */}
             <BalanceChangeToggle />
             {/* fuse-balance-change-toggle-animation 🔼 */}
           </BalanceAnimationProvider>
+          {/* fuse-balance-secure-view-toggle-animation 🔼 */}
         </View>
         <View className="flex-row gap-2">
           <ActionButton label="Receive" onPress={() => Alert.alert("Receive")} />

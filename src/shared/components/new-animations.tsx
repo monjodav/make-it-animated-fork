@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { googleChrome } from "@/src/shared/lib/constants/apps/g";
+import { fuse } from "@/src/shared/lib/constants/apps/f";
 import { App } from "../lib/constants/apps-list";
 
 type AnimationItemProps = {
@@ -41,18 +41,7 @@ export const NewAnimations: FC = () => {
 
   return (
     <View className="px-5 gap-5 py-5">
-      <AnimationItem
-        label={getItemProps(googleChrome, 1).label}
-        onPress={getItemProps(googleChrome, 1).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(googleChrome, 2).label}
-        onPress={getItemProps(googleChrome, 2).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(googleChrome, 3).label}
-        onPress={getItemProps(googleChrome, 3).onPress}
-      />
+      <AnimationItem label={getItemProps(fuse, 1).label} onPress={getItemProps(fuse, 1).onPress} />
     </View>
   );
 };

@@ -1,6 +1,11 @@
 import { createContext, FC, PropsWithChildren, useContext, useState } from "react";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
 
+// fuse-balance-secure-view-toggle-animation 🔽
+// fuse-balance-change-toggle-animation 🔽
+
+export const LONG_PRESS_DELAY = 500;
+
 type BalanceChangeView = "percent" | "currency";
 
 type ContextValue = {
@@ -49,3 +54,6 @@ export const useBalanceAnimation = () => {
 
   return context;
 };
+
+// fuse-balance-change-toggle-animation 🔼
+// fuse-balance-secure-view-toggle-animation 🔼

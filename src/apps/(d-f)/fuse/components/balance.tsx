@@ -2,8 +2,10 @@ import { Asterisk } from "lucide-react-native";
 import React, { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import Animated, { Easing, Keyframe, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useBalanceAnimation } from "../lib/providers/balance-animation-provider";
+import { LONG_PRESS_DELAY, useBalanceAnimation } from "../lib/providers/balance-animation-provider";
 import * as Haptics from "expo-haptics";
+
+// fuse-balance-secure-view-toggle-animation 🔽
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -97,31 +99,31 @@ export const Balance: FC = () => {
       transform: [
         {
           translateY: withTiming(isBalanceSecureTouched.value ? -4 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           translateX: withTiming(isBalanceSecureTouched.value ? 2 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           scale: withTiming(isBalanceSecureTouched.value ? 0.97 : 1, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           rotateX: withTiming(isBalanceSecureTouched.value ? "5deg" : "0deg", {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           skewX: withTiming(isBalanceSecureTouched.value ? "2deg" : "0deg", {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
@@ -134,31 +136,31 @@ export const Balance: FC = () => {
       transform: [
         {
           translateY: withTiming(isBalanceInsecureTouched.value ? 5 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           translateX: withTiming(isBalanceInsecureTouched.value ? 2.5 : 0, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           scale: withTiming(isBalanceInsecureTouched.value ? 0.97 : 1, {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           rotateX: withTiming(isBalanceInsecureTouched.value ? "5deg" : "0deg", {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
           skewX: withTiming(isBalanceInsecureTouched.value ? "2deg" : "0deg", {
-            duration: 500,
+            duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
@@ -201,7 +203,7 @@ export const Balance: FC = () => {
             onLayout={() => isBalanceSecureTouched.set(false)}
             onTouchEnd={() => isBalanceSecureTouched.set(false)}
             onLongPress={onLongPressBalanceSecure}
-            delayLongPress={500}
+            delayLongPress={LONG_PRESS_DELAY}
             className="flex-row"
           >
             {Array.from({ length: 5 }).map((_, index) => (
@@ -228,7 +230,7 @@ export const Balance: FC = () => {
             }}
             onTouchEnd={() => isBalanceInsecureTouched.set(false)}
             onLongPress={onLongPressBalanceInsecure}
-            delayLongPress={500}
+            delayLongPress={LONG_PRESS_DELAY}
           >
             <Text className="text-neutral-900 text-3xl font-bold">$</Text>
             <Text className="text-neutral-900 text-6xl font-bold">0</Text>
@@ -245,3 +247,5 @@ const styles = StyleSheet.create({
     marginHorizontal: -2,
   },
 });
+
+// fuse-balance-insecure-view-toggle-animation 🔼

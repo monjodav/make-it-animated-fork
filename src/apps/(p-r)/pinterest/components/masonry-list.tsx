@@ -98,7 +98,7 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
     return (
       <View className="px-1.5">
         <View
-          className="w-full rounded-2xl bg-neutral-900 items-center justify-center"
+          className="w-full rounded-2xl bg-neutral-900 items-center justify-center mb-3"
           style={{ height }}
         />
       </View>
