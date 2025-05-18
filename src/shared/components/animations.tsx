@@ -30,7 +30,7 @@ type FlatDataItem =
 
 type Props = DrawerContentComponentProps;
 
-const Animations: FC<Props> = ({ state, navigation, descriptors }) => {
+const Animations: FC<Props> = ({ navigation }) => {
   const [query, setQuery] = useState("");
 
   const { drawerTextInputRef } = useDrawer();
@@ -51,7 +51,7 @@ const Animations: FC<Props> = ({ state, navigation, descriptors }) => {
 
   const _renderListHeader = () => {
     if (query.trim()) return <></>;
-    return <NewAnimations />;
+    return <NewAnimations navigation={navigation} />;
   };
 
   const _renderSectionHeader = useCallback(

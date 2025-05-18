@@ -4,6 +4,7 @@ import { AlignLeft } from "lucide-react-native";
 import React, { FC, useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import Animated, { useSharedValue, withSequence, withTiming } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
 export const DrawerToggleButton: FC = () => {
   const navigation = useNavigation();
@@ -28,7 +29,10 @@ export const DrawerToggleButton: FC = () => {
       <Pressable
         className="w-10 h-10 items-center justify-center rounded-xl bg-[#131316]"
         style={styles.borderCurve}
-        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}
       >
         <AlignLeft size={20} color="white" />
       </Pressable>

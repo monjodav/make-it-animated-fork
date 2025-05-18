@@ -83,6 +83,7 @@ export default function RootLayout() {
               drawerStyle: {
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
+                backgroundColor: "#131316",
               },
             }}
           />

@@ -172,23 +172,23 @@ export const Balance: FC = () => {
   });
 
   const onLongPressBalanceSecure = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsBalanceSecure(!isBalanceSecure);
     // NOTE: See balance-animation-provider for more info why I use balanceChangeTappedValue here
     if (balanceChangeTappedValue.value === "percent") {
       return;
     }
     setBalanceChangeView("currency");
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   const onLongPressBalanceInsecure = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsBalanceSecure(!isBalanceSecure);
     // NOTE: See balance-animation-provider for more info why I use balanceChangeTappedValue here
     if (balanceChangeTappedValue.value === "percent") {
       return;
     }
     setBalanceChangeView("percent");
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   return (

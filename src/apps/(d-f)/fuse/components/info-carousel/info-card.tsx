@@ -1,4 +1,12 @@
-import { Alert, Platform, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
+import {
+  Alert,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  Text,
+} from "react-native";
 import Animated, {
   useAnimatedProps,
   Extrapolation,
@@ -98,9 +106,11 @@ This component is disabled on Android for two reasons:
         style={rCardStyle}
       >
         <View
-          className="bg-neutral-800 h-full aspect-square rounded-xl"
+          className="bg-neutral-800 h-full aspect-square rounded-xl items-center justify-center"
           style={styles.borderCurve}
-        />
+        >
+          <Text className="font-semibold text-stone-300">{index + 1}</Text>
+        </View>
         <View className="flex-1 gap-2">
           <View className="w-1/2 h-3 rounded-full bg-neutral-800" />
           <View className="w-2/3 h-2 rounded-full bg-neutral-400" />
