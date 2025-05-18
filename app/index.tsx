@@ -41,7 +41,6 @@ export default function Index() {
 
   useEffect(() => {
     if (keyboardStatus.isVisible && drawerStatus === "closed") {
-      console.log("blur");
       drawerTextInputRef.current?.blur();
     }
   }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
