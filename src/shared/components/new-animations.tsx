@@ -1,8 +1,10 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { googleChrome } from "@/src/shared/lib/constants/apps/g";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
+import { fuse } from "@/src/shared/lib/constants/apps/f";
 import { App } from "../lib/constants/apps-list";
+import { DrawerContentComponentProps } from "@react-navigation/drawer";
+import * as Haptics from "expo-haptics";
 
 type AnimationItemProps = {
   label: string;
@@ -26,7 +28,9 @@ const AnimationItem = ({ label, onPress }: AnimationItemProps) => {
   );
 };
 
-export const NewAnimations: FC = () => {
+type Props = { navigation: DrawerContentComponentProps["navigation"] };
+
+export const NewAnimations: FC<Props> = ({ navigation }) => {
   const router = useRouter();
 
   const getItemProps = (app: App, animationIndex: number) => {
@@ -35,24 +39,23 @@ export const NewAnimations: FC = () => {
     }
     return {
       label: app.name + " " + app.animations[animationIndex].name.toLowerCase(),
-      onPress: () => router.push(app.animations[animationIndex].href),
+      onPress: () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        router.push(app.animations[animationIndex].href);
+        navigation.closeDrawer();
+      },
     };
   };
 
   return (
     <View className="px-5 gap-5 py-5">
-      <AnimationItem
-        label={getItemProps(googleChrome, 1).label}
-        onPress={getItemProps(googleChrome, 1).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(googleChrome, 2).label}
-        onPress={getItemProps(googleChrome, 2).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(googleChrome, 3).label}
-        onPress={getItemProps(googleChrome, 3).onPress}
-      />
+      <AnimationItem label={getItemProps(fuse, 1).label} onPress={getItemProps(fuse, 1).onPress} />
+      {Platform.OS === "ios" && (
+        <AnimationItem
+          label={getItemProps(fuse, 3).label}
+          onPress={getItemProps(fuse, 3).onPress}
+        />
+      )}
     </View>
   );
 };

@@ -10,7 +10,15 @@ export const fuse: App = {
       href: "/fuse/home",
     },
     {
+      name: "Balance secure view toggle animation",
+      href: "/fuse/home",
+    },
+    {
       name: "Balance change toggle animation",
+      href: "/fuse/home",
+    },
+    {
+      name: "Info cards carousel animation",
       href: "/fuse/home",
     },
   ],

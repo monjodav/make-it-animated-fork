@@ -1,4 +1,4 @@
-import { Keyboard, Pressable, TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity } from "react-native";
 import Logo from "@/assets/images/icon-ios.png";
 import { Image, Text, View } from "react-native";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
@@ -15,8 +15,8 @@ import * as Updates from "expo-updates";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
-import { usePathname } from "expo-router";
 import { useAppStore } from "@/src/shared/lib/store/app";
+import { useDrawer } from "@/src/shared/lib/providers/drawer-provider";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -31,18 +31,19 @@ export default function Index() {
   useWarmUpBrowser();
 
   const navigation = useNavigation();
-  const pathname = usePathname();
 
   const isOtaUpdateAvailable = useAppStore.use.isOtaUpdateAvailable();
 
   const keyboardStatus = useKeyboardState();
   const drawerStatus = useDrawerStatus();
 
+  const { drawerTextInputRef } = useDrawer();
+
   useEffect(() => {
-    if (keyboardStatus.isVisible && drawerStatus === "closed" && pathname === "/") {
-      Keyboard.dismiss();
+    if (keyboardStatus.isVisible && drawerStatus === "closed") {
+      drawerTextInputRef.current?.blur();
     }
-  }, [keyboardStatus, drawerStatus, pathname]);
+  }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">

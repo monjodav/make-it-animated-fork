@@ -3,7 +3,10 @@ import React, { FC } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
-import { BalanceChangeToggle } from "./balance-change-toggle";
+import { BalanceChangeToggle } from "./balance-view/balance-change-toggle";
+import { Balance } from "./balance-view/balance";
+import { BalanceAnimationProvider } from "../lib/providers/balance-animation-provider";
+import { InfoCarousel } from "./info-carousel";
 
 type ActionButtonProps = {
   label: string;
@@ -30,14 +33,14 @@ export const Dashboard: FC = () => {
       <View className="flex-1 p-5">
         <Text className="text-neutral-400 font-medium mb-4">Balance</Text>
         <View className="flex-row items-center justify-between mb-5">
-          <View className="flex-row">
-            <Text className="text-neutral-900 text-3xl font-bold">$</Text>
-            <Text className="text-neutral-900 text-6xl font-bold">0</Text>
-            <Text className="text-neutral-400 text-6xl font-bold">.00</Text>
-          </View>
-          {/* fuse-balance-change-toggle-animation 🔽 */}
-          <BalanceChangeToggle />
-          {/* fuse-balance-change-toggle-animation 🔼 */}
+          {/* fuse-balance-secure-view-toggle-animation 🔽 */}
+          <BalanceAnimationProvider>
+            <Balance />
+            {/* fuse-balance-change-toggle-animation 🔽 */}
+            <BalanceChangeToggle />
+            {/* fuse-balance-change-toggle-animation 🔼 */}
+          </BalanceAnimationProvider>
+          {/* fuse-balance-secure-view-toggle-animation 🔼 */}
         </View>
         <View className="flex-row gap-2">
           <ActionButton label="Receive" onPress={() => Alert.alert("Receive")} />
@@ -46,7 +49,7 @@ export const Dashboard: FC = () => {
         </View>
       </View>
       <View className="h-[2px] bg-neutral-700" />
-      <View className="flex-1 justify-end p-5">
+      <View className="flex-1 justify-end">
         <LinearGradient
           colors={[colorKit.setAlpha("#000", 0.1).hex(), colorKit.setAlpha("#000", 0).hex()]}
           style={StyleSheet.absoluteFill}
@@ -56,7 +59,9 @@ export const Dashboard: FC = () => {
             <View key={index} className="w-9 h-6 rounded-full bg-neutral-300" />
           ))}
         </View>
-        <View className="w-full h-20 bg-neutral-300 rounded-2xl" />
+        {/* fuse-info-cards-carousel-animation 🔽 */}
+        <InfoCarousel />
+        {/* fuse-info-cards-carousel-animation 🔼 */}
       </View>
     </View>
   );
