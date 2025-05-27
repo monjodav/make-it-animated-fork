@@ -1,6 +1,6 @@
 import { Canvas, Path, Skia } from "@shopify/react-native-skia";
 import React, { FC } from "react";
-import { useDerivedValue, withTiming } from "react-native-reanimated";
+import { Extrapolation, useDerivedValue, withTiming } from "react-native-reanimated";
 import { StyleSheet, View, Text } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
@@ -30,7 +30,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
       };
     }
     return {
-      opacity: interpolate(panX.value, [0, sign * panDistance], [0, 1]),
+      opacity: interpolate(panX.value, [0, sign * panDistance], [0, 1], Extrapolation.CLAMP),
     };
   });
 
