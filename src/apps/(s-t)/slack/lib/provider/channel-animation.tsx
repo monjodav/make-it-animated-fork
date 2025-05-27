@@ -16,6 +16,7 @@ type ContextValue = {
   panDistance: number;
   panX: SharedValue<number>;
   panY: SharedValue<number>;
+  absoluteY: SharedValue<number>;
   isDragging: SharedValue<boolean>;
 };
 
@@ -27,6 +28,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const panX = useSharedValue(0);
   const panY = useSharedValue(0);
+  const absoluteY = useSharedValue(0);
   const isDragging = useSharedValue(false);
 
   const { singleHapticOnChange } = useSingleHapticOnPanGesture({
@@ -41,6 +43,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     .onChange((event) => {
       panX.set(event.translationX);
       panY.set(event.translationY);
+      absoluteY.set(event.absoluteY);
       singleHapticOnChange(event);
     })
     .onEnd((event) => {
@@ -58,7 +61,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       }
     });
 
-  const value = { panDistance, panX, panY, isDragging };
+  const value = { panDistance, panX, panY, absoluteY, isDragging };
 
   return (
     <ChannelAnimationContext.Provider value={value}>

@@ -1,13 +1,17 @@
 import React, { FC, PropsWithChildren } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 
 export const ChannelContainer: FC<PropsWithChildren> = ({ children }) => {
-  const { panX, panY, panDistance } = useChannelAnimation();
+  const { height } = useWindowDimensions();
+
+  const { panX, panY, absoluteY, panDistance } = useChannelAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const rotate = interpolate(panX.value, [0, panDistance], [0, -5]);
+    const sign = absoluteY.value > height / 2 ? -1 : 1;
+
+    const rotate = interpolate(panX.value, [0, panDistance], [0, sign * 5]);
 
     return {
       transform: [
