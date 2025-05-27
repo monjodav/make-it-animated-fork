@@ -26,7 +26,7 @@ export const ChannelContainer: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <Animated.View
-      className="flex-1 bg-neutral-900 border border-neutral-800 rounded-3xl z-50"
+      className="flex-1 bg-neutral-900 border border-neutral-800 rounded-3xl z-50 shadow-lg overflow-hidden"
       style={[styles.container, rContainerStyle]}
     >
       {children}
