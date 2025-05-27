@@ -11,7 +11,7 @@ export const Unread: FC = () => {
     <View className="flex-1 px-5" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
       <LinearGradient colors={["#013D60", "#001A2C"]} style={StyleSheet.absoluteFill} />
       <Channel />
-      <View className="flex-row gap-5 pt-5">
+      <View className="flex-row gap-5 pt-5 items-center">
         <Pressable
           className="flex-1 p-[14px] bg-neutral-900 border border-neutral-700/50 rounded-2xl items-center justify-center"
           style={styles.borderCurve}
@@ -19,7 +19,7 @@ export const Unread: FC = () => {
           <Text className="text-lg font-semibold text-neutral-300">Keep Unread</Text>
         </Pressable>
         <Pressable
-          className="flex-1 p-[14px] bg-emerald-900 border border-emerald-700/50 rounded-2xl items-center justify-center"
+          className="flex-1 p-[12px] bg-emerald-900 border border-emerald-700/50 rounded-2xl items-center justify-center"
           style={styles.borderCurve}
         >
           <Text className="text-lg font-semibold text-neutral-300">Mark as Read</Text>

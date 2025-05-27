@@ -19,11 +19,16 @@ type Props = {
 };
 
 export const MarkView: FC<Props> = ({ variant }) => {
-  const { panX, panDistance } = useChannelAnimation();
+  const { panX, panDistance, isDragging } = useChannelAnimation();
 
   const sign = variant === "keep-read" ? 1 : -1;
 
   const rContainerStyle = useAnimatedStyle(() => {
+    if (!isDragging.value) {
+      return {
+        opacity: withTiming(0, { duration: 100 }),
+      };
+    }
     return {
       opacity: interpolate(panX.value, [0, sign * panDistance], [0, 1]),
     };

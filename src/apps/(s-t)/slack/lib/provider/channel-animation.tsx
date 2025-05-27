@@ -1,7 +1,13 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
 import { useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { SharedValue, useSharedValue, withDecay, withTiming } from "react-native-reanimated";
+import {
+  SharedValue,
+  useSharedValue,
+  withDecay,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { useSingleHapticOnPanGesture } from "../hooks/use-single-haptic-on-pan-gesture";
 
 const MIN_VELOCITY = 500;
@@ -10,6 +16,7 @@ type ContextValue = {
   panDistance: number;
   panX: SharedValue<number>;
   panY: SharedValue<number>;
+  isDragging: SharedValue<boolean>;
 };
 
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
@@ -20,6 +27,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const panX = useSharedValue(0);
   const panY = useSharedValue(0);
+  const isDragging = useSharedValue(false);
 
   const { singleHapticOnChange } = useSingleHapticOnPanGesture({
     triggerOffset: panDistance,
@@ -27,13 +35,16 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   });
 
   const gesture = Gesture.Pan()
-    .onStart(() => {})
+    .onStart(() => {
+      isDragging.set(true);
+    })
     .onChange((event) => {
       panX.set(event.translationX);
       panY.set(event.translationY);
       singleHapticOnChange(event);
     })
     .onEnd((event) => {
+      isDragging.set(false);
       if (Math.abs(event.velocityX) > MIN_VELOCITY || Math.abs(event.translationX) > panDistance) {
         panX.set(withTiming(width * 2 * Math.sign(event.velocityX)));
         panY.set(
@@ -42,12 +53,12 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
           })
         );
       } else {
-        panX.set(withTiming(0));
-        panY.set(withTiming(0));
+        panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
+        panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
       }
     });
 
-  const value = { panDistance, panX, panY };
+  const value = { panDistance, panX, panY, isDragging };
 
   return (
     <ChannelAnimationContext.Provider value={value}>
