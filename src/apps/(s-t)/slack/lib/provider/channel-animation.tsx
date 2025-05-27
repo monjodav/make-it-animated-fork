@@ -22,7 +22,16 @@ type ContextValue = {
 
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 
-export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
+type Props = {
+  index: number;
+  activeChannelIndex: SharedValue<number>;
+};
+
+export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
+  children,
+  index,
+  activeChannelIndex,
+}) => {
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
 
@@ -42,6 +51,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       absoluteYAnchor.set(event.absoluteY);
     })
     .onChange((event) => {
+      activeChannelIndex.set(index - Math.abs(event.translationX) / panDistance);
       panX.set(event.translationX);
       panY.set(event.translationY);
       singleHapticOnChange(event);

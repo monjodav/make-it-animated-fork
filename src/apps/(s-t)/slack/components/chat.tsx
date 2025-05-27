@@ -2,18 +2,21 @@ import { ChevronDown, Mic, Plus } from "lucide-react-native";
 import React, { FC } from "react";
 import { View, FlatList, Text, Pressable } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import { Channel as ChannelType } from "../lib/types";
 
-const data = Array.from({ length: 20 }, (_, i) => i);
+type Props = {
+  channel: ChannelType;
+};
 
-export const Chat: FC = () => {
+export const Chat: FC<Props> = ({ channel }) => {
   return (
     <View className="flex-1">
       <Pressable className="p-3 flex-row items-center justify-center gap-1 border-b border-neutral-800">
-        <Text className="text-neutral-300 text-base font-semibold">#channel-name</Text>
+        <Text className="text-neutral-300 text-base font-semibold">#{channel.name}</Text>
         <ChevronDown size={14} color="#d4d4d4" strokeWidth={2.5} />
       </Pressable>
       <FlatList
-        data={data}
+        data={channel.data}
         renderItem={() => (
           <View className="flex-row gap-4 p-5">
             <View className="w-12 h-12 rounded-xl bg-neutral-800" />
@@ -34,7 +37,7 @@ export const Chat: FC = () => {
           <Plus size={24} color="#737373" />
         </View>
         <TextInput
-          placeholder="Message #channel-name"
+          placeholder={`Message #${channel.name}`}
           placeholderTextColor="#a3a3a3"
           className="px-16 py-6"
         />

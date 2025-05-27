@@ -5,12 +5,20 @@ import { MarkView } from "./mark-view";
 import { Chat } from "./chat";
 import { ChannelContainer } from "./channel-container";
 import { ColorBackground } from "./color-background";
+import { Channel as ChannelType } from "../lib/types";
+import { SharedValue } from "react-native-reanimated";
 
-export const Channel: FC = () => {
+type Props = {
+  channel: ChannelType;
+  index: number;
+  activeChannelIndex: SharedValue<number>;
+};
+
+export const Channel: FC<Props> = ({ channel, index, activeChannelIndex }) => {
   return (
-    <ChannelAnimationProvider>
-      <ChannelContainer>
-        <Chat />
+    <ChannelAnimationProvider index={index} activeChannelIndex={activeChannelIndex}>
+      <ChannelContainer index={index} activeChannelIndex={activeChannelIndex}>
+        <Chat channel={channel} />
         <ColorBackground />
         <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between pointer-events-none">
           <MarkView variant="keep-read" />
