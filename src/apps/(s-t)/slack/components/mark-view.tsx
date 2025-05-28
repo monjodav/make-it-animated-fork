@@ -1,4 +1,4 @@
-import { Canvas, Path, Skia } from "@shopify/react-native-skia";
+import { Canvas, Path, Skia, usePathInterpolation } from "@shopify/react-native-skia";
 import React, { FC } from "react";
 import { Extrapolation, useDerivedValue, withTiming } from "react-native-reanimated";
 import { StyleSheet, View, Text } from "react-native";
@@ -39,7 +39,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
       backgroundColor: withTiming(
         Math.abs(panX.value) + STROKE_WIDTH / 2 > panDistance ? "white" : TRANSPARENT,
         {
-          duration: 100,
+          duration: 50,
         }
       ),
     };
@@ -97,7 +97,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
               <FontAwesome6 name="check" size={ICON_SIZE} color="white" />
             </Animated.View>
             <Animated.View className="absolute" style={rIconStyle}>
-              <FontAwesome6 name="check" size={ICON_SIZE} color="#292524" />
+              <FontAwesome6 name="check" size={ICON_SIZE} color="#065f46" />
             </Animated.View>
           </View>
         ) : (
@@ -106,7 +106,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
               <EyeClosed size={ICON_SIZE} color="white" />
             </Animated.View>
             <Animated.View className="absolute" style={rIconStyle}>
-              <EyeClosed size={ICON_SIZE} color="#292524" />
+              <EyeClosed size={ICON_SIZE} color="#1e3a8a" />
             </Animated.View>
           </View>
         )}

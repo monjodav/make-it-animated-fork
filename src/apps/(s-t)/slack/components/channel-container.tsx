@@ -24,7 +24,7 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
     const top = interpolate(
       activeChannelIndex.value,
       inputRange,
-      [0, 0, 0, width * 0.07, width * 0.02],
+      [0, 0, 0, width * 0.07, width * 0.01],
       Extrapolation.CLAMP
     );
 
