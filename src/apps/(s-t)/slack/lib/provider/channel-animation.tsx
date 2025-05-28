@@ -2,6 +2,7 @@ import { createContext, FC, PropsWithChildren, useContext } from "react";
 import { useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
+  runOnJS,
   SharedValue,
   useSharedValue,
   withDecay,
@@ -10,6 +11,8 @@ import {
 } from "react-native-reanimated";
 import { useSingleHapticOnPanGesture } from "../hooks/use-single-haptic-on-pan-gesture";
 import { useActiveChannelIndex } from "./active-channel-index";
+import { useUnreadStore } from "../store/unread";
+import { ChannelStatus } from "../types";
 
 const MIN_VELOCITY = 500;
 
@@ -39,6 +42,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
   const lastItemIndex = total - 1;
 
   const { activeChannelIndex } = useActiveChannelIndex();
+
+  const popChannel = useUnreadStore.use.popChannel();
+
+  const handlePopChannel = (status: ChannelStatus) => {
+    setTimeout(() => {
+      popChannel(status);
+    }, 500);
+  };
 
   const panX = useSharedValue(0);
   const panY = useSharedValue(0);
@@ -72,6 +83,8 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
             velocity: event.velocityY,
           })
         );
+        const status = event.translationX > 0 ? "read" : "unread";
+        runOnJS(handlePopChannel)(status);
       } else {
         panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
         panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
