@@ -3,41 +3,15 @@ import { View, StyleSheet, Pressable, Text } from "react-native";
 import { Channel } from "../components/channel";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { Channel as ChannelType } from "../lib/types";
 import { useSharedValue } from "react-native-reanimated";
-
-const unreadChannels: ChannelType[] = [
-  {
-    id: "1",
-    name: "channel-1",
-    data: Array.from({ length: 20 }, (_, i) => i),
-  },
-  {
-    id: "2",
-    name: "channel-2",
-    data: Array.from({ length: 20 }, (_, i) => i),
-  },
-  {
-    id: "3",
-    name: "channel-3",
-    data: Array.from({ length: 20 }, (_, i) => i),
-  },
-  {
-    id: "4",
-    name: "channel-4",
-    data: Array.from({ length: 20 }, (_, i) => i),
-  },
-  {
-    id: "5",
-    name: "channel-5",
-    data: Array.from({ length: 20 }, (_, i) => i),
-  },
-];
+import { useUnreadStore } from "../lib/store/unread";
 
 export const Unread: FC = () => {
   const insets = useSafeAreaInsets();
 
-  const activeChannelIndex = useSharedValue(0);
+  const unreadChannels = useUnreadStore.use.unreadChannels();
+
+  const activeChannelIndex = useSharedValue(unreadChannels.length - 1);
 
   return (
     <View className="flex-1 px-5" style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}>
@@ -48,11 +22,12 @@ export const Unread: FC = () => {
             key={channel.id}
             channel={channel}
             index={index}
+            total={unreadChannels.length}
             activeChannelIndex={activeChannelIndex}
           />
         ))}
       </View>
-      <View className="flex-row gap-5 pt-5 items-center">
+      <View className="flex-row gap-5 pt-6 items-center">
         <Pressable
           className="flex-1 p-[14px] bg-neutral-900 border border-neutral-700/50 rounded-2xl items-center justify-center"
           style={styles.borderCurve}

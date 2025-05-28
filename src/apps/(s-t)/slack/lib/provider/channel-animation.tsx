@@ -25,15 +25,19 @@ const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 type Props = {
   index: number;
   activeChannelIndex: SharedValue<number>;
+  total: number;
 };
 
 export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
   children,
   index,
   activeChannelIndex,
+  total,
 }) => {
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
+
+  const lastItem = total - 1;
 
   const panX = useSharedValue(0);
   const panY = useSharedValue(0);
@@ -51,7 +55,9 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
       absoluteYAnchor.set(event.absoluteY);
     })
     .onChange((event) => {
-      activeChannelIndex.set(index - Math.abs(event.translationX) / panDistance);
+      const progress = index - Math.abs(event.translationX) / panDistance;
+      activeChannelIndex.set(progress < lastItem - 1 ? lastItem - 1 : progress);
+
       panX.set(event.translationX);
       panY.set(event.translationY);
       singleHapticOnChange(event);
