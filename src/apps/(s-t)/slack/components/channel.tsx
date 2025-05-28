@@ -6,19 +6,17 @@ import { Chat } from "./chat";
 import { ChannelContainer } from "./channel-container";
 import { ColorBackground } from "./color-background";
 import { Channel as ChannelType } from "../lib/types";
-import { SharedValue } from "react-native-reanimated";
 
 type Props = {
   channel: ChannelType;
   index: number;
   total: number;
-  activeChannelIndex: SharedValue<number>;
 };
 
-export const Channel: FC<Props> = ({ channel, index, total, activeChannelIndex }) => {
+export const Channel: FC<Props> = ({ channel, index, total }) => {
   return (
-    <ChannelAnimationProvider index={index} activeChannelIndex={activeChannelIndex} total={total}>
-      <ChannelContainer index={index} activeChannelIndex={activeChannelIndex} total={total}>
+    <ChannelAnimationProvider index={index} total={total}>
+      <ChannelContainer index={index} total={total}>
         <Chat channel={channel} />
         <ColorBackground />
         <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between pointer-events-none">

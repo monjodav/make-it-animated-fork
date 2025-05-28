@@ -1,28 +1,19 @@
 import React, { FC, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  SharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import { useActiveChannelIndex } from "../lib/provider/active-channel-index";
 
 type Props = {
   index: number;
-  activeChannelIndex: SharedValue<number>;
   total: number;
 };
 
-export const ChannelContainer: FC<PropsWithChildren<Props>> = ({
-  children,
-  index,
-  activeChannelIndex,
-  total,
-}) => {
+export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index, total }) => {
   const { width, height } = useWindowDimensions();
 
   const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
+  const { activeChannelIndex } = useActiveChannelIndex();
 
   const rContainerStyle = useAnimatedStyle(() => {
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
