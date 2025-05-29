@@ -1,4 +1,4 @@
-import { Canvas, Path, Skia, usePathInterpolation } from "@shopify/react-native-skia";
+import { Canvas, Path, Skia } from "@shopify/react-native-skia";
 import React, { FC } from "react";
 import { Extrapolation, useDerivedValue, withTiming } from "react-native-reanimated";
 import { StyleSheet, View, Text } from "react-native";

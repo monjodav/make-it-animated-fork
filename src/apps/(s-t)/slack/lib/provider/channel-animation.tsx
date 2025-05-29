@@ -10,13 +10,13 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { useSingleHapticOnPanGesture } from "../hooks/use-single-haptic-on-pan-gesture";
-import { useActiveChannelIndex } from "./active-channel-index";
 import { useUnreadStore } from "../store/unread";
 import { ChannelStatus } from "../types";
 
 const MIN_VELOCITY = 500;
 
 type ContextValue = {
+  activeChannelIndex: SharedValue<number>;
   panDistance: number;
   panX: SharedValue<number>;
   panY: SharedValue<number>;
@@ -27,29 +27,15 @@ type ContextValue = {
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 type Props = {
-  index: number;
   total: number;
 };
 
-export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
-  children,
-  index,
-  total,
-}) => {
+export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ children, total }) => {
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
 
   const lastItemIndex = total - 1;
-
-  const { activeChannelIndex } = useActiveChannelIndex();
-
-  const popChannel = useUnreadStore.use.popChannel();
-
-  const handlePopChannel = (status: ChannelStatus) => {
-    setTimeout(() => {
-      popChannel(status);
-    }, 500);
-  };
+  const activeChannelIndex = useSharedValue(lastItemIndex);
 
   const panX = useSharedValue(0);
   const panY = useSharedValue(0);
@@ -61,13 +47,23 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
     axis: "x",
   });
 
+  const popChannel = useUnreadStore.use.popChannel();
+
+  const handlePopChannel = (status: ChannelStatus) => {
+    setTimeout(() => {
+      popChannel(status);
+      panX.set(0);
+      panY.set(0);
+    }, 200);
+  };
+
   const gesture = Gesture.Pan()
     .onStart((event) => {
       isDragging.set(true);
       absoluteYAnchor.set(event.absoluteY);
     })
     .onChange((event) => {
-      const progress = index - Math.abs(event.translationX) / panDistance;
+      const progress = lastItemIndex - Math.abs(event.translationX) / panDistance;
       activeChannelIndex.set(progress < lastItemIndex - 1 ? lastItemIndex - 1 : progress);
 
       panX.set(event.translationX);
@@ -92,7 +88,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({
       }
     });
 
-  const value = { panDistance, panX, panY, absoluteYAnchor, isDragging };
+  const value = { activeChannelIndex, panDistance, panX, panY, absoluteYAnchor, isDragging };
 
   return (
     <ChannelAnimationContext.Provider value={value}>

@@ -4,7 +4,7 @@ import { Channel } from "../components/channel";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useUnreadStore } from "../lib/store/unread";
-import { ActiveChannelIndexProvider } from "../lib/provider/active-channel-index";
+import { ChannelAnimationProvider } from "../lib/provider/channel-animation";
 
 export const Unread: FC = () => {
   const insets = useSafeAreaInsets();
@@ -12,7 +12,7 @@ export const Unread: FC = () => {
   const unreadChannels = useUnreadStore.use.unreadChannels();
 
   return (
-    <ActiveChannelIndexProvider>
+    <ChannelAnimationProvider total={unreadChannels.length}>
       <View
         className="flex-1 px-5"
         style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
@@ -43,7 +43,7 @@ export const Unread: FC = () => {
           </Pressable>
         </View>
       </View>
-    </ActiveChannelIndexProvider>
+    </ChannelAnimationProvider>
   );
 };
 

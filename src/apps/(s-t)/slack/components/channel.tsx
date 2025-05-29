@@ -1,6 +1,5 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import { ChannelAnimationProvider } from "../lib/provider/channel-animation";
 import { MarkView } from "./mark-view";
 import { Chat } from "./chat";
 import { ChannelContainer } from "./channel-container";
@@ -14,16 +13,20 @@ type Props = {
 };
 
 export const Channel: FC<Props> = ({ channel, index, total }) => {
+  const isLast = index === total - 1;
+
   return (
-    <ChannelAnimationProvider index={index} total={total}>
-      <ChannelContainer index={index} total={total}>
-        <Chat channel={channel} />
-        <ColorBackground />
-        <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between pointer-events-none">
-          <MarkView variant="keep-read" />
-          <MarkView variant="keep-unread" />
-        </View>
-      </ChannelContainer>
-    </ChannelAnimationProvider>
+    <ChannelContainer index={index} total={total}>
+      <Chat channel={channel} />
+      {isLast && (
+        <>
+          <ColorBackground />
+          <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between pointer-events-none">
+            <MarkView variant="keep-read" />
+            <MarkView variant="keep-unread" />
+          </View>
+        </>
+      )}
+    </ChannelContainer>
   );
 };

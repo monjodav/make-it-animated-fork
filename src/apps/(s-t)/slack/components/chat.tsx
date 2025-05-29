@@ -1,7 +1,7 @@
 import { ChevronDown, Mic, Plus } from "lucide-react-native";
 import React, { FC } from "react";
-import { View, FlatList, Text, Pressable } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { View, Text, Pressable } from "react-native";
+import { FlatList, TextInput } from "react-native-gesture-handler";
 import { Channel as ChannelType } from "../lib/types";
 
 type Props = {

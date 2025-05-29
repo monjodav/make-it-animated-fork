@@ -2,7 +2,6 @@ import React, { FC, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { useActiveChannelIndex } from "../lib/provider/active-channel-index";
 
 type Props = {
   index: number;
@@ -12,8 +11,11 @@ type Props = {
 export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index, total }) => {
   const { width, height } = useWindowDimensions();
 
-  const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
-  const { activeChannelIndex } = useActiveChannelIndex();
+  const { activeChannelIndex, panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
+
+  const isLast = index === total - 1;
+  const isSecondLast = index === total - 2;
+  const isThirdLast = index === total - 3;
 
   const rContainerStyle = useAnimatedStyle(() => {
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
@@ -37,16 +39,16 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
 
     return {
       top,
-      opacity: [total - 1, total - 2, total - 3].includes(index) ? 1 : 0,
+      opacity: isLast || isSecondLast || isThirdLast ? 1 : 0,
       transform: [
         {
-          translateX: panX.value,
+          translateX: isLast ? panX.value : 0,
         },
         {
-          translateY: panY.value,
+          translateY: isLast ? panY.value : 0,
         },
         {
-          rotate: `${rotate}deg`,
+          rotate: isLast ? `${rotate}deg` : `${0}deg`,
         },
         {
           scale,
