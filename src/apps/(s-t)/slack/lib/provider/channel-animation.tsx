@@ -1,4 +1,4 @@
-import { createContext, FC, PropsWithChildren, useContext } from "react";
+import { createContext, FC, PropsWithChildren, useCallback, useContext } from "react";
 import { useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
@@ -22,6 +22,7 @@ type ContextValue = {
   panY: SharedValue<number>;
   absoluteYAnchor: SharedValue<number>;
   isDragging: SharedValue<boolean>;
+  handlePopChannel: (status: ChannelStatus) => void;
 };
 
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
@@ -49,13 +50,16 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ childre
 
   const popChannel = useUnreadStore.use.popChannel();
 
-  const handlePopChannel = (status: ChannelStatus) => {
-    setTimeout(() => {
-      popChannel(status);
-      panX.set(0);
-      panY.set(0);
-    }, 200);
-  };
+  const handlePopChannel = useCallback(
+    (status: ChannelStatus) => {
+      setTimeout(() => {
+        popChannel(status);
+        panX.set(0);
+        panY.set(0);
+      }, 200);
+    },
+    [popChannel]
+  );
 
   const gesture = Gesture.Pan()
     .onStart((event) => {
@@ -88,7 +92,15 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ childre
       }
     });
 
-  const value = { activeChannelIndex, panDistance, panX, panY, absoluteYAnchor, isDragging };
+  const value = {
+    activeChannelIndex,
+    panDistance,
+    panX,
+    panY,
+    absoluteYAnchor,
+    isDragging,
+    handlePopChannel,
+  };
 
   return (
     <ChannelAnimationContext.Provider value={value}>
