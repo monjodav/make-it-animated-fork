@@ -3,19 +3,25 @@ import { View, Text, Pressable, StyleSheet, useWindowDimensions } from "react-na
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import { withTiming } from "react-native-reanimated";
 
-export const ChannelFooter: FC = () => {
+const DURATION = 600;
+
+export const UnreadFooter: FC = () => {
   const { width } = useWindowDimensions();
-  const { handlePopChannel, panX, activeChannelIndex } = useChannelAnimation();
+  const { handlePopChannel, panX, panY, isDragging, activeChannelIndex } = useChannelAnimation();
 
   const handleKeepUnread = () => {
-    panX.set(withTiming(-width * 2));
-    activeChannelIndex.set(activeChannelIndex.value - 1);
+    isDragging.set(true);
+    panY.set(0);
+    panX.set(withTiming(-width * 2, { duration: DURATION }));
+    activeChannelIndex.set(withTiming(activeChannelIndex.value - 1, { duration: DURATION }));
     handlePopChannel("unread");
   };
 
   const handleMarkAsRead = () => {
-    panX.set(withTiming(width * 2));
-    activeChannelIndex.set(activeChannelIndex.value - 1);
+    isDragging.set(true);
+    panY.set(0);
+    panX.set(withTiming(width * 2, { duration: DURATION }));
+    activeChannelIndex.set(withTiming(activeChannelIndex.value - 1, { duration: DURATION }));
     handlePopChannel("read");
   };
 

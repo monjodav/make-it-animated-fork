@@ -56,7 +56,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ childre
         popChannel(status);
         panX.set(0);
         panY.set(0);
-      }, 200);
+      }, 500);
     },
     [popChannel]
   );

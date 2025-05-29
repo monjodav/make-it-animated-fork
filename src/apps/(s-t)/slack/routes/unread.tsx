@@ -5,7 +5,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useUnreadStore } from "../lib/store/unread";
 import { ChannelAnimationProvider } from "../lib/provider/channel-animation";
-import { ChannelFooter } from "../components/channel-footer";
+import { UnreadFooter } from "../components/unread-footer";
+import { UnreadHeader } from "../components/unread-header";
 
 export const Unread: FC = () => {
   const insets = useSafeAreaInsets();
@@ -16,9 +17,10 @@ export const Unread: FC = () => {
     <ChannelAnimationProvider total={unreadChannels.length}>
       <View
         className="flex-1 px-5"
-        style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+        style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}
       >
         <LinearGradient colors={["#013D60", "#001A2C"]} style={StyleSheet.absoluteFill} />
+        <UnreadHeader total={unreadChannels.length} />
         <View className="flex-1">
           {unreadChannels.map((channel, index) => (
             <Channel
@@ -29,7 +31,7 @@ export const Unread: FC = () => {
             />
           ))}
         </View>
-        <ChannelFooter />
+        <UnreadFooter />
       </View>
     </ChannelAnimationProvider>
   );
