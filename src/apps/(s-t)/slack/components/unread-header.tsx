@@ -47,10 +47,10 @@ export const UnreadHeader: FC = () => {
           withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );
         titleTransformY.set(
-          withSequence(withTiming(-6, { duration: 0 }), withTiming(0, { duration: DURATION }))
+          withSequence(withTiming(-4, { duration: 0 }), withTiming(0, { duration: DURATION }))
         );
         titleOpacity.set(
-          withSequence(withTiming(0, { duration: 0 }), withTiming(1, { duration: DURATION }))
+          withSequence(withTiming(0.5, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );
       }
     }

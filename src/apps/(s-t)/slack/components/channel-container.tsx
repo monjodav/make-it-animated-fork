@@ -18,6 +18,7 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
     const isLast = index === prevChannelIndex.value;
     const isSecondLast = index === prevChannelIndex.value - 1;
     const isThirdLast = index === prevChannelIndex.value - 2;
+    const isNextToLast = index === prevChannelIndex.value + 1;
 
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
 
@@ -40,7 +41,7 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
 
     return {
       top,
-      opacity: isLast || isSecondLast || isThirdLast ? 1 : 0,
+      opacity: isLast || isSecondLast || isThirdLast || isNextToLast ? 1 : 0,
       transform: [
         {
           translateX: panX.value,
