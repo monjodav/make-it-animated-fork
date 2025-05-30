@@ -22,13 +22,13 @@ type ContextValue = {
   panX: SharedValue<number>;
   panY: SharedValue<number>;
   absoluteYAnchor: SharedValue<number>;
-  handlePopChannel: (status: ChannelStatus) => void;
+  handleChannelStatus: (status: ChannelStatus) => void;
 };
 
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { currentChannelIndex, prevChannelIndex, isDragging, isDone } = useUnreadAnimation();
+  const { currentChannelIndex, prevChannelIndex, isDone, isDecreasing } = useUnreadAnimation();
 
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
@@ -44,18 +44,16 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const popChannel = useUnreadStore.use.popChannel();
 
-  const handlePopChannel = useCallback((status: ChannelStatus) => {
-    if (prevChannelIndex.get() === 0) {
+  const handleChannelStatus = useCallback((status: ChannelStatus) => {
+    if (prevChannelIndex.get() < 0) {
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    prevChannelIndex.set(Math.round(currentChannelIndex.get()));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const gesture = Gesture.Pan()
     .onBegin((event) => {
-      isDragging.set(true);
       absoluteYAnchor.set(event.absoluteY);
       prevChannelIndex.set(Math.round(currentChannelIndex.get()));
     })
@@ -70,8 +68,11 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       singleHapticOnChange(event);
     })
     .onEnd((event) => {
-      isDragging.set(false);
       if (Math.abs(event.velocityX) > MIN_VELOCITY || Math.abs(event.translationX) > panDistance) {
+        isDecreasing.set(true);
+
+        prevChannelIndex.set(Math.round(currentChannelIndex.get()));
+
         panX.set(withTiming(width * 2 * Math.sign(event.velocityX)));
         panY.set(
           withDecay({
@@ -80,7 +81,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
         );
 
         const status = event.translationX > 0 ? "read" : "unread";
-        runOnJS(handlePopChannel)(status);
+        runOnJS(handleChannelStatus)(status);
       } else {
         panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
         panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
@@ -93,7 +94,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     panX,
     panY,
     absoluteYAnchor,
-    handlePopChannel,
+    handleChannelStatus,
   };
 
   return (

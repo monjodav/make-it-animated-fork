@@ -7,7 +7,6 @@ import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import { EyeClosed } from "lucide-react-native";
 import { colorKit } from "reanimated-color-picker";
-import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 const SIZE = 60;
 const STROKE_WIDTH = 3;
@@ -20,19 +19,18 @@ type Props = {
 };
 
 export const MarkView: FC<Props> = ({ variant }) => {
-  const { isDragging } = useUnreadAnimation();
   const { panX, panDistance } = useChannelAnimation();
 
   const sign = variant === "keep-read" ? 1 : -1;
 
   const rContainerStyle = useAnimatedStyle(() => {
-    if (!isDragging.value) {
+    if (variant === "keep-read") {
       return {
-        opacity: withTiming(0, { duration: 100 }),
+        opacity: interpolate(panX.value, [20, sign * panDistance], [0, 1], Extrapolation.CLAMP),
       };
     }
     return {
-      opacity: interpolate(panX.value, [0, sign * panDistance], [0, 1], Extrapolation.CLAMP),
+      opacity: interpolate(panX.value, [-20, sign * panDistance], [0, 1], Extrapolation.CLAMP),
     };
   });
 

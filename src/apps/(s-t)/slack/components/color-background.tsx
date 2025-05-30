@@ -1,38 +1,21 @@
 import React, { FC } from "react";
 import { View, StyleSheet } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
-import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 export const ColorBackground: FC = () => {
-  const { isDragging } = useUnreadAnimation();
   const { panX, panDistance } = useChannelAnimation();
 
   const rGreenStyle = useAnimatedStyle(() => {
-    if (!isDragging.value) {
-      return {
-        opacity: withTiming(0, { duration: 100 }),
-      };
-    }
     return {
-      opacity: interpolate(panX.value, [0, panDistance], [0, 0.8], Extrapolation.CLAMP),
+      opacity: interpolate(panX.value, [20, panDistance], [0, 0.8], Extrapolation.CLAMP),
     };
   });
 
   const rBlueStyle = useAnimatedStyle(() => {
-    if (!isDragging.value) {
-      return {
-        opacity: withTiming(0, { duration: 100 }),
-      };
-    }
     return {
-      opacity: interpolate(panX.value, [0, -panDistance], [0, 0.8], Extrapolation.CLAMP),
+      opacity: interpolate(panX.value, [-20, -panDistance], [0, 0.8], Extrapolation.CLAMP),
     };
   });
 

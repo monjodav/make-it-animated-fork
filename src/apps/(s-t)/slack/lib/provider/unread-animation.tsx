@@ -1,12 +1,14 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
-import { SharedValue, useSharedValue } from "react-native-reanimated";
+import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { useUnreadStore } from "../store/unread";
 
 type ContextValue = {
   currentChannelIndex: SharedValue<number>;
   prevChannelIndex: SharedValue<number>;
-  isDragging: SharedValue<boolean>;
+  isDecreasing: SharedValue<boolean>;
   isDone: SharedValue<boolean>;
+  isKeepUnreadPressed: SharedValue<boolean>;
+  isMarkAsReadPressed: SharedValue<boolean>;
 };
 
 const UnreadAnimationContext = createContext<ContextValue>({} as ContextValue);
@@ -17,11 +19,39 @@ export const UnreadAnimationProvider: FC<PropsWithChildren> = ({ children }) => 
 
   const currentChannelIndex = useSharedValue(lastItemIndex);
   const prevChannelIndex = useSharedValue(lastItemIndex);
-  const isDragging = useSharedValue(false);
-
+  const isDecreasing = useSharedValue(false);
   const isDone = useSharedValue(false);
 
-  const value = { currentChannelIndex, prevChannelIndex, isDone, isDragging };
+  const isKeepUnreadPressed = useSharedValue(false);
+  const isMarkAsReadPressed = useSharedValue(false);
+
+  const resetDecreasing = () => {
+    setTimeout(() => {
+      isDecreasing.set(false);
+    }, 200);
+  };
+
+  useAnimatedReaction(
+    () => {
+      return {
+        isDecreasingValue: isDecreasing.value,
+      };
+    },
+    ({ isDecreasingValue }) => {
+      if (isDecreasingValue) {
+        runOnJS(resetDecreasing)();
+      }
+    }
+  );
+
+  const value = {
+    currentChannelIndex,
+    prevChannelIndex,
+    isDecreasing,
+    isDone,
+    isKeepUnreadPressed,
+    isMarkAsReadPressed,
+  };
 
   return (
     <UnreadAnimationContext.Provider value={value}>{children}</UnreadAnimationContext.Provider>

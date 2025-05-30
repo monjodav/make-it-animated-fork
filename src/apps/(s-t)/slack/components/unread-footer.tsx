@@ -1,40 +1,36 @@
 import React, { FC } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { withTiming } from "react-native-reanimated";
+import { Text, Pressable, StyleSheet } from "react-native";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
-const DURATION = 600;
-
 export const UnreadFooter: FC = () => {
-  const { currentChannelIndex, isDragging } = useUnreadAnimation();
+  const { isKeepUnreadPressed, isMarkAsReadPressed } = useUnreadAnimation();
 
-  const handleKeepUnread = () => {
-    isDragging.set(true);
-    currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: DURATION }));
-  };
+  const rContainerStyle = useAnimatedStyle(() => {
+    const disabled = isKeepUnreadPressed.get() || isMarkAsReadPressed.get();
 
-  const handleMarkAsRead = () => {
-    isDragging.set(true);
-    currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: DURATION }));
-  };
+    return {
+      pointerEvents: disabled ? "none" : "auto",
+    };
+  });
 
   return (
-    <View className="flex-row gap-5 pt-6 items-center">
+    <Animated.View className="flex-row gap-5 pt-6 items-center" style={rContainerStyle}>
       <Pressable
         className="flex-1 p-[14px] bg-neutral-900 border border-neutral-700/50 rounded-2xl items-center justify-center"
         style={styles.borderCurve}
-        onPress={handleKeepUnread}
+        onPress={() => isKeepUnreadPressed.set(true)}
       >
         <Text className="text-lg font-semibold text-neutral-300">Keep Unread</Text>
       </Pressable>
       <Pressable
         className="flex-1 p-[12px] bg-emerald-900 border border-emerald-700/50 rounded-2xl items-center justify-center"
         style={styles.borderCurve}
-        onPress={handleMarkAsRead}
+        onPress={() => isMarkAsReadPressed.set(true)}
       >
         <Text className="text-lg font-semibold text-neutral-300">Mark as Read</Text>
       </Pressable>
-    </View>
+    </Animated.View>
   );
 };
 

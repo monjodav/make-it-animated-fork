@@ -16,7 +16,7 @@ import { ReText } from "react-native-redash";
 const DURATION = 200;
 
 export const UnreadHeader: FC = () => {
-  const { currentChannelIndex, prevChannelIndex, isDragging, isDone } = useUnreadAnimation();
+  const { prevChannelIndex, isDone, isDecreasing } = useUnreadAnimation();
 
   const rTitleContainerStyle = useAnimatedStyle(() => {
     return {
@@ -26,7 +26,7 @@ export const UnreadHeader: FC = () => {
   });
 
   const numberOfLeftChannels = useDerivedValue(() => {
-    return Math.max(prevChannelIndex.value + 1, 1).toFixed(0);
+    return Math.max(prevChannelIndex.get() + 1, 1).toFixed(0);
   });
 
   const titleScale = useSharedValue(1);
@@ -35,14 +35,10 @@ export const UnreadHeader: FC = () => {
 
   useAnimatedReaction(
     () => ({
-      prevChannelIndexValue: prevChannelIndex.value,
-      isDraggingValue: isDragging.value,
+      isDecreasingValue: isDecreasing.value,
     }),
-    ({ prevChannelIndexValue, isDraggingValue }) => {
-      if (isDraggingValue) {
-        return;
-      }
-      if (prevChannelIndexValue - currentChannelIndex.get() === 1) {
+    ({ isDecreasingValue }) => {
+      if (isDecreasingValue) {
         titleScale.set(
           withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );

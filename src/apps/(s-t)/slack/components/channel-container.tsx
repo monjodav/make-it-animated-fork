@@ -1,7 +1,14 @@
 import React, { FC, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  runOnJS,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 type Props = {
@@ -11,8 +18,60 @@ type Props = {
 export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
   const { width, height } = useWindowDimensions();
 
-  const { currentChannelIndex, prevChannelIndex } = useUnreadAnimation();
-  const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
+  const {
+    currentChannelIndex,
+    prevChannelIndex,
+    isKeepUnreadPressed,
+    isMarkAsReadPressed,
+    isDecreasing,
+  } = useUnreadAnimation();
+  const { panX, panY, absoluteYAnchor, panDistance, handleChannelStatus } = useChannelAnimation();
+
+  const resetKeepUnreadPressed = () => {
+    setTimeout(() => {
+      isKeepUnreadPressed.set(false);
+    }, 250);
+  };
+
+  const resetMarkAsReadPressed = () => {
+    setTimeout(() => {
+      isMarkAsReadPressed.set(false);
+    }, 250);
+  };
+
+  useAnimatedReaction(
+    () => {
+      return {
+        isKeepUnreadPressedValue: isKeepUnreadPressed.value,
+        isMarkAsReadPressedValue: isMarkAsReadPressed.value,
+      };
+    },
+    ({ isKeepUnreadPressedValue, isMarkAsReadPressedValue }) => {
+      if (index !== Math.round(currentChannelIndex.get())) {
+        return;
+      }
+
+      if (isKeepUnreadPressedValue) {
+        isDecreasing.set(true);
+        absoluteYAnchor.set(0);
+        prevChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
+        currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: 500 }));
+        panX.set(withTiming(-width * 2, { duration: 500 }));
+        runOnJS(handleChannelStatus)("unread");
+        runOnJS(resetKeepUnreadPressed)();
+      }
+
+      if (isMarkAsReadPressedValue) {
+        isDecreasing.set(true);
+        absoluteYAnchor.set(0);
+        prevChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
+        currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: 500 }));
+        panX.set(withTiming(width * 2, { duration: 500 }));
+        runOnJS(handleChannelStatus)("read");
+        runOnJS(resetMarkAsReadPressed)();
+      }
+    }
+  );
 
   const rContainerStyle = useAnimatedStyle(() => {
     const isLast = index === prevChannelIndex.value;
