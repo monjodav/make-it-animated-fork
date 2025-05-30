@@ -1,21 +1,16 @@
 import React, { FC } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useChannelAnimation } from "../lib/provider/channel-animation";
 import { useUnreadStore } from "../lib/store/unread";
+import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 const EASING = Easing.out(Easing.ease);
 
-type Props = {
-  total: number;
-};
-
-export const UnreadDone: FC<Props> = ({ total }) => {
-  const { isDone } = useChannelAnimation();
+export const UnreadDone: FC = () => {
+  const { isDone } = useUnreadAnimation();
   const resetStore = useUnreadStore.use.reset();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    console.log("🔴", isDone.value); // VS --------- Remove Log
     return {
       opacity: withTiming(isDone.value ? 1 : 0, { easing: EASING }),
       pointerEvents: isDone.value ? "auto" : "none",

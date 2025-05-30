@@ -8,9 +8,11 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
+import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 export const ColorBackground: FC = () => {
-  const { panX, panDistance, isDragging } = useChannelAnimation();
+  const { isDragging } = useUnreadAnimation();
+  const { panX, panDistance } = useChannelAnimation();
 
   const rGreenStyle = useAnimatedStyle(() => {
     if (!isDragging.value) {

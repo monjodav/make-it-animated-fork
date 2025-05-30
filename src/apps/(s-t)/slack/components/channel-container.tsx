@@ -2,36 +2,37 @@ import React, { FC, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 type Props = {
   index: number;
-  total: number;
 };
 
-export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index, total }) => {
+export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
   const { width, height } = useWindowDimensions();
 
-  const { activeChannelIndex, panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
-
-  const isLast = index === total - 1;
-  const isSecondLast = index === total - 2;
-  const isThirdLast = index === total - 3;
+  const { currentChannelIndex, prevChannelIndex } = useUnreadAnimation();
+  const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
+    const isLast = index === prevChannelIndex.value;
+    const isSecondLast = index === prevChannelIndex.value - 1;
+    const isThirdLast = index === prevChannelIndex.value - 2;
+
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
 
     const sign = absoluteYAnchor.value > height / 2 ? -1 : 1;
     const rotate = interpolate(panX.value, [0, panDistance], [0, sign * 4]);
 
     const top = interpolate(
-      activeChannelIndex.value,
+      currentChannelIndex.value,
       inputRange,
       [0, 0, 0, width * 0.07, width * 0.01],
       Extrapolation.CLAMP
     );
 
     const scale = interpolate(
-      activeChannelIndex.value,
+      currentChannelIndex.value,
       inputRange,
       [1, 1, 1, 0.95, 0.95],
       Extrapolation.CLAMP
@@ -42,13 +43,13 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
       opacity: isLast || isSecondLast || isThirdLast ? 1 : 0,
       transform: [
         {
-          translateX: isLast ? panX.value : 0,
+          translateX: panX.value,
         },
         {
-          translateY: isLast ? panY.value : 0,
+          translateY: panY.value,
         },
         {
-          rotate: isLast ? `${rotate}deg` : `${0}deg`,
+          rotate: `${rotate}deg`,
         },
         {
           scale,

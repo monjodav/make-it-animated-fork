@@ -8,6 +8,7 @@ import { ChannelAnimationProvider } from "../lib/provider/channel-animation";
 import { UnreadFooter } from "../components/unread-footer";
 import { UnreadHeader } from "../components/unread-header";
 import { UnreadDone } from "../components/unread-done";
+import { UnreadAnimationProvider } from "../lib/provider/unread-animation";
 
 export const Unread: FC = () => {
   const insets = useSafeAreaInsets();
@@ -15,28 +16,25 @@ export const Unread: FC = () => {
   const unreadChannels = useUnreadStore.use.unreadChannels();
 
   return (
-    <ChannelAnimationProvider total={unreadChannels.length}>
+    <UnreadAnimationProvider>
       <View
         className="flex-1 px-5"
         style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}
       >
         <LinearGradient colors={["#013D60", "#001A2C"]} style={StyleSheet.absoluteFill} />
-        <UnreadHeader total={unreadChannels.length} />
+        <UnreadHeader />
         <View className="flex-1">
           <View className="flex-1">
             {unreadChannels.map((channel, index) => (
-              <Channel
-                key={channel.id}
-                channel={channel}
-                index={index}
-                total={unreadChannels.length}
-              />
+              <ChannelAnimationProvider key={channel.id}>
+                <Channel channel={channel} index={index} />
+              </ChannelAnimationProvider>
             ))}
           </View>
           <UnreadFooter />
-          <UnreadDone total={unreadChannels.length} />
+          <UnreadDone />
         </View>
       </View>
-    </ChannelAnimationProvider>
+    </UnreadAnimationProvider>
   );
 };

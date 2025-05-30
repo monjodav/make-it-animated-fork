@@ -9,24 +9,17 @@ import { Channel as ChannelType } from "../lib/types";
 type Props = {
   channel: ChannelType;
   index: number;
-  total: number;
 };
 
-export const Channel: FC<Props> = ({ channel, index, total }) => {
-  const isLast = index === total - 1;
-
+export const Channel: FC<Props> = ({ channel, index }) => {
   return (
-    <ChannelContainer index={index} total={total}>
+    <ChannelContainer index={index}>
       <Chat channel={channel} />
-      {isLast && (
-        <>
-          <ColorBackground />
-          <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between pointer-events-none">
-            <MarkView variant="keep-read" />
-            <MarkView variant="keep-unread" />
-          </View>
-        </>
-      )}
+      <ColorBackground />
+      <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between pointer-events-none">
+        <MarkView variant="keep-read" />
+        <MarkView variant="keep-unread" />
+      </View>
     </ChannelContainer>
   );
 };

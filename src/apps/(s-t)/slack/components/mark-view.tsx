@@ -7,6 +7,7 @@ import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import { EyeClosed } from "lucide-react-native";
 import { colorKit } from "reanimated-color-picker";
+import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 const SIZE = 60;
 const STROKE_WIDTH = 3;
@@ -19,7 +20,8 @@ type Props = {
 };
 
 export const MarkView: FC<Props> = ({ variant }) => {
-  const { panX, panDistance, isDragging } = useChannelAnimation();
+  const { isDragging } = useUnreadAnimation();
+  const { panX, panDistance } = useChannelAnimation();
 
   const sign = variant === "keep-read" ? 1 : -1;
 

@@ -1,20 +1,65 @@
 import { ChevronLeft, X } from "lucide-react-native";
 import React, { FC } from "react";
-import { View, Text, Pressable, Alert, StyleSheet } from "react-native";
-import { useChannelAnimation } from "../lib/provider/channel-animation";
-import Animated, { FadeInUp, useAnimatedStyle, withTiming, ZoomIn } from "react-native-reanimated";
+import { View, Pressable, Alert, StyleSheet } from "react-native";
+import Animated, {
+  LinearTransition,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
+import { useUnreadAnimation } from "../lib/provider/unread-animation";
+import { ReText } from "react-native-redash";
 
-type Props = {
-  total: number;
-};
+const DURATION = 200;
 
-export const UnreadHeader: FC<Props> = ({ total }) => {
-  const { isDone } = useChannelAnimation();
+export const UnreadHeader: FC = () => {
+  const { currentChannelIndex, prevChannelIndex, isDragging, isDone } = useUnreadAnimation();
+
+  const rTitleContainerStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isDone.value ? 0 : 1, { duration: DURATION }),
+      transform: [{ translateY: withTiming(isDone.value ? -20 : 0, { duration: DURATION }) }],
+    };
+  });
+
+  const numberOfLeftChannels = useDerivedValue(() => {
+    return Math.max(prevChannelIndex.value + 1, 1).toFixed(0);
+  });
+
+  const titleScale = useSharedValue(1);
+  const titleTransformY = useSharedValue(0);
+  const titleOpacity = useSharedValue(1);
+
+  useAnimatedReaction(
+    () => ({
+      prevChannelIndexValue: prevChannelIndex.value,
+      isDraggingValue: isDragging.value,
+    }),
+    ({ prevChannelIndexValue, isDraggingValue }) => {
+      if (isDraggingValue) {
+        return;
+      }
+      if (prevChannelIndexValue - currentChannelIndex.get() === 1) {
+        titleScale.set(
+          withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
+        );
+        titleTransformY.set(
+          withSequence(withTiming(-6, { duration: 0 }), withTiming(0, { duration: DURATION }))
+        );
+        titleOpacity.set(
+          withSequence(withTiming(0, { duration: 0 }), withTiming(1, { duration: DURATION }))
+        );
+      }
+    }
+  );
 
   const rTitleStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isDone.value ? 0 : 1),
-      transform: [{ translateY: withTiming(isDone.value ? -20 : 0) }],
+      opacity: titleOpacity.value,
+      transform: [{ translateY: titleTransformY.value }, { scale: titleScale.value }],
     };
   });
 
@@ -32,30 +77,20 @@ export const UnreadHeader: FC<Props> = ({ total }) => {
 
   return (
     <View className="flex-row items-center justify-between px-2 mb-3">
-      <Animated.View
-        className="absolute top-0 left-0 right-0 bottom-0 items-center justify-center"
-        style={rTitleStyle}
-      >
-        <View className="flex-row items-center gap-1">
-          <Animated.View
-            key={total}
-            entering={ZoomIn.withInitialValues({
-              transform: [{ scale: 0.85 }],
-            })}
-          >
-            <Animated.Text
-              key={total}
-              entering={FadeInUp.withInitialValues({
-                transform: [{ translateY: -6 }],
-              })}
-              className="text-lg font-bold text-neutral-200"
-            >
-              {total === 0 ? 1 : total}
-            </Animated.Text>
+      <View className="absolute top-0 left-0 right-0 bottom-0 items-center justify-center">
+        <Animated.View
+          className="flex-row items-center gap-1"
+          style={rTitleContainerStyle}
+          layout={LinearTransition}
+        >
+          <Animated.View style={rTitleStyle} layout={LinearTransition}>
+            <ReText text={numberOfLeftChannels} style={styles.text} />
           </Animated.View>
-          <Text className="text-lg font-bold text-neutral-200">Left</Text>
-        </View>
-      </Animated.View>
+          <Animated.Text className="text-lg font-bold text-neutral-200" layout={LinearTransition}>
+            Left
+          </Animated.Text>
+        </Animated.View>
+      </View>
       <Pressable
         className="w-8 h-8 items-center justify-center"
         onPress={() => Alert.alert("Go To Home")}

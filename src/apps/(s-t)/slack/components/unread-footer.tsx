@@ -2,19 +2,21 @@ import React, { FC } from "react";
 import { View, Text, Pressable, StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import { withTiming } from "react-native-reanimated";
+import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 const DURATION = 600;
 
 export const UnreadFooter: FC = () => {
   const { width } = useWindowDimensions();
-  const { handlePopChannel, panX, absoluteYAnchor, isDragging, activeChannelIndex } =
-    useChannelAnimation();
+
+  const { currentChannelIndex, isDragging } = useUnreadAnimation();
+  const { handlePopChannel, panX, absoluteYAnchor } = useChannelAnimation();
 
   const handleKeepUnread = () => {
     isDragging.set(true);
     absoluteYAnchor.set(0);
     panX.set(withTiming(-width * 2, { duration: DURATION }));
-    activeChannelIndex.set(withTiming(activeChannelIndex.value - 1, { duration: DURATION }));
+    currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: DURATION }));
     handlePopChannel("unread");
     setTimeout(() => {
       panX.set(0);
@@ -25,7 +27,7 @@ export const UnreadFooter: FC = () => {
     isDragging.set(true);
     absoluteYAnchor.set(0);
     panX.set(withTiming(width * 2, { duration: DURATION }));
-    activeChannelIndex.set(withTiming(activeChannelIndex.value - 1, { duration: DURATION }));
+    currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: DURATION }));
     handlePopChannel("read");
     setTimeout(() => {
       panX.set(0);
