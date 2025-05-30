@@ -1,17 +1,19 @@
 import { createContext, FC, PropsWithChildren, useCallback, useContext } from "react";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, InteractionManager } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   runOnJS,
   SharedValue,
   useSharedValue,
   withDecay,
+  withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { useSingleHapticOnPanGesture } from "../hooks/use-single-haptic-on-pan-gesture";
 import { useUnreadStore } from "../store/unread";
 import { ChannelStatus } from "../types";
+import * as Haptics from "expo-haptics";
 
 const MIN_VELOCITY = 500;
 
@@ -22,6 +24,7 @@ type ContextValue = {
   panY: SharedValue<number>;
   absoluteYAnchor: SharedValue<number>;
   isDragging: SharedValue<boolean>;
+  isDone: SharedValue<boolean>;
   handlePopChannel: (status: ChannelStatus) => void;
 };
 
@@ -42,6 +45,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ childre
   const panY = useSharedValue(0);
   const absoluteYAnchor = useSharedValue(0);
   const isDragging = useSharedValue(false);
+  const isDone = useSharedValue(false);
 
   const { singleHapticOnChange } = useSingleHapticOnPanGesture({
     triggerOffset: panDistance,
@@ -52,13 +56,18 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ childre
 
   const handlePopChannel = useCallback(
     (status: ChannelStatus) => {
-      setTimeout(() => {
+      if (total === 1) {
+        isDone.set(true);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+      InteractionManager.runAfterInteractions(() => {
         popChannel(status);
-        panX.set(0);
-        panY.set(0);
-      }, 500);
+        // panX.set(0);
+        // panY.set(0);
+      });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [popChannel]
+    [total]
   );
 
   const gesture = Gesture.Pan()
@@ -99,6 +108,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren<Props>> = ({ childre
     panY,
     absoluteYAnchor,
     isDragging,
+    isDone,
     handlePopChannel,
   };
 

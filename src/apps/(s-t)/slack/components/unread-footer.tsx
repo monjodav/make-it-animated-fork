@@ -7,22 +7,29 @@ const DURATION = 600;
 
 export const UnreadFooter: FC = () => {
   const { width } = useWindowDimensions();
-  const { handlePopChannel, panX, panY, isDragging, activeChannelIndex } = useChannelAnimation();
+  const { handlePopChannel, panX, absoluteYAnchor, isDragging, activeChannelIndex } =
+    useChannelAnimation();
 
   const handleKeepUnread = () => {
     isDragging.set(true);
-    panY.set(0);
+    absoluteYAnchor.set(0);
     panX.set(withTiming(-width * 2, { duration: DURATION }));
     activeChannelIndex.set(withTiming(activeChannelIndex.value - 1, { duration: DURATION }));
     handlePopChannel("unread");
+    setTimeout(() => {
+      panX.set(0);
+    }, 200);
   };
 
   const handleMarkAsRead = () => {
     isDragging.set(true);
-    panY.set(0);
+    absoluteYAnchor.set(0);
     panX.set(withTiming(width * 2, { duration: DURATION }));
     activeChannelIndex.set(withTiming(activeChannelIndex.value - 1, { duration: DURATION }));
     handlePopChannel("read");
+    setTimeout(() => {
+      panX.set(0);
+    }, 200);
   };
 
   return (

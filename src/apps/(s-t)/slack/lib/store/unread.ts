@@ -40,6 +40,7 @@ interface State {
 }
 
 interface Actions {
+  reset: () => void;
   popChannel: (status: ChannelStatus) => void;
 }
 
@@ -49,6 +50,9 @@ export const initialState: State = {
 
 const unreadStore = create<State & Actions>()((set) => ({
   ...initialState,
+  reset: () => {
+    set(initialState);
+  },
   // NOTE: we can handle status of the channel here
   popChannel: (status: ChannelStatus) => {
     set((state) => ({
