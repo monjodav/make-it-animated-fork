@@ -1,5 +1,5 @@
 import { createContext, FC, PropsWithChildren, useCallback, useContext } from "react";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, InteractionManager } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   runOnJS,
@@ -45,7 +45,6 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const setChannelStatus = useUnreadStore.use.setChannelStatus();
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
-    console.log("🔴"); // VS --------- Remove Log
     if (currentChannelIndex.get() === -1 && prevChannelIndex.get() === 0) {
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -53,10 +52,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
     if (currentChannelIndex.get() < prevChannelIndex.get()) {
       const channelIndex = currentChannelIndex.get() + 1;
-      setChannelStatus(channelIndex, status);
+      InteractionManager.runAfterInteractions(() => {
+        setChannelStatus(channelIndex, status);
+      });
     } else {
       const channelIndex = currentChannelIndex.get();
-      setChannelStatus(channelIndex, status);
+      InteractionManager.runAfterInteractions(() => {
+        setChannelStatus(channelIndex, status);
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

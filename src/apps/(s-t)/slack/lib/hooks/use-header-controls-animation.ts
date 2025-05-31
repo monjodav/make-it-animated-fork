@@ -16,7 +16,9 @@ export const useHeaderControlsAnimation = (index: number) => {
 
   const resetUndoPressed = () => {
     setTimeout(() => {
+      // Be sure to set undoChannelIndex before handleChannelStatus call to avoid re-render issue on store update
       undoChannelIndex.set(null);
+      handleChannelStatus("unread");
     }, 250);
   };
 
@@ -42,7 +44,6 @@ export const useHeaderControlsAnimation = (index: number) => {
         panX.set(withSpring(0, ANIM_CONFIG));
         panY.set(withSpring(0, ANIM_CONFIG));
 
-        runOnJS(handleChannelStatus)("unread");
         runOnJS(resetUndoPressed)();
       }
     }

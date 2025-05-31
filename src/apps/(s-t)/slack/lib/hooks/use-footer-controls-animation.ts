@@ -22,15 +22,19 @@ export const useFooterControlsAnimation = (index: number) => {
 
   const resetKeepUnreadPressed = () => {
     setTimeout(() => {
+      // Be sure to set isKeepUnreadPressed before handleChannelStatus call to avoid re-render issue on store update
       isKeepUnreadPressed.set(false);
       isDragging.set(false);
+      handleChannelStatus("unread");
     }, TIMEOUT);
   };
 
   const resetMarkAsReadPressed = () => {
     setTimeout(() => {
+      // Be sure to set isMarkAsReadPressed before handleChannelStatus call to avoid re-render issue on store update
       isMarkAsReadPressed.set(false);
       isDragging.set(false);
+      handleChannelStatus("read");
     }, TIMEOUT);
   };
 
@@ -60,14 +64,12 @@ export const useFooterControlsAnimation = (index: number) => {
       if (isKeepUnreadPressedValue) {
         onButtonPressed();
         panX.set(withTiming(-width * 2, { duration: DURATION }));
-        runOnJS(handleChannelStatus)("unread");
         runOnJS(resetKeepUnreadPressed)();
       }
 
       if (isMarkAsReadPressedValue) {
         onButtonPressed();
         panX.set(withTiming(width * 2, { duration: DURATION }));
-        runOnJS(handleChannelStatus)("read");
         runOnJS(resetMarkAsReadPressed)();
       }
     }

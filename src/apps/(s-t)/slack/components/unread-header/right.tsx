@@ -13,6 +13,12 @@ export const Right: FC = () => {
 
   const { currentChannelIndex, undoChannelIndex, isDone } = useUnreadAnimation();
 
+  const rOuterContainerStyle = useAnimatedStyle(() => {
+    return {
+      pointerEvents: undoChannelIndex.get() === null ? "auto" : "none",
+    };
+  });
+
   const rContainerStyle = useAnimatedStyle(() => {
     const show = currentChannelIndex.get() < unreadChannels.length - 1;
 
@@ -24,16 +30,18 @@ export const Right: FC = () => {
   });
 
   return (
-    <AnimatedPressable
-      onPress={() => {
-        undoChannelIndex.set(currentChannelIndex.get() + 1);
-        if (isDone.get()) {
-          isDone.set(false);
-        }
-      }}
-      style={rContainerStyle}
-    >
-      <Text className="text-base font-bold text-neutral-200">Undo</Text>
-    </AnimatedPressable>
+    <Animated.View style={rOuterContainerStyle}>
+      <AnimatedPressable
+        onPress={() => {
+          undoChannelIndex.set(currentChannelIndex.get() + 1);
+          if (isDone.get()) {
+            isDone.set(false);
+          }
+        }}
+        style={rContainerStyle}
+      >
+        <Text className="text-base font-bold text-neutral-200">Undo</Text>
+      </AnimatedPressable>
+    </Animated.View>
   );
 };
