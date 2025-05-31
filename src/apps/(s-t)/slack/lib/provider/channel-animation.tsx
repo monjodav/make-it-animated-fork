@@ -36,6 +36,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const panDistance = width / 4;
 
   const panX = useSharedValue(0);
+  const panXAnchor = useSharedValue(0);
   const panY = useSharedValue(0);
   const absoluteYAnchor = useSharedValue(0);
 
@@ -47,7 +48,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const popChannel = useUnreadStore.use.popChannel();
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
-    console.log("🔴", status); // VS --------- Remove Log
+    console.log("🔴", prevChannelIndex.get(), status); // VS --------- Remove Log
     if (prevChannelIndex.get() < 0) {
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -59,13 +60,11 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     .onBegin((event) => {
       isDragging.set(true);
       absoluteYAnchor.set(event.absoluteY);
-      prevChannelIndex.set(Math.round(currentChannelIndex.get()));
+      panXAnchor.set(Math.round(currentChannelIndex.get()));
     })
     .onChange((event) => {
-      const progress = prevChannelIndex.get() - Math.abs(event.translationX) / panDistance;
-      currentChannelIndex.set(
-        progress < prevChannelIndex.get() - 1 ? prevChannelIndex.get() - 1 : progress
-      );
+      const progress = panXAnchor.get() - Math.abs(event.translationX) / panDistance;
+      currentChannelIndex.set(progress < panXAnchor.get() - 1 ? panXAnchor.get() - 1 : progress);
 
       panX.set(event.translationX);
       panY.set(event.translationY);
