@@ -26,18 +26,18 @@ export const MarkView: FC<Props> = ({ variant }) => {
   const rContainerStyle = useAnimatedStyle(() => {
     if (variant === "keep-read") {
       return {
-        opacity: interpolate(panX.value, [20, sign * panDistance], [0, 1], Extrapolation.CLAMP),
+        opacity: interpolate(panX.get(), [0, sign * panDistance], [0, 1], Extrapolation.CLAMP),
       };
     }
     return {
-      opacity: interpolate(panX.value, [-20, sign * panDistance], [0, 1], Extrapolation.CLAMP),
+      opacity: interpolate(panX.get(), [0, sign * panDistance], [0, 1], Extrapolation.CLAMP),
     };
   });
 
   const rIconContainerStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: withTiming(
-        Math.abs(panX.value) + STROKE_WIDTH / 2 > panDistance ? "white" : TRANSPARENT,
+        Math.abs(panX.get()) + STROKE_WIDTH / 2 > panDistance ? "white" : TRANSPARENT,
         {
           duration: 50,
         }
@@ -50,7 +50,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
     const skPath = Skia.Path.Make();
 
     // Calculate the end angle based on panX (0 to 2π)
-    const progress = Math.abs(panX.value) / panDistance;
+    const progress = Math.abs(panX.get()) / panDistance;
     const endAngle = 2 * Math.PI * progress;
 
     // Draw an arc
@@ -70,7 +70,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
 
   const rIconStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(Math.abs(panX.value) + STROKE_WIDTH / 2 > panDistance ? 1 : 0, {
+      opacity: withTiming(Math.abs(panX.get()) + STROKE_WIDTH / 2 > panDistance ? 1 : 0, {
         duration: 200,
       }),
     };

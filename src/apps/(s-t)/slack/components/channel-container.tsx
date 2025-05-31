@@ -1,14 +1,7 @@
 import React, { FC, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  runOnJS,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 type Props = {
@@ -18,81 +11,29 @@ type Props = {
 export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
   const { width, height } = useWindowDimensions();
 
-  const {
-    currentChannelIndex,
-    prevChannelIndex,
-    isKeepUnreadPressed,
-    isMarkAsReadPressed,
-    isDecreasing,
-  } = useUnreadAnimation();
-  const { panX, panY, absoluteYAnchor, panDistance, handleChannelStatus } = useChannelAnimation();
-
-  const resetKeepUnreadPressed = () => {
-    setTimeout(() => {
-      isKeepUnreadPressed.set(false);
-    }, 250);
-  };
-
-  const resetMarkAsReadPressed = () => {
-    setTimeout(() => {
-      isMarkAsReadPressed.set(false);
-    }, 250);
-  };
-
-  useAnimatedReaction(
-    () => {
-      return {
-        isKeepUnreadPressedValue: isKeepUnreadPressed.value,
-        isMarkAsReadPressedValue: isMarkAsReadPressed.value,
-      };
-    },
-    ({ isKeepUnreadPressedValue, isMarkAsReadPressedValue }) => {
-      if (index !== Math.round(currentChannelIndex.get())) {
-        return;
-      }
-
-      if (isKeepUnreadPressedValue) {
-        isDecreasing.set(true);
-        absoluteYAnchor.set(0);
-        prevChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
-        currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: 500 }));
-        panX.set(withTiming(-width * 2, { duration: 500 }));
-        runOnJS(handleChannelStatus)("unread");
-        runOnJS(resetKeepUnreadPressed)();
-      }
-
-      if (isMarkAsReadPressedValue) {
-        isDecreasing.set(true);
-        absoluteYAnchor.set(0);
-        prevChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
-        currentChannelIndex.set(withTiming(currentChannelIndex.value - 1, { duration: 500 }));
-        panX.set(withTiming(width * 2, { duration: 500 }));
-        runOnJS(handleChannelStatus)("read");
-        runOnJS(resetMarkAsReadPressed)();
-      }
-    }
-  );
+  const { currentChannelIndex, prevChannelIndex } = useUnreadAnimation();
+  const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const isLast = index === prevChannelIndex.value;
-    const isSecondLast = index === prevChannelIndex.value - 1;
-    const isThirdLast = index === prevChannelIndex.value - 2;
-    const isNextToLast = index === prevChannelIndex.value + 1;
+    const isLast = index === prevChannelIndex.get();
+    const isSecondLast = index === prevChannelIndex.get() - 1;
+    const isThirdLast = index === prevChannelIndex.get() - 2;
+    const isNextToLast = index === prevChannelIndex.get() + 1;
 
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
 
-    const sign = absoluteYAnchor.value > height / 2 ? -1 : 1;
-    const rotate = interpolate(panX.value, [0, panDistance], [0, sign * 4]);
+    const sign = absoluteYAnchor.get() > height / 2 ? -1 : 1;
+    const rotate = interpolate(panX.get(), [0, panDistance], [0, sign * 4]);
 
     const top = interpolate(
-      currentChannelIndex.value,
+      currentChannelIndex.get(),
       inputRange,
       [0, 0, 0, width * 0.07, width * 0.01],
       Extrapolation.CLAMP
     );
 
     const scale = interpolate(
-      currentChannelIndex.value,
+      currentChannelIndex.get(),
       inputRange,
       [1, 1, 1, 0.95, 0.95],
       Extrapolation.CLAMP
@@ -103,10 +44,10 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
       opacity: isLast || isSecondLast || isThirdLast || isNextToLast ? 1 : 0,
       transform: [
         {
-          translateX: panX.value,
+          translateX: panX.get(),
         },
         {
-          translateY: panY.value,
+          translateY: panY.get(),
         },
         {
           rotate: `${rotate}deg`,

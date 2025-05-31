@@ -1,20 +1,18 @@
 import React, { FC } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useUnreadStore } from "../lib/store/unread";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
 const EASING = Easing.out(Easing.ease);
 
 export const UnreadDone: FC = () => {
   const { isDone } = useUnreadAnimation();
-  const resetStore = useUnreadStore.use.reset();
 
   const rContainerStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isDone.value ? 1 : 0, { easing: EASING }),
-      pointerEvents: isDone.value ? "auto" : "none",
-      transform: [{ scale: withTiming(isDone.value ? 1 : 0.5, { easing: EASING }) }],
+      opacity: withTiming(isDone.get() ? 1 : 0, { easing: EASING }),
+      pointerEvents: isDone.get() ? "auto" : "none",
+      transform: [{ scale: withTiming(isDone.get() ? 1 : 0.5, { easing: EASING }) }],
     };
   });
 
@@ -28,10 +26,7 @@ export const UnreadDone: FC = () => {
       <Pressable
         className="p-4 bg-emerald-900 rounded-2xl items-center justify-center"
         style={styles.borderCurve}
-        onPress={() => {
-          resetStore();
-          isDone.set(false);
-        }}
+        onPress={() => Alert.alert("Done", "Press 'Undo' few times and play with it again")}
       >
         <Text className="text-lg font-semibold text-neutral-200">Done</Text>
       </Pressable>

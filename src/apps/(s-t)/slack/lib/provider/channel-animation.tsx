@@ -6,6 +6,7 @@ import {
   SharedValue,
   useSharedValue,
   withDecay,
+  withSequence,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -18,17 +19,18 @@ import { useUnreadAnimation } from "./unread-animation";
 const MIN_VELOCITY = 500;
 
 type ContextValue = {
-  panDistance: number;
   panX: SharedValue<number>;
   panY: SharedValue<number>;
   absoluteYAnchor: SharedValue<number>;
+  panDistance: number;
   handleChannelStatus: (status: ChannelStatus) => void;
 };
 
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { currentChannelIndex, prevChannelIndex, isDone, isDecreasing } = useUnreadAnimation();
+  const { isDragging, currentChannelIndex, prevChannelIndex, isDone, isDecreasing } =
+    useUnreadAnimation();
 
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
@@ -45,6 +47,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const popChannel = useUnreadStore.use.popChannel();
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
+    console.log("🔴", status); // VS --------- Remove Log
     if (prevChannelIndex.get() < 0) {
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -54,13 +57,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const gesture = Gesture.Pan()
     .onBegin((event) => {
+      isDragging.set(true);
       absoluteYAnchor.set(event.absoluteY);
       prevChannelIndex.set(Math.round(currentChannelIndex.get()));
     })
     .onChange((event) => {
-      const progress = prevChannelIndex.value - Math.abs(event.translationX) / panDistance;
+      const progress = prevChannelIndex.get() - Math.abs(event.translationX) / panDistance;
       currentChannelIndex.set(
-        progress < prevChannelIndex.value - 1 ? prevChannelIndex.value - 1 : progress
+        progress < prevChannelIndex.get() - 1 ? prevChannelIndex.get() - 1 : progress
       );
 
       panX.set(event.translationX);
@@ -68,6 +72,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       singleHapticOnChange(event);
     })
     .onEnd((event) => {
+      isDragging.set(false);
       if (Math.abs(event.velocityX) > MIN_VELOCITY || Math.abs(event.translationX) > panDistance) {
         isDecreasing.set(true);
 
@@ -75,9 +80,12 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
         panX.set(withTiming(width * 2 * Math.sign(event.velocityX)));
         panY.set(
-          withDecay({
-            velocity: event.velocityY,
-          })
+          withSequence(
+            withDecay({
+              velocity: event.velocityY,
+            }),
+            withTiming(0, { duration: 0 })
+          )
         );
 
         const status = event.translationX > 0 ? "read" : "unread";
@@ -85,15 +93,15 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       } else {
         panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
         panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
-        currentChannelIndex.set(withTiming(prevChannelIndex.value, { duration: 100 }));
+        currentChannelIndex.set(withTiming(prevChannelIndex.get(), { duration: 100 }));
       }
     });
 
   const value = {
-    panDistance,
     panX,
     panY,
     absoluteYAnchor,
+    panDistance,
     handleChannelStatus,
   };
 

@@ -3,12 +3,15 @@ import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from "react
 import { useUnreadStore } from "../store/unread";
 
 type ContextValue = {
+  isDragging: SharedValue<boolean>;
   currentChannelIndex: SharedValue<number>;
   prevChannelIndex: SharedValue<number>;
   isDecreasing: SharedValue<boolean>;
-  isDone: SharedValue<boolean>;
+  isIncreasing: SharedValue<boolean>;
   isKeepUnreadPressed: SharedValue<boolean>;
   isMarkAsReadPressed: SharedValue<boolean>;
+  isUndoPressed: SharedValue<boolean>;
+  isDone: SharedValue<boolean>;
 };
 
 const UnreadAnimationContext = createContext<ContextValue>({} as ContextValue);
@@ -17,13 +20,15 @@ export const UnreadAnimationProvider: FC<PropsWithChildren> = ({ children }) => 
   const unreadChannels = useUnreadStore.use.unreadChannels();
   const lastItemIndex = unreadChannels.length - 1;
 
+  const isDragging = useSharedValue(false);
   const currentChannelIndex = useSharedValue(lastItemIndex);
   const prevChannelIndex = useSharedValue(lastItemIndex);
   const isDecreasing = useSharedValue(false);
-  const isDone = useSharedValue(false);
-
+  const isIncreasing = useSharedValue(false);
   const isKeepUnreadPressed = useSharedValue(false);
   const isMarkAsReadPressed = useSharedValue(false);
+  const isUndoPressed = useSharedValue(false);
+  const isDone = useSharedValue(false);
 
   const resetDecreasing = () => {
     setTimeout(() => {
@@ -31,26 +36,39 @@ export const UnreadAnimationProvider: FC<PropsWithChildren> = ({ children }) => 
     }, 200);
   };
 
+  const resetIncreasing = () => {
+    setTimeout(() => {
+      isIncreasing.set(false);
+    }, 200);
+  };
+
   useAnimatedReaction(
     () => {
       return {
-        isDecreasingValue: isDecreasing.value,
+        isDecreasingValue: isDecreasing.get(),
+        isIncreasingValue: isIncreasing.get(),
       };
     },
-    ({ isDecreasingValue }) => {
+    ({ isDecreasingValue, isIncreasingValue }) => {
       if (isDecreasingValue) {
         runOnJS(resetDecreasing)();
+      }
+      if (isIncreasingValue) {
+        runOnJS(resetIncreasing)();
       }
     }
   );
 
   const value = {
+    isDragging,
     currentChannelIndex,
     prevChannelIndex,
     isDecreasing,
-    isDone,
+    isIncreasing,
     isKeepUnreadPressed,
     isMarkAsReadPressed,
+    isUndoPressed,
+    isDone,
   };
 
   return (

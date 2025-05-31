@@ -9,18 +9,18 @@ export const ColorBackground: FC = () => {
 
   const rGreenStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(panX.value, [20, panDistance], [0, 0.8], Extrapolation.CLAMP),
+      opacity: interpolate(panX.get(), [0, panDistance], [0, 0.8], Extrapolation.CLAMP),
     };
   });
 
   const rBlueStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(panX.value, [-20, -panDistance], [0, 0.8], Extrapolation.CLAMP),
+      opacity: interpolate(panX.get(), [0, -panDistance], [0, 0.8], Extrapolation.CLAMP),
     };
   });
 
   return (
-    <View style={StyleSheet.absoluteFill} className="pointer-events-none">
+    <View style={StyleSheet.absoluteFill}>
       <Animated.View style={[StyleSheet.absoluteFill, rGreenStyle]}>
         <LinearGradient
           colors={["#34d399", "#064e3b"]}
