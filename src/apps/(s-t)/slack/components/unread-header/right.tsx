@@ -9,7 +9,7 @@ const EASING = Easing.out(Easing.ease);
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const Right: FC = () => {
-  const unreadChannels = useUnreadStore.use.unreadChannels();
+  const total = useUnreadStore.use.total();
 
   const { currentChannelIndex, undoChannelIndex, isDone } = useUnreadAnimation();
 
@@ -20,7 +20,7 @@ export const Right: FC = () => {
   });
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const show = currentChannelIndex.get() < unreadChannels.length - 1;
+    const show = currentChannelIndex.get() < total - 1;
 
     return {
       pointerEvents: show ? "auto" : "none",

@@ -37,6 +37,7 @@ const initialData: Channel[] = [
 
 interface State {
   unreadChannels: Channel[];
+  total: number;
 }
 
 interface Actions {
@@ -45,6 +46,7 @@ interface Actions {
 
 export const initialState: State = {
   unreadChannels: initialData,
+  total: initialData.length,
 };
 
 const unreadStore = create<State & Actions>()((set) => ({

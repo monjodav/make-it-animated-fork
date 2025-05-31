@@ -16,8 +16,8 @@ type ContextValue = {
 const UnreadAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const UnreadAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const unreadChannels = useUnreadStore.use.unreadChannels();
-  const lastItemIndex = unreadChannels.length - 1;
+  const total = useUnreadStore.use.total();
+  const lastItemIndex = total - 1;
 
   const isDragging = useSharedValue(false);
   const animatedChannelIndex = useSharedValue(lastItemIndex);
