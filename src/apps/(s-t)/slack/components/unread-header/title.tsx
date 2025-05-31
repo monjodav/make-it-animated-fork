@@ -13,7 +13,8 @@ import { ReText } from "react-native-redash";
 import { useUnreadAnimation } from "../../lib/provider/unread-animation";
 
 const DURATION = 200;
-const ENTER_TRANSLATE_Y = 6;
+const ENTER_SCALE = 0.75;
+const ENTER_TRANSLATE_Y = 7;
 
 export const Title: FC = () => {
   const { currentChannelIndex, prevChannelIndex, isDone } = useUnreadAnimation();
@@ -24,6 +25,7 @@ export const Title: FC = () => {
 
   const titleScale = useSharedValue(1);
   const titleTransformY = useSharedValue(0);
+  const titleRotateX = useSharedValue(0);
   const titleOpacity = useSharedValue(1);
 
   const rTitleContainerStyle = useAnimatedStyle(() => {
@@ -36,7 +38,11 @@ export const Title: FC = () => {
   const rReTextStyle = useAnimatedStyle(() => {
     return {
       opacity: titleOpacity.get(),
-      transform: [{ translateY: titleTransformY.get() }, { scale: titleScale.get() }],
+      transform: [
+        { translateY: titleTransformY.get() },
+        { rotateX: `${titleRotateX.get()}deg` },
+        { scale: titleScale.get() },
+      ],
     };
   });
 
@@ -48,7 +54,10 @@ export const Title: FC = () => {
     ({ currentChannelIndexValue, prevChannelIndexValue }) => {
       if (currentChannelIndexValue < prevChannelIndexValue) {
         titleScale.set(
-          withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
+          withSequence(
+            withTiming(ENTER_SCALE, { duration: 0 }),
+            withTiming(1, { duration: DURATION })
+          )
         );
         titleTransformY.set(
           withSequence(
@@ -56,19 +65,28 @@ export const Title: FC = () => {
             withTiming(0, { duration: DURATION })
           )
         );
+        titleRotateX.set(
+          withSequence(withTiming(-45, { duration: 0 }), withTiming(0, { duration: DURATION }))
+        );
         titleOpacity.set(
           withSequence(withTiming(0.5, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );
       }
       if (currentChannelIndexValue > prevChannelIndexValue) {
         titleScale.set(
-          withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
+          withSequence(
+            withTiming(ENTER_SCALE, { duration: 0 }),
+            withTiming(1, { duration: DURATION })
+          )
         );
         titleTransformY.set(
           withSequence(
             withTiming(ENTER_TRANSLATE_Y, { duration: 0 }),
             withTiming(0, { duration: DURATION })
           )
+        );
+        titleRotateX.set(
+          withSequence(withTiming(45, { duration: 0 }), withTiming(0, { duration: DURATION }))
         );
         titleOpacity.set(
           withSequence(withTiming(0.5, { duration: 0 }), withTiming(1, { duration: DURATION }))

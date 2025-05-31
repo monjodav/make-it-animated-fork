@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { Channel } from "../components/channel";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,6 +14,13 @@ export const Unread: FC = () => {
   const insets = useSafeAreaInsets();
 
   const unreadChannels = useUnreadStore.use.unreadChannels();
+
+  useEffect(() => {
+    console.log(
+      "unreadChannels",
+      unreadChannels.map((channel) => channel.status)
+    );
+  }, [unreadChannels]);
 
   return (
     <UnreadAnimationProvider>

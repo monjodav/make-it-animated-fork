@@ -42,9 +42,10 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     axis: "x",
   });
 
-  const popChannel = useUnreadStore.use.popChannel();
+  const setChannelStatus = useUnreadStore.use.setChannelStatus();
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
+    console.log("🔴"); // VS --------- Remove Log
     if (currentChannelIndex.get() === -1 && prevChannelIndex.get() === 0) {
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -52,10 +53,10 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
     if (currentChannelIndex.get() < prevChannelIndex.get()) {
       const channelIndex = currentChannelIndex.get() + 1;
-      console.log("🔴 handleChannelStatus", currentChannelIndex.get() + 1); // VS --------- Remove Log
+      setChannelStatus(channelIndex, status);
     } else {
       const channelIndex = currentChannelIndex.get();
-      console.log("🔴 handleChannelStatus", currentChannelIndex.get()); // VS --------- Remove Log
+      setChannelStatus(channelIndex, status);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

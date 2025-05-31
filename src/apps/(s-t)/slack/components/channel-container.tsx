@@ -1,18 +1,23 @@
-import React, { FC, PropsWithChildren } from "react";
+import React, { FC, memo, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
+import { useHeaderControlsAnimation } from "../lib/hooks/use-header-controls-animation";
+import { useFooterControlsAnimation } from "../lib/hooks/use-footer-controls-animation";
 
 type Props = {
   index: number;
 };
 
-export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
+const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
   const { width, height } = useWindowDimensions();
 
   const { animatedChannelIndex, currentChannelIndex } = useUnreadAnimation();
   const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
+
+  useHeaderControlsAnimation(index);
+  useFooterControlsAnimation(index);
 
   const rContainerStyle = useAnimatedStyle(() => {
     const isLast = index === currentChannelIndex.get();
@@ -75,3 +80,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+export default memo(ChannelContainer);

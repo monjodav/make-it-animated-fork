@@ -2,13 +2,11 @@ import React, { FC } from "react";
 import { View, StyleSheet } from "react-native";
 import { MarkView } from "./mark-view";
 import { Chat } from "./chat";
-import { ChannelContainer } from "./channel-container";
+import ChannelContainer from "./channel-container";
 import { ColorBackground } from "./color-background";
 import { Channel as ChannelType } from "../lib/types";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useFooterControlsAnimation } from "../lib/hooks/use-footer-controls-animation";
-import { useHeaderControlsAnimation } from "../lib/hooks/use-header-controls-animation";
 
 type Props = {
   channel: ChannelType;
@@ -23,9 +21,6 @@ export const Channel: FC<Props> = ({ channel, index }) => {
       opacity: withTiming(isDragging.get() ? 1 : 0, { duration: 150 }),
     };
   });
-
-  useHeaderControlsAnimation(index);
-  useFooterControlsAnimation(index);
 
   return (
     <ChannelContainer index={index}>

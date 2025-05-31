@@ -40,7 +40,7 @@ interface State {
 }
 
 interface Actions {
-  popChannel: (status: ChannelStatus) => void;
+  setChannelStatus: (index: number, status: ChannelStatus) => void;
 }
 
 export const initialState: State = {
@@ -49,11 +49,18 @@ export const initialState: State = {
 
 const unreadStore = create<State & Actions>()((set) => ({
   ...initialState,
-  // NOTE: we can handle status of the channel here
-  popChannel: (status: ChannelStatus) => {
+  setChannelStatus: (index, status) => {
     set((state) => ({
       ...state,
-      unreadChannels: state.unreadChannels.slice(0, -1),
+      unreadChannels: state.unreadChannels.map((channel, i) => {
+        if (i === index) {
+          return {
+            ...channel,
+            status,
+          };
+        }
+        return channel;
+      }),
     }));
   },
 }));
