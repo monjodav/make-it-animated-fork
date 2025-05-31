@@ -11,10 +11,10 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export const Right: FC = () => {
   const unreadChannels = useUnreadStore.use.unreadChannels();
 
-  const { prevChannelIndex, isUndoPressed, isDone } = useUnreadAnimation();
+  const { currentChannelIndex, undoChannelIndex, isDone } = useUnreadAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const show = prevChannelIndex.get() < unreadChannels.length - 1;
+    const show = currentChannelIndex.get() < unreadChannels.length - 1;
 
     return {
       pointerEvents: show ? "auto" : "none",
@@ -26,7 +26,7 @@ export const Right: FC = () => {
   return (
     <AnimatedPressable
       onPress={() => {
-        isUndoPressed.set(true);
+        undoChannelIndex.set(currentChannelIndex.get() + 1);
         if (isDone.get()) {
           isDone.set(false);
         }

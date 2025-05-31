@@ -11,14 +11,14 @@ type Props = {
 export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
   const { width, height } = useWindowDimensions();
 
-  const { currentChannelIndex, prevChannelIndex } = useUnreadAnimation();
+  const { animatedChannelIndex, currentChannelIndex } = useUnreadAnimation();
   const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const isLast = index === prevChannelIndex.get();
-    const isSecondLast = index === prevChannelIndex.get() - 1;
-    const isThirdLast = index === prevChannelIndex.get() - 2;
-    const isNextToLast = index === prevChannelIndex.get() + 1;
+    const isLast = index === currentChannelIndex.get();
+    const isSecondLast = index === currentChannelIndex.get() - 1;
+    const isThirdLast = index === currentChannelIndex.get() - 2;
+    const isNextToLast = index === currentChannelIndex.get() + 1;
 
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
 
@@ -26,14 +26,14 @@ export const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index
     const rotate = interpolate(panX.get(), [0, panDistance], [0, sign * 4]);
 
     const top = interpolate(
-      currentChannelIndex.get(),
+      animatedChannelIndex.get(),
       inputRange,
       [0, 0, 0, width * 0.07, width * 0.01],
       Extrapolation.CLAMP
     );
 
     const scale = interpolate(
-      currentChannelIndex.get(),
+      animatedChannelIndex.get(),
       inputRange,
       [1, 1, 1, 0.95, 0.95],
       Extrapolation.CLAMP

@@ -16,10 +16,10 @@ const DURATION = 200;
 const ENTER_TRANSLATE_Y = 6;
 
 export const Title: FC = () => {
-  const { prevChannelIndex, isDone, isDecreasing, isIncreasing } = useUnreadAnimation();
+  const { currentChannelIndex, prevChannelIndex, isDone } = useUnreadAnimation();
 
   const numberOfLeftChannels = useDerivedValue(() => {
-    return Math.max(prevChannelIndex.get() + 1, 1).toFixed(0);
+    return Math.max(currentChannelIndex.get() + 1, 1).toFixed(0);
   });
 
   const titleScale = useSharedValue(1);
@@ -42,11 +42,11 @@ export const Title: FC = () => {
 
   useAnimatedReaction(
     () => ({
-      isDecreasingValue: isDecreasing.get(),
-      isIncreasingValue: isIncreasing.get(),
+      currentChannelIndexValue: currentChannelIndex.get(),
+      prevChannelIndexValue: prevChannelIndex.get(),
     }),
-    ({ isDecreasingValue, isIncreasingValue }) => {
-      if (isDecreasingValue) {
+    ({ currentChannelIndexValue, prevChannelIndexValue }) => {
+      if (currentChannelIndexValue < prevChannelIndexValue) {
         titleScale.set(
           withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );
@@ -60,7 +60,7 @@ export const Title: FC = () => {
           withSequence(withTiming(0.5, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );
       }
-      if (isIncreasingValue) {
+      if (currentChannelIndexValue > prevChannelIndexValue) {
         titleScale.set(
           withSequence(withTiming(0.8, { duration: 0 }), withTiming(1, { duration: DURATION }))
         );

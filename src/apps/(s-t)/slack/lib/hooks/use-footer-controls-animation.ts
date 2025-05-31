@@ -11,11 +11,11 @@ export const useFooterControlsAnimation = (index: number) => {
 
   const {
     isDragging,
+    animatedChannelIndex,
     currentChannelIndex,
     prevChannelIndex,
     isKeepUnreadPressed,
     isMarkAsReadPressed,
-    isDecreasing,
   } = useUnreadAnimation();
 
   const { panX, absoluteYAnchor, handleChannelStatus } = useChannelAnimation();
@@ -37,10 +37,12 @@ export const useFooterControlsAnimation = (index: number) => {
   const onButtonPressed = () => {
     "worklet";
     isDragging.set(true);
-    isDecreasing.set(true);
     absoluteYAnchor.set(0);
-    prevChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
-    currentChannelIndex.set(withTiming(currentChannelIndex.get() - 1, { duration: DURATION }));
+
+    // Important here to keep an order so currentChannelIndex is last
+    prevChannelIndex.set(currentChannelIndex.get());
+    animatedChannelIndex.set(withTiming(currentChannelIndex.get() - 1, { duration: DURATION }));
+    currentChannelIndex.set(currentChannelIndex.get() - 1);
   };
 
   useAnimatedReaction(
@@ -51,7 +53,7 @@ export const useFooterControlsAnimation = (index: number) => {
       };
     },
     ({ isKeepUnreadPressedValue, isMarkAsReadPressedValue }) => {
-      if (index !== Math.round(currentChannelIndex.get())) {
+      if (index !== currentChannelIndex.get()) {
         return;
       }
 

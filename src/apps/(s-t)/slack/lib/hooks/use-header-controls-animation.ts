@@ -10,33 +10,38 @@ const ANIM_CONFIG = {
 };
 
 export const useHeaderControlsAnimation = (index: number) => {
-  const { currentChannelIndex, prevChannelIndex, isUndoPressed, isIncreasing } =
+  const { animatedChannelIndex, currentChannelIndex, prevChannelIndex, undoChannelIndex } =
     useUnreadAnimation();
   const { panX, panY, absoluteYAnchor, handleChannelStatus } = useChannelAnimation();
 
   const resetUndoPressed = () => {
     setTimeout(() => {
-      isUndoPressed.set(false);
+      undoChannelIndex.set(null);
     }, 250);
   };
 
   useAnimatedReaction(
     () => {
       return {
-        isUndoPressedValue: isUndoPressed.value,
+        undoChannelIndexValue: undoChannelIndex.get(),
       };
     },
-    ({ isUndoPressedValue }) => {
-      if (index !== Math.round(currentChannelIndex.get() + 1)) {
+    ({ undoChannelIndexValue }) => {
+      if (index !== undoChannelIndex.get()) {
         return;
       }
-      if (isUndoPressedValue) {
-        isIncreasing.set(true);
+
+      if (undoChannelIndexValue !== null) {
         absoluteYAnchor.set(0);
-        prevChannelIndex.set(Math.round(currentChannelIndex.get() + 1));
-        currentChannelIndex.set(withTiming(currentChannelIndex.value + 1, { duration: DURATION }));
+
+        // Important here to keep an order so currentChannelIndex is last
+        prevChannelIndex.set(currentChannelIndex.get());
+        animatedChannelIndex.set(withTiming(currentChannelIndex.get() + 1, { duration: DURATION }));
+        currentChannelIndex.set(currentChannelIndex.get() + 1);
+
         panX.set(withSpring(0, ANIM_CONFIG));
         panY.set(withSpring(0, ANIM_CONFIG));
+
         runOnJS(handleChannelStatus)("unread");
         runOnJS(resetUndoPressed)();
       }

@@ -1,5 +1,5 @@
 import { createContext, FC, PropsWithChildren, useCallback, useContext } from "react";
-import { useWindowDimensions, InteractionManager } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   runOnJS,
@@ -16,8 +16,6 @@ import { ChannelStatus } from "../types";
 import * as Haptics from "expo-haptics";
 import { useUnreadAnimation } from "./unread-animation";
 
-const MIN_VELOCITY = 500;
-
 type ContextValue = {
   panX: SharedValue<number>;
   panY: SharedValue<number>;
@@ -29,14 +27,13 @@ type ContextValue = {
 const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const { isDragging, currentChannelIndex, prevChannelIndex, isDone, isDecreasing } =
+  const { isDragging, animatedChannelIndex, currentChannelIndex, prevChannelIndex, isDone } =
     useUnreadAnimation();
 
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
 
   const panX = useSharedValue(0);
-  const panXAnchor = useSharedValue(0);
   const panY = useSharedValue(0);
   const absoluteYAnchor = useSharedValue(0);
 
@@ -48,10 +45,17 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const popChannel = useUnreadStore.use.popChannel();
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
-    console.log("🔴", prevChannelIndex.get(), status); // VS --------- Remove Log
-    if (prevChannelIndex.get() < 0) {
+    if (currentChannelIndex.get() === -1 && prevChannelIndex.get() === 0) {
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+
+    if (currentChannelIndex.get() < prevChannelIndex.get()) {
+      const channelIndex = currentChannelIndex.get() + 1;
+      console.log("🔴 handleChannelStatus", currentChannelIndex.get() + 1); // VS --------- Remove Log
+    } else {
+      const channelIndex = currentChannelIndex.get();
+      console.log("🔴 handleChannelStatus", currentChannelIndex.get()); // VS --------- Remove Log
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -60,11 +64,12 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     .onBegin((event) => {
       isDragging.set(true);
       absoluteYAnchor.set(event.absoluteY);
-      panXAnchor.set(Math.round(currentChannelIndex.get()));
     })
     .onChange((event) => {
-      const progress = panXAnchor.get() - Math.abs(event.translationX) / panDistance;
-      currentChannelIndex.set(progress < panXAnchor.get() - 1 ? panXAnchor.get() - 1 : progress);
+      const progress = currentChannelIndex.get() - Math.abs(event.translationX) / panDistance;
+      animatedChannelIndex.set(
+        progress < currentChannelIndex.get() - 1 ? currentChannelIndex.get() - 1 : progress
+      );
 
       panX.set(event.translationX);
       panY.set(event.translationY);
@@ -72,12 +77,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     })
     .onEnd((event) => {
       isDragging.set(false);
-      if (Math.abs(event.velocityX) > MIN_VELOCITY || Math.abs(event.translationX) > panDistance) {
-        isDecreasing.set(true);
-
+      if (Math.abs(event.translationX) > panDistance) {
         prevChannelIndex.set(Math.round(currentChannelIndex.get()));
+        currentChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
 
-        panX.set(withTiming(width * 2 * Math.sign(event.velocityX)));
+        const status = event.translationX > 0 ? "read" : "unread";
+        const sign = event.translationX > 0 ? 1 : -1;
+
+        panX.set(withTiming(sign * width * 2));
         panY.set(
           withSequence(
             withDecay({
@@ -87,12 +94,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
           )
         );
 
-        const status = event.translationX > 0 ? "read" : "unread";
         runOnJS(handleChannelStatus)(status);
       } else {
+        // We reset panX and panY to 0 on release
         panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
         panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
-        currentChannelIndex.set(withTiming(prevChannelIndex.get(), { duration: 100 }));
+
+        // We need, because on release our index can be a float so we ceil it
+        animatedChannelIndex.set(Math.ceil(currentChannelIndex.get()));
       }
     });
 
