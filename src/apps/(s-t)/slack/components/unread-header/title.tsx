@@ -13,7 +13,7 @@ import { ReText } from "react-native-redash";
 import { useUnreadAnimation } from "../../lib/provider/unread-animation";
 
 const DURATION = 200;
-const ENTER_SCALE = 0.75;
+const ENTER_SCALE = 0.6;
 const ENTER_TRANSLATE_Y = 7;
 
 export const Title: FC = () => {

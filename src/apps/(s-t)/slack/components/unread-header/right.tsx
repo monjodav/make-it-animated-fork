@@ -3,6 +3,7 @@ import { Pressable, Text } from "react-native";
 import { useUnreadAnimation } from "../../lib/provider/unread-animation";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useUnreadStore } from "../../lib/store/unread";
+import * as Haptics from "expo-haptics";
 
 const EASING = Easing.out(Easing.ease);
 
@@ -33,12 +34,14 @@ export const Right: FC = () => {
     <Animated.View style={rOuterContainerStyle}>
       <AnimatedPressable
         onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           undoChannelIndex.set(currentChannelIndex.get() + 1);
           if (isDone.get()) {
             isDone.set(false);
           }
         }}
         style={rContainerStyle}
+        hitSlop={10}
       >
         <Text className="text-base font-bold text-neutral-200">Undo</Text>
       </AnimatedPressable>
