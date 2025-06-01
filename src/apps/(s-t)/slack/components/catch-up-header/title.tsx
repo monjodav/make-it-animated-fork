@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import Animated, {
   Easing,
   LinearTransition,
@@ -100,7 +100,7 @@ export const Title: FC = () => {
         layout={LinearTransition}
       >
         <Animated.View style={rReTextStyle} layout={LinearTransition}>
-          <ReText text={numberOfLeftChannels} style={styles.text} />
+          <ReText text={numberOfLeftChannels} style={styles.text} verticalAlign="middle" />
         </Animated.View>
         <Animated.Text className="text-lg font-bold text-neutral-200" layout={LinearTransition}>
           Left
@@ -113,6 +113,7 @@ export const Title: FC = () => {
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
+    lineHeight: Platform.OS === "android" ? 6 : undefined,
     fontWeight: "bold",
     color: "#e5e5e5",
   },
