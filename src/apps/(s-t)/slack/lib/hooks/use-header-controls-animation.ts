@@ -10,8 +10,13 @@ const ANIM_CONFIG = {
 };
 
 export const useHeaderControlsAnimation = (index: number) => {
-  const { animatedChannelIndex, currentChannelIndex, prevChannelIndex, undoChannelIndex } =
-    useUnreadAnimation();
+  const {
+    isDragging,
+    animatedChannelIndex,
+    currentChannelIndex,
+    prevChannelIndex,
+    undoChannelIndex,
+  } = useUnreadAnimation();
   const { panX, panY, absoluteYAnchor, handleChannelStatus } = useChannelAnimation();
 
   const resetUndoPressed = () => {
@@ -34,6 +39,7 @@ export const useHeaderControlsAnimation = (index: number) => {
       }
 
       if (undoChannelIndexValue !== null) {
+        isDragging.set(false);
         absoluteYAnchor.set(0);
 
         // Important here to keep an order so currentChannelIndex is last
