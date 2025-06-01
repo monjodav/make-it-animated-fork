@@ -23,7 +23,7 @@ export const DrawerToggleButton: FC = () => {
 
   return (
     <Animated.View
-      className="absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none"
+      className="absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none z-[9999]"
       style={{ opacity }}
     >
       <Pressable
