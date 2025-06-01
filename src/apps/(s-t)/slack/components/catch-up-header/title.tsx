@@ -1,0 +1,122 @@
+import React, { FC } from "react";
+import { View, StyleSheet } from "react-native";
+import Animated, {
+  Easing,
+  LinearTransition,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import { ReText } from "react-native-redash";
+import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
+
+// slack-catch-up-cards-swipe-animation 🔽
+// slack-catch-up-header-counter-animation 🔽
+
+const DURATION = 200;
+const ANIM_CONFIG = { stiffness: 300, damping: 20, easing: Easing.out(Easing.ease) };
+
+const ENTER_SCALE = 0.6;
+const ENTER_TRANSLATE_Y = 7;
+const ENTER_ROTATE_X = 45;
+const ENTER_OPACITY = 0.5;
+
+export const Title: FC = () => {
+  const { currentChannelIndex, prevChannelIndex, isDone } = useCatchUpAnimation();
+
+  const numberOfLeftChannels = useDerivedValue(() => {
+    return Math.max(currentChannelIndex.get() + 1, 1).toFixed(0);
+  });
+
+  const titleScale = useSharedValue(1);
+  const titleTransformY = useSharedValue(0);
+  const titleRotateX = useSharedValue(0);
+  const titleOpacity = useSharedValue(1);
+
+  const rTitleContainerStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isDone.get() ? 0 : 1, { duration: DURATION }),
+      transform: [{ translateY: withTiming(isDone.get() ? -20 : 0, { duration: DURATION }) }],
+    };
+  });
+
+  const rReTextStyle = useAnimatedStyle(() => {
+    return {
+      opacity: titleOpacity.get(),
+      transform: [
+        { translateY: titleTransformY.get() },
+        { rotateX: `${titleRotateX.get()}deg` },
+        { scale: titleScale.get() },
+      ],
+    };
+  });
+
+  useAnimatedReaction(
+    () => ({
+      currentChannelIndexValue: currentChannelIndex.get(),
+      prevChannelIndexValue: prevChannelIndex.get(),
+    }),
+    ({ currentChannelIndexValue, prevChannelIndexValue }) => {
+      if (currentChannelIndexValue < prevChannelIndexValue) {
+        titleScale.set(
+          withSequence(withTiming(ENTER_SCALE, { duration: 0 }), withSpring(1, ANIM_CONFIG))
+        );
+        titleTransformY.set(
+          withSequence(withTiming(-ENTER_TRANSLATE_Y, { duration: 0 }), withSpring(0, ANIM_CONFIG))
+        );
+        titleRotateX.set(
+          withSequence(withTiming(-ENTER_ROTATE_X, { duration: 0 }), withSpring(0, ANIM_CONFIG))
+        );
+        titleOpacity.set(
+          withSequence(withTiming(ENTER_OPACITY, { duration: 0 }), withSpring(1, ANIM_CONFIG))
+        );
+      }
+      if (currentChannelIndexValue > prevChannelIndexValue) {
+        titleScale.set(
+          withSequence(withTiming(ENTER_SCALE, { duration: 0 }), withSpring(1, ANIM_CONFIG))
+        );
+        titleTransformY.set(
+          withSequence(withTiming(ENTER_TRANSLATE_Y, { duration: 0 }), withSpring(0, ANIM_CONFIG))
+        );
+        titleRotateX.set(
+          withSequence(withTiming(ENTER_ROTATE_X, { duration: 0 }), withSpring(0, ANIM_CONFIG))
+        );
+        titleOpacity.set(
+          withSequence(withTiming(ENTER_OPACITY, { duration: 0 }), withSpring(1, ANIM_CONFIG))
+        );
+      }
+    }
+  );
+
+  return (
+    <View className="absolute top-0 left-0 right-0 bottom-0 items-center justify-center">
+      <Animated.View
+        className="flex-row items-center gap-1"
+        style={rTitleContainerStyle}
+        layout={LinearTransition}
+      >
+        <Animated.View style={rReTextStyle} layout={LinearTransition}>
+          <ReText text={numberOfLeftChannels} style={styles.text} />
+        </Animated.View>
+        <Animated.Text className="text-lg font-bold text-neutral-200" layout={LinearTransition}>
+          Left
+        </Animated.Text>
+      </Animated.View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#e5e5e5",
+  },
+});
+
+// slack-catch-up-header-counter-animation 🔼
+// slack-catch-up-cards-swipe-animation 🔼

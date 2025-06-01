@@ -16,7 +16,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "../../lib/hooks/use-header-height";
-import { useSingleHapticOnScroll } from "@/src/shared/lib/hooks/use-single-haptic-on-scroll";
+import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { TopGradient } from "./top-gradient";
 
@@ -45,7 +45,7 @@ export const Favorites = () => {
   const { onScroll: scrollDirectionOnScroll, scrollDirection } =
     useScrollDirection("include-negative");
 
-  const { singleHapticOnScroll } = useSingleHapticOnScroll({
+  const { singleHapticOnScroll } = useHapticOnScroll({
     isListDragging,
     scrollDirection,
     triggerOffset: TRIGGER_DRAG_DISTANCE,

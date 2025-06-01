@@ -12,6 +12,7 @@ import { queue } from "./apps/q";
 import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
 import { raycast } from "./apps/r";
+import { slack } from "./apps/s";
 
 type Animation = {
   name: string;
@@ -67,6 +68,7 @@ export const apps: App[] = [
   raycast,
   // -----------------------
   // S
+  slack,
   // T
   threads,
   //------------------------

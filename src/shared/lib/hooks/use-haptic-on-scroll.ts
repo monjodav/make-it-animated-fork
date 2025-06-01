@@ -10,14 +10,10 @@ type Params = {
 };
 
 /**
- * Hook for single haptic on scroll: fires once when passing a trigger distance.
+ * Hook for haptic on scroll: fires once when passing a trigger distance in both directions.
  * Use this when you want one haptic feedback per threshold crossing.
  */
-export const useSingleHapticOnScroll = ({
-  isListDragging,
-  scrollDirection,
-  triggerOffset,
-}: Params) => {
+export const useHapticOnScroll = ({ isListDragging, scrollDirection, triggerOffset }: Params) => {
   const isHapticTriggered = useSharedValue(false);
 
   const handleHaptics = () => {
