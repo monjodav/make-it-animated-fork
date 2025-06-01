@@ -5,8 +5,7 @@ export default function AppsLayout() {
   return (
     <>
       <Slot />
-      {/* VS ---------------- */}
-      {/* <DrawerToggleButton /> */}
+      <DrawerToggleButton />
     </>
   );
 }
