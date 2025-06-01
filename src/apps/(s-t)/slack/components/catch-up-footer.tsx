@@ -1,13 +1,20 @@
 import React, { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useCatchUpAnimation } from "../lib/provider/catch-up-animation";
 import * as Haptics from "expo-haptics";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+const DURATION = 150;
+
 export const CatchUpFooter: FC = () => {
   const { isKeepUnreadPressed, isMarkAsReadPressed } = useCatchUpAnimation();
+
+  const keepUnreadScale = useSharedValue(1);
+  const markAsReadScale = useSharedValue(1);
 
   const rContainerStyle = useAnimatedStyle(() => {
     // I want to disable it for short moment to let animation complete
@@ -20,26 +27,38 @@ export const CatchUpFooter: FC = () => {
 
   return (
     <Animated.View className="flex-row gap-5 pt-6 items-center" style={rContainerStyle}>
-      <Pressable
+      <AnimatedPressable
         className="flex-1 p-[14px] bg-neutral-900 border border-neutral-700/50 rounded-2xl items-center justify-center"
-        style={styles.borderCurve}
+        style={[styles.borderCurve, { transform: [{ scale: keepUnreadScale }] }]}
+        onPressIn={() => {
+          keepUnreadScale.value = withTiming(0.98, { duration: DURATION });
+        }}
+        onPressOut={() => {
+          keepUnreadScale.value = withTiming(1, { duration: DURATION });
+        }}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           isKeepUnreadPressed.set(true);
         }}
       >
         <Text className="text-lg font-semibold text-neutral-300">Keep Unread</Text>
-      </Pressable>
-      <Pressable
+      </AnimatedPressable>
+      <AnimatedPressable
         className="flex-1 p-[12px] bg-emerald-900 border border-emerald-700/50 rounded-2xl items-center justify-center"
-        style={styles.borderCurve}
+        style={[styles.borderCurve, { transform: [{ scale: markAsReadScale }] }]}
+        onPressIn={() => {
+          markAsReadScale.value = withTiming(0.98, { duration: DURATION });
+        }}
+        onPressOut={() => {
+          markAsReadScale.value = withTiming(1, { duration: DURATION });
+        }}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           isMarkAsReadPressed.set(true);
         }}
       >
         <Text className="text-lg font-semibold text-neutral-300">Mark as Read</Text>
-      </Pressable>
+      </AnimatedPressable>
     </Animated.View>
   );
 };

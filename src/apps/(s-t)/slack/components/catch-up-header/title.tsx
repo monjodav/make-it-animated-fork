@@ -1,12 +1,14 @@
 import React, { FC } from "react";
 import { View, StyleSheet } from "react-native";
 import Animated, {
+  Easing,
   LinearTransition,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withSequence,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { ReText } from "react-native-redash";
@@ -16,6 +18,8 @@ import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
 // slack-catch-up-header-counter-animation 🔽
 
 const DURATION = 200;
+const ANIM_CONFIG = { stiffness: 300, damping: 20, easing: Easing.out(Easing.ease) };
+
 const ENTER_SCALE = 0.6;
 const ENTER_TRANSLATE_Y = 7;
 const ENTER_ROTATE_X = 45;
@@ -59,54 +63,30 @@ export const Title: FC = () => {
     ({ currentChannelIndexValue, prevChannelIndexValue }) => {
       if (currentChannelIndexValue < prevChannelIndexValue) {
         titleScale.set(
-          withSequence(
-            withTiming(ENTER_SCALE, { duration: 0 }),
-            withTiming(1, { duration: DURATION })
-          )
+          withSequence(withTiming(ENTER_SCALE, { duration: 0 }), withSpring(1, ANIM_CONFIG))
         );
         titleTransformY.set(
-          withSequence(
-            withTiming(-ENTER_TRANSLATE_Y, { duration: 0 }),
-            withTiming(0, { duration: DURATION })
-          )
+          withSequence(withTiming(-ENTER_TRANSLATE_Y, { duration: 0 }), withSpring(0, ANIM_CONFIG))
         );
         titleRotateX.set(
-          withSequence(
-            withTiming(-ENTER_ROTATE_X, { duration: 0 }),
-            withTiming(0, { duration: DURATION })
-          )
+          withSequence(withTiming(-ENTER_ROTATE_X, { duration: 0 }), withSpring(0, ANIM_CONFIG))
         );
         titleOpacity.set(
-          withSequence(
-            withTiming(ENTER_OPACITY, { duration: 0 }),
-            withTiming(1, { duration: DURATION })
-          )
+          withSequence(withTiming(ENTER_OPACITY, { duration: 0 }), withSpring(1, ANIM_CONFIG))
         );
       }
       if (currentChannelIndexValue > prevChannelIndexValue) {
         titleScale.set(
-          withSequence(
-            withTiming(ENTER_SCALE, { duration: 0 }),
-            withTiming(1, { duration: DURATION })
-          )
+          withSequence(withTiming(ENTER_SCALE, { duration: 0 }), withSpring(1, ANIM_CONFIG))
         );
         titleTransformY.set(
-          withSequence(
-            withTiming(ENTER_TRANSLATE_Y, { duration: 0 }),
-            withTiming(0, { duration: DURATION })
-          )
+          withSequence(withTiming(ENTER_TRANSLATE_Y, { duration: 0 }), withSpring(0, ANIM_CONFIG))
         );
         titleRotateX.set(
-          withSequence(
-            withTiming(ENTER_ROTATE_X, { duration: 0 }),
-            withTiming(0, { duration: DURATION })
-          )
+          withSequence(withTiming(ENTER_ROTATE_X, { duration: 0 }), withSpring(0, ANIM_CONFIG))
         );
         titleOpacity.set(
-          withSequence(
-            withTiming(ENTER_OPACITY, { duration: 0 }),
-            withTiming(1, { duration: DURATION })
-          )
+          withSequence(withTiming(ENTER_OPACITY, { duration: 0 }), withSpring(1, ANIM_CONFIG))
         );
       }
     }

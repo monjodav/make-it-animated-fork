@@ -115,7 +115,9 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
         panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
 
         // We need, because on release our index can be a float so we ceil it
-        animatedChannelIndex.set(Math.ceil(currentChannelIndex.get()));
+        animatedChannelIndex.set(
+          withTiming(Math.ceil(currentChannelIndex.get()), { duration: 200 })
+        );
       }
     });
 

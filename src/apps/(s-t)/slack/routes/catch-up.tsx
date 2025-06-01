@@ -19,7 +19,7 @@ export const CatchUp: FC = () => {
         className="flex-1 px-5"
         style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}
       >
-        <LinearGradient colors={["#013D60", "#001A2C"]} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={["#401147", "#20031F"]} style={StyleSheet.absoluteFill} />
         <CatchUpHeader />
         <View className="flex-1">
           <CatchUpChannels />
