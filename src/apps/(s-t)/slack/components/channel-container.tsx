@@ -6,6 +6,8 @@ import { useUnreadAnimation } from "../lib/provider/unread-animation";
 import { useHeaderControlsAnimation } from "../lib/hooks/use-header-controls-animation";
 import { useFooterControlsAnimation } from "../lib/hooks/use-footer-controls-animation";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type Props = {
   index: number;
 };
@@ -83,3 +85,5 @@ const styles = StyleSheet.create({
 });
 
 export default memo(ChannelContainer);
+
+// slack-catch-up-cards-swipe-animation 🔼

@@ -5,6 +5,8 @@ import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated"
 import { Pressable } from "react-native";
 import { ChevronLeft, X } from "lucide-react-native";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const DURATION = 50;
 
 export const Left: FC = () => {
@@ -36,3 +38,5 @@ export const Left: FC = () => {
     </Pressable>
   );
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

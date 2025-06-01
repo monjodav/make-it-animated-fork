@@ -8,6 +8,8 @@ import { Channel as ChannelType } from "../lib/types";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type Props = {
   channel: ChannelType;
   index: number;
@@ -38,3 +40,5 @@ export const Channel: FC<Props> = ({ channel, index }) => {
     </ChannelContainer>
   );
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

@@ -5,6 +5,8 @@ import { ChannelAnimationProvider } from "../lib/provider/channel-animation";
 import { Channel } from "./channel";
 import { Channel as ChannelType } from "../lib/types";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type Props = {
   unreadChannels: ChannelType[];
 };
@@ -33,3 +35,5 @@ export const UnreadChannels: FC = () => {
 
   return <MemoizedListOfChannels unreadChannels={data} />;
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

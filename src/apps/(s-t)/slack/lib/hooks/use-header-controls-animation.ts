@@ -2,6 +2,8 @@ import { runOnJS, useAnimatedReaction, withSpring, withTiming } from "react-nati
 import { useChannelAnimation } from "../provider/channel-animation";
 import { useUnreadAnimation } from "../provider/unread-animation";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const DURATION = 300;
 
 const ANIM_CONFIG = {
@@ -55,3 +57,5 @@ export const useHeaderControlsAnimation = (index: number) => {
     }
   );
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

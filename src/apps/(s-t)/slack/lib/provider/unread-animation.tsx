@@ -2,6 +2,8 @@ import { createContext, FC, PropsWithChildren, useContext } from "react";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
 import { useUnreadStore } from "../store/unread";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type ContextValue = {
   isDragging: SharedValue<boolean>;
   // I separated animatedChannelIndex from currentChannelIndex to be able to animate the channel while it's being dragged
@@ -59,3 +61,5 @@ export const useUnreadAnimation = () => {
 
   return context;
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

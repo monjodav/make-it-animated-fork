@@ -3,6 +3,8 @@ import { useUnreadAnimation } from "../provider/unread-animation";
 import { useChannelAnimation } from "../provider/channel-animation";
 import { runOnJS, useAnimatedReaction, withTiming } from "react-native-reanimated";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const DURATION = 500;
 const TIMEOUT = 250;
 
@@ -75,3 +77,5 @@ export const useFooterControlsAnimation = (index: number) => {
     }
   );
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

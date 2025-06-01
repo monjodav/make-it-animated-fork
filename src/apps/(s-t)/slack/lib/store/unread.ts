@@ -2,6 +2,8 @@ import { createSelectors } from "@/src/shared/lib/utils/create-selectors";
 import { create } from "zustand";
 import { Channel, ChannelStatus } from "../types";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const initialData: Channel[] = [
   {
     id: "1",
@@ -68,3 +70,5 @@ const unreadStore = create<State & Actions>()((set) => ({
 }));
 
 export const useUnreadStore = createSelectors(unreadStore);
+
+// slack-catch-up-cards-swipe-animation 🔼

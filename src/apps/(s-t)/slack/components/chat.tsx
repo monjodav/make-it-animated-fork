@@ -4,6 +4,8 @@ import { View, Text, Pressable, Alert } from "react-native";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { Channel as ChannelType } from "../lib/types";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type Props = {
   channel: ChannelType;
 };
@@ -51,3 +53,5 @@ export const Chat: FC<Props> = ({ channel }) => {
     </View>
   );
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

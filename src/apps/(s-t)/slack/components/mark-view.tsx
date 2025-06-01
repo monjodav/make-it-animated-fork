@@ -8,6 +8,8 @@ import { useChannelAnimation } from "../lib/provider/channel-animation";
 import { EyeClosed } from "lucide-react-native";
 import { colorKit } from "reanimated-color-picker";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const SIZE = 60;
 const STROKE_WIDTH = 3;
 const ICON_SIZE = 24;
@@ -143,3 +145,5 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
+
+// slack-catch-up-cards-swipe-animation 🔼

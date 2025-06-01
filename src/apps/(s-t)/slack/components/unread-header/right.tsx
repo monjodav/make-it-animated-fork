@@ -5,6 +5,8 @@ import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-rea
 import { useUnreadStore } from "../../lib/store/unread";
 import * as Haptics from "expo-haptics";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const EASING = Easing.out(Easing.ease);
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -49,3 +51,5 @@ export const Right: FC = () => {
     </Animated.View>
   );
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

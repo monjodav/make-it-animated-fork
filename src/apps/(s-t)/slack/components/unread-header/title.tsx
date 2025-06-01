@@ -12,6 +12,8 @@ import Animated, {
 import { ReText } from "react-native-redash";
 import { useUnreadAnimation } from "../../lib/provider/unread-animation";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const DURATION = 200;
 const ENTER_SCALE = 0.6;
 const ENTER_TRANSLATE_Y = 7;
@@ -134,3 +136,5 @@ const styles = StyleSheet.create({
     color: "#e5e5e5",
   },
 });
+
+// slack-catch-up-cards-swipe-animation 🔼

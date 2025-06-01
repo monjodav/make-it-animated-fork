@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 const EASING = Easing.out(Easing.ease);
 
 export const UnreadDone: FC = () => {
@@ -39,3 +41,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// slack-catch-up-cards-swipe-animation 🔼

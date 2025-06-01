@@ -4,6 +4,8 @@ import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useUnreadAnimation } from "../lib/provider/unread-animation";
 import * as Haptics from "expo-haptics";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 export const UnreadFooter: FC = () => {
   const { isKeepUnreadPressed, isMarkAsReadPressed } = useUnreadAnimation();
 
@@ -47,3 +49,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// slack-catch-up-cards-swipe-animation 🔼

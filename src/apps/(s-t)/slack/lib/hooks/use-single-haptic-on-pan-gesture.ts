@@ -6,6 +6,8 @@ import {
   PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type Params = {
   triggerOffset: number;
   axis: "x" | "y";
@@ -38,3 +40,5 @@ export const useSingleHapticOnPanGesture = ({ triggerOffset, axis }: Params) => 
 
   return { singleHapticOnChange };
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

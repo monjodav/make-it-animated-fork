@@ -16,6 +16,8 @@ import { ChannelStatus } from "../types";
 import * as Haptics from "expo-haptics";
 import { useUnreadAnimation } from "./unread-animation";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 type ContextValue = {
   // panX, panY are used to move the channel along the screen
   panX: SharedValue<number>;
@@ -141,3 +143,5 @@ export const useChannelAnimation = () => {
 
   return context;
 };
+
+// slack-catch-up-cards-swipe-animation 🔼

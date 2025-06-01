@@ -4,6 +4,8 @@ import { useChannelAnimation } from "../lib/provider/channel-animation";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 
+// slack-catch-up-cards-swipe-animation 🔽
+
 export const ColorBackground: FC = () => {
   const { panX, panDistance } = useChannelAnimation();
 
@@ -47,3 +49,5 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
+// slack-catch-up-cards-swipe-animation 🔼
