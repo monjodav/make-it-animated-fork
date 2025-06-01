@@ -7,7 +7,11 @@ export const slack: App = {
   animations: [
     {
       name: "Catch up cards swipe animation",
-      href: "/slack/home",
+      href: "/slack/catch-up",
+    },
+    {
+      name: "Catch up header counter animation",
+      href: "/slack/catch-up",
     },
   ],
 };

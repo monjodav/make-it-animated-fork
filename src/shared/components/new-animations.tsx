@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
-import { View, Text, TouchableOpacity, Platform } from "react-native";
-import { fuse } from "@/src/shared/lib/constants/apps/f";
+import { View, Text, TouchableOpacity } from "react-native";
+import { slack } from "@/src/shared/lib/constants/apps/s";
 import { App } from "../lib/constants/apps-list";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
@@ -49,13 +49,14 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
 
   return (
     <View className="px-5 gap-5 py-5">
-      <AnimationItem label={getItemProps(fuse, 1).label} onPress={getItemProps(fuse, 1).onPress} />
-      {Platform.OS === "ios" && (
-        <AnimationItem
-          label={getItemProps(fuse, 3).label}
-          onPress={getItemProps(fuse, 3).onPress}
-        />
-      )}
+      <AnimationItem
+        label={getItemProps(slack, 0).label}
+        onPress={getItemProps(slack, 0).onPress}
+      />
+      <AnimationItem
+        label={getItemProps(slack, 1).label}
+        onPress={getItemProps(slack, 1).onPress}
+      />
     </View>
   );
 };

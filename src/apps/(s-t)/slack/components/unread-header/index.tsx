@@ -5,6 +5,7 @@ import { Left } from "./left";
 import { Right } from "./right";
 
 // slack-catch-up-cards-swipe-animation 🔽
+// slack-catch-up-header-counter-animation 🔽
 
 export const UnreadHeader: FC = () => {
   return (
@@ -16,4 +17,5 @@ export const UnreadHeader: FC = () => {
   );
 };
 
+// slack-catch-up-header-counter-animation 🔼
 // slack-catch-up-cards-swipe-animation 🔼

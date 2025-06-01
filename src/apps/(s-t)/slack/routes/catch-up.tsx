@@ -10,7 +10,7 @@ import { UnreadChannels } from "../components/unread-channels";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
-export const Unread: FC = () => {
+export const CatchUp: FC = () => {
   const insets = useSafeAreaInsets();
 
   return (
