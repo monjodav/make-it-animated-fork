@@ -19,6 +19,7 @@ export const useSingleHapticOnPanGesture = ({ triggerOffset, axis }: Params) => 
     isHapticTriggered.set(true);
   };
 
+  // We insert singleHapticOnChange in onChange of the gesture to be able to trigger haptics when we pan the card more than triggerOffset
   const singleHapticOnChange = (
     event: GestureUpdateEvent<PanGestureHandlerEventPayload & PanGestureChangeEventPayload>
   ) => {

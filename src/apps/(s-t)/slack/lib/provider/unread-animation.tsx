@@ -4,12 +4,18 @@ import { useUnreadStore } from "../store/unread";
 
 type ContextValue = {
   isDragging: SharedValue<boolean>;
+  // I separated animatedChannelIndex from currentChannelIndex to be able to animate the channel while it's being dragged
+  // I need currentChannelIndex without float so it's easier to handle logic based on currentChannelIndex and prevChannelIndex
   animatedChannelIndex: SharedValue<number>;
   currentChannelIndex: SharedValue<number>;
   prevChannelIndex: SharedValue<number>;
+  // Because of header and footer are outside of ChannelAnimationContext I decided to handle it here using shared values
+  // Animation logic based on isKeepUnreadPressed and isMarkAsReadPressed changes you can find in useHeaderControlsAnimation and useFooterControlsAnimation hooks
   isKeepUnreadPressed: SharedValue<boolean>;
   isMarkAsReadPressed: SharedValue<boolean>;
+  // isDone is used to trigger animation when we have no more unread channels
   isDone: SharedValue<boolean>;
+  // undoChannelIndex is used to animate the channel back to its original position when we undo the action
   undoChannelIndex: SharedValue<number | null>;
 };
 

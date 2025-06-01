@@ -28,7 +28,6 @@ const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => 
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
 
     const sign = absoluteYAnchor.get() > height / 2 ? -1 : 1;
-    const rotate = interpolate(panX.get(), [0, panDistance], [0, sign * 4]);
 
     const top = interpolate(
       animatedChannelIndex.get(),
@@ -36,6 +35,8 @@ const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => 
       [0, 0, 0, width * 0.07, width * 0.01],
       Extrapolation.CLAMP
     );
+
+    const rotate = interpolate(panX.get(), [0, panDistance], [0, sign * 4]);
 
     const scale = interpolate(
       animatedChannelIndex.get(),

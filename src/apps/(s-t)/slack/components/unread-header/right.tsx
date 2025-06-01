@@ -15,6 +15,7 @@ export const Right: FC = () => {
   const { currentChannelIndex, undoChannelIndex, isDone } = useUnreadAnimation();
 
   const rOuterContainerStyle = useAnimatedStyle(() => {
+    // I want to disable it for short moment to let animation complete
     return {
       pointerEvents: undoChannelIndex.get() === null ? "auto" : "none",
     };

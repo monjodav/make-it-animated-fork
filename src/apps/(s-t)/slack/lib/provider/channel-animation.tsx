@@ -17,10 +17,14 @@ import * as Haptics from "expo-haptics";
 import { useUnreadAnimation } from "./unread-animation";
 
 type ContextValue = {
+  // panX, panY are used to move the channel along the screen
   panX: SharedValue<number>;
   panY: SharedValue<number>;
+  // absoluteYAnchor is used to handle rotation of the card based on the part of the screen you start the gesture (top or bottom)
   absoluteYAnchor: SharedValue<number>;
+  // panDistance is the distance you need to drag the card to swipe it left or right
   panDistance: number;
+  // handleChannelStatus is used to update the channel status (or any other needed data) in the store
   handleChannelStatus: (status: ChannelStatus) => void;
 };
 
@@ -37,6 +41,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const panY = useSharedValue(0);
   const absoluteYAnchor = useSharedValue(0);
 
+  // hook to add haptic when we pan the card more than panDistance
   const { singleHapticOnChange } = useSingleHapticOnPanGesture({
     triggerOffset: panDistance,
     axis: "x",
@@ -50,6 +55,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
+    // We handle the status update in both direction as user can undo the action
     if (currentChannelIndex.get() < prevChannelIndex.get()) {
       const channelIndex = currentChannelIndex.get() + 1;
       InteractionManager.runAfterInteractions(() => {
@@ -77,10 +83,12 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
       panX.set(event.translationX);
       panY.set(event.translationY);
+
       singleHapticOnChange(event);
     })
     .onEnd((event) => {
       isDragging.set(false);
+
       if (Math.abs(event.translationX) > panDistance) {
         prevChannelIndex.set(Math.round(currentChannelIndex.get()));
         currentChannelIndex.set(Math.round(currentChannelIndex.get() - 1));

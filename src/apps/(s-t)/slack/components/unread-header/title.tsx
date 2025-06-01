@@ -15,6 +15,8 @@ import { useUnreadAnimation } from "../../lib/provider/unread-animation";
 const DURATION = 200;
 const ENTER_SCALE = 0.6;
 const ENTER_TRANSLATE_Y = 7;
+const ENTER_ROTATE_X = 45;
+const ENTER_OPACITY = 0.5;
 
 export const Title: FC = () => {
   const { currentChannelIndex, prevChannelIndex, isDone } = useUnreadAnimation();
@@ -66,10 +68,16 @@ export const Title: FC = () => {
           )
         );
         titleRotateX.set(
-          withSequence(withTiming(-45, { duration: 0 }), withTiming(0, { duration: DURATION }))
+          withSequence(
+            withTiming(-ENTER_ROTATE_X, { duration: 0 }),
+            withTiming(0, { duration: DURATION })
+          )
         );
         titleOpacity.set(
-          withSequence(withTiming(0.5, { duration: 0 }), withTiming(1, { duration: DURATION }))
+          withSequence(
+            withTiming(ENTER_OPACITY, { duration: 0 }),
+            withTiming(1, { duration: DURATION })
+          )
         );
       }
       if (currentChannelIndexValue > prevChannelIndexValue) {
@@ -86,10 +94,16 @@ export const Title: FC = () => {
           )
         );
         titleRotateX.set(
-          withSequence(withTiming(45, { duration: 0 }), withTiming(0, { duration: DURATION }))
+          withSequence(
+            withTiming(ENTER_ROTATE_X, { duration: 0 }),
+            withTiming(0, { duration: DURATION })
+          )
         );
         titleOpacity.set(
-          withSequence(withTiming(0.5, { duration: 0 }), withTiming(1, { duration: DURATION }))
+          withSequence(
+            withTiming(ENTER_OPACITY, { duration: 0 }),
+            withTiming(1, { duration: DURATION })
+          )
         );
       }
     }

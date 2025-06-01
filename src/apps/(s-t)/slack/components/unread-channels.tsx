@@ -28,6 +28,7 @@ export const UnreadChannels: FC = () => {
 
   // For display purposes I don't really care about channel status as It can be set in background
   // so I'm memoizing it to prevent unnecessary re-renders
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const data = useMemo(() => unreadChannels, []);
 
   return <MemoizedListOfChannels unreadChannels={data} />;

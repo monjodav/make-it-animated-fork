@@ -8,6 +8,7 @@ export const UnreadFooter: FC = () => {
   const { isKeepUnreadPressed, isMarkAsReadPressed } = useUnreadAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
+    // I want to disable it for short moment to let animation complete
     const disabled = isKeepUnreadPressed.get() || isMarkAsReadPressed.get();
 
     return {

@@ -1,6 +1,6 @@
 import { ChevronDown, Mic, Plus } from "lucide-react-native";
 import React, { FC } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Alert } from "react-native";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { Channel as ChannelType } from "../lib/types";
 
@@ -32,19 +32,22 @@ export const Chat: FC<Props> = ({ channel }) => {
         keyExtractor={(item) => item.toString()}
         indicatorStyle="white"
       />
-      <View className="justify-center rounded-3xl border border-neutral-800 -mx-px -mb-px">
+      <Pressable
+        onPress={() => Alert.alert("The keyboard animation will be available very soon!")}
+        className="justify-center rounded-3xl border border-neutral-800 -mx-px -mb-px"
+      >
         <View className="w-10 h-10 rounded-full items-center justify-center bg-neutral-800/50 absolute left-3">
           <Plus size={24} color="#737373" />
         </View>
         <TextInput
           placeholder={`Message #${channel.name}`}
           placeholderTextColor="#a3a3a3"
-          className="px-16 py-6"
+          className="px-16 py-6 pointer-events-none"
         />
         <View className="w-10 h-10 rounded-full items-center justify-center absolute right-3">
           <Mic size={18} color="#737373" />
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 };
