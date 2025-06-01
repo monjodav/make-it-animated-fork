@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Alert } from "react-native";
-import { useUnreadAnimation } from "../../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { Pressable } from "react-native";
 import { ChevronLeft, X } from "lucide-react-native";
@@ -10,7 +10,7 @@ import { ChevronLeft, X } from "lucide-react-native";
 const DURATION = 50;
 
 export const Left: FC = () => {
-  const { isDone } = useUnreadAnimation();
+  const { isDone } = useCatchUpAnimation();
 
   const rChevronStyle = useAnimatedStyle(() => {
     return {

@@ -5,7 +5,7 @@ import { Chat } from "./chat";
 import ChannelContainer from "./channel-container";
 import { ColorBackground } from "./color-background";
 import { Channel as ChannelType } from "../lib/types";
-import { useUnreadAnimation } from "../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../lib/provider/catch-up-animation";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 // slack-catch-up-cards-swipe-animation 🔽
@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const Channel: FC<Props> = ({ channel, index }) => {
-  const { isDragging } = useUnreadAnimation();
+  const { isDragging } = useCatchUpAnimation();
 
   const rSwipeIndicationContainerStyle = useAnimatedStyle(() => {
     return {

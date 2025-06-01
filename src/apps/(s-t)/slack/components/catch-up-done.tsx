@@ -1,14 +1,14 @@
 import React, { FC } from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useUnreadAnimation } from "../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../lib/provider/catch-up-animation";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
 const EASING = Easing.out(Easing.ease);
 
-export const UnreadDone: FC = () => {
-  const { isDone } = useUnreadAnimation();
+export const CatchUpDone: FC = () => {
+  const { isDone } = useCatchUpAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
     return {

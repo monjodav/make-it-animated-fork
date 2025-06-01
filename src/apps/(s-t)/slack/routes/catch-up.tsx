@@ -2,11 +2,11 @@ import React, { FC } from "react";
 import { View, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { UnreadFooter } from "../components/unread-footer";
-import { UnreadHeader } from "../components/unread-header";
-import { UnreadDone } from "../components/unread-done";
-import { UnreadAnimationProvider } from "../lib/provider/unread-animation";
-import { UnreadChannels } from "../components/unread-channels";
+import { CatchUpFooter } from "../components/catch-up-footer";
+import { CatchUpHeader } from "../components/catch-up-header";
+import { CatchUpDone } from "../components/catch-up-done";
+import { CatchUpAnimationProvider } from "../lib/provider/catch-up-animation";
+import { CatchUpChannels } from "../components/catch-up-channels";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -14,20 +14,20 @@ export const CatchUp: FC = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <UnreadAnimationProvider>
+    <CatchUpAnimationProvider>
       <View
         className="flex-1 px-5"
         style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}
       >
         <LinearGradient colors={["#013D60", "#001A2C"]} style={StyleSheet.absoluteFill} />
-        <UnreadHeader />
+        <CatchUpHeader />
         <View className="flex-1">
-          <UnreadChannels />
-          <UnreadFooter />
-          <UnreadDone />
+          <CatchUpChannels />
+          <CatchUpFooter />
+          <CatchUpDone />
         </View>
       </View>
-    </UnreadAnimationProvider>
+    </CatchUpAnimationProvider>
   );
 };
 

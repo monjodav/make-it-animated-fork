@@ -1,6 +1,6 @@
 import React, { FC, memo, useMemo } from "react";
 import { View } from "react-native";
-import { useUnreadStore } from "../lib/store/unread";
+import { useCatchUpStore } from "../lib/store/catch-up";
 import { ChannelAnimationProvider } from "../lib/provider/channel-animation";
 import { Channel } from "./channel";
 import { Channel as ChannelType } from "../lib/types";
@@ -25,8 +25,8 @@ const MemoizedListOfChannels: FC<Props> = memo(({ unreadChannels }) => {
 
 MemoizedListOfChannels.displayName = "MemoizedListOfChannels";
 
-export const UnreadChannels: FC = () => {
-  const unreadChannels = useUnreadStore.use.unreadChannels();
+export const CatchUpChannels: FC = () => {
+  const unreadChannels = useCatchUpStore.use.unreadChannels();
 
   // For display purposes I don't really care about channel status as It can be set in background
   // so I'm memoizing it to prevent unnecessary re-renders

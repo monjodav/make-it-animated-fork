@@ -11,10 +11,10 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { useSingleHapticOnPanGesture } from "../hooks/use-single-haptic-on-pan-gesture";
-import { useUnreadStore } from "../store/unread";
+import { useCatchUpStore } from "../store/catch-up";
 import { ChannelStatus } from "../types";
 import * as Haptics from "expo-haptics";
-import { useUnreadAnimation } from "./unread-animation";
+import { useCatchUpAnimation } from "./catch-up-animation";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -34,7 +34,7 @@ const ChannelAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
   const { isDragging, animatedChannelIndex, currentChannelIndex, prevChannelIndex, isDone } =
-    useUnreadAnimation();
+    useCatchUpAnimation();
 
   const { width } = useWindowDimensions();
   const panDistance = width / 4;
@@ -49,7 +49,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     axis: "x",
   });
 
-  const setChannelStatus = useUnreadStore.use.setChannelStatus();
+  const setChannelStatus = useCatchUpStore.use.setChannelStatus();
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
     if (currentChannelIndex.get() === -1 && prevChannelIndex.get() === 0) {

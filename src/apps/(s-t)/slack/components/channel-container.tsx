@@ -2,7 +2,7 @@ import React, { FC, memo, PropsWithChildren } from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { useChannelAnimation } from "../lib/provider/channel-animation";
 import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { useUnreadAnimation } from "../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../lib/provider/catch-up-animation";
 import { useHeaderControlsAnimation } from "../lib/hooks/use-header-controls-animation";
 import { useFooterControlsAnimation } from "../lib/hooks/use-footer-controls-animation";
 
@@ -15,7 +15,7 @@ type Props = {
 const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => {
   const { width, height } = useWindowDimensions();
 
-  const { animatedChannelIndex, currentChannelIndex } = useUnreadAnimation();
+  const { animatedChannelIndex, currentChannelIndex } = useCatchUpAnimation();
   const { panX, panY, absoluteYAnchor, panDistance } = useChannelAnimation();
 
   useHeaderControlsAnimation(index);

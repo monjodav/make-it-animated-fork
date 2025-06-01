@@ -7,7 +7,7 @@ import { Right } from "./right";
 // slack-catch-up-cards-swipe-animation 🔽
 // slack-catch-up-header-counter-animation 🔽
 
-export const UnreadHeader: FC = () => {
+export const CatchUpHeader: FC = () => {
   return (
     <View className="flex-row items-center justify-between px-2 mb-3">
       <Title />

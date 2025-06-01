@@ -1,5 +1,5 @@
 import { useWindowDimensions } from "react-native";
-import { useUnreadAnimation } from "../provider/unread-animation";
+import { useCatchUpAnimation } from "../provider/catch-up-animation";
 import { useChannelAnimation } from "../provider/channel-animation";
 import { runOnJS, useAnimatedReaction, withTiming } from "react-native-reanimated";
 
@@ -18,7 +18,7 @@ export const useFooterControlsAnimation = (index: number) => {
     prevChannelIndex,
     isKeepUnreadPressed,
     isMarkAsReadPressed,
-  } = useUnreadAnimation();
+  } = useCatchUpAnimation();
 
   const { panX, absoluteYAnchor, handleChannelStatus } = useChannelAnimation();
 

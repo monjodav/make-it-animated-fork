@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
-import { useUnreadAnimation } from "../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../lib/provider/catch-up-animation";
 import * as Haptics from "expo-haptics";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
-export const UnreadFooter: FC = () => {
-  const { isKeepUnreadPressed, isMarkAsReadPressed } = useUnreadAnimation();
+export const CatchUpFooter: FC = () => {
+  const { isKeepUnreadPressed, isMarkAsReadPressed } = useCatchUpAnimation();
 
   const rContainerStyle = useAnimatedStyle(() => {
     // I want to disable it for short moment to let animation complete

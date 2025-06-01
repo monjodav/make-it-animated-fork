@@ -1,6 +1,6 @@
 import { runOnJS, useAnimatedReaction, withSpring, withTiming } from "react-native-reanimated";
 import { useChannelAnimation } from "../provider/channel-animation";
-import { useUnreadAnimation } from "../provider/unread-animation";
+import { useCatchUpAnimation } from "../provider/catch-up-animation";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -18,7 +18,7 @@ export const useHeaderControlsAnimation = (index: number) => {
     currentChannelIndex,
     prevChannelIndex,
     undoChannelIndex,
-  } = useUnreadAnimation();
+  } = useCatchUpAnimation();
   const { panX, panY, absoluteYAnchor, handleChannelStatus } = useChannelAnimation();
 
   const resetUndoPressed = () => {

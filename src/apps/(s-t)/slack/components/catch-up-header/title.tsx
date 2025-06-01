@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { ReText } from "react-native-redash";
-import { useUnreadAnimation } from "../../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
 
 // slack-catch-up-cards-swipe-animation 🔽
 // slack-catch-up-header-counter-animation 🔽
@@ -22,7 +22,7 @@ const ENTER_ROTATE_X = 45;
 const ENTER_OPACITY = 0.5;
 
 export const Title: FC = () => {
-  const { currentChannelIndex, prevChannelIndex, isDone } = useUnreadAnimation();
+  const { currentChannelIndex, prevChannelIndex, isDone } = useCatchUpAnimation();
 
   const numberOfLeftChannels = useDerivedValue(() => {
     return Math.max(currentChannelIndex.get() + 1, 1).toFixed(0);

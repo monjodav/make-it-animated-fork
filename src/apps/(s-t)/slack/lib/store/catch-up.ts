@@ -51,7 +51,7 @@ export const initialState: State = {
   total: initialData.length,
 };
 
-const unreadStore = create<State & Actions>()((set) => ({
+const catchUpStore = create<State & Actions>()((set) => ({
   ...initialState,
   setChannelStatus: (index, status) => {
     set((state) => ({
@@ -69,6 +69,6 @@ const unreadStore = create<State & Actions>()((set) => ({
   },
 }));
 
-export const useUnreadStore = createSelectors(unreadStore);
+export const useCatchUpStore = createSelectors(catchUpStore);
 
 // slack-catch-up-cards-swipe-animation 🔼

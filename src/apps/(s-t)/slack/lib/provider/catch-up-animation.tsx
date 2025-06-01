@@ -1,6 +1,6 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
-import { useUnreadStore } from "../store/unread";
+import { useCatchUpStore } from "../store/catch-up";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -21,10 +21,10 @@ type ContextValue = {
   undoChannelIndex: SharedValue<number | null>;
 };
 
-const UnreadAnimationContext = createContext<ContextValue>({} as ContextValue);
+const CatchUpAnimationContext = createContext<ContextValue>({} as ContextValue);
 
-export const UnreadAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const total = useUnreadStore.use.total();
+export const CatchUpAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
+  const total = useCatchUpStore.use.total();
   const lastItemIndex = total - 1;
 
   const isDragging = useSharedValue(false);
@@ -48,15 +48,15 @@ export const UnreadAnimationProvider: FC<PropsWithChildren> = ({ children }) => 
   };
 
   return (
-    <UnreadAnimationContext.Provider value={value}>{children}</UnreadAnimationContext.Provider>
+    <CatchUpAnimationContext.Provider value={value}>{children}</CatchUpAnimationContext.Provider>
   );
 };
 
-export const useUnreadAnimation = () => {
-  const context = useContext(UnreadAnimationContext);
+export const useCatchUpAnimation = () => {
+  const context = useContext(CatchUpAnimationContext);
 
   if (!context) {
-    throw new Error("useUnreadAnimation must be used within an UnreadAnimationProvider");
+    throw new Error("useCatchUpAnimation must be used within an CatchUpAnimationProvider");
   }
 
   return context;

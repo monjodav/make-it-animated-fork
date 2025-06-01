@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { Pressable, Text } from "react-native";
-import { useUnreadAnimation } from "../../lib/provider/unread-animation";
+import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
 import Animated, { Easing, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useUnreadStore } from "../../lib/store/unread";
+import { useCatchUpStore } from "../../lib/store/catch-up";
 import * as Haptics from "expo-haptics";
 
 // slack-catch-up-cards-swipe-animation 🔽
@@ -12,9 +12,9 @@ const EASING = Easing.out(Easing.ease);
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const Right: FC = () => {
-  const total = useUnreadStore.use.total();
+  const total = useCatchUpStore.use.total();
 
-  const { currentChannelIndex, undoChannelIndex, isDone } = useUnreadAnimation();
+  const { currentChannelIndex, undoChannelIndex, isDone } = useCatchUpAnimation();
 
   const rOuterContainerStyle = useAnimatedStyle(() => {
     // I want to disable it for short moment to let animation complete
