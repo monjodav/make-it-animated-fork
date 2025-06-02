@@ -11,7 +11,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const DURATION = 150;
 
 export const CatchUpFooter: FC = () => {
-  const { isKeepUnreadPressed, isMarkAsReadPressed } = useCatchUpAnimation();
+  const { isKeepUnreadPressed, isMarkAsReadPressed, isDone } = useCatchUpAnimation();
 
   const keepUnreadScale = useSharedValue(1);
   const markAsReadScale = useSharedValue(1);
@@ -21,6 +21,7 @@ export const CatchUpFooter: FC = () => {
     const disabled = isKeepUnreadPressed.get() || isMarkAsReadPressed.get();
 
     return {
+      opacity: withTiming(isDone.get() ? 0 : 1, { duration: DURATION }),
       pointerEvents: disabled ? "none" : "auto",
     };
   });
