@@ -9,56 +9,71 @@ import Animated, {
   interpolate,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
 export const HEADER_HEIGHT = 50;
+const DURATION = 150;
 
 export const CustomHeader: FC = () => {
   const { netHeaderHeight } = useHomeHeaderHeight();
 
-  const { offsetY, headerTop, scrollDirection, offsetYAnchorOnChangeDirection } =
-    useAnimatedScroll();
+  const {
+    offsetY,
+    velocityYonEndDrag,
+    headerTop,
+    isHeaderVisible,
+    scrollDirection,
+    offsetYAnchorOnBeginDrag,
+    offsetYAnchorOnChangeDirection,
+  } = useAnimatedScroll();
 
   const headerTopAnchor = useSharedValue(0);
   const headerOpacity = useSharedValue(1);
   const headerOpacityAnchor = useSharedValue(1);
 
+  const skipTopInterpolation = useSharedValue(false);
+
+  const isTopOfList = useDerivedValue(() => offsetY.value < netHeaderHeight * 3);
+  const isVelocityHigh = useDerivedValue(() => Math.abs(velocityYonEndDrag.value) > 1.3);
+
   useAnimatedReaction(
     () => offsetYAnchorOnChangeDirection.value,
-    (offsetValue) => {
+    () => {
       headerTopAnchor.set(headerTop.get());
       headerOpacityAnchor.set(headerOpacity.get());
     }
   );
 
   const rPositionContainer = useAnimatedStyle(() => {
-    if (scrollDirection.value === "to-bottom") {
+    if (offsetY.get() <= 0 && skipTopInterpolation.get()) {
+      skipTopInterpolation.set(false);
+    }
+
+    if (isTopOfList.get() && !skipTopInterpolation.get()) {
       headerTop.set(
-        interpolate(
-          offsetY.value,
-          [
-            offsetYAnchorOnChangeDirection.get(),
-            offsetYAnchorOnChangeDirection.get() + netHeaderHeight,
-          ],
-          [headerTopAnchor.get(), -netHeaderHeight],
-          Extrapolation.CLAMP
-        )
+        interpolate(offsetY.value, [0, netHeaderHeight], [0, -netHeaderHeight], Extrapolation.CLAMP)
       );
     }
 
-    if (scrollDirection.value === "to-top") {
-      headerTop.set(
-        interpolate(
-          offsetY.value,
-          [
-            offsetYAnchorOnChangeDirection.get(),
-            offsetYAnchorOnChangeDirection.get() - netHeaderHeight,
-          ],
-          [headerTopAnchor.get(), 0],
-          Extrapolation.CLAMP
-        )
-      );
+    if (!isTopOfList.get()) {
+      if (!isHeaderVisible.get() && isVelocityHigh.get() && scrollDirection.get() === "to-top") {
+        headerTop.set(withTiming(0, { duration: DURATION }));
+        skipTopInterpolation.set(true);
+      }
+
+      if (isHeaderVisible.get() && !isVelocityHigh.get()) {
+        headerTop.set(
+          interpolate(
+            offsetY.value,
+            [offsetYAnchorOnBeginDrag.get(), offsetYAnchorOnBeginDrag.get() + netHeaderHeight],
+            [0, -netHeaderHeight],
+            Extrapolation.CLAMP
+          )
+        );
+      }
     }
 
     return {
@@ -67,32 +82,27 @@ export const CustomHeader: FC = () => {
   });
 
   const rOpacityContainer = useAnimatedStyle(() => {
-    if (scrollDirection.value === "to-bottom") {
+    if (isTopOfList.get() && !skipTopInterpolation.get()) {
       headerOpacity.set(
-        interpolate(
-          offsetY.value,
-          [
-            offsetYAnchorOnChangeDirection.get(),
-            offsetYAnchorOnChangeDirection.get() + netHeaderHeight,
-          ],
-          [headerOpacityAnchor.get(), 0],
-          Extrapolation.CLAMP
-        )
+        interpolate(offsetY.value, [0, netHeaderHeight * 0.75], [1, 0], Extrapolation.CLAMP)
       );
     }
 
-    if (scrollDirection.value === "to-top") {
-      headerOpacity.set(
-        interpolate(
-          offsetY.value,
-          [
-            offsetYAnchorOnChangeDirection.get(),
-            offsetYAnchorOnChangeDirection.get() - netHeaderHeight,
-          ],
-          [headerOpacityAnchor.get(), 1],
-          Extrapolation.CLAMP
-        )
-      );
+    if (!isTopOfList.get()) {
+      if (!isHeaderVisible.get() && isVelocityHigh.get() && scrollDirection.get() === "to-top") {
+        headerOpacity.set(withTiming(1, { duration: DURATION }));
+      }
+
+      if (isHeaderVisible.get() && !isVelocityHigh.get()) {
+        headerOpacity.set(
+          interpolate(
+            offsetY.value,
+            [offsetYAnchorOnBeginDrag.get(), offsetYAnchorOnBeginDrag.get() + netHeaderHeight],
+            [1, 0],
+            Extrapolation.CLAMP
+          )
+        );
+      }
     }
 
     return {
@@ -101,13 +111,10 @@ export const CustomHeader: FC = () => {
   });
 
   return (
-    <Animated.View
-      className="absolute left-0 right-0  bg-black z-50"
-      style={[{ height: netHeaderHeight }, rPositionContainer]}
-    >
+    <Animated.View className="absolute left-0 right-0  bg-black z-50" style={rPositionContainer}>
       <Animated.View
         className="flex-row items-center justify-between px-5"
-        style={rOpacityContainer}
+        style={[{ height: netHeaderHeight }, rOpacityContainer]}
       >
         <Logo width={110} height={30} />
         <View className="flex-row items-center gap-8">

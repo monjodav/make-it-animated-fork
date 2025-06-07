@@ -13,7 +13,12 @@ const posts: Post[] = [
   { images: Array.from({ length: 2 }).map((_, index) => index) },
   { images: Array.from({ length: 10 }).map((_, index) => index) },
   { images: Array.from({ length: 6 }).map((_, index) => index) },
-  { images: Array.from({ length: 16 }).map((_, index) => index) },
+  // { images: Array.from({ length: 16 }).map((_, index) => index) },
+  // { images: Array.from({ length: 12 }).map((_, index) => index) },
+  // { images: Array.from({ length: 4 }).map((_, index) => index) },
+  // { images: Array.from({ length: 12 }).map((_, index) => index) },
+  // { images: Array.from({ length: 2 }).map((_, index) => index) },
+  // { images: Array.from({ length: 10 }).map((_, index) => index) },
 ];
 
 export default function Home() {
