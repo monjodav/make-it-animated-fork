@@ -13,12 +13,10 @@ const posts: Post[] = [
   { images: Array.from({ length: 2 }).map((_, index) => index) },
   { images: Array.from({ length: 10 }).map((_, index) => index) },
   { images: Array.from({ length: 6 }).map((_, index) => index) },
-  // { images: Array.from({ length: 16 }).map((_, index) => index) },
-  // { images: Array.from({ length: 12 }).map((_, index) => index) },
-  // { images: Array.from({ length: 4 }).map((_, index) => index) },
-  // { images: Array.from({ length: 12 }).map((_, index) => index) },
-  // { images: Array.from({ length: 2 }).map((_, index) => index) },
-  // { images: Array.from({ length: 10 }).map((_, index) => index) },
+  { images: Array.from({ length: 16 }).map((_, index) => index) },
+  { images: Array.from({ length: 12 }).map((_, index) => index) },
+  { images: Array.from({ length: 4 }).map((_, index) => index) },
+  { images: Array.from({ length: 12 }).map((_, index) => index) },
 ];
 
 export default function Home() {
@@ -29,7 +27,9 @@ export default function Home() {
       <View className="flex-1 bg-black">
         <View style={{ height: topSafeAreaHeight }} />
         <View className="flex-1">
+          {/* instagram-header-on-scroll-animation 🔽 */}
           <CustomHeader />
+          {/* instagram-header-on-scroll-animation 🔼 */}
           <HomeList posts={posts} />
         </View>
       </View>

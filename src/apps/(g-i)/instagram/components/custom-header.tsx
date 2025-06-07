@@ -14,6 +14,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+// instagram-header-on-scroll-animation 🔽
+
 export const HEADER_HEIGHT = 50;
 const DURATION = 150;
 
@@ -22,7 +24,7 @@ export const CustomHeader: FC = () => {
 
   const {
     offsetY,
-    velocityYonEndDrag,
+    velocityOnEndDrag,
     headerTop,
     isHeaderVisible,
     scrollDirection,
@@ -34,11 +36,17 @@ export const CustomHeader: FC = () => {
   const headerOpacity = useSharedValue(1);
   const headerOpacityAnchor = useSharedValue(1);
 
+  // I need this key for case when the user is not on top of the list and the header is already shown
+  // so I can skip the interpolation of the header position and opacity when we are at the top of the list
   const skipTopInterpolation = useSharedValue(false);
 
+  // On top we have a bit different behavior of the list
+  // so I need to check if the user is on top of the list
   const isTopOfList = useDerivedValue(() => offsetY.value < netHeaderHeight * 3);
-  const isVelocityHigh = useDerivedValue(() => Math.abs(velocityYonEndDrag.value) > 1.3);
+  const isVelocityHigh = useDerivedValue(() => Math.abs(velocityOnEndDrag.value) > 1.25);
 
+  // I need anchors for the cases when user is dragging the list up and down without releasing
+  // so I can interpolate the header position and opacity properly
   useAnimatedReaction(
     () => offsetYAnchorOnChangeDirection.value,
     () => {
@@ -129,3 +137,5 @@ export const CustomHeader: FC = () => {
     </Animated.View>
   );
 };
+
+// instagram-header-on-scroll-animation 🔼
