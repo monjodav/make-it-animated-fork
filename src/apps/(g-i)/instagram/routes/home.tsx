@@ -1,53 +1,38 @@
-import { ScrollView, View, Text, useWindowDimensions } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselImage,
-  CarouselPagination,
-} from "../components/carousel";
-
-type Post = {
-  images: CarouselImage[];
-};
+import { View } from "react-native";
+import { CustomHeader } from "../components/custom-header";
+import { useHomeHeaderHeight } from "../lib/hooks/use-home-header-height";
+import { AnimatedScrollProvider } from "../lib/providers/animated-scroll";
+import { Post } from "../lib/types";
+import { HomeList } from "../components/home-list";
 
 const posts: Post[] = [
   { images: Array.from({ length: 8 }).map((_, index) => index) },
   { images: Array.from({ length: 11 }).map((_, index) => index) },
   { images: Array.from({ length: 4 }).map((_, index) => index) },
+  { images: Array.from({ length: 12 }).map((_, index) => index) },
+  { images: Array.from({ length: 2 }).map((_, index) => index) },
+  { images: Array.from({ length: 10 }).map((_, index) => index) },
+  { images: Array.from({ length: 6 }).map((_, index) => index) },
+  { images: Array.from({ length: 16 }).map((_, index) => index) },
+  { images: Array.from({ length: 12 }).map((_, index) => index) },
+  { images: Array.from({ length: 4 }).map((_, index) => index) },
+  { images: Array.from({ length: 12 }).map((_, index) => index) },
 ];
 
 export default function Home() {
-  const { width } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
+  const { topSafeAreaHeight } = useHomeHeaderHeight();
 
   return (
-    <ScrollView
-      className="flex-1 bg-black"
-      contentContainerClassName="gap-16 py-6"
-      style={{ paddingTop: insets.top + 16 }}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* instagram-pagination-dots-animation 🔽 */}
-      {posts.map((post, index) => (
-        <Carousel key={index} images={post.images}>
-          <CarouselContent
-            width={width}
-            renderItem={({ item }) => (
-              <View
-                className="bg-neutral-900 items-center justify-center aspect-square"
-                style={{ width }}
-              >
-                <Text className="text-neutral-600 text-5xl">{item}</Text>
-              </View>
-            )}
-          />
-          <View className="p-3 items-center">
-            <CarouselPagination />
-          </View>
-        </Carousel>
-      ))}
-      {/* instagram-pagination-dots-animation 🔼 */}
-    </ScrollView>
+    <AnimatedScrollProvider>
+      <View className="flex-1 bg-black">
+        <View style={{ height: topSafeAreaHeight }} />
+        <View className="flex-1">
+          {/* instagram-header-on-scroll-animation 🔽 */}
+          <CustomHeader />
+          {/* instagram-header-on-scroll-animation 🔼 */}
+          <HomeList posts={posts} />
+        </View>
+      </View>
+    </AnimatedScrollProvider>
   );
 }

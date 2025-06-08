@@ -6,6 +6,10 @@ export const instagram: App = {
   imageSource: InstagramImage,
   animations: [
     {
+      name: "Header on scroll animation",
+      href: "/instagram/home",
+    },
+    {
       name: "Pagination dots animation",
       href: "/instagram/home",
     },
