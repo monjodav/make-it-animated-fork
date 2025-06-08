@@ -25,7 +25,6 @@ type ContextValue = {
   scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>;
   scrollDirection: SharedValue<ScrollDirection>;
   offsetYAnchorOnBeginDrag: SharedValue<number>;
-  offsetYAnchorOnChangeDirection: SharedValue<number>;
 };
 
 const AnimatedScrollContext = createContext<ContextValue>({} as ContextValue);
@@ -64,7 +63,6 @@ export const AnimatedScrollProvider: FC<PropsWithChildren> = ({ children }) => {
     onScroll: directionOnScroll,
     scrollDirection,
     offsetYAnchorOnBeginDrag,
-    offsetYAnchorOnChangeDirection,
   } = useScrollDirection();
 
   const scrollHandler = useAnimatedScrollHandler({
@@ -111,7 +109,6 @@ export const AnimatedScrollProvider: FC<PropsWithChildren> = ({ children }) => {
     scrollHandler,
     scrollDirection,
     offsetYAnchorOnBeginDrag,
-    offsetYAnchorOnChangeDirection,
   };
 
   return <AnimatedScrollContext.Provider value={value}>{children}</AnimatedScrollContext.Provider>;
