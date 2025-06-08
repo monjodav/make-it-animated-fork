@@ -28,6 +28,20 @@ npm run android
 npm run dev
 ```
 
+## System Requirements
+
+- **Expo SDK 53** - For more details, check the [Expo 53 Documentation](https://docs.expo.dev/versions/latest/)
+
+### iOS Development
+
+- Xcode 16.0+
+- iOS 15.1+
+
+### Android Development
+
+- Android 7.0+ (API level 24+)
+- compileSdkVersion 35
+
 ## Project Structure
 
 The project is organized as follows:
