@@ -1,5 +1,5 @@
 import { DrawerActions } from "@react-navigation/native";
-import { useNavigation, usePathname } from "expo-router";
+import { useNavigation, useSegments } from "expo-router";
 import { AlignLeft } from "lucide-react-native";
 import React, { FC, useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
@@ -8,7 +8,7 @@ import * as Haptics from "expo-haptics";
 
 export const DrawerToggleButton: FC = () => {
   const navigation = useNavigation();
-  const pathname = usePathname();
+  const segments = useSegments();
 
   const opacity = useSharedValue(0);
 
@@ -19,7 +19,7 @@ export const DrawerToggleButton: FC = () => {
       withTiming(0.1, { duration: 600 })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [segments[2]]);
 
   return (
     <Animated.View
