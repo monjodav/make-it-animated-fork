@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
 import { useAppStore } from "@/src/shared/lib/store/app";
 import { useDrawer } from "@/src/shared/lib/providers/drawer-provider";
+import { Redirect } from "expo-router";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,

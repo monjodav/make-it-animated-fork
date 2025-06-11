@@ -13,6 +13,7 @@ import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
 import { raycast } from "./apps/r";
 import { slack } from "./apps/s";
+import { discord } from "./apps/d";
 
 type Animation = {
   name: string;
@@ -37,6 +38,7 @@ export const apps: App[] = [
   colorsApp,
   //------------------------
   // D
+  discord,
   // E
   // F
   fuse,

@@ -1,25 +1,25 @@
+import { Check, X } from "lucide-react-native";
 import React, { FC } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import * as Haptics from "expo-haptics";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   interpolateColor,
+  ZoomIn,
 } from "react-native-reanimated";
 
-// queue-custom-switch-animation 🔽
+// discord-custom-switch-animation 🔽
 
-const SWITCH_WIDTH = 54;
-const SWITCH_THUMB_SIZE = 26;
-const SWITCH_HORIZONTAL_PADDING = 6;
-const SWITCH_VERTICAL_PADDING = 6;
-const SWITCH_BORDER_WIDTH = 0.5;
-const SWITCH_HEIGHT = SWITCH_THUMB_SIZE + SWITCH_VERTICAL_PADDING * 2 + 2 * SWITCH_BORDER_WIDTH;
+const SWITCH_WIDTH = 40;
+const SWITCH_THUMB_SIZE = 20;
+const SWITCH_HORIZONTAL_PADDING = 3;
+const SWITCH_VERTICAL_PADDING = 3;
+const SWITCH_HEIGHT = SWITCH_THUMB_SIZE + SWITCH_VERTICAL_PADDING * 2;
 const SWITCH_MAX_OFFSET = SWITCH_WIDTH - SWITCH_THUMB_SIZE - SWITCH_HORIZONTAL_PADDING * 2;
 
-const DEFAULT_TRACK_COLOR = "#1F2024";
-const DEFAULT_ACTIVE_TRACK_COLOR = "#31D159";
+const TRACK_DEFAULT_COLOR = "#4E505B";
+const TRACK_ACTIVE_COLOR = "#5965F2";
 const THUMB_COLOR = "#F5F5F5";
 
 type Props = {
@@ -32,14 +32,13 @@ export const CustomSwitch: FC<Props> = ({ value = false, onValueChange }) => {
   const isOn = useSharedValue(value);
 
   const toggleSwitch = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     const newValue = !isOn.get();
     isOn.set(newValue);
 
     offset.set(
       withSpring(newValue ? SWITCH_MAX_OFFSET : 0, {
-        damping: 20,
-        stiffness: 180,
+        damping: 25,
+        stiffness: 300,
       })
     );
     onValueChange?.(newValue);
@@ -55,7 +54,7 @@ export const CustomSwitch: FC<Props> = ({ value = false, onValueChange }) => {
     const backgroundColor = interpolateColor(
       offset.get(),
       [0, SWITCH_MAX_OFFSET],
-      [DEFAULT_TRACK_COLOR, DEFAULT_ACTIVE_TRACK_COLOR]
+      [TRACK_DEFAULT_COLOR, TRACK_ACTIVE_COLOR]
     );
 
     return {
@@ -66,7 +65,22 @@ export const CustomSwitch: FC<Props> = ({ value = false, onValueChange }) => {
   return (
     <Pressable onPress={toggleSwitch}>
       <Animated.View style={[styles.track, backgroundStyle]}>
-        <Animated.View style={[styles.thumb, animatedStyle]} />
+        <Animated.View
+          style={[styles.thumb, animatedStyle]}
+          className="items-center justify-center"
+        >
+          {value ? (
+            // NOTE: When you have conditional rendering of few components with entering animation
+            // you should use key prop so it works correctly
+            <Animated.View key="check" entering={ZoomIn}>
+              <Check size={12} color={TRACK_ACTIVE_COLOR} strokeWidth={4} />
+            </Animated.View>
+          ) : (
+            <Animated.View key="x" entering={ZoomIn}>
+              <X size={14} color={TRACK_DEFAULT_COLOR} strokeWidth={3} />
+            </Animated.View>
+          )}
+        </Animated.View>
       </Animated.View>
     </Pressable>
   );
@@ -77,9 +91,6 @@ const styles = StyleSheet.create({
     width: SWITCH_WIDTH,
     height: SWITCH_HEIGHT,
     borderRadius: SWITCH_HEIGHT / 2,
-    borderWidth: SWITCH_BORDER_WIDTH,
-    borderColor: "#2C2B2F",
-    borderCurve: "continuous",
     paddingHorizontal: SWITCH_HORIZONTAL_PADDING,
     paddingVertical: SWITCH_VERTICAL_PADDING,
   },
@@ -91,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// queue-custom-switch-animation 🔼
+// discord-custom-switch-animation 🔼
