@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
 import { useAppStore } from "@/src/shared/lib/store/app";
 import { useDrawer } from "@/src/shared/lib/providers/drawer-provider";
+import { Redirect } from "expo-router";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -44,6 +45,9 @@ export default function Index() {
       drawerTextInputRef.current?.blur();
     }
   }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
+
+  // VS -------------------
+  return <Redirect href="/chatgpt/chat" />;
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
