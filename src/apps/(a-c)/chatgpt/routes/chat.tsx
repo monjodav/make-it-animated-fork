@@ -13,8 +13,19 @@ export const Chat: FC = () => {
   }, [navigation]);
 
   return (
-    <View className="flex-1 pt-20 bg-black">
-      <ShimmerText style={{ fontSize: 24, color: "#a1a1aa" }}>Processing Image</ShimmerText>
+    <View className="flex-1 bg-black">
+      <View className="flex-1 p-6">
+        <View className="w-56 h-10 rounded-full bg-neutral-900 mb-12 self-end" />
+        <View className="p-5 rounded-xl border border-white/15 self-start">
+          {/* chatgpt-shimmer-text-animation 🔽 */}
+          <ShimmerText style={{ fontSize: 16, color: "#525252" }}>Processing Image</ShimmerText>
+          {/* chatgpt-shimmer-text-animation 🔼 */}
+          <View className="w-[250px] h-3 rounded-full bg-neutral-900 mt-4 mb-2" />
+          <View className="w-[250px] h-3 rounded-full bg-neutral-900 mb-2" />
+          <View className="w-[200px] h-3 rounded-full bg-neutral-900 mb-2" />
+        </View>
+      </View>
+      <View className="h-[110px] bg-neutral-900 rounded-t-3xl " />
     </View>
   );
 };

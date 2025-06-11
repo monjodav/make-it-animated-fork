@@ -14,6 +14,8 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
 
+// chatgpt-shimmer-text-animation 🔽
+
 type ShimmerTextProps = TextProps & {
   children: React.ReactNode;
   speed?: number;
@@ -23,8 +25,8 @@ type ShimmerTextProps = TextProps & {
 
 export const ShimmerText = ({
   children,
-  speed = 0.75,
-  easing = Easing.out(Easing.ease),
+  speed = 0.5,
+  easing = Easing.in(Easing.ease),
   highlightColor = "#ffffff",
   ...textProps
 }: ShimmerTextProps) => {
@@ -91,7 +93,7 @@ export const ShimmerText = ({
               highlightColor,
               highlightColorTransparent,
             ]}
-            locations={[0, 0.45, 0.55, 1]}
+            locations={[0, 0.4, 0.6, 1]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={StyleSheet.absoluteFill}
@@ -101,3 +103,5 @@ export const ShimmerText = ({
     </View>
   );
 };
+
+// chatgpt-shimmer-text-animation 🔼
