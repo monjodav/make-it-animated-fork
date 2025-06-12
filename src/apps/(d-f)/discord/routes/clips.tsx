@@ -12,10 +12,10 @@ export const Clips: FC = () => {
         style={styles.borderCurve}
       >
         <View className="flex-1">
-          <View className="w-full h-3 rounded-full bg-white/5 mb-2" />
+          <View className="w-3/4 h-3 rounded-full bg-white/5 mb-3" />
           <View className="w-full h-2 rounded-full bg-white/5 mb-1.5" />
           <View className="w-full h-2 rounded-full bg-white/5 mb-1.5" />
-          <View className="w-3/4 h-2 rounded-full bg-white/5" />
+          <View className="w-1/2 h-2 rounded-full bg-white/5" />
         </View>
         {/* discord-custom-switch-animation 🔽 */}
         <CustomSwitch value={value} onValueChange={setValue} />

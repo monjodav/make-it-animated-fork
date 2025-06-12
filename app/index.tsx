@@ -46,6 +46,9 @@ export default function Index() {
     }
   }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
 
+  // VS ---------------
+  return <Redirect href="/discord/language" />;
+
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
       <TouchableOpacity

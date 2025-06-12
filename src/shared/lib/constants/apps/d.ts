@@ -9,5 +9,9 @@ export const discord: App = {
       name: "Custom switch animation",
       href: "/discord/clips",
     },
+    {
+      name: "Language radio button animation",
+      href: "/discord/language",
+    },
   ],
 };
