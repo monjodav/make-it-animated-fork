@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Animated, { useSharedValue, withTiming } from "react-native-reanimated";
 import { LanguageType } from "../lib/types";
@@ -9,17 +9,17 @@ import { CustomRadio } from "./custom-radio";
 type Props = {
   data: LanguageType;
   selected: boolean;
-  onPress: () => void;
+  onPress: (language: LanguageType) => void;
 };
 
-export const LanguageItem: FC<Props> = ({ data, selected, onPress }) => {
+const LanguageItem: FC<Props> = ({ data, selected, onPress }) => {
   const backdropOpacity = useSharedValue(0);
 
   return (
     <Pressable
       onPressIn={() => backdropOpacity.set(withTiming(1, { duration: 100 }))}
       onPressOut={() => backdropOpacity.set(withTiming(0, { duration: 100 }))}
-      onPress={onPress}
+      onPress={() => onPress(data)}
     >
       <View className="flex-row items-center gap-3 p-4">
         <Animated.View
@@ -36,5 +36,7 @@ export const LanguageItem: FC<Props> = ({ data, selected, onPress }) => {
     </Pressable>
   );
 };
+
+export default memo(LanguageItem);
 
 // discord-language-radio-button-animation 🔼

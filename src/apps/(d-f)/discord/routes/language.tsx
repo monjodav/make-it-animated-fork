@@ -1,6 +1,6 @@
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
-import { LanguageItem } from "../components/language-item";
+import LanguageItem from "../components/language-item";
 import { LanguageType } from "../lib/types";
 
 const languages: LanguageType[] = Array.from({ length: 20 }).map((_, index) => ({
@@ -10,6 +10,11 @@ const languages: LanguageType[] = Array.from({ length: 20 }).map((_, index) => (
 
 export const Language: FC = () => {
   const [currentLanguage, setCurrentLanguage] = useState<LanguageType>(languages[2]);
+
+  const handleListItemPress = useCallback(
+    (language: LanguageType) => setCurrentLanguage(language),
+    []
+  );
 
   return (
     <ScrollView
@@ -23,7 +28,7 @@ export const Language: FC = () => {
           <React.Fragment key={language.id}>
             <LanguageItem
               data={language}
-              onPress={() => setCurrentLanguage(language)}
+              onPress={handleListItemPress}
               selected={language.id === currentLanguage.id}
             />
             {index < languages.length - 1 && <View className="h-[0.5px] bg-white/10 ml-16" />}

@@ -14,6 +14,7 @@ const ACTIVE_DOT_SIZE = INACTIVE_RING_SIZE * 0.45;
 const ACTIVE_DOT_COLOR = "#F5F5F5";
 
 const DURATION = 150;
+const EASING = Easing.out(Easing.ease);
 
 type Props = {
   selected: boolean;
@@ -23,14 +24,14 @@ export const CustomRadio: FC<Props> = ({ selected }) => {
   const rActiveStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(selected ? 1 : 0, {
-        duration: DURATION * 2,
-        easing: Easing.out(Easing.ease),
+        duration: selected ? DURATION * 2 : DURATION,
+        easing: EASING,
       }),
       transform: [
         {
           scale: withTiming(selected ? 1 : 0.5, {
             duration: DURATION,
-            easing: Easing.out(Easing.ease),
+            easing: EASING,
           }),
         },
       ],
