@@ -105,6 +105,13 @@ export default ({ config }: { config: ExpoConfig }) => ({
           sounds: ["assets/sounds/cash.wav"],
         },
       ],
+      [
+        "react-native-vision-camera",
+        {
+          cameraPermissionText: "$(PRODUCT_NAME) needs access to your Camera.",
+          enableCodeScanner: true,
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
