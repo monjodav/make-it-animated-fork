@@ -10,6 +10,7 @@ import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
 import { BlurView } from "expo-blur";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { X } from "lucide-react-native";
+import { SkiaCorner } from "./skia-corner";
 
 export const CameraView: FC = () => {
   const device = useCameraDevice("back");
@@ -46,9 +47,39 @@ export const CameraView: FC = () => {
   return (
     <View className="flex-1" style={[StyleSheet.absoluteFill, styles.container]}>
       <Camera device={device} codeScanner={codeScanner} isActive style={styles.camera} />
-      <BlurView style={StyleSheet.absoluteFill} tint="dark" />
+      {/* <BlurView style={StyleSheet.absoluteFill} tint="dark" /> */}
       <Canvas style={StyleSheet.absoluteFill}>
         <DiffRect inner={inner} outer={outer} color="rgba(19, 19, 22, 0.5)" />
+        {/* Top-left corner */}
+        <SkiaCorner
+          path={`
+            M${(width - _innerRectWidth) / 2},${(height - _innerRectHeight) / 2 + 42}
+            v-10
+            a32,32 0 0 1 32,-32
+            h10
+          `}
+        />
+        {/* Top-right corner */}
+        <SkiaCorner
+          path={`M${(width + _innerRectWidth) / 2 - 42},${(height - _innerRectHeight) / 2}
+            h10
+            a32,32 0 0 1 32,32
+            v10`}
+        />
+        {/* Bottom-right corner */}
+        <SkiaCorner
+          path={`M${(width + _innerRectWidth) / 2},${(height + _innerRectHeight) / 2 - 42}
+            v10
+            a32,32 0 0 1 -32,32
+            h-10`}
+        />
+        {/* Bottom-left corner */}
+        <SkiaCorner
+          path={`M${(width - _innerRectWidth) / 2 + 42},${(height + _innerRectHeight) / 2}
+            h-10
+            a32,32 0 0 1 -32,-32
+            v-10`}
+        />
       </Canvas>
       <Pressable className="absolute right-5" style={{ top: insets.top + 20 }}>
         <X size={30} color="white" />

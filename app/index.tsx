@@ -44,7 +44,7 @@ export default function Index() {
 
   return (
     <View className="flex-1 items-center justify-center bg-[#131316]">
-      <CameraView />
+      {/* <CameraView /> */}
       {/* <TouchableOpacity
         activeOpacity={0.8}
         onPress={() =>
