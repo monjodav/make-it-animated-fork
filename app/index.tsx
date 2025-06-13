@@ -32,11 +32,11 @@ export default function Index() {
 
   return (
     <IndexAnimationProvider>
-      <View className="flex-1 items-center justify-center bg-[#131316]">
-        <PressToScanBtn />
+      <View className="flex-1 items-center justify-center">
         <CameraView />
-        <ExploreAnimationsBtn />
         <OtaUpdate />
+        <PressToScanBtn />
+        <ExploreAnimationsBtn />
       </View>
     </IndexAnimationProvider>
   );

@@ -1,11 +1,17 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
+import { SharedValue, useSharedValue } from "react-native-reanimated";
 
-type ContextValue = {};
+type ContextValue = {
+  state: SharedValue<number>;
+};
 
 const IndexAnimationContext = createContext<ContextValue>({} as ContextValue);
 
 export const IndexAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const value = {};
+  const state = useSharedValue<number>(0);
+
+  const value = { state };
+
   return <IndexAnimationContext.Provider value={value}>{children}</IndexAnimationContext.Provider>;
 };
 
