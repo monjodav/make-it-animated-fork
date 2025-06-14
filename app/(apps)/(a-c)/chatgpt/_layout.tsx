@@ -1,8 +1,11 @@
-import { Stack } from "expo-router";
+import { DrawerActions } from "@react-navigation/routers";
+import { Stack, useNavigation } from "expo-router";
 import { AlignLeft, SquarePen } from "lucide-react-native";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 
 export default function Layout() {
+  const navigation = useNavigation();
+
   return (
     <Stack screenOptions={{ headerShown: true }}>
       <Stack.Screen
@@ -11,7 +14,7 @@ export default function Layout() {
           title: "ChatGPT",
           headerTintColor: "white",
           headerLeft: () => (
-            <Pressable onPress={() => Alert.alert("Open Menu")}>
+            <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
               <AlignLeft size={20} color="white" />
             </Pressable>
           ),
