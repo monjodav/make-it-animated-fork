@@ -22,6 +22,8 @@ import { colorKit } from "reanimated-color-picker";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { QrCode } from "lucide-react-native";
+import { useAppStore } from "../lib/store/app";
 
 type AppSection = {
   title: string;
@@ -37,6 +39,8 @@ type Props = DrawerContentComponentProps;
 
 const Animations: FC<Props> = ({ navigation }) => {
   const [query, setQuery] = useState("");
+
+  const indexView = useAppStore.use.indexView();
 
   const { drawerTextInputRef } = useDrawer();
 
@@ -143,7 +147,11 @@ const Animations: FC<Props> = ({ navigation }) => {
             style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
             onPress={() => router.replace("/")}
           >
-            <MaterialCommunityIcons name="home-circle" size={24} color="#fafaf9" />
+            {indexView === "home" ? (
+              <MaterialCommunityIcons name="home-circle" size={24} color="#fafaf9" />
+            ) : (
+              <QrCode size={20} color="#fafaf9" />
+            )}
             <Text className="text-stone-50 text-sm/4">Home</Text>
           </Pressable>
           <View className="flex-row items-center gap-2">

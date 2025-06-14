@@ -1,64 +1,28 @@
-import React, { FC, useCallback, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  useWindowDimensions,
-  Alert,
-  Linking,
-  Pressable,
-  Text,
-} from "react-native";
+import React, { FC } from "react";
+import { View, StyleSheet, useWindowDimensions, Pressable, Text } from "react-native";
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
-import { BlurView } from "expo-blur";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { X } from "lucide-react-native";
 import { SkiaCorner } from "./skia-corner";
-import { useIndexAnimation } from "../../lib/providers/index-animation";
+import { useIndexAnimation } from "../../../lib/providers/index-animation";
 import Animated, {
-  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withSpring,
   withTiming,
   interpolate,
 } from "react-native-reanimated";
-import * as Haptics from "expo-haptics";
-import { CameraView as ExpoCamera, BarcodeScanningResult } from "expo-camera";
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+import { ExpoCamera } from "./expo-camera";
+import { AnimatedBlur } from "./animated-blur";
+import { useAppStore } from "../../../lib/store/app";
 
 export const CameraView: FC = () => {
-  const hasHandledScan = useRef(false);
-
-  const onBarcodeScanned = useCallback((scanningResult: BarcodeScanningResult) => {
-    if (hasHandledScan.current) return;
-
-    const urlFromCode = scanningResult.data;
-    if (!urlFromCode) return;
-
-    hasHandledScan.current = true;
-
-    if (urlFromCode.includes("miaapp://")) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      Linking.openURL(urlFromCode);
-      setTimeout(() => {
-        hasHandledScan.current = false;
-      }, 1000);
-    } else {
-      Alert.alert("Invalid URL", "Please scan a valid QR code from www.makeitanimated.dev.", [
-        {
-          text: "OK",
-          onPress: () => {
-            hasHandledScan.current = false;
-          },
-        },
-      ]);
-    }
-  }, []);
+  const setIndexView = useAppStore.use.setIndexView();
 
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
+
+  const { state } = useIndexAnimation();
 
   const _innerRectWidth = width > 500 ? 400 : width * 0.8;
   const _innerRectHeight = _innerRectWidth;
@@ -74,20 +38,6 @@ export const CameraView: FC = () => {
     32,
     32
   );
-
-  const { state } = useIndexAnimation();
-
-  const blurIntensity = useSharedValue(75);
-
-  const backdropAnimatedProps = useAnimatedProps(() => {
-    if (state.get() === 1) {
-      blurIntensity.set(withSpring(0));
-    } else {
-      blurIntensity.set(withSpring(75));
-    }
-
-    return { intensity: blurIntensity.value };
-  });
 
   const cornerStrokeWidth = useDerivedValue<number>(() => {
     if (state.get() === 1) {
@@ -121,20 +71,8 @@ export const CameraView: FC = () => {
 
   return (
     <View className="flex-1" style={[StyleSheet.absoluteFill, styles.container]}>
-      <ExpoCamera
-        style={StyleSheet.absoluteFill}
-        facing="back"
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr"],
-        }}
-        onBarcodeScanned={onBarcodeScanned}
-      />
-      <AnimatedBlurView
-        style={StyleSheet.absoluteFill}
-        tint="dark"
-        animatedProps={backdropAnimatedProps}
-        experimentalBlurMethod="dimezisBlurView"
-      />
+      <ExpoCamera />
+      <AnimatedBlur />
       <Canvas style={StyleSheet.absoluteFill}>
         <DiffRect inner={inner} outer={outer} color="rgba(19, 19, 22, 0.5)" />
         {/* Top-left corner */}
@@ -179,7 +117,10 @@ export const CameraView: FC = () => {
       <Pressable
         className="absolute right-5"
         style={{ top: insets.top + 20 }}
-        onPress={() => state.set(withTiming(0, { duration: 200 }))}
+        onPress={() => {
+          setIndexView("home");
+          state.set(withTiming(0, { duration: 200 }));
+        }}
       >
         <X size={30} color="white" />
       </Pressable>
