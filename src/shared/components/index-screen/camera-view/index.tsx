@@ -27,7 +27,7 @@ export const CameraView: FC = () => {
   const _innerRectWidth = width > 500 ? 400 : width * 0.8;
   const _innerRectHeight = _innerRectWidth;
 
-  const outer = rrect(rect(0, 0, width, height), 25, 25);
+  const outer = rrect(rect(0, 0, width, height), 0, 0);
   const inner = rrect(
     rect(
       (width - _innerRectWidth) / 2,
@@ -70,7 +70,7 @@ export const CameraView: FC = () => {
   });
 
   return (
-    <View className="flex-1" style={[StyleSheet.absoluteFill, styles.container]}>
+    <View className="flex-1" style={StyleSheet.absoluteFill}>
       <ExpoCamera />
       <AnimatedBlur />
       <Canvas style={StyleSheet.absoluteFill}>
@@ -115,6 +115,7 @@ export const CameraView: FC = () => {
         />
       </Canvas>
       <Pressable
+        hitSlop={20}
         className="absolute right-5"
         style={{ top: insets.top + 20 }}
         onPress={() => {
@@ -132,17 +133,10 @@ export const CameraView: FC = () => {
           <Text className="text-stone-900 font-medium">Scan QR code</Text>
         </View>
       </Animated.View>
-      <Animated.View style={[StyleSheet.absoluteFill, rOverlayStyle]} className="bg-[#131316]" />
+      <Animated.View
+        style={[StyleSheet.absoluteFill, rOverlayStyle]}
+        className="bg-[#131316] pointer-events-none"
+      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    borderCurve: "continuous",
-  },
-  camera: {
-    width: "100%",
-    height: "100%",
-  },
-});

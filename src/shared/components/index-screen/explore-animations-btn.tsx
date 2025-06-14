@@ -23,13 +23,14 @@ export const ExploreAnimationsBtn: FC = () => {
   });
 
   return (
-    <AnimatedTouchable
-      entering={FadeInDown.delay(1400)}
-      onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-      className="absolute bottom-0 px-20 py-5 rounded-full items-center self-center bg-stone-300"
-      style={[{ bottom: insets.bottom + 24 }, rContainerStyle]}
-    >
-      <Text className="text-stone-900 text-lg font-semibold">Explore animations</Text>
-    </AnimatedTouchable>
+    <Animated.View className="absolute" style={[{ bottom: insets.bottom + 24 }, rContainerStyle]}>
+      <AnimatedTouchable
+        entering={FadeInDown.delay(1400)}
+        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        className="px-20 py-5 rounded-full items-center self-center bg-stone-300"
+      >
+        <Text className="text-stone-900 text-lg font-semibold">Explore animations</Text>
+      </AnimatedTouchable>
+    </Animated.View>
   );
 };
