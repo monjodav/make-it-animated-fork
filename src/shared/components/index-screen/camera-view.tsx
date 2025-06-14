@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { FC, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -31,13 +31,9 @@ import Animated, {
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
-type CameraViewProps = {
-  onClose: () => void;
-};
-
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-export const CameraView = ({ onClose }: CameraViewProps) => {
+export const CameraView: FC = () => {
   const device = useCameraDevice("back");
   const { hasPermission } = useCameraPermission();
   const hasHandledScan = useRef(false);
@@ -92,6 +88,7 @@ export const CameraView = ({ onClose }: CameraViewProps) => {
   const { state } = useIndexAnimation();
 
   const blurIntensity = useSharedValue(75);
+
   const backdropAnimatedProps = useAnimatedProps(() => {
     if (state.get() === 1) {
       blurIntensity.set(withSpring(0));

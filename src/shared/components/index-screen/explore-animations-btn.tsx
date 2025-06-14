@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Text } from "react-native";
-import Animated, { FadeIn, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import Animated, { FadeInDown, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { Pressable } from "react-native";
 import { DrawerActions } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -24,7 +24,7 @@ export const ExploreAnimationsBtn: FC = () => {
 
   return (
     <AnimatedTouchable
-      entering={FadeIn}
+      entering={FadeInDown.delay(1400)}
       onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       className="absolute bottom-0 px-20 py-5 rounded-full items-center self-center bg-stone-300"
       style={[{ bottom: insets.bottom + 24 }, rContainerStyle]}

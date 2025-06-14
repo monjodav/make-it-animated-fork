@@ -1,9 +1,8 @@
 import React, { FC } from "react";
-import { StyleSheet, Pressable } from "react-native";
-import LottieView from "lottie-react-native";
-import qrCodeAnimation from "@/assets/lottie/qr-code.json";
+import { Pressable } from "react-native";
 import Animated, {
   FadeIn,
+  FadeInDown,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
@@ -11,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useIndexAnimation } from "@/src/shared/lib/providers/index-animation";
 import * as Haptics from "expo-haptics";
+import { QrCodeIcon } from "lucide-react-native";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -44,18 +44,16 @@ export const PressToScanBtn: FC = () => {
         className="gap-1.5 items-center"
         style={rPressableStyle}
       >
-        <LottieView source={qrCodeAnimation} autoPlay loop={false} style={styles.lottie} />
-        <Animated.Text entering={FadeIn.delay(3000)} className="text-stone-200 font-medium text-sm">
+        <Animated.View entering={FadeIn.delay(1000)}>
+          <QrCodeIcon size={60} color="#e7e5e4" />
+        </Animated.View>
+        <Animated.Text
+          entering={FadeInDown.delay(1200)}
+          className="text-stone-200 font-medium text-sm"
+        >
           Press to scan
         </Animated.Text>
       </AnimatedPressable>
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  lottie: {
-    width: 90,
-    height: 90,
-  },
-});
