@@ -1,4 +1,4 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useCallback, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -8,12 +8,6 @@ import {
   Pressable,
   Text,
 } from "react-native";
-import {
-  Camera,
-  useCameraDevice,
-  useCameraPermission,
-  useCodeScanner,
-} from "react-native-vision-camera";
 import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
 import { BlurView } from "expo-blur";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -30,42 +24,38 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import { CameraView as ExpoCamera, BarcodeScanningResult } from "expo-camera";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export const CameraView: FC = () => {
-  const device = useCameraDevice("back");
-  const { hasPermission } = useCameraPermission();
   const hasHandledScan = useRef(false);
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ["qr", "ean-13"],
-    onCodeScanned: (codes) => {
-      if (hasHandledScan.current) return;
+  const onBarcodeScanned = useCallback((scanningResult: BarcodeScanningResult) => {
+    if (hasHandledScan.current) return;
 
-      const urlFromCode = codes[0]?.value;
-      if (!urlFromCode) return;
+    const urlFromCode = scanningResult.data;
+    if (!urlFromCode) return;
 
-      hasHandledScan.current = true;
+    hasHandledScan.current = true;
 
-      if (urlFromCode.includes("miaapp://")) {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        Linking.openURL(urlFromCode);
-        setTimeout(() => {
-          hasHandledScan.current = false;
-        }, 1000);
-      } else {
-        Alert.alert("Invalid URL", "Please scan a valid QR code from www.makeitanimated.dev.", [
-          {
-            text: "OK",
-            onPress: () => {
-              hasHandledScan.current = false;
-            },
+    if (urlFromCode.includes("miaapp://")) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      Linking.openURL(urlFromCode);
+      setTimeout(() => {
+        hasHandledScan.current = false;
+      }, 1000);
+    } else {
+      Alert.alert("Invalid URL", "Please scan a valid QR code from www.makeitanimated.dev.", [
+        {
+          text: "OK",
+          onPress: () => {
+            hasHandledScan.current = false;
           },
-        ]);
-      }
-    },
-  });
+        },
+      ]);
+    }
+  }, []);
 
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
@@ -129,12 +119,16 @@ export const CameraView: FC = () => {
     };
   });
 
-  if (hasPermission === false) return <></>;
-  if (device === undefined) return <></>;
-
   return (
     <View className="flex-1" style={[StyleSheet.absoluteFill, styles.container]}>
-      <Camera device={device} codeScanner={codeScanner} isActive style={styles.camera} />
+      <ExpoCamera
+        style={StyleSheet.absoluteFill}
+        facing="back"
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr"],
+        }}
+        onBarcodeScanned={onBarcodeScanned}
+      />
       <AnimatedBlurView
         style={StyleSheet.absoluteFill}
         tint="dark"
