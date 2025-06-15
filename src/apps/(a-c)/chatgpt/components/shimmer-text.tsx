@@ -25,7 +25,7 @@ type ShimmerTextProps = TextProps & {
 
 export const ShimmerText = ({
   children,
-  speed = 0.5,
+  speed = 0.6,
   easing = Easing.in(Easing.ease),
   highlightColor = "#ffffff",
   ...textProps
