@@ -36,7 +36,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
   expo: {
     name: getEnvironmentValues().name,
     slug: "make-it-animated",
-    version: "1.1.5",
+    version: "1.1.6",
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",
@@ -103,6 +103,12 @@ export default ({ config }: { config: ExpoConfig }) => ({
         "expo-notifications",
         {
           sounds: ["assets/sounds/cash.wav"],
+        },
+      ],
+      [
+        "expo-camera",
+        {
+          cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
         },
       ],
     ],
