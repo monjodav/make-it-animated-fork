@@ -126,7 +126,15 @@ const Animations: FC<Props> = ({ navigation }) => {
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            router.push(item.animation.href);
+            if (Platform.OS === "android") {
+              // There is weird bug on Android when you navigate from drawer to one animation
+              // and after open drawer on go to other. It doesn't work so I added this setTimeout to fix it
+              setTimeout(() => {
+                router.push(item.animation.href);
+              }, 0);
+            } else {
+              router.push(item.animation.href);
+            }
             navigation.closeDrawer();
           }}
           style={styles.listItem}
