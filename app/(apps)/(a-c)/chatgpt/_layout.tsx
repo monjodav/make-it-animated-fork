@@ -12,6 +12,7 @@ export default function Layout() {
         name="chat"
         options={{
           title: "ChatGPT",
+          headerTitleAlign: "center",
           headerTintColor: "white",
           headerLeft: () => (
             <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>

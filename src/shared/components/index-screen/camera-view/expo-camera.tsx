@@ -4,10 +4,15 @@ import { Alert, Linking, StyleSheet } from "react-native";
 import * as Haptics from "expo-haptics";
 import { usePathname } from "expo-router";
 import { useAppStore } from "../../../lib/store/app";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useDrawerStatus } from "@react-navigation/drawer";
 
 export const ExpoCamera: FC = () => {
   const indexView = useAppStore.use.indexView();
   const pathname = usePathname();
+  const drawerStatus = useDrawerStatus();
+
+  const showCamera = pathname === "/" && indexView === "qr" && drawerStatus === "closed";
 
   const hasHandledScan = useRef(false);
 
@@ -43,15 +48,33 @@ export const ExpoCamera: FC = () => {
     [pathname]
   );
 
+  if (!showCamera)
+    return (
+      <Animated.View
+        key="no-camera"
+        entering={FadeIn.duration(200)}
+        exiting={FadeOut.duration(200)}
+        style={StyleSheet.absoluteFill}
+        className="bg-[#131316]"
+      />
+    );
+
   return (
-    <CameraView
-      active={pathname === "/" && indexView === "qr"}
-      facing="back"
-      barcodeScannerSettings={{
-        barcodeTypes: ["qr"],
-      }}
-      onBarcodeScanned={onBarcodeScanned}
-      style={StyleSheet.absoluteFill}
-    />
+    <Animated.View key="camera" exiting={FadeOut.duration(200)} style={StyleSheet.absoluteFill}>
+      <CameraView
+        facing="back"
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr"],
+        }}
+        onBarcodeScanned={onBarcodeScanned}
+        style={[StyleSheet.absoluteFill, styles.cameraView]}
+      />
+    </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  cameraView: {
+    backgroundColor: "#131316",
+  },
+});

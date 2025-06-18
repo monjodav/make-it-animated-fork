@@ -51,17 +51,13 @@ export const PressToScanBtn: FC = () => {
 
   const handlePress = () => {
     if (status?.granted) {
-      if (Platform.OS === "android") {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-      }
-
       setIndexView("qr");
 
       preOpenProgress.set(withTiming(1, { duration: STATE_DELAY }));
 
       const timeout = Platform.select({
         ios: STATE_DELAY / 50,
-        android: STATE_DELAY,
+        android: STATE_DELAY / 500,
       });
 
       const hapticInterval = setInterval(() => {
