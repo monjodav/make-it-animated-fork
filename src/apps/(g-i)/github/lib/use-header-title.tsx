@@ -3,7 +3,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { useNavigation } from "expo-router";
 import type React from "react";
 import { useEffect } from "react";
-import { Platform, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -23,8 +23,6 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
 
   const headerHeight = useHeaderHeight();
 
-  const isIOS = Platform.OS === "ios";
-
   const {
     targetRef: triggerRef,
     onTargetLayout: onLayout,
@@ -38,9 +36,7 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
     const triggerHeight = triggerMeasurement.value.height;
     const triggerPageY = triggerMeasurement.value.pageY;
 
-    const scrollDistance = isIOS ? triggerPageY - 2 * headerHeight : triggerPageY - headerHeight;
-    // Kinda bug on iOS and reanimated measure adds headerHeight to pageY if router header is enabled
-    // That's why we need to subtract 2 * headerHeight
+    const scrollDistance = triggerPageY - headerHeight;
 
     return {
       opacity: 1,
