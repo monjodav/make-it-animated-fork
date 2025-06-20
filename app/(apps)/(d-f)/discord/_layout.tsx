@@ -43,6 +43,12 @@ export default function DiscordLayout() {
           headerBackground: () => <HeaderBackground />,
         }}
       />
+      <Stack.Screen
+        name="account"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
