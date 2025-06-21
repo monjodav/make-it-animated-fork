@@ -28,9 +28,9 @@ export const VisitWebsite = () => {
         <Text className="text-pink-300 font-medium text-lg">Get code</Text>
         <AntDesign name="codesquare" size={16} color="#f9a8d4" />
       </View>
-      <View className="absolute -top-5 left-0 right-0 h-6">
+      <View className="absolute -top-9 left-0 right-0 h-10">
         <LinearGradient
-          colors={[colorKit.setAlpha("#131316", 0.3).hex(), "#131316"]}
+          colors={[colorKit.setAlpha("#131316", 0).hex(), "#131316"]}
           style={StyleSheet.absoluteFill}
           locations={[0, 1]}
         />
