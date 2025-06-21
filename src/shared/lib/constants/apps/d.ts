@@ -15,6 +15,10 @@ export const discord: App = {
     },
     {
       name: "Button shimmer effect animation",
+      href: "/discord/profile",
+    },
+    {
+      name: "Top tabs indicator animation",
       href: "/discord/account",
     },
   ],

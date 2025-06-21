@@ -3,12 +3,14 @@ import { ArrowLeft } from "lucide-react-native";
 import { Pressable, View, StyleSheet } from "react-native";
 import { DrawerActions } from "@react-navigation/native";
 
+const HEADER_TINT_COLOR = "#e5e5e5";
+
 const HeaderLeft = () => {
   const navigation = useNavigation();
 
   return (
     <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-      <ArrowLeft size={22} color="#e5e5e5" />
+      <ArrowLeft size={22} color={HEADER_TINT_COLOR} />
     </Pressable>
   );
 };
@@ -28,7 +30,8 @@ export default function DiscordLayout() {
         options={{
           headerShown: true,
           title: "Clips",
-          headerTintColor: "#e5e5e5",
+          headerTitleAlign: "center",
+          headerTintColor: HEADER_TINT_COLOR,
           headerLeft: () => <HeaderLeft />,
           headerBackground: () => <HeaderBackground />,
         }}
@@ -38,15 +41,27 @@ export default function DiscordLayout() {
         options={{
           headerShown: true,
           title: "Language",
-          headerTintColor: "#e5e5e5",
+          headerTitleAlign: "center",
+          headerTintColor: HEADER_TINT_COLOR,
           headerLeft: () => <HeaderLeft />,
           headerBackground: () => <HeaderBackground />,
         }}
       />
       <Stack.Screen
-        name="account"
+        name="profile"
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="account"
+        options={{
+          headerShown: true,
+          title: "Account",
+          headerTitleAlign: "center",
+          headerTintColor: HEADER_TINT_COLOR,
+          headerLeft: () => <HeaderLeft />,
+          headerBackground: () => <HeaderBackground />,
         }}
       />
     </Stack>
