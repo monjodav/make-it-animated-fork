@@ -1,25 +1,28 @@
 import { DrawerActions } from "@react-navigation/native";
-import { useNavigation, useSegments } from "expo-router";
+import { useNavigation } from "expo-router";
 import { AlignLeft } from "lucide-react-native";
 import React, { FC, useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import Animated, { useSharedValue, withSequence, withTiming } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
+import { useDrawerStatus } from "@react-navigation/drawer";
 
 export const DrawerToggleButton: FC = () => {
   const navigation = useNavigation();
-  const segments = useSegments();
+  const drawerStatus = useDrawerStatus();
 
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    opacity.value = withSequence(
-      withTiming(1, { duration: 300 }),
-      withTiming(1, { duration: 1000 }),
-      withTiming(0.1, { duration: 600 })
-    );
+    if (drawerStatus === "closed") {
+      opacity.value = withSequence(
+        withTiming(1, { duration: 300 }),
+        withTiming(1, { duration: 1000 }),
+        withTiming(0.1, { duration: 600 })
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segments[2]]);
+  }, [drawerStatus]);
 
   return (
     <Animated.View
