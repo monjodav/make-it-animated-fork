@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { chatgpt } from "@/src/shared/lib/constants/apps/c";
+import { discord } from "@/src/shared/lib/constants/apps/d";
 import { App } from "../lib/constants/apps-list";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
@@ -50,8 +50,12 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
-        label={getItemProps(chatgpt, 0).label}
-        onPress={getItemProps(chatgpt, 0).onPress}
+        label={getItemProps(discord, 0).label}
+        onPress={getItemProps(discord, 0).onPress}
+      />
+      <AnimationItem
+        label={getItemProps(discord, 1).label}
+        onPress={getItemProps(discord, 1).onPress}
       />
     </View>
   );
