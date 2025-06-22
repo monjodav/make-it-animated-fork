@@ -1,6 +1,6 @@
 import { BarcodeScanningResult, CameraView } from "expo-camera";
-import React, { FC, useCallback, useRef } from "react";
-import { Alert, Linking, StyleSheet } from "react-native";
+import React, { FC, useCallback, useMemo, useRef } from "react";
+import { Alert, Linking, StyleSheet, useWindowDimensions } from "react-native";
 import * as Haptics from "expo-haptics";
 import { usePathname } from "expo-router";
 import { useAppStore } from "../../../lib/store/app";
@@ -16,11 +16,40 @@ export const ExpoCamera: FC = () => {
 
   const hasHandledScan = useRef(false);
 
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  // Active box is 80% of screen width, centered
+  const boxDimensions = useMemo(() => {
+    const boxSize = screenWidth * 0.8;
+    const boxLeft = (screenWidth - boxSize) / 2;
+    const boxTop = (screenHeight - boxSize) / 2;
+    const boxRight = boxLeft + boxSize;
+    const boxBottom = boxTop + boxSize;
+
+    return { boxSize, boxLeft, boxTop, boxRight, boxBottom };
+  }, [screenWidth, screenHeight]);
+
   const onBarcodeScanned = useCallback(
     (scanningResult: BarcodeScanningResult) => {
       if (pathname !== "/") return;
 
       if (hasHandledScan.current) return;
+
+      // Get barcode bounds
+      const { origin, size } = scanningResult.bounds;
+      const barcodeLeft = origin.x;
+      const barcodeTop = origin.y;
+      const barcodeRight = origin.x + size.width;
+      const barcodeBottom = origin.y + size.height;
+
+      // Check if barcode is completely inside the active box
+      const isInsideBox =
+        barcodeLeft >= boxDimensions.boxLeft &&
+        barcodeTop >= boxDimensions.boxTop &&
+        barcodeRight <= boxDimensions.boxRight &&
+        barcodeBottom <= boxDimensions.boxBottom;
+
+      if (!isInsideBox) return;
 
       const urlFromCode = scanningResult.data;
 
@@ -45,7 +74,7 @@ export const ExpoCamera: FC = () => {
         ]);
       }
     },
-    [pathname]
+    [pathname, boxDimensions]
   );
 
   if (!showCamera)
