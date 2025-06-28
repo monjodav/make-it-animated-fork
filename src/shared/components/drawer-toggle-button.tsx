@@ -6,8 +6,11 @@ import { Pressable, StyleSheet } from "react-native";
 import Animated, { useSharedValue, withSequence, withTiming } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { useDrawerStatus } from "@react-navigation/drawer";
+import { usePathname } from "expo-router";
+import { cn } from "../lib/utils/cn";
 
 export const DrawerToggleButton: FC = () => {
+  const pathname = usePathname();
   const navigation = useNavigation();
   const drawerStatus = useDrawerStatus();
 
@@ -26,7 +29,10 @@ export const DrawerToggleButton: FC = () => {
 
   return (
     <Animated.View
-      className="absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none z-[9999]"
+      className={cn(
+        "absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none z-[9999]",
+        pathname === "/instagram/add-content" && "pl-20"
+      )}
       style={{ opacity }}
     >
       <Pressable
