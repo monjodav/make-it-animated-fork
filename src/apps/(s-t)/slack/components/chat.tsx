@@ -41,11 +41,13 @@ export const Chat: FC<Props> = ({ channel }) => {
         <View className="w-10 h-10 rounded-full items-center justify-center bg-neutral-800/50 absolute left-3">
           <Plus size={24} color="#737373" />
         </View>
-        <TextInput
-          placeholder={`Message #${channel.name}`}
-          placeholderTextColor="#a3a3a3"
-          className="px-16 py-6 pointer-events-none"
-        />
+        <View className="pointer-events-none">
+          <TextInput
+            placeholder={`Message #${channel.name}`}
+            placeholderTextColor="#a3a3a3"
+            className="px-16 py-6"
+          />
+        </View>
         <View className="w-10 h-10 rounded-full items-center justify-center absolute right-3">
           <Mic size={18} color="#737373" />
         </View>

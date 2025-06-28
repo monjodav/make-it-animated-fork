@@ -17,7 +17,7 @@ export const CatchUp: FC = () => {
     <CatchUpAnimationProvider>
       <View
         className="flex-1 px-5"
-        style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}
+        style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 8 }}
       >
         <LinearGradient colors={["#401147", "#20031F"]} style={StyleSheet.absoluteFill} />
         <CatchUpHeader />

@@ -116,7 +116,11 @@ export default function Home() {
         </View>
       </Animated.View>
       {/* List  */}
-      <Animated.ScrollView ref={listRef} showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView
+        ref={listRef}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+      >
         <View className="h-[600px] bg-stone-100 justify-end px-6 pb-3">
           <View className="h-6 w-[100px] bg-white mb-1" />
           <View className="h-6 w-[130px] bg-white mb-4" />

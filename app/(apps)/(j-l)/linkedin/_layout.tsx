@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { colorKit } from "reanimated-color-picker";
 
 // linkedin-bottom-tabs-indicator-animation 🔽
 
@@ -65,7 +66,7 @@ const TabsLayout = () => {
             height: tabBarHeight,
             overflow: "hidden",
             paddingBottom: tabBarPaddingBottom,
-            borderTopColor: "#ffffff20",
+            borderColor: colorKit.setAlpha("#ffffff", 0.3).hex(),
             backgroundColor: "#21262E",
           },
           tabBarButton: (props) => (
