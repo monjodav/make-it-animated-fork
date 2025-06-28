@@ -5,15 +5,10 @@ import { useHeaderBackground } from "../lib/use-header-background";
 import { useHeaderTitle } from "../lib/use-header-title";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AchievementsButton } from "../components/achievements-button";
-import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // github-profile-header-title-animation 🔽
 
 export default function Profile() {
-  useAndroidNote(
-    "After upgrading to Expo SDK 53 and Router v5, I've observed on some Android devices that the layout can suddenly break - components misalign or overlap unexpectedly. Issue is investigating and added to backlog"
-  );
-
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
