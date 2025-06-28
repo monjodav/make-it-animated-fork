@@ -66,6 +66,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
       package: getEnvironmentValues().package,
       googleServicesFile: getGoogleServicesFile(),
       permissions: ["NOTIFICATIONS"],
+      edgeToEdgeEnabled: true,
     },
     plugins: [
       "expo-router",

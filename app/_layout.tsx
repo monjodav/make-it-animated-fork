@@ -1,12 +1,10 @@
 import * as SplashScreen from "expo-splash-screen";
-import { Platform, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
 import "../global.css";
 import Animations from "@/src/shared/components/animations";
-import * as NavigationBar from "expo-navigation-bar";
-import { StatusBar } from "expo-status-bar";
 import * as Sentry from "@sentry/react-native";
 import { VisitWebsite } from "@/src/shared/components/visit-website";
 import { LogLevel, OneSignal } from "react-native-onesignal";
@@ -45,10 +43,6 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default function RootLayout() {
-  if (Platform.OS === "android") {
-    NavigationBar.setBackgroundColorAsync("black");
-  }
-
   useVersionCheck();
   useOtaUpdate();
 
@@ -72,9 +66,6 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
       <KeyboardProvider>
-        {Platform.OS === "android" && (
-          <StatusBar style="light" backgroundColor="black" translucent={false} />
-        )}
         <DrawerProvider>
           <Drawer
             drawerContent={(props: DrawerContentComponentProps) => <DrawerContent {...props} />}
