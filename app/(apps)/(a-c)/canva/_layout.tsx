@@ -9,6 +9,7 @@ export default function CanvaLayout() {
           headerShown: true,
           headerTransparent: true,
           headerTintColor: "black",
+          headerTitleAlign: "center",
         }}
       />
     </Stack>

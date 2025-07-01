@@ -120,6 +120,7 @@ export const AnimatedProfileImage: FC = () => {
         onPress={close}
         className="pointer-events-none"
       >
+        {/* Blur is still not so stable on Android. Consider to use backdrop color instead */}
         <AnimatedBlurView
           tint="systemChromeMaterialDark"
           style={StyleSheet.absoluteFill}

@@ -7,7 +7,6 @@ import {
   useHeaderHeight,
 } from "@react-navigation/elements";
 import Animated, {
-  Extrapolation,
   interpolate,
   useAnimatedRef,
   useAnimatedStyle,
@@ -18,15 +17,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ellipsis, Menu, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // canva-header-transition-animation 🔽
 
 export default function Projects() {
-  useAndroidNote(
-    "After upgrading to Expo SDK 53 and Router v5, I've observed on some Android devices that the layout can suddenly break - components misalign or overlap unexpectedly. Issue is investigating and added to backlog"
-  );
-
   const headerHeight = useHeaderHeight();
 
   const navigation = useNavigation();
@@ -67,7 +61,7 @@ export default function Projects() {
 
   const rImageHeaderStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(scrollOffsetY.value, rInputRange.value, [1, 0], Extrapolation.CLAMP),
+      opacity: interpolate(scrollOffsetY.value, rInputRange.value, [1, 0]),
     };
   });
 

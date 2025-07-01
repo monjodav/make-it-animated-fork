@@ -9,7 +9,7 @@ const HeaderLeft = () => {
   const navigation = useNavigation();
 
   return (
-    <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+    <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())} hitSlop={15}>
       <ArrowLeft size={22} color={HEADER_TINT_COLOR} />
     </Pressable>
   );

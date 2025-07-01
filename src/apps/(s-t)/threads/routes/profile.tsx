@@ -1,5 +1,4 @@
 import { View } from "react-native";
-import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 import { ProfileImageAnimationProvider } from "../lib/providers/profile-image-animation-provider";
 import { AnimatedProfileImage } from "../components/animated-profile-image";
 import { DefaultProfileImage } from "../components/default-profile-image";
@@ -8,8 +7,6 @@ import { AnimatedScrollView } from "../components/animated-scroll-view";
 // threads-profile-picture-animation 🔽
 
 export default function Profile() {
-  useAndroidNote("Blur effect is an experimental feature on Android and may not work as expected.");
-
   return (
     <ProfileImageAnimationProvider>
       <AnimatedScrollView>

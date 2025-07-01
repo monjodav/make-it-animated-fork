@@ -36,7 +36,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
   expo: {
     name: getEnvironmentValues().name,
     slug: "make-it-animated",
-    version: "1.1.6",
+    version: "1.1.7",
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",
@@ -66,6 +66,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
       package: getEnvironmentValues().package,
       googleServicesFile: getGoogleServicesFile(),
       permissions: ["NOTIFICATIONS"],
+      edgeToEdgeEnabled: true,
     },
     plugins: [
       "expo-router",

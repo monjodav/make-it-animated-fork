@@ -60,7 +60,7 @@ export const CustomFooter: FC = () => {
   return (
     <View
       className="absolute bottom-0 left-0 right-0 pt-1.5"
-      style={{ paddingBottom: bottomInset }}
+      style={{ paddingBottom: bottomInset + 8 }}
     >
       <View style={StyleSheet.absoluteFill}>
         <Animated.View
