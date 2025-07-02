@@ -36,7 +36,7 @@ export const DrawerToggleButton: FC = () => {
       style={{ opacity }}
     >
       <Pressable
-        className="w-10 h-10 items-center justify-center rounded-xl bg-[#131316]"
+        className="w-10 h-10 items-center justify-center rounded-xl bg-[#131316] mt-28"
         style={styles.borderCurve}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

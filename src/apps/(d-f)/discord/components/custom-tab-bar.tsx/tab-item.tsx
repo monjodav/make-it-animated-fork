@@ -32,7 +32,7 @@ export const TabItem: FC<Props> = ({ index, tabName, indexDecimal, onPress }) =>
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={onPress}
-      className="flex-1 items-center justify-center"
+      className="flex-1 items-center justify-center h-full"
     >
       <Reanimated.Text className="text-base font-semibold" style={rTextStyle}>
         {tabName}
