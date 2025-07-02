@@ -50,12 +50,12 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
-        label={getItemProps(discord, 0).label}
-        onPress={getItemProps(discord, 0).onPress}
+        label={getItemProps(discord, 2).label}
+        onPress={getItemProps(discord, 2).onPress}
       />
       <AnimationItem
-        label={getItemProps(discord, 1).label}
-        onPress={getItemProps(discord, 1).onPress}
+        label={getItemProps(discord, 3).label}
+        onPress={getItemProps(discord, 3).onPress}
       />
     </View>
   );
