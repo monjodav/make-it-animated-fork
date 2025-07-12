@@ -8,6 +8,7 @@ import { MenuTrigger } from "./menu-trigger";
 // apple-books-menu-buttons-animation 🔽
 
 export const Menu: FC = () => {
+  // Central state management for menu open/closed - drives all child animations
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const insets = useSafeAreaInsets();
@@ -15,16 +16,17 @@ export const Menu: FC = () => {
   return (
     <View
       style={[
-        StyleSheet.absoluteFillObject,
+        StyleSheet.absoluteFillObject, // Overlay entire screen for proper touch handling
         {
-          bottom: insets.bottom + 16,
+          bottom: insets.bottom + 16, // Respect safe area with additional padding
         },
       ]}
       className={cn(
-        "items-end justify-end px-5 pointer-events-box-none",
-        isMenuOpen && "pointer-events-auto"
+        "items-end justify-end px-5 pointer-events-box-none", // Right-aligned positioning, selective touch handling
+        isMenuOpen && "pointer-events-auto" // Enable full interaction when menu is open
       )}
     >
+      {/* Invisible backdrop for tap-to-close when menu is open */}
       {isMenuOpen && (
         <Pressable style={StyleSheet.absoluteFillObject} onPress={() => setIsMenuOpen(false)} />
       )}

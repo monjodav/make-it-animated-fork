@@ -13,9 +13,11 @@ type Props = {
 };
 
 export const MenuTrigger: FC<Props> = ({ isOpen, setIsOpen }) => {
+  // Trigger button animation: fade out and shrink when menu opens
+  // Creates visual feedback that menu is active and trigger is temporarily disabled
   const rStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(isOpen ? 0 : 1),
-    transform: [{ scale: withTiming(isOpen ? 0.5 : 1) }],
+    opacity: withTiming(isOpen ? 0 : 1), // Fade to invisible when menu is open
+    transform: [{ scale: withTiming(isOpen ? 0.5 : 1) }], // Shrink to half size for subtle disappear effect
   }));
 
   return (

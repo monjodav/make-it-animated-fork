@@ -11,6 +11,8 @@ type Props = {
 };
 
 export const MenuButtonsWrapper: FC<PropsWithChildren<Props>> = ({ isOpen, children }) => {
+  // Shared value tracks container height for proportional exit animations
+  // Each AnimatedRow uses this to calculate its translateY distance
   const containerHeight = useSharedValue(0);
 
   if (!children) {
@@ -20,6 +22,7 @@ export const MenuButtonsWrapper: FC<PropsWithChildren<Props>> = ({ isOpen, child
   return (
     <View
       className={cn("gap-1 pointer-events-none", isOpen && "pointer-events-auto")}
+      // Capture container dimensions for animation calculations - triggered on mount and resize
       onLayout={(e) => (containerHeight.value = e.nativeEvent.layout.height)}
     >
       {React.Children.map(children, (child, index) => {
@@ -27,13 +30,15 @@ export const MenuButtonsWrapper: FC<PropsWithChildren<Props>> = ({ isOpen, child
           return <></>;
         }
 
+        // Wrap each button in AnimatedRow with staggered animation props
+        // Index and numberOfRows enable proportional timing and spacing calculations
         return (
           <AnimatedRow
             key={index}
             isOpen={isOpen}
-            index={index}
-            numberOfRows={React.Children.count(children)}
-            containerHeight={containerHeight}
+            index={index} // Position in stack - affects animation delay and translateY
+            numberOfRows={React.Children.count(children)} // Total count for proportional calculations
+            containerHeight={containerHeight} // Shared reference for coordinated movement
           >
             {child}
           </AnimatedRow>
