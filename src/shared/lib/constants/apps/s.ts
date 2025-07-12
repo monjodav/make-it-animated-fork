@@ -1,4 +1,5 @@
 import SlackImage from "@/assets/images/apps/slack.png";
+import ShowcaseImage from "@/assets/images/apps/showcase.png";
 import { App } from "../apps-list";
 
 export const slack: App = {
@@ -12,6 +13,17 @@ export const slack: App = {
     {
       name: "Catch up header counter animation",
       href: "/slack/catch-up",
+    },
+  ],
+};
+
+export const showcase: App = {
+  name: "Showcase",
+  imageSource: ShowcaseImage,
+  animations: [
+    {
+      name: "Upcoming list scroll animation",
+      href: "/showcase/upcoming",
     },
   ],
 };
