@@ -3,6 +3,7 @@ import { ScrollView, View, StyleSheet } from "react-native";
 import LanguageItem from "../components/language-item";
 import { LanguageType } from "../lib/types";
 
+// Mock data generation for demo - simulates language selection list
 const languages: LanguageType[] = Array.from({ length: 20 }).map((_, index) => ({
   id: index,
   name: `Language ${index + 1}`,
@@ -11,6 +12,8 @@ const languages: LanguageType[] = Array.from({ length: 20 }).map((_, index) => (
 export const Language: FC = () => {
   const [currentLanguage, setCurrentLanguage] = useState<LanguageType>(languages[2]);
 
+  // Memoized handler prevents unnecessary re-renders of list items
+  // Critical for performance with animated components
   const handleListItemPress = useCallback(
     (language: LanguageType) => setCurrentLanguage(language),
     []

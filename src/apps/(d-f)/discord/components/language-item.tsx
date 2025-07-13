@@ -13,15 +13,19 @@ type Props = {
 };
 
 const LanguageItem: FC<Props> = ({ data, selected, onPress }) => {
+  // Shared value for press feedback - direct opacity control without re-renders
   const backdropOpacity = useSharedValue(0);
 
   return (
     <Pressable
+      // Fast press feedback: 100ms creates immediate tactile response
       onPressIn={() => backdropOpacity.set(withTiming(1, { duration: 100 }))}
       onPressOut={() => backdropOpacity.set(withTiming(0, { duration: 100 }))}
       onPress={() => onPress(data)}
     >
       <View className="flex-row items-center gap-3 p-4">
+        {/* Backdrop overlay using absoluteFill for full coverage */}
+        {/* Dark overlay (50% opacity) provides press feedback without obscuring content */}
         <Animated.View
           style={[StyleSheet.absoluteFill, { opacity: backdropOpacity }]}
           className="bg-[#1C1D24]/50"
