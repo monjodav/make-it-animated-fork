@@ -6,6 +6,8 @@ import { TAB_BAR_HEIGHT } from "../../lib/constants/account";
 
 // discord-top-tabs-indicator-animation 🔽
 
+// Horizontal padding around the entire tab bar - ensures consistent spacing from screen edges
+// Used in indicator width calculation to match visual boundaries
 const TAB_BAR_OUTER_PADDING = 20;
 
 type Props = TabBarProps<string>;
@@ -13,6 +15,8 @@ type Props = TabBarProps<string>;
 export function CustomTabBar({ tabNames, indexDecimal, onTabPress }: Props) {
   const { width } = useWindowDimensions();
 
+  // Calculate indicator width to match tab distribution
+  // Subtracts outer padding from both sides, then divides by tab count for equal spacing
   const indicatorWidth = (width - TAB_BAR_OUTER_PADDING * 2) / tabNames.length;
 
   return (
@@ -21,6 +25,7 @@ export function CustomTabBar({ tabNames, indexDecimal, onTabPress }: Props) {
         className="flex-row bg-[#101217] rounded-full items-center"
         style={styles.innerContainer}
       >
+        {/* Indicator animates beneath tabs - positioned first for proper z-layering */}
         <TabIndicator indexDecimal={indexDecimal} width={indicatorWidth} />
         {tabNames.map((tab, index) => {
           return (
@@ -30,6 +35,7 @@ export function CustomTabBar({ tabNames, indexDecimal, onTabPress }: Props) {
               tabName={tab}
               indexDecimal={indexDecimal}
               onPress={() => {
+                // Callback triggers external state update that drives indexDecimal animation
                 onTabPress(tab);
               }}
             />
@@ -46,7 +52,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     height: TAB_BAR_HEIGHT,
-    borderCurve: "continuous",
+    borderCurve: "continuous", // iOS 16+ continuous curves for softer visual appearance
   },
 });
 
