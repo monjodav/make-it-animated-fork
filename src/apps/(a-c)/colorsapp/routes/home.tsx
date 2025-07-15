@@ -3,21 +3,18 @@ import React, { FC } from "react";
 import Animated, {
   Extrapolation,
   interpolate,
-  useAnimatedRef,
   useAnimatedStyle,
-  useScrollViewOffset,
   withTiming,
 } from "react-native-reanimated";
-import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
 import { View } from "react-native";
 import { HomeHeader, Scroll_Distance } from "../components/home-header";
 import { Carousel } from "../components/carousel";
+import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
 
 // colorsapp-home-header-animation 🔽
 
 const Home: FC = () => {
-  const animatedRef = useAnimatedRef<ScrollView>();
-  const scrollOffsetY = useScrollViewOffset(animatedRef);
+  const { scrollOffsetY, scrollHandler } = useScrollViewOffset();
 
   const animatedHeight = useAnimatedStyle(() => ({
     height: withTiming(
@@ -31,7 +28,11 @@ const Home: FC = () => {
       <Animated.View className="overflow-hidden" style={animatedHeight}>
         <View className="h-2 w-full bg-[#1B1721]" />
       </Animated.View>
-      <Animated.ScrollView ref={animatedRef} showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+      >
         <View className="mt-5">
           {/* colorsapp-card-blurry-circles-animation 🔽 */}
           <Carousel />

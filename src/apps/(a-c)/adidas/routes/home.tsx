@@ -1,16 +1,11 @@
 import { Car, PawPrint, Percent, Search, UserRound } from "lucide-react-native";
 import { View, Text } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
 import { Marquee } from "@/src/shared/components/marquee";
+import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
 
 // adidas-home-header-marquee-animation 🔽
 
@@ -44,8 +39,7 @@ const TabItem = ({ label, isActive }: TabItemProps) => {
 export default function Home() {
   const insets = useSafeAreaInsets();
 
-  const listRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffsetY = useScrollViewOffset(listRef);
+  const { scrollOffsetY, scrollHandler } = useScrollViewOffset();
 
   const { targetRef, onTargetLayout, measurement } = useTargetMeasurement();
 
@@ -117,7 +111,7 @@ export default function Home() {
       </Animated.View>
       {/* List  */}
       <Animated.ScrollView
-        ref={listRef}
+        onScroll={scrollHandler}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
       >

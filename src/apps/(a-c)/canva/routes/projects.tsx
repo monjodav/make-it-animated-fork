@@ -8,15 +8,14 @@ import {
 } from "@react-navigation/elements";
 import Animated, {
   interpolate,
-  useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
-  useScrollViewOffset,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { Ellipsis, Menu, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
 
 // canva-header-transition-animation 🔽
 
@@ -26,10 +25,8 @@ export default function Projects() {
 
   const navigation = useNavigation();
 
-  // ScrollView ref for tracking scroll position via useScrollViewOffset
-  const listRef = useAnimatedRef<Animated.ScrollView>();
   // Real-time scroll Y position - drives all header transition animations
-  const scrollOffsetY = useScrollViewOffset(listRef);
+  const { scrollOffsetY, scrollHandler } = useScrollViewOffset();
   // Dynamic height of the hero section - measured via onLayout for responsive calculations
   const rImageHeaderHeight = useSharedValue(200); // Initial fallback: 200px
 
@@ -153,7 +150,12 @@ export default function Projects() {
   return (
     <View className="flex-1 bg-white">
       {/* Main scroll container - bounces disabled for smoother header transitions */}
-      <Animated.ScrollView ref={listRef} bounces={false} showsVerticalScrollIndicator={false}>
+      <Animated.ScrollView
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16} // 60fps = 16ms
+      >
         {/* Hero section - fades out during scroll and measures its own height */}
         <Animated.View
           style={[{ paddingTop: headerHeight }, rImageHeaderStyle]} // paddingTop prevents overlap with native header

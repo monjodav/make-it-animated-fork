@@ -8,14 +8,15 @@ import { useProfileImageAnimation } from "../lib/providers/profile-image-animati
 export const AnimatedScrollView: FC<PropsWithChildren> = ({ children }) => {
   const insets = useSafeAreaInsets();
 
-  const { listRef } = useProfileImageAnimation();
+  const { scrollHandler } = useProfileImageAnimation();
 
   return (
     <Animated.ScrollView
-      ref={listRef}
       className="bg-neutral-950"
       contentContainerClassName="px-4"
       contentContainerStyle={{ paddingTop: insets.top + 30 }}
+      onScroll={scrollHandler}
+      scrollEventThrottle={16}
     >
       {children}
     </Animated.ScrollView>

@@ -1,19 +1,19 @@
 import { useTargetMeasurement } from "@/src/shared/lib/hooks/use-target-measurment";
 import { createContext, FC, PropsWithChildren, useContext } from "react";
 import { useWindowDimensions } from "react-native";
-import Animated, {
+import {
   AnimatedRef,
   Easing,
   runOnJS,
+  ScrollHandlerProcessed,
   SharedValue,
   useAnimatedReaction,
-  useAnimatedRef,
-  useScrollViewOffset,
   useSharedValue,
   withDelay,
   withTiming,
 } from "react-native-reanimated";
 import { useBottomTabsStore } from "../store/bottom-tabs";
+import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
 
 // threads-profile-picture-animation 🔽
 
@@ -21,8 +21,8 @@ const _duration = 250;
 export const _timingConfig = { duration: _duration, easing: Easing.out(Easing.quad) };
 
 type ContextValue = {
-  listRef: AnimatedRef<Animated.ScrollView>;
   listOffsetX: SharedValue<number>;
+  scrollHandler: ScrollHandlerProcessed<Record<string, unknown>>;
   defaultProfileImageSize: number;
   expandedProfileImageSize: number;
   targetRef: AnimatedRef<React.Component<{}, {}, any>>;
@@ -49,8 +49,7 @@ export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children 
   const defaultProfileImageSize = 70;
   const expandedProfileImageSize = screenWidth * 0.65;
 
-  const listRef = useAnimatedRef<Animated.ScrollView>();
-  const listOffsetX = useScrollViewOffset(listRef);
+  const { scrollOffsetY: listOffsetX, scrollHandler } = useScrollViewOffset();
 
   const { targetRef, onTargetLayout, measurement } = useTargetMeasurement();
 
@@ -107,8 +106,8 @@ export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children 
   return (
     <ProfileImageAnimationContext.Provider
       value={{
-        listRef,
         listOffsetX,
+        scrollHandler,
         defaultProfileImageSize,
         expandedProfileImageSize,
         targetRef,

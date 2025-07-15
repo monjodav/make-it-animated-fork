@@ -195,7 +195,7 @@ const Animations: FC<Props> = ({ navigation }) => {
             ListHeaderComponent={_renderListHeader}
             ListEmptyComponent={_renderEmptyListComponent}
             contentContainerClassName="pt-3"
-            contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 70 }}
             stickyHeaderIndices={Platform.select({
               ios: stickyHeaderIndices,
               default: [],

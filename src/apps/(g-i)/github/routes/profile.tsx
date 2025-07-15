@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import { useHeaderHeight } from "@react-navigation/elements";
-import Animated, { useAnimatedRef, useScrollViewOffset } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import { useHeaderBackground } from "../lib/use-header-background";
 import { useHeaderTitle } from "../lib/use-header-title";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AchievementsButton } from "../components/achievements-button";
+import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
 
 // github-profile-header-title-animation 🔽
 
@@ -12,8 +13,7 @@ export default function Profile() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
-  const listRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffsetY = useScrollViewOffset(listRef);
+  const { scrollOffsetY, scrollHandler } = useScrollViewOffset();
 
   useHeaderBackground({ offsetY: scrollOffsetY });
 
@@ -24,12 +24,12 @@ export default function Profile() {
 
   return (
     <Animated.ScrollView
-      ref={listRef}
       className="flex-1 bg-black"
       contentContainerClassName="px-5"
       contentContainerStyle={{ paddingTop: headerHeight + 16, paddingBottom: insets.bottom }}
-      scrollEventThrottle={1000 / 60}
       indicatorStyle="white"
+      onScroll={scrollHandler}
+      scrollEventThrottle={16}
     >
       <View className="flex-row items-center gap-4 mb-6">
         <View className="w-20 h-20 rounded-full border border-white/15" />
