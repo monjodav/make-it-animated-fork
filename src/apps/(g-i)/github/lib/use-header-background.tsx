@@ -13,8 +13,12 @@ type Props = {
 export const useHeaderBackground = ({ offsetY }: Props) => {
   const navigation = useNavigation();
 
+  // Animate header bottom border visibility based on scroll position
   const rContainerStyle = useAnimatedStyle(() => {
     return {
+      // Show 0.5px border when scrolled, hide when at top
+      // 200ms timing provides smooth transition without lag
+      // Threshold: offsetY > 0 ensures border appears immediately on scroll
       borderBottomWidth: withTiming(offsetY.value > 0 ? 0.5 : 0, {
         duration: 200,
       }),
@@ -29,6 +33,8 @@ export const useHeaderBackground = ({ offsetY }: Props) => {
           style={[
             rContainerStyle,
             {
+              // 10% opacity white border provides subtle separation
+              // colorKit.setAlpha ensures consistent opacity calculation
               borderColor: colorKit.setAlpha("#ffffff", 0.1).hex(),
             },
           ]}

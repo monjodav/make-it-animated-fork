@@ -21,8 +21,13 @@ type Props = {
 export const useHeaderTitle = ({ offsetY, title }: Props) => {
   const navigation = useNavigation();
 
+  // Native header height includes status bar + navigation header
   const headerHeight = useHeaderHeight();
 
+  // Track username element position to calculate scroll trigger point
+  // triggerRef: attach to username element for measurement
+  // onLayout: callback when element dimensions change
+  // triggerMeasurement: shared value containing pageY, height, width
   const {
     targetRef: triggerRef,
     onTargetLayout: onLayout,
@@ -30,18 +35,26 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
   } = useTargetMeasurement();
 
   const rTitleStyle = useAnimatedStyle(() => {
+    // Hide title until username element measurements are available
     if (triggerMeasurement.value === null) {
       return { opacity: 0 };
     }
     const triggerHeight = triggerMeasurement.value.height;
     const triggerPageY = triggerMeasurement.value.pageY;
 
+    // Calculate when username starts disappearing under header
+    // scrollDistance: pixels scrolled when username touches header bottom
     const scrollDistance = triggerPageY - headerHeight;
 
     return {
       opacity: 1,
       transform: [
         {
+          // Slide title up from +30px to 0px as username disappears
+          // Animation range: username top edge touches header → username fully hidden
+          // Input: [scrollDistance, scrollDistance + triggerHeight] (scroll position)
+          // Output: [30, 0] (translateY in pixels)
+          // CLAMP: prevents over-animation beyond defined ranges
           translateY: interpolate(
             offsetY.value,
             [scrollDistance, scrollDistance + triggerHeight],
@@ -55,7 +68,7 @@ export const useHeaderTitle = ({ offsetY, title }: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      // This is temporary fix for headerTitleAlign: "center" not working properly on Android
+      // Android fix: 48px spacer compensates for headerTitleAlign: "center" bug
       headerLeft: () => <View className="w-12" />,
       headerTitle: () => {
         return (
