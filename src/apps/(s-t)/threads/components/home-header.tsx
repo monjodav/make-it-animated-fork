@@ -6,6 +6,7 @@ import { Logo } from "./logo";
 
 export const HomeHeader: FC = () => {
   return (
+    // Header content for collapsible tab system - appears/disappears based on scroll
     <View className="items-center justify-center">
       <Logo width={24} />
     </View>

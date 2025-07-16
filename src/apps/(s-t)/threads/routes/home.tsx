@@ -10,6 +10,7 @@ import { useScrollToTop } from "@react-navigation/native";
 // threads-home-header-tabs-animation 🔽
 
 export const Home: FC = () => {
+  // Ref required for react-navigation's scroll-to-top functionality on tab press
   const containerRef = useRef(null);
   useScrollToTop(containerRef);
 
@@ -25,9 +26,9 @@ export const Home: FC = () => {
           borderBottomWidth: 0.5,
           borderBottomColor: "#262626",
         }}
-        renderTabBar={(props) => <TopTabs {...props} />}
-        initialTabName="For You"
-        revealHeaderOnScroll
+        renderTabBar={(props) => <TopTabs {...props} />} // Custom tab bar with animated indicator
+        initialTabName="For You" // Default active tab matches Threads UX pattern
+        revealHeaderOnScroll // Shows header when scrolling up, hides when scrolling down
       >
         <Tabs.Tab name="For You">
           <HomeTabContent tabName="For You" />
