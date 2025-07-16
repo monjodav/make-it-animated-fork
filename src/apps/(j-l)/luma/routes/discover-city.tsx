@@ -14,10 +14,13 @@ export default function DiscoverCity() {
 
   const insets = useSafeAreaInsets();
 
+  // Shared scroll position drives HeaderImage parallax and scale transformations
   const scrollY = useSharedValue(0);
 
+  // Worklet-optimized scroll handler for 60fps parallax animations
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { y } }) => {
+      // Direct shared value assignment runs on UI thread for smooth transforms
       scrollY.value = y;
     },
   });
@@ -44,6 +47,7 @@ export default function DiscoverCity() {
         }}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
+        // 16.67ms throttling = ~60fps for smooth parallax without performance overhead
         scrollEventThrottle={1000 / 60}
       />
     </View>

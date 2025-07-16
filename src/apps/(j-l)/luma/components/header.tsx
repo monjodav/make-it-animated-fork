@@ -4,12 +4,16 @@ import { Map } from "lucide-react-native";
 
 // luma-blurred-header-image-animation 🔽
 
+// Full screen width for seamless header coverage
 export const _headerWidth = Dimensions.get("window").width;
+// 80% of screen height creates immersive header without overwhelming content
 export const _headerHeight = Dimensions.get("window").height * 0.8;
+// 30px offset prevents header overlap with status bar and enables pull-to-scale effect
 export const _topOffset = 30;
 
 export const Header: FC = () => {
   return (
+    // Subtract topOffset to account for absolute positioned HeaderImage offset
     <View
       className="justify-end"
       style={{ width: _headerWidth, height: _headerHeight - _topOffset }}
