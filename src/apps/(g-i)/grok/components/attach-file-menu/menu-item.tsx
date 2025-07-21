@@ -2,6 +2,8 @@ import { cn } from "@/src/shared/lib/utils/cn";
 import React, { FC } from "react";
 import { View, Text, Pressable } from "react-native";
 
+// grok-attach-file-menu-animation 🔽
+
 type Props = {
   icon: React.ReactNode;
   label: string;
@@ -31,3 +33,5 @@ export const MenuItem: FC<Props> = ({
     </Pressable>
   );
 };
+
+// grok-attach-file-menu-animation 🔼

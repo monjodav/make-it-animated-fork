@@ -9,6 +9,8 @@ import Animated, {
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAttachFileMenu } from "../../lib/providers/attach-file-menu";
 
+// grok-attach-file-menu-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const MenuTrigger: FC = () => {
@@ -44,3 +46,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// grok-attach-file-menu-animation 🔼

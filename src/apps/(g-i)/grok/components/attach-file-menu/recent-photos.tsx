@@ -6,9 +6,11 @@ import Animated, { useAnimatedStyle, withTiming, Easing } from "react-native-rea
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pressable } from "react-native";
 
+// grok-attach-file-menu-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const DURATION = 400;
+const DURATION = 350;
 const EASING = Easing.inOut(Easing.ease);
 
 export const RecentPhotos = () => {
@@ -19,8 +21,8 @@ export const RecentPhotos = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(isMenuOpen.get() ? 1 : 0, { duration: DURATION, easing: EASING }),
-      left: withTiming(isMenuOpen.get() ? 16 : 26, { duration: DURATION, easing: EASING }),
-      top: withTiming(isMenuOpen.get() ? insets.top + 40 : insets.top + 30, {
+      left: withTiming(isMenuOpen.get() ? 16 : 24, { duration: DURATION, easing: EASING }),
+      top: withTiming(isMenuOpen.get() ? insets.top + 40 : insets.top + 32, {
         duration: DURATION,
         easing: EASING,
       }),
@@ -38,3 +40,5 @@ export const RecentPhotos = () => {
     </AnimatedPressable>
   );
 };
+
+// grok-attach-file-menu-animation 🔼

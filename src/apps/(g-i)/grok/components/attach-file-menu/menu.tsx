@@ -7,6 +7,8 @@ import { Backdrop } from "./backdrop";
 import { Overlay } from "./overlay";
 import { RecentPhotos } from "./recent-photos";
 
+// grok-attach-file-menu-animation 🔽
+
 export const Menu: FC = () => {
   const { isMenuOpen } = useAttachFileMenu();
 
@@ -25,3 +27,5 @@ export const Menu: FC = () => {
     </Animated.View>
   );
 };
+
+// grok-attach-file-menu-animation 🔼

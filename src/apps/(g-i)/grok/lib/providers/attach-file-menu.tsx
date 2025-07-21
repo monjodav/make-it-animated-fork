@@ -1,6 +1,8 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
 
+// grok-attach-file-menu-animation 🔽
+
 type ContextValue = {
   isMenuOpen: SharedValue<boolean>;
 };
@@ -21,6 +23,7 @@ export const useAttachFileMenu = () => {
   if (!context) {
     throw new Error("useAttachFileMenu must be used within an AttachFileMenuProvider");
   }
-
   return context;
 };
+
+// grok-attach-file-menu-animation 🔼

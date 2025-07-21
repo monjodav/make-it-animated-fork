@@ -4,6 +4,8 @@ import { AnimatedRow } from "./animated-row";
 import { useAttachFileMenu } from "../../lib/providers/attach-file-menu";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// grok-attach-file-menu-animation 🔽
+
 export const MenuItemsWrapper: FC<PropsWithChildren> = ({ children }) => {
   const insets = useSafeAreaInsets();
 
@@ -48,3 +50,5 @@ export const MenuItemsWrapper: FC<PropsWithChildren> = ({ children }) => {
     </Animated.View>
   );
 };
+
+// grok-attach-file-menu-animation 🔼

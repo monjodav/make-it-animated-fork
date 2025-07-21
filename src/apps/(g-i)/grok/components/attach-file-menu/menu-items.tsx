@@ -4,6 +4,8 @@ import { MenuItem } from "./menu-item";
 import { Camera, File, Fullscreen, ImagePlus, Images } from "lucide-react-native";
 import { Alert } from "react-native";
 
+// grok-attach-file-menu-animation 🔽
+
 const _iconSize = 16;
 const _iconColor = "black";
 
@@ -41,3 +43,5 @@ export const MenuItems: FC = () => {
     </MenuItemsWrapper>
   );
 };
+
+// grok-attach-file-menu-animation 🔼

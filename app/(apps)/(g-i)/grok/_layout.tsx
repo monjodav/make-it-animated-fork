@@ -4,6 +4,8 @@ import { Stack } from "expo-router";
 import { Ghost, MenuIcon } from "lucide-react-native";
 import { Alert, View, StyleSheet, Pressable } from "react-native";
 
+// grok-attach-file-menu-animation 🔽
+
 export default function Layout() {
   return (
     <AttachFileMenuProvider>
@@ -35,3 +37,5 @@ export default function Layout() {
     </AttachFileMenuProvider>
   );
 }
+
+// grok-attach-file-menu-animation 🔼

@@ -4,6 +4,8 @@ import { useAttachFileMenu } from "../../lib/providers/attach-file-menu";
 import Animated, { useAnimatedProps, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { BlurView } from "expo-blur";
 
+// grok-attach-file-menu-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -11,7 +13,7 @@ export const Backdrop: FC = () => {
   const { isMenuOpen } = useAttachFileMenu();
 
   const backdropAnimatedProps = useAnimatedProps(() => {
-    if (Platform.OS === "android") return { intensity: 0 };
+    if (Platform.OS !== "ios") return { intensity: 0 };
     const intensity = withTiming(isMenuOpen.get() ? 75 : 0);
     return {
       intensity,
@@ -19,6 +21,7 @@ export const Backdrop: FC = () => {
   });
 
   const rContainerStyle = useAnimatedStyle(() => {
+    if (Platform.OS !== "android") return { opacity: 0 };
     return {
       opacity: withTiming(isMenuOpen.get() ? 1 : 0),
     };
@@ -44,3 +47,5 @@ export const Backdrop: FC = () => {
     </Pressable>
   );
 };
+
+// grok-attach-file-menu-animation 🔼

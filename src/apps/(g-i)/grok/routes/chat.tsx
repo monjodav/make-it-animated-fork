@@ -80,7 +80,9 @@ export const Chat: FC = () => {
           <Text className="text-neutral-500 text-xl font-medium mb-5 mt-1 ml-1">Ask Anything</Text>
           <View className="flex-row justify-between h-9">
             <View className="flex-row items-center gap-2">
+              {/* grok-attach-file-menu-animation 🔽 */}
               <MenuTrigger />
+              {/* grok-attach-file-menu-animation 🔼 */}
               <View className="w-[100px] h-full border border-white/5 rounded-full" />
               <View className="aspect-square h-full border border-white/5 rounded-full" />
               <View className="aspect-square h-full border border-white/5 rounded-full" />
