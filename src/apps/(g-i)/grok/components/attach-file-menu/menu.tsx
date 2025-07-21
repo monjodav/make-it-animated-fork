@@ -12,6 +12,8 @@ import { RecentPhotos } from "./recent-photos";
 export const Menu: FC = () => {
   const { isMenuOpen } = useAttachFileMenu();
 
+  // Pointer events optimization: prevents touch events when menu is closed
+  // Avoids invisible overlay blocking interactions with underlying content
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       pointerEvents: isMenuOpen.get() ? "auto" : "none",
@@ -19,10 +21,16 @@ export const Menu: FC = () => {
   });
 
   return (
+    // Full-screen container with bottom alignment for menu slide-up effect
+    // px-8 provides consistent horizontal padding for all menu components
     <Animated.View className="justify-end px-8" style={[StyleSheet.absoluteFill, rContainerStyle]}>
+      {/* Platform-specific blur/overlay backdrop */}
       <Backdrop />
+      {/* Top-positioned animated header element */}
       <RecentPhotos />
+      {/* Main menu with staggered slide-in animation */}
       <MenuItems />
+      {/* iOS-only blur overlay for depth effect */}
       <Overlay />
     </Animated.View>
   );
