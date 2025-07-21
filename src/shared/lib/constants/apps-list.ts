@@ -7,7 +7,7 @@ import { pinterest } from "./apps/p";
 import { x } from "./apps/x";
 import { viber } from "./apps/v";
 import { whatsapp } from "./apps/w";
-import { github, gmail, googleChrome } from "./apps/g";
+import { github, gmail, googleChrome, grok } from "./apps/g";
 import { queue } from "./apps/q";
 import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
@@ -45,9 +45,10 @@ export const apps: App[] = [
   fuse,
   //------------------------
   // G
+  github,
   googleChrome,
   gmail,
-  github,
+  grok,
   // H
   // I
   instagram,

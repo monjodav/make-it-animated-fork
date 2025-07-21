@@ -1,6 +1,7 @@
 import GoogleChromeImage from "@/assets/images/apps/google-chrome.png";
 import GmailImage from "@/assets/images/apps/gmail.png";
 import GithubImage from "@/assets/images/apps/github.png";
+import GrokImage from "@/assets/images/apps/grok.png";
 import { App } from "../apps-list";
 
 export const googleChrome: App = {
@@ -52,6 +53,17 @@ export const github: App = {
     {
       name: "Achievements carousel animation",
       href: "/github/achievements",
+    },
+  ],
+};
+
+export const grok: App = {
+  name: "Grok",
+  imageSource: GrokImage,
+  animations: [
+    {
+      name: "Attach file menu animation",
+      href: "/grok/chat",
     },
   ],
 };

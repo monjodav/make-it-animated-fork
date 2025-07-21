@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -62,11 +62,7 @@ export const AnimatedRow: FC<PropsWithChildren<Props>> = ({
     ],
   }));
 
-  return (
-    <View>
-      <Animated.View style={[rInnerStyle, styles.container]}>{children}</Animated.View>
-    </View>
-  );
+  return <Animated.View style={[rInnerStyle, styles.container]}>{children}</Animated.View>;
 };
 
 const styles = StyleSheet.create({
