@@ -8,34 +8,48 @@ import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-pro
 
 // gmail-bottom-tab-bar-and-fab-animation 🔽
 
+// Animation duration (300ms) provides smooth tab bar hide/show transitions
+const _duration = 300;
+
+// Enum for tab types
 export enum Tab {
   Inbox = "inbox",
   Meet = "meet",
 }
 
-const _duration = 200;
-
+// Custom bottom tab bar with scroll-based hide/show animation
+// Coordinates with header animation for unified Gmail UX
 export const CustomTabBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
+  // Get the total height of the tab bar
   const { grossHeight } = useBottomTabBarHeight();
 
+  // Shared animation state from centralized provider
+  // Enables coordinated animations between header, tab bar, and FAB
   const { listOffsetY, offsetYAnchorOnBeginDrag, scrollDirection } = useAnimatedScrollList();
 
+  // Tab bar animation style - hides when scrolling down, shows when scrolling up
   const rContainerStyle = useAnimatedStyle(() => {
+    // Hide condition: scrolled beyond drag start point AND scrolling down
+    // Prevents hiding on small scroll movements or direction changes
     if (
       listOffsetY.value >= offsetYAnchorOnBeginDrag.value &&
       scrollDirection.value === "to-bottom"
     ) {
+      // Move tab bar down by its full height (negative bottom = hidden)
       return {
         bottom: withTiming(-grossHeight, { duration: _duration }),
       };
     }
 
+    // Show condition: any other scroll state (up-scroll or near top)
+    // Return tab bar to natural position (bottom: 0)
     return {
       bottom: withTiming(0, { duration: _duration }),
     };
   });
 
   return (
+    // Fixed positioned tab bar with animated bottom offset
     <Animated.View
       className="absolute bottom-0 left-0 right-0 bg-neutral-800 flex-row"
       style={[rContainerStyle, { height: grossHeight }]}
@@ -43,7 +57,7 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ navigation, state }) => {
       <Pressable
         className="flex-1 items-center pt-4"
         onPress={() => navigation.navigate(Tab.Inbox)}
-        android_ripple={{ color: "transparent" }}
+        android_ripple={{ color: "transparent" }} // Disable default ripple for custom styling
       >
         <Mail size={20} color={state.index === 0 ? "darksalmon" : "gray"} />
       </Pressable>
