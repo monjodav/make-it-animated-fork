@@ -15,6 +15,7 @@ import { colorKit } from "reanimated-color-picker";
 
 // linkedin-bottom-tabs-indicator-animation 🔽
 
+// Tab enum defines route names for type-safe navigation and animation state management
 enum Tab {
   Home = "home",
   Video = "video",
@@ -23,32 +24,41 @@ enum Tab {
   Jobs = "jobs",
 }
 
+// Base tab bar height excluding safe area - matches LinkedIn's compact design
 const TAB_BAR_HEIGHT_WITHOUT_INSET = 40;
+// Indicator height: 2px creates subtle underline without overwhelming tab content
 const ANIMATED_BAR_HEIGHT = 2;
 
 const TabsLayout = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
+  // Safe area calculation: bottom inset + 16px padding ensures proper spacing on all devices
   const tabBarPaddingBottom = insets.bottom + 16;
   const tabBarHeight = tabBarPaddingBottom + TAB_BAR_HEIGHT_WITHOUT_INSET;
+  // Equal width distribution: screen width divided by tab count for consistent indicator sizing
   const animatedBarWidth = width / Object.keys(Tab).length;
 
+  // Shared value tracks current tab for smooth indicator animation coordination
   const currentTab = useSharedValue(Tab.Home);
 
+  // Position mapping: calculates precise left offset for indicator animation
+  // Uses 2px edge padding to prevent indicator from touching screen boundaries
   const left: Record<Tab, number> = {
-    [Tab.Home]: 2, // Value is 2 to keep a small gap between the animated bar and left edge of the screen
-    [Tab.Video]: animatedBarWidth,
-    [Tab.MyNetwork]: animatedBarWidth * 2,
-    [Tab.Notifications]: animatedBarWidth * 3,
-    [Tab.Jobs]: animatedBarWidth * 4 - 2, // Value is -2 to keep a small gap between the animated bar and right edge of the screen
+    [Tab.Home]: 2, // 2px left margin prevents edge collision
+    [Tab.Video]: animatedBarWidth, // 1x width = second tab position
+    [Tab.MyNetwork]: animatedBarWidth * 2, // 2x width = third tab position
+    [Tab.Notifications]: animatedBarWidth * 3, // 3x width = fourth tab position
+    [Tab.Jobs]: animatedBarWidth * 4 - 2, // 4x width - 2px right margin for symmetry
   };
 
+  // Animated style hook: drives indicator position based on currentTab shared value
   const rAnimatedBarStyle = useAnimatedStyle(() => {
     return {
+      // withTiming creates smooth position transitions between tab selections
       left: withTiming(left[currentTab.value], {
-        duration: 200,
-        easing: Easing.inOut(Easing.quad),
+        duration: 200, // 200ms duration provides responsive feel without being jarring
+        easing: Easing.inOut(Easing.quad), // Quad easing: gentle acceleration/deceleration for natural motion
       }),
     };
   });
@@ -60,27 +70,32 @@ const TabsLayout = () => {
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: true,
-          tabBarActiveTintColor: "#C4C6C7",
-          tabBarInactiveTintColor: "#96999b",
+          // LinkedIn color scheme: light gray active, darker gray inactive for subtle contrast
+          tabBarActiveTintColor: "#C4C6C7", // Active: light gray (#C4C6C7) for prominence
+          tabBarInactiveTintColor: "#96999b", // Inactive: muted gray (#96999b) for hierarchy
           tabBarStyle: {
-            height: tabBarHeight,
-            overflow: "hidden",
-            paddingBottom: tabBarPaddingBottom,
-            borderColor: colorKit.setAlpha("#ffffff", 0.3).hex(),
-            backgroundColor: "#21262E",
+            height: tabBarHeight, // Dynamic height accounts for safe area variations
+            overflow: "hidden", // Clips indicator animation within tab bar bounds
+            paddingBottom: tabBarPaddingBottom, // Safe area + 16px ensures proper spacing
+            borderColor: colorKit.setAlpha("#ffffff", 0.3).hex(), // 30% white opacity for subtle top border
+            backgroundColor: "#21262E", // Dark background matches LinkedIn's professional theme
           },
+          // Custom tab button: Pressable wrapper enables custom press handling for animation
           tabBarButton: (props) => (
             <Pressable
               onPress={props.onPress}
               style={props.style}
-              android_ripple={{ color: "transparent" }}
+              android_ripple={{ color: "transparent" }} // Disables Android ripple to prevent visual conflicts with indicator
             >
               {props.children}
             </Pressable>
           ),
         }}
+        // Tab press listener: updates shared value to trigger indicator animation
         screenListeners={{
           tabPress: (e) => {
+            // Route name detection: updates currentTab shared value based on pressed tab
+            // This triggers the rAnimatedBarStyle recalculation and smooth position transition
             if (e.target?.includes(Tab.Home)) {
               currentTab.value = Tab.Home;
             } else if (e.target?.includes(Tab.Video)) {
@@ -135,14 +150,15 @@ const TabsLayout = () => {
           }}
         />
       </Tabs>
+      {/* Animated indicator: positioned absolutely to slide smoothly between tabs */}
       <Animated.View
         className="absolute left-0 right-0 rounded-full bg-[#C4C6C7]"
         style={[
-          rAnimatedBarStyle,
+          rAnimatedBarStyle, // Applies animated left position from useAnimatedStyle
           {
-            width: animatedBarWidth,
-            height: ANIMATED_BAR_HEIGHT,
-            bottom: tabBarHeight - ANIMATED_BAR_HEIGHT,
+            width: animatedBarWidth, // Matches individual tab width for perfect alignment
+            height: ANIMATED_BAR_HEIGHT, // 2px height creates subtle underline effect
+            bottom: tabBarHeight - ANIMATED_BAR_HEIGHT, // Positions at tab bar bottom edge
           },
         ]}
       />
