@@ -1,6 +1,6 @@
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { View, StyleSheet, Text, Pressable, useWindowDimensions } from "react-native";
 import Animated, {
   useAnimatedReaction,
@@ -11,6 +11,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
 import { Dots } from "../components/dots";
 import { FeatureItem } from "../components/feature-item";
+import { StaggeredText, type StaggeredTextRef } from "../components/stagged-text";
+import { useFonts } from "expo-font";
+import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
 
 const HEADER_HEIGHT = 50;
 const GRADIENT_HEIGHT = 50;
@@ -36,8 +39,14 @@ const data: OnboardingItem[] = [
 ];
 
 export const Onboarding: FC = () => {
+  let [fontsLoaded] = useFonts({
+    LibreBaskerville_700Bold,
+  });
+
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+
+  const staggeredTextRef = useRef<StaggeredTextRef>(null);
 
   const prevOffsetX = useSharedValue(0);
   const scrollDirection = useSharedValue<"to-left" | "to-right" | "idle">("idle");
@@ -46,9 +55,6 @@ export const Onboarding: FC = () => {
   const prevIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
-    // onBeginDrag: () => {
-    //   prevIndex.set(activeIndex.get());
-    // },
     onScroll: (event) => {
       const offsetX = event.contentOffset.x;
       const positiveOffsetX = Math.max(offsetX, 0);
@@ -115,7 +121,18 @@ export const Onboarding: FC = () => {
           style={styles.gradient}
         />
         <View className="items-center mb-10">
-          <Text className="text-2xl font-semibold mb-5">The easiest way to...</Text>
+          <View className="mb-5 items-center justify-center h-8">
+            <View className="absolute">
+              <StaggeredText
+                text="The easiest way to..."
+                slideIndex={activeIndex}
+                showIndex={[0, 1]}
+              />
+            </View>
+            <View className="absolute">
+              <StaggeredText text="And coming soon..." slideIndex={activeIndex} showIndex={[2]} />
+            </View>
+          </View>
           <View className="h-14 w-full mb-8 items-center justify-center">
             {data.map((item, index) => (
               <FeatureItem
