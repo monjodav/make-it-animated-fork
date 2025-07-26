@@ -2,9 +2,14 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FC } from "react";
 import { View, StyleSheet, Text, Pressable, useWindowDimensions } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+  useDerivedValue,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
+import { Dots } from "../components/dots";
 
 const HEADER_HEIGHT = 50;
 const GRADIENT_HEIGHT = 50;
@@ -16,6 +21,10 @@ export const Onboarding: FC = () => {
   const { width } = useWindowDimensions();
 
   const listOffsetX = useSharedValue(0);
+
+  const activeIndex = useDerivedValue(() => {
+    return listOffsetX.value / width;
+  });
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
@@ -49,18 +58,19 @@ export const Onboarding: FC = () => {
         scrollEventThrottle={16}
       />
       <View
-        className="absolute bottom-0 left-0 right-0 h-[200px] bg-[#F7F5ED] px-8 pt-6"
+        className="absolute bottom-0 left-0 right-0 bg-[#F7F5ED] px-8 pt-6"
         style={{ paddingBottom: insets.bottom + 8 }}
       >
         <LinearGradient
           colors={[colorKit.setAlpha("#F7F5ED", 0).hex(), "#F7F5ED"]}
           style={styles.gradient}
         />
-        <View className="items-center mb-4">
+        <View className="items-center mb-10">
           <Text className="text-2xl font-semibold mb-4">The easiest way to...</Text>
-          <View className="px-3 py-2 bg-white rounded-xl" style={styles.borderCurve}>
+          <View className="px-3 py-2 bg-white rounded-xl mb-10" style={styles.borderCurve}>
             <Text>Track what you eat</Text>
           </View>
+          <Dots numberOfDots={data.length} activeIndex={activeIndex} />
         </View>
         <Pressable
           className="bg-[#3C5627] h-[56px] px-3 rounded-[19px] items-center justify-center"
