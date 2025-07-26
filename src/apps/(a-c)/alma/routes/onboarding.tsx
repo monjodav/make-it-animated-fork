@@ -2,7 +2,11 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FC } from "react";
 import { View, StyleSheet, Text, Pressable, useWindowDimensions } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedReaction,
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
 import { Dots } from "../components/dots";
@@ -35,17 +39,47 @@ export const Onboarding: FC = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
+  const prevOffsetX = useSharedValue(0);
+  const scrollDirection = useSharedValue<"to-left" | "to-right" | "idle">("idle");
+
   const activeIndex = useSharedValue(0);
   const prevIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: () => {
-      prevIndex.set(activeIndex.get());
-    },
+    // onBeginDrag: () => {
+    //   prevIndex.set(activeIndex.get());
+    // },
     onScroll: (event) => {
-      activeIndex.set(Math.floor(event.contentOffset.x / width + 0.5));
+      const offsetX = event.contentOffset.x;
+      const positiveOffsetX = Math.max(offsetX, 0);
+      const positivePrevOffsetX = Math.max(prevOffsetX.get(), 0);
+
+      activeIndex.set(Math.floor(offsetX / width + 0.5));
+
+      if (
+        positivePrevOffsetX - positiveOffsetX < 0 &&
+        (scrollDirection.get() === "idle" || scrollDirection.get() === "to-left")
+      ) {
+        scrollDirection.set("to-right");
+      }
+
+      if (
+        positivePrevOffsetX - positiveOffsetX > 0 &&
+        (scrollDirection.get() === "idle" || scrollDirection.get() === "to-right")
+      ) {
+        scrollDirection.set("to-left");
+      }
+
+      prevOffsetX.set(offsetX);
     },
   });
+
+  useAnimatedReaction(
+    () => scrollDirection.get(),
+    () => {
+      prevIndex.set(activeIndex.get());
+    }
+  );
 
   return (
     <View className="flex-1 bg-[#F7F5ED]">
