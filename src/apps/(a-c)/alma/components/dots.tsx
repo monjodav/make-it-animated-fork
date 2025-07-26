@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View } from "react-native";
-import Animated, { interpolateColor, SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import Animated, { SharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 
 interface DotsProps {
   numberOfDots: number;
@@ -24,11 +24,9 @@ interface DotProps {
 
 const Dot: FC<DotProps> = ({ index, activeIndex }) => {
   const animatedStyle = useAnimatedStyle(() => {
-    const backgroundColor = interpolateColor(
-      activeIndex.value,
-      [index - 1, index, index + 1],
-      ["#d6d3d1", "#3C5627", "#d6d3d1"]
-    );
+    const backgroundColor = withTiming(activeIndex.get() === index ? "#3C5627" : "#d6d3d1", {
+      duration: 200,
+    });
 
     return {
       backgroundColor,

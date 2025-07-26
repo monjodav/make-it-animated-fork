@@ -2,33 +2,48 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FC } from "react";
 import { View, StyleSheet, Text, Pressable, useWindowDimensions } from "react-native";
-import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-  useDerivedValue,
-} from "react-native-reanimated";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
 import { Dots } from "../components/dots";
+import { FeatureItem } from "../components/feature-item";
 
 const HEADER_HEIGHT = 50;
 const GRADIENT_HEIGHT = 50;
 
-const data = Array.from({ length: 3 });
+type OnboardingItem = {
+  title: string;
+  description: string;
+};
+
+const data: OnboardingItem[] = [
+  {
+    title: "The easiest way to...",
+    description: "Track what you eat ✍️",
+  },
+  {
+    title: "The easiest way to...",
+    description: "Learn how your diet affects you 🧠",
+  },
+  {
+    title: "And coming soon...",
+    description: "Find food that's perfect for you 🥗",
+  },
+];
 
 export const Onboarding: FC = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
-  const listOffsetX = useSharedValue(0);
-
-  const activeIndex = useDerivedValue(() => {
-    return listOffsetX.value / width;
-  });
+  const activeIndex = useSharedValue(0);
+  const prevIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {
+      prevIndex.set(activeIndex.get());
+    },
     onScroll: (event) => {
-      listOffsetX.value = event.contentOffset.x;
+      activeIndex.set(Math.floor(event.contentOffset.x / width + 0.5));
     },
   });
 
@@ -66,9 +81,17 @@ export const Onboarding: FC = () => {
           style={styles.gradient}
         />
         <View className="items-center mb-10">
-          <Text className="text-2xl font-semibold mb-4">The easiest way to...</Text>
-          <View className="px-3 py-2 bg-white rounded-xl mb-10" style={styles.borderCurve}>
-            <Text>Track what you eat</Text>
+          <Text className="text-2xl font-semibold mb-5">The easiest way to...</Text>
+          <View className="h-14 w-full mb-8 items-center justify-center">
+            {data.map((item, index) => (
+              <FeatureItem
+                key={index}
+                label={item.description}
+                itemIndex={index}
+                activeIndex={activeIndex}
+                prevIndex={prevIndex}
+              />
+            ))}
           </View>
           <Dots numberOfDots={data.length} activeIndex={activeIndex} />
         </View>
