@@ -1,6 +1,6 @@
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { FC, useRef } from "react";
+import React, { FC } from "react";
 import { View, StyleSheet, Text, Pressable, useWindowDimensions } from "react-native";
 import Animated, {
   useAnimatedReaction,
@@ -11,42 +11,32 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
 import { Dots } from "../components/dots";
 import { FeatureItem } from "../components/feature-item";
-import { StaggeredText, type StaggeredTextRef } from "../components/stagged-text";
-import { useFonts } from "expo-font";
-import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
+import { StaggeredText } from "../components/stagged-text";
+
+// alma-onboarding-carousel-animation 🔽
 
 const HEADER_HEIGHT = 50;
 const GRADIENT_HEIGHT = 50;
 
 type OnboardingItem = {
-  title: string;
   description: string;
 };
 
 const data: OnboardingItem[] = [
   {
-    title: "The easiest way to...",
     description: "Track what you eat ✍️",
   },
   {
-    title: "The easiest way to...",
     description: "Learn how your diet affects you 🧠",
   },
   {
-    title: "And coming soon...",
     description: "Find food that's perfect for you 🥗",
   },
 ];
 
 export const Onboarding: FC = () => {
-  let [fontsLoaded] = useFonts({
-    LibreBaskerville_700Bold,
-  });
-
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-
-  const staggeredTextRef = useRef<StaggeredTextRef>(null);
 
   const prevOffsetX = useSharedValue(0);
   const scrollDirection = useSharedValue<"to-left" | "to-right" | "idle">("idle");
@@ -125,12 +115,12 @@ export const Onboarding: FC = () => {
             <View className="absolute">
               <StaggeredText
                 text="The easiest way to..."
-                slideIndex={activeIndex}
+                activeIndex={activeIndex}
                 showIndex={[0, 1]}
               />
             </View>
             <View className="absolute">
-              <StaggeredText text="And coming soon..." slideIndex={activeIndex} showIndex={[2]} />
+              <StaggeredText text="And coming soon..." activeIndex={activeIndex} showIndex={[2]} />
             </View>
           </View>
           <View className="h-14 w-full mb-8 items-center justify-center">
@@ -170,3 +160,5 @@ const styles = StyleSheet.create({
     height: GRADIENT_HEIGHT,
   },
 });
+
+// alma-onboarding-carousel-animation 🔼

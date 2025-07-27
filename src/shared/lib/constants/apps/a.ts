@@ -1,6 +1,7 @@
 import AdidasImage from "@/assets/images/apps/adidas.png";
 import AppleBooksImage from "@/assets/images/apps/apple-books.png";
 import AppleInvitesImage from "@/assets/images/apps/apple-invites.png";
+import AlmaImage from "@/assets/images/apps/alma.png";
 import { App } from "../apps-list";
 
 export const adidas: App = {
@@ -10,6 +11,17 @@ export const adidas: App = {
     {
       name: "Home header marquee animation",
       href: "/adidas/home",
+    },
+  ],
+};
+
+export const alma: App = {
+  name: "Alma",
+  imageSource: AlmaImage,
+  animations: [
+    {
+      name: "Onboarding carousel animation",
+      href: "/alma/onboarding",
     },
   ],
 };

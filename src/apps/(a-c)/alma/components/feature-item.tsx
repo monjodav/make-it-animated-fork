@@ -10,6 +10,8 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
+// alma-onboarding-carousel-animation 🔽
+
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 const INITIAL_OPACITY = 0;
@@ -164,3 +166,5 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
 });
+
+// alma-onboarding-carousel-animation 🔼

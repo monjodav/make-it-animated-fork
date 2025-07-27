@@ -5,30 +5,28 @@ import type { FC } from "react";
 import { AnimatedChar } from "./animated-char";
 import React from "react";
 
+// alma-onboarding-carousel-animation 🔽
+
 type Props = {
   text: string;
-  slideIndex: SharedValue<number>;
+  activeIndex: SharedValue<number>;
   showIndex: number[];
 };
 
-export type StaggeredTextRef = {
-  animate: () => void;
-  reset: () => void;
-};
-
-export const StaggeredText: FC<Props> = ({ text, slideIndex, showIndex }: Props) => {
+export const StaggeredText: FC<Props> = ({ text, activeIndex, showIndex }: Props) => {
   const progress = useSharedValue(0);
 
   const show = () => {
+    if (progress.value === 1) return;
     setTimeout(() => {
       progress.value = 1;
     }, 250);
   };
 
   useAnimatedReaction(
-    () => slideIndex.get(),
-    (slideIndex) => {
-      if (showIndex.includes(slideIndex)) {
+    () => activeIndex.get(),
+    (value) => {
+      if (showIndex.includes(value)) {
         runOnJS(show)();
       } else {
         progress.value = 0;
@@ -46,3 +44,5 @@ export const StaggeredText: FC<Props> = ({ text, slideIndex, showIndex }: Props)
     </View>
   );
 };
+
+// alma-onboarding-carousel-animation 🔼
