@@ -1,7 +1,8 @@
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { _padding, Controls } from "../components/controls";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { X } from "lucide-react-native";
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // instagram-story-controls-animation 🔽
@@ -19,18 +20,18 @@ export default function AddContent() {
         style={styles.container}
       >
         <View className="flex-row items-center justify-between">
-          <Pressable onPress={() => Alert.alert("Close")}>
+          <Pressable onPress={simulatePress}>
             <X size={_iconSize} color={_iconColor} strokeWidth={1.5} />
           </Pressable>
-          <Pressable onPress={() => Alert.alert("Flash")}>
+          <Pressable onPress={simulatePress}>
             <Ionicons name="flash-off" size={_iconSize} color={_iconColor} />
           </Pressable>
-          <Pressable onPress={() => Alert.alert("Settings")}>
+          <Pressable onPress={simulatePress}>
             <Ionicons name="settings-sharp" size={_iconSize} color={_iconColor} />
           </Pressable>
         </View>
         <View className="pb-4 items-center">
-          <Pressable onPress={() => Alert.alert("Camera")}>
+          <Pressable onPress={simulatePress}>
             <View className="h-[60px] w-[60px] rounded-full bg-white/50 border border-white/90" />
           </Pressable>
         </View>

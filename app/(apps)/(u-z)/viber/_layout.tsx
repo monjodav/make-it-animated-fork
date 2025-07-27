@@ -2,10 +2,11 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
 import { Camera, Ellipsis, LayoutGrid, Phone, SquarePen } from "lucide-react-native";
 import React from "react";
-import { Alert, Pressable, TouchableOpacity, View } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { colorKit } from "reanimated-color-picker";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 enum Tab {
   Chats = "chats",
@@ -47,18 +48,10 @@ const TabsLayout = () => {
         options={{
           headerRight: () => (
             <View className="flex-row items-center gap-5 pr-4 pb-1">
-              <TouchableOpacity
-                activeOpacity={0.9}
-                hitSlop={15}
-                onPress={() => Alert.alert("Take a photo")}
-              >
+              <TouchableOpacity activeOpacity={0.9} hitSlop={15} onPress={simulatePress}>
                 <Camera size={20} color="#7F61F2" />
               </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                hitSlop={15}
-                onPress={() => Alert.alert("Create a chat")}
-              >
+              <TouchableOpacity activeOpacity={0.9} hitSlop={15} onPress={simulatePress}>
                 <SquarePen size={18} color="#7F61F2" />
               </TouchableOpacity>
             </View>
@@ -74,18 +67,10 @@ const TabsLayout = () => {
         options={{
           headerRight: () => (
             <View className="flex-row items-center gap-5 pr-4 pb-1">
-              <TouchableOpacity
-                activeOpacity={0.9}
-                hitSlop={15}
-                onPress={() => Alert.alert("Add contact")}
-              >
+              <TouchableOpacity activeOpacity={0.9} hitSlop={15} onPress={simulatePress}>
                 <FontAwesome6 name="user-plus" size={18} color="#7F61F2" />
               </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                hitSlop={15}
-                onPress={() => Alert.alert("Open keypad")}
-              >
+              <TouchableOpacity activeOpacity={0.9} hitSlop={15} onPress={simulatePress}>
                 <Ionicons name="keypad" size={18} color="#7F61F2" />
               </TouchableOpacity>
             </View>

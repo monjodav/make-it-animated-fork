@@ -3,8 +3,9 @@ import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Bookmark, Logs, Rows3, Search } from "lucide-react-native";
 import React, { FC } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { MenuButtonsWrapper } from "./menu-buttons-wrapper";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // apple-books-menu-buttons-animation 🔽
 
@@ -26,24 +27,16 @@ export const MenuButtons: FC<Props> = ({ isOpen }) => {
       <Pressable
         className={cn(className.button, "bg-neutral-600")}
         style={styles.button}
-        onPress={() => Alert.alert("Contents")}
+        onPress={simulatePress}
       >
         <Text className={className.text}>Contents • 0%</Text>
         <Logs size={_iconSize} color={_iconColor} />
       </Pressable>
-      <Pressable
-        className={className.button}
-        style={styles.button}
-        onPress={() => Alert.alert("Search Book")}
-      >
+      <Pressable className={className.button} style={styles.button} onPress={simulatePress}>
         <Text className={className.text}>Search Book</Text>
         <Search size={_iconSize} color={_iconColor} />
       </Pressable>
-      <Pressable
-        className={className.button}
-        style={styles.button}
-        onPress={() => Alert.alert("Themes & Settings")}
-      >
+      <Pressable className={className.button} style={styles.button} onPress={simulatePress}>
         <Text className={className.text}>Themes & Settings</Text>
         <View className="flex-row items-center">
           <Text className="text-[14px] text-neutral-100 mt-1 font-semibold">A</Text>
@@ -51,32 +44,16 @@ export const MenuButtons: FC<Props> = ({ isOpen }) => {
         </View>
       </Pressable>
       <View className="flex-row gap-1">
-        <Pressable
-          className={className.button}
-          style={styles.button}
-          onPress={() => Alert.alert("Share")}
-        >
+        <Pressable className={className.button} style={styles.button} onPress={simulatePress}>
           <Feather name="share" size={_iconSize} color={_iconColor} />
         </Pressable>
-        <Pressable
-          className={className.button}
-          style={styles.button}
-          onPress={() => Alert.alert("Lock Reset")}
-        >
+        <Pressable className={className.button} style={styles.button} onPress={simulatePress}>
           <MaterialIcons name="lock-reset" size={_iconSize} color={_iconColor} />
         </Pressable>
-        <Pressable
-          className={className.button}
-          style={styles.button}
-          onPress={() => Alert.alert("Line Guide")}
-        >
+        <Pressable className={className.button} style={styles.button} onPress={simulatePress}>
           <Rows3 size={_iconSize} color={_iconColor} />
         </Pressable>
-        <Pressable
-          className={className.button}
-          style={styles.button}
-          onPress={() => Alert.alert("Bookmark")}
-        >
+        <Pressable className={className.button} style={styles.button} onPress={simulatePress}>
           <Bookmark size={_iconSize} color={_iconColor} />
         </Pressable>
       </View>

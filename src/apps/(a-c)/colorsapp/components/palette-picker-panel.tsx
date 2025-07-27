@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 
-import { Alert, useWindowDimensions, View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -14,6 +14,7 @@ import { sharedConfigs } from "../lib/constants/palette-picker-color-change-anim
 import { BrightnessSlider } from "reanimated-color-picker";
 import { ColorItem } from "./color-item";
 import { ColorPanel } from "./color-panel";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // colorsapp-palette-picker-color-change-animation 🔽
 
@@ -135,14 +136,11 @@ export const PalettePickerPanel: FC<Props> = ({
         />
       </View>
       <View className="flex-row w-full px-4 gap-1">
-        <ColorItem
-          color={lightShadeColor}
-          handleEditPress={() => Alert.alert("Edit light shade")}
-        />
+        <ColorItem color={lightShadeColor} handleEditPress={simulatePress} />
         <ColorItem color={lightAccentColor} />
-        <ColorItem color={primaryColor} handleEditPress={() => Alert.alert("Edit primary")} />
+        <ColorItem color={primaryColor} handleEditPress={simulatePress} />
         <ColorItem color={darkAccentColor} />
-        <ColorItem color={darkShadeColor} handleEditPress={() => Alert.alert("Edit dark shade")} />
+        <ColorItem color={darkShadeColor} handleEditPress={simulatePress} />
       </View>
     </View>
   );

@@ -1,10 +1,11 @@
 import React from "react";
-import { Alert, Text } from "react-native";
+import { Text } from "react-native";
 import { useAttachFileMenu } from "../../lib/providers/attach-file-menu";
 import { ChevronRight } from "lucide-react-native";
 import Animated, { useAnimatedStyle, withTiming, Easing } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Pressable } from "react-native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // grok-attach-file-menu-animation 🔽
 
@@ -42,7 +43,7 @@ export const RecentPhotos = () => {
     <AnimatedPressable
       style={rContainerStyle}
       className="absolute flex-row items-center gap-1"
-      onPress={() => Alert.alert("Recent Photos")}
+      onPress={simulatePress}
     >
       <Text className="text-neutral-400 text-xl font-semibold">Recent Photos</Text>
       <ChevronRight size={28} color="gray" />

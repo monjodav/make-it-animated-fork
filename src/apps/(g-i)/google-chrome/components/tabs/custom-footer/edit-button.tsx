@@ -1,8 +1,9 @@
 import React from "react";
-import { Pressable, Alert, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useTabsStore } from "../../../lib/store/tabs";
 import { TabName } from "../../../lib/types";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // google-chrome-footer-animation 🔽
 
@@ -33,7 +34,7 @@ export const EditButton = () => {
   });
 
   return (
-    <AnimatedPressable style={rContainerStyle} onPress={() => Alert.alert("Edit")}>
+    <AnimatedPressable style={rContainerStyle} onPress={simulatePress}>
       <Text className="text-lg font-medium text-stone-200">Edit</Text>
     </AnimatedPressable>
   );

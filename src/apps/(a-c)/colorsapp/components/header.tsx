@@ -1,10 +1,11 @@
 import React, { FC } from "react";
 
 import { ArrowLeft } from "lucide-react-native";
-import { Alert, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Animated, { SharedValue, useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 import { ReText } from "react-native-redash";
 import { colorKit } from "reanimated-color-picker";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // colorsapp-color-picker-background-animation 🔽
 
@@ -46,7 +47,7 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
           />
         </Animated.View>
       </View>
-      <TouchableOpacity className="absolute top-0 left-4" onPress={() => Alert.alert("Back")}>
+      <TouchableOpacity className="absolute top-0 left-4" onPress={simulatePress}>
         <ArrowLeft size={30} color="#fff" strokeWidth={1.5} />
       </TouchableOpacity>
     </View>

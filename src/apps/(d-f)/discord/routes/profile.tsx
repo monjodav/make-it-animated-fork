@@ -1,9 +1,10 @@
 import React, { FC } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { CustomButton } from "../components/custom-button";
 import { CircleGauge, Store, X } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 export const Profile: FC = () => {
   const insets = useSafeAreaInsets();
@@ -36,12 +37,12 @@ export const Profile: FC = () => {
               </View>
               <View className="flex-row gap-4">
                 {/* discord-button-shimmer-effect-animation 🔽 */}
-                <CustomButton withShimmer onPress={() => Alert.alert("Get Nitro")}>
+                <CustomButton withShimmer onPress={simulatePress}>
                   <CircleGauge size={16} color="#C7C8CE" />
                   <Text className="font-semibold text-[#C7C8CE]">Get Nitro</Text>
                 </CustomButton>
                 {/* discord-button-shimmer-effect-animation 🔼 */}
-                <CustomButton onPress={() => Alert.alert("Shop")}>
+                <CustomButton onPress={simulatePress}>
                   <Store size={16} color="#C7C8CE" />
                   <Text className="font-semibold text-[#C7C8CE]">Shop</Text>
                 </CustomButton>

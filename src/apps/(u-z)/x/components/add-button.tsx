@@ -1,3 +1,4 @@
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { XTabsContext } from "../lib/providers/x-tabs-provider";
 import AntDesign from "@expo/vector-icons/build/AntDesign";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -101,7 +102,7 @@ export const AddButton: FC = () => {
         onPressOut={() => {
           addButtonScale.value = withTiming(1, { duration: 200 });
         }}
-        onPress={() => Alert.alert("🚀 ✨ 🪐")}
+        onPress={simulatePress}
       >
         <Animated.View className="absolute" style={rPlusIconStyle}>
           <AntDesign name="plus" size={20} color="#fff" />

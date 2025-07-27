@@ -1,6 +1,7 @@
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Stack, useRouter } from "expo-router";
 import { Palette, X } from "lucide-react-native";
-import { Alert, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 export default function WhatsAppLayout() {
   const router = useRouter();
@@ -24,13 +25,13 @@ export default function WhatsAppLayout() {
             <View className="flex-row items-center gap-3">
               <Pressable
                 className="w-9 h-9 rounded-full bg-neutral-950/40 items-center justify-center"
-                onPress={() => Alert.alert("Change typeface")}
+                onPress={simulatePress}
               >
                 <Text className="text-neutral-200 font-bold">T</Text>
               </Pressable>
               <Pressable
                 className="w-9 h-9 rounded-full bg-neutral-950/40 items-center justify-center"
-                onPress={() => Alert.alert("Change color")}
+                onPress={simulatePress}
               >
                 <Palette size={18} color="lightgray" />
               </Pressable>

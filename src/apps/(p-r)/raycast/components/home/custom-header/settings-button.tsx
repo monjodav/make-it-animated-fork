@@ -1,14 +1,15 @@
 import React, { FC } from "react";
-import { Pressable, Alert, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import { SETTINGS_CONTAINER_WIDTH } from "../../../lib/providers/home-animation";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // raycast-home-search-transition-animation 🔽
 
 export const SettingsButton: FC = () => {
   return (
     <Pressable
-      onPress={() => Alert.alert("Settings")}
+      onPress={simulatePress}
       className="items-center justify-center"
       style={styles.imageContainer}
     >

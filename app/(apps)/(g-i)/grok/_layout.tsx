@@ -1,8 +1,9 @@
 import { Menu } from "@/src/apps/(g-i)/grok/components/attach-file-menu/menu";
 import { AttachFileMenuProvider } from "@/src/apps/(g-i)/grok/lib/providers/attach-file-menu";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Stack } from "expo-router";
 import { Ghost, MenuIcon } from "lucide-react-native";
-import { Alert, View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 
 // grok-attach-file-menu-animation 🔽
 
@@ -21,12 +22,12 @@ export default function Layout() {
             headerTitleAlign: "center",
             headerTintColor: "white",
             headerLeft: () => (
-              <Pressable onPress={() => Alert.alert("Menu")}>
+              <Pressable onPress={simulatePress}>
                 <MenuIcon size={20} color="white" />
               </Pressable>
             ),
             headerRight: () => (
-              <Pressable onPress={() => Alert.alert("Private Chat")}>
+              <Pressable onPress={simulatePress}>
                 <Ghost size={18} color="white" />
               </Pressable>
             ),

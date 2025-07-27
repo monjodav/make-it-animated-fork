@@ -1,7 +1,8 @@
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { DrawerActions } from "@react-navigation/routers";
 import { Stack, useNavigation } from "expo-router";
 import { AlignLeft, SquarePen } from "lucide-react-native";
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 export default function Layout() {
   const navigation = useNavigation();
@@ -20,7 +21,7 @@ export default function Layout() {
             </Pressable>
           ),
           headerRight: () => (
-            <Pressable onPress={() => Alert.alert("New Chat")}>
+            <Pressable onPress={simulatePress}>
               <SquarePen size={20} color="white" />
             </Pressable>
           ),

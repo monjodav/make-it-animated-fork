@@ -1,9 +1,9 @@
 import React, { FC } from "react";
-import { Alert } from "react-native";
 import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { Pressable } from "react-native";
 import { ChevronLeft, X } from "lucide-react-native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -25,10 +25,7 @@ export const Left: FC = () => {
   });
 
   return (
-    <Pressable
-      className="w-8 h-8 items-center justify-center"
-      onPress={() => Alert.alert("Go To Home")}
-    >
+    <Pressable className="w-8 h-8 items-center justify-center" onPress={simulatePress}>
       <Animated.View style={rChevronStyle} className="absolute">
         <ChevronLeft size={28} color="#e5e5e5" strokeWidth={1.5} />
       </Animated.View>

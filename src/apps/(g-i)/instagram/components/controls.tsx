@@ -3,9 +3,10 @@ import Feather from "@expo/vector-icons/Feather";
 import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeftRight, ChevronDown, CircleStop, Infinity } from "lucide-react-native";
 import React, { FC, useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { _height, ControlItem } from "./control-item";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // instagram-story-controls-animation 🔽
 
@@ -103,7 +104,7 @@ export const Controls: FC = () => {
                 <Text className={className.label}>Create</Text>
               </Animated.View>
             }
-            onPress={() => Alert.alert("Create")}
+            onPress={simulatePress}
           />
           <ControlItem
             controlsPosition={controlsPosition}
@@ -113,7 +114,7 @@ export const Controls: FC = () => {
                 <Text className={className.label}>Boomerang</Text>
               </Animated.View>
             }
-            onPress={() => Alert.alert("Boomerang")}
+            onPress={simulatePress}
           />
           <ControlItem
             controlsPosition={controlsPosition}
@@ -123,7 +124,7 @@ export const Controls: FC = () => {
                 <Text className={className.label}>Layout</Text>
               </Animated.View>
             }
-            onPress={() => Alert.alert("Layout")}
+            onPress={simulatePress}
           />
         </Animated.View>
         <Animated.View style={rLabelStyle}>
@@ -131,7 +132,7 @@ export const Controls: FC = () => {
             controlsPosition={controlsPosition}
             icon={<CircleStop size={_iconSize} color={_iconColor} />}
             label={<Text className={className.label}>Hands-free</Text>}
-            onPress={() => Alert.alert("Hands-free")}
+            onPress={simulatePress}
           />
         </Animated.View>
         <Animated.View style={rCloseItemStyle}>

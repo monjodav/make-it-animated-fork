@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, TouchableOpacity, Alert, StyleSheet, Platform } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { TabBarProps } from "react-native-collapsible-tab-view";
 import { Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -7,6 +7,7 @@ import { TabBar } from "./tab-bar";
 import { BlurView } from "expo-blur";
 import Animated, { useAnimatedStyle, withDelay, withTiming } from "react-native-reanimated";
 import { useTabsScreenAnimated } from "../../../lib/providers/tabs-screen-animated-provider";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // google-chrome-top-tabs-indicator-animation 🔽
 // google-chrome-header-background-animation 🔽
@@ -51,7 +52,7 @@ export const CustomHeader: FC<Props> = ({ indexDecimal, onTabPress }) => {
       </View>
       <View className="items-center justify-center">
         <TabBar indexDecimal={indexDecimal} onTabPress={onTabPress} />
-        <TouchableOpacity className="absolute left-5" onPress={() => Alert.alert("Search")}>
+        <TouchableOpacity className="absolute left-5" onPress={simulatePress}>
           <Search size={22} color="lightgray" strokeWidth={2.5} />
         </TouchableOpacity>
       </View>
