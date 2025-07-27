@@ -1,12 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { FC } from "react";
-import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
 import { BalanceChangeToggle } from "./balance-view/balance-change-toggle";
 import { Balance } from "./balance-view/balance";
 import { BalanceAnimationProvider } from "../lib/providers/balance-animation-provider";
 import { InfoCarousel } from "./info-carousel";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 type ActionButtonProps = {
   label: string;
@@ -43,9 +44,9 @@ export const Dashboard: FC = () => {
           {/* fuse-balance-secure-view-toggle-animation 🔼 */}
         </View>
         <View className="flex-row gap-2">
-          <ActionButton label="Receive" onPress={() => Alert.alert("Receive")} />
-          <ActionButton label="Swap" onPress={() => Alert.alert("Swap")} />
-          <ActionButton label="Send" onPress={() => Alert.alert("Send")} />
+          <ActionButton label="Receive" onPress={simulatePress} />
+          <ActionButton label="Swap" onPress={simulatePress} />
+          <ActionButton label="Send" onPress={simulatePress} />
         </View>
       </View>
       <View className="h-[2px] bg-neutral-700" />

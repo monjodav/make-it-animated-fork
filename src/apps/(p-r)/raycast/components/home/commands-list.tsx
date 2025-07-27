@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, Pressable, Alert, StyleSheet } from "react-native";
+import { View, FlatList, Pressable, StyleSheet } from "react-native";
 import { useHeaderHeight } from "../../lib/hooks/use-header-height";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
@@ -15,6 +15,7 @@ import {
 } from "../../lib/providers/home-animation";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { TopGradient } from "./top-gradient";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // raycast-home-search-transition-animation 🔽
 
@@ -22,7 +23,7 @@ const CommandItem = () => {
   const randomWidth = React.useMemo(() => Math.floor(Math.random() * 151) + 50, []);
 
   return (
-    <Pressable className="flex-row items-center gap-3" onPress={() => Alert.alert("Item Pressed")}>
+    <Pressable className="flex-row items-center gap-3" onPress={simulatePress}>
       <View className="w-8 h-8 rounded-xl bg-orange-800" />
       <View className="h-3 rounded-full bg-neutral-200/25" style={{ width: randomWidth }} />
     </Pressable>

@@ -1,14 +1,15 @@
 import React, { FC } from "react";
-import { Pressable, Alert } from "react-native";
+import { Pressable } from "react-native";
 import { EDIT_HOME_CONTAINER_WIDTH } from "../../../lib/providers/home-animation";
 import { Settings2 } from "lucide-react-native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // raycast-home-search-transition-animation 🔽
 
 export const EditHomeButton: FC = () => {
   return (
     <Pressable
-      onPress={() => Alert.alert("Edit Home")}
+      onPress={simulatePress}
       className="items-center justify-center"
       style={{ width: EDIT_HOME_CONTAINER_WIDTH }}
     >

@@ -1,13 +1,5 @@
 import React, { FC } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  Alert,
-  StyleSheet,
-  useWindowDimensions,
-  Platform,
-} from "react-native";
+import { View, Text, Pressable, StyleSheet, useWindowDimensions, Platform } from "react-native";
 import { useTabsScreenAnimated } from "../../../lib/providers/tabs-screen-animated-provider";
 import Animated, {
   useAnimatedStyle,
@@ -20,6 +12,7 @@ import { AddTabButton } from "./add-tab-button";
 import { EditButton } from "./edit-button";
 import { useTabsStore } from "../../../lib/store/tabs";
 import { useFooterHeight } from "../../../lib/hooks/use-footer-height";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // google-chrome-footer-animation 🔽
 
@@ -76,7 +69,7 @@ export const CustomFooter: FC = () => {
       <View className="px-5 flex-row items-center justify-between" style={{ height: netHeight }}>
         <EditButton />
         <AddTabButton />
-        <Pressable onPress={() => Alert.alert("Done")}>
+        <Pressable onPress={simulatePress}>
           <Text className="text-lg font-medium text-stone-200">Done</Text>
         </Pressable>
       </View>

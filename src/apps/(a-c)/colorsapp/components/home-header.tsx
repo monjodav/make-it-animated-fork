@@ -7,10 +7,11 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { Pressable, View, Text, Alert } from "react-native";
+import { Pressable, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Home, Sun } from "lucide-react-native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // colorsapp-home-header-animation 🔽
 
@@ -76,10 +77,7 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY }) => {
             <Text className="font-p-sb text-lg text-neutral-300">👋 Hello</Text>
             <View className="flex-row items-center gap-2">
               <Text className="text-neutral-300">Explore more</Text>
-              <Pressable
-                className="p-2 rounded-full bg-pink-400"
-                onPress={() => Alert.alert("Home")}
-              >
+              <Pressable className="p-2 rounded-full bg-pink-400" onPress={simulatePress}>
                 <Home size={20} color="black" strokeWidth={1.5} />
               </Pressable>
             </View>
@@ -89,17 +87,11 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY }) => {
           <View className="h-px w-full opacity-20 my-3 bg-neutral-500" />
         </Animated.View>
         <View className="flex-row items-center">
-          <Pressable
-            className="p-3 rounded-full border border-neutral-600"
-            onPress={() => Alert.alert("Change theme")}
-          >
+          <Pressable className="p-3 rounded-full border border-neutral-600" onPress={simulatePress}>
             <Sun size={14} color="white" />
           </Pressable>
           <View className="w-2" />
-          <Pressable
-            className="py-3 px-4 rounded-full bg-neutral-700/50"
-            onPress={() => Alert.alert("Set colors")}
-          >
+          <Pressable className="py-3 px-4 rounded-full bg-neutral-700/50" onPress={simulatePress}>
             <Text className="text-neutral-300">Set colors</Text>
           </Pressable>
         </View>

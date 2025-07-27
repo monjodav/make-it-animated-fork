@@ -14,6 +14,8 @@ import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import { useCallback, useEffect } from "react";
 import { DrawerProvider } from "@/src/shared/lib/providers/drawer-provider";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
+import { useFonts } from "expo-font";
+import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -43,6 +45,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default function RootLayout() {
+  useFonts({
+    LibreBaskerville_700Bold,
+  });
+
   useVersionCheck();
   useOtaUpdate();
 

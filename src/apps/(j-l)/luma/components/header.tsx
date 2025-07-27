@@ -1,6 +1,7 @@
 import React, { FC } from "react";
-import { View, Dimensions, Pressable, Alert, Text } from "react-native";
+import { View, Dimensions, Pressable, Text } from "react-native";
 import { Map } from "lucide-react-native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // luma-blurred-header-image-animation 🔽
 
@@ -30,13 +31,13 @@ export const Header: FC = () => {
         <View className="flex-row items-center justify-between">
           <Pressable
             className="bg-white h-12 px-6 rounded-full items-center justify-center"
-            onPress={() => Alert.alert("Subscribe")}
+            onPress={simulatePress}
           >
             <Text className="text-center font-semibold text-lg text-purple-500">Subscribe</Text>
           </Pressable>
           <Pressable
             className="bg-white rounded-full h-12 w-12 items-center justify-center"
-            onPress={() => Alert.alert("Map")}
+            onPress={simulatePress}
           >
             <Map size={20} color="gray" />
           </Pressable>

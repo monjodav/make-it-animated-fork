@@ -1,6 +1,6 @@
 import { useNavigation } from "expo-router";
 import { useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import {
   HeaderTitle as HeaderTitleComponent,
   HeaderTitleProps,
@@ -16,6 +16,7 @@ import Animated, {
 import { Ellipsis, Menu, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // canva-header-transition-animation 🔽
 
@@ -100,10 +101,7 @@ export default function Projects() {
       // Dual-mode icons - white over hero gradient, black over solid header
       headerRight: () => (
         <View className="flex-row gap-4">
-          <TouchableOpacity
-            className="items-center justify-center h-5 w-5"
-            onPress={() => Alert.alert("Search")}
-          >
+          <TouchableOpacity className="items-center justify-center h-5 w-5" onPress={simulatePress}>
             {/* Layered icon approach - both versions positioned absolutely for smooth transition */}
             <Animated.View className="absolute" style={rWhiteIconStyle}>
               {/* Thicker stroke for visibility on gradient */}
@@ -114,10 +112,7 @@ export default function Projects() {
               <Search size={18} color="black" strokeWidth={2} />
             </Animated.View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className="items-center justify-center h-5 w-5"
-            onPress={() => Alert.alert("More")}
-          >
+          <TouchableOpacity className="items-center justify-center h-5 w-5" onPress={simulatePress}>
             {/* Same dual-layer pattern for consistent icon behavior */}
             <Animated.View className="absolute" style={rWhiteIconStyle}>
               {/* Heavier stroke for gradient visibility */}

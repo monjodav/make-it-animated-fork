@@ -1,8 +1,9 @@
 import React, { FC } from "react";
-import { Pressable, ScrollView, Text, View, StyleSheet, Alert } from "react-native";
+import { Pressable, ScrollView, Text, View, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AudioLines, File, Fullscreen, ImagePlus, Settings2 } from "lucide-react-native";
 import { MenuTrigger } from "../components/attach-file-menu/menu-trigger";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 const classNames = {
   quickActionContainer:
@@ -28,7 +29,7 @@ export const Chat: FC = () => {
           <Pressable
             className={classNames.quickActionContainer}
             style={styles.borderCurve}
-            onPress={() => Alert.alert("Voice Mode")}
+            onPress={simulatePress}
           >
             <AudioLines size={20} color="gray" />
             <Text className={classNames.quickActionText}>Voice Mode</Text>
@@ -36,7 +37,7 @@ export const Chat: FC = () => {
           <Pressable
             className={classNames.quickActionContainer}
             style={styles.borderCurve}
-            onPress={() => Alert.alert("Create Images")}
+            onPress={simulatePress}
           >
             <ImagePlus size={20} color="gray" />
             <Text className={classNames.quickActionText}>Create Images</Text>
@@ -44,7 +45,7 @@ export const Chat: FC = () => {
           <Pressable
             className={classNames.quickActionContainer}
             style={styles.borderCurve}
-            onPress={() => Alert.alert("Edit Image")}
+            onPress={simulatePress}
           >
             <ImagePlus size={20} color="gray" />
             <Text className={classNames.quickActionText}>Create Images</Text>
@@ -52,7 +53,7 @@ export const Chat: FC = () => {
           <Pressable
             className={classNames.quickActionContainer}
             style={styles.borderCurve}
-            onPress={() => Alert.alert("Edit Image")}
+            onPress={simulatePress}
           >
             <Fullscreen size={20} color="gray" />
             <Text className={classNames.quickActionText}>Edit Image</Text>
@@ -60,7 +61,7 @@ export const Chat: FC = () => {
           <Pressable
             className={classNames.quickActionContainer}
             style={styles.borderCurve}
-            onPress={() => Alert.alert("Analyze Docs")}
+            onPress={simulatePress}
           >
             <File size={20} color="gray" />
             <Text className={classNames.quickActionText}>Analyze Docs</Text>
@@ -68,7 +69,7 @@ export const Chat: FC = () => {
           <Pressable
             className={classNames.quickActionContainer}
             style={styles.borderCurve}
-            onPress={() => Alert.alert("Customize Grok")}
+            onPress={simulatePress}
           >
             <Settings2 size={20} color="gray" />
             <Text className={classNames.quickActionText}>Customize Grok</Text>
