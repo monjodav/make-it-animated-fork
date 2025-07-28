@@ -15,10 +15,12 @@ export default function AddContent() {
 
   return (
     <View className="flex-1  bg-instagram-back px-2" style={{ paddingTop: insets.top + 12 }}>
+      {/* Main camera preview container - rounded corners create Instagram's signature story UI */}
       <View
         className="flex-1 justify-between rounded-3xl bg-gray-500 overflow-hidden"
         style={styles.container}
       >
+        {/* Top toolbar - positioned at safe area top for thumb accessibility */}
         <View className="flex-row items-center justify-between">
           <Pressable onPress={simulatePress}>
             <X size={_iconSize} color={_iconColor} strokeWidth={1.5} />
@@ -30,13 +32,16 @@ export default function AddContent() {
             <Ionicons name="settings-sharp" size={_iconSize} color={_iconColor} />
           </Pressable>
         </View>
+        {/* Capture button - centered for easy thumb reach from either hand */}
         <View className="pb-4 items-center">
           <Pressable onPress={simulatePress}>
             <View className="h-[60px] w-[60px] rounded-full bg-white/50 border border-white/90" />
           </Pressable>
         </View>
+        {/* Animated controls component - handles position switching and stacking animations */}
         <Controls />
       </View>
+      {/* Bottom navigation area - outside camera preview for persistent access */}
       <View className="flex-row items-center justify-between p-4">
         <View className="h-9 w-9 rounded-lg bg-instagram-front" />
         <View className="flex-row items-center gap-2">
