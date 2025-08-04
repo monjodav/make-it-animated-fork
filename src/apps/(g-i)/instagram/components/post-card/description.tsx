@@ -4,6 +4,8 @@ import { postDescriptionClassNames } from "../../lib/constants/post-description"
 import { TextLine } from "./text-line";
 import { cn } from "@/src/shared/lib/utils/cn";
 
+// instagram-post-truncated-text-animation 🔽
+
 type Props = {
   text: string;
   numberOfLines: number;
@@ -50,3 +52,5 @@ export const Description: FC<Props> = ({ text, numberOfLines }: Props) => {
     </Pressable>
   );
 };
+
+// instagram-post-truncated-text-animation 🔼

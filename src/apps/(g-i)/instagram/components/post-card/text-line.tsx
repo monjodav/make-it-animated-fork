@@ -2,6 +2,8 @@ import React, { FC } from "react";
 import { Text, TextLayoutLine, View } from "react-native";
 import { postDescriptionClassNames } from "../../lib/constants/post-description";
 
+// instagram-post-truncated-text-animation 🔽
+
 type Props = {
   index: number;
   line: TextLayoutLine;
@@ -31,3 +33,5 @@ export const TextLine: FC<Props> = ({ index, line, totalLines, numberOfLines, is
 
   return <Text className={postDescriptionClassNames.text}>{line.text.trim()}</Text>;
 };
+
+// instagram-post-truncated-text-animation 🔼

@@ -2,6 +2,8 @@ import type React from "react";
 import { createContext, useContext } from "react";
 import type { FlatList, ViewToken } from "react-native";
 
+// instagram-pagination-dots-animation 🔽
+
 export type CarouselImage = number; // Type for demo, in real project would be {uri: string, blurhash: string}
 
 export type CarouselContextValue = {
@@ -28,3 +30,5 @@ export function useCarousel() {
 
   return context;
 }
+
+// instagram-pagination-dots-animation 🔼

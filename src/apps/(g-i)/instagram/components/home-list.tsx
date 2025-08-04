@@ -7,6 +7,8 @@ import { Post } from "../lib/types";
 import { FlashList } from "@shopify/flash-list";
 import { PostCard } from "./post-card";
 
+// instagram-header-on-scroll-animation 🔽
+
 const AnimatedFlatList = Animated.createAnimatedComponent(FlashList<Post>);
 
 type Props = {
@@ -62,3 +64,5 @@ export const HomeList: FC<Props> = ({ posts }) => {
     />
   );
 };
+
+// instagram-header-on-scroll-animation 🔼

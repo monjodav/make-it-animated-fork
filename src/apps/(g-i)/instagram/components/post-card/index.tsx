@@ -5,6 +5,8 @@ import Animated, { LinearTransition } from "react-native-reanimated";
 import { Description } from "./description";
 import { Post } from "../../lib/types";
 
+// instagram-pagination-dots-animation 🔽
+
 type Props = {
   index: number;
   width: number;
@@ -34,8 +36,12 @@ export const PostCard: FC<Props> = ({ index, width, post }: Props) => {
         </View>
       </Carousel>
       <View className="px-4">
+        {/* instagram-post-truncated-text-animation 🔽 */}
         <Description text={post.description} numberOfLines={2} />
+        {/* instagram-post-truncated-text-animation 🔼 */}
       </View>
     </Animated.View>
   );
 };
+
+// instagram-pagination-dots-animation 🔼
