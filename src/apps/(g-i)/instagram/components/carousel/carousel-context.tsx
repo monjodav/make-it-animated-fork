@@ -10,8 +10,8 @@ export type CarouselContextValue = {
   images: CarouselImage[];
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
-  carouselRef: React.RefObject<FlatList<CarouselImage>>;
-  dotsListRef: React.RefObject<FlatList<string>>;
+  carouselRef: React.RefObject<FlatList<CarouselImage> | null>;
+  dotsListRef: React.RefObject<FlatList<string> | null>;
   isDotsPressed: boolean;
   setIsDotsPressed: (value: boolean) => void;
   onViewableItemsChanged: (info: { viewableItems: ViewToken<CarouselImage>[] }) => void;
