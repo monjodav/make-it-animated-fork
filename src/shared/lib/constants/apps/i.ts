@@ -14,6 +14,10 @@ export const instagram: App = {
       href: "/instagram/home",
     },
     {
+      name: "Post truncated text animation",
+      href: "/instagram/home",
+    },
+    {
       name: "Story controls animation",
       href: "/instagram/add-content",
     },

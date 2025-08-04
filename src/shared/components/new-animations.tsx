@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { alma } from "@/src/shared/lib/constants/apps/a";
+import { instagram } from "@/src/shared/lib/constants/apps/i";
 import { App } from "../lib/constants/apps-list";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
@@ -49,7 +49,10 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
 
   return (
     <View className="px-5 gap-5 py-5">
-      <AnimationItem label={getItemProps(alma, 0).label} onPress={getItemProps(alma, 0).onPress} />
+      <AnimationItem
+        label={getItemProps(instagram, 2).label}
+        onPress={getItemProps(instagram, 2).onPress}
+      />
     </View>
   );
 };

@@ -2,14 +2,16 @@ import type React from "react";
 import { createContext, useContext } from "react";
 import type { FlatList, ViewToken } from "react-native";
 
+// instagram-pagination-dots-animation 🔽
+
 export type CarouselImage = number; // Type for demo, in real project would be {uri: string, blurhash: string}
 
 export type CarouselContextValue = {
   images: CarouselImage[];
   currentIndex: number;
   setCurrentIndex: (index: number) => void;
-  carouselRef: React.RefObject<FlatList<CarouselImage>>;
-  dotsListRef: React.RefObject<FlatList<string>>;
+  carouselRef: React.RefObject<FlatList<CarouselImage> | null>;
+  dotsListRef: React.RefObject<FlatList<string> | null>;
   isDotsPressed: boolean;
   setIsDotsPressed: (value: boolean) => void;
   onViewableItemsChanged: (info: { viewableItems: ViewToken<CarouselImage>[] }) => void;
@@ -28,3 +30,5 @@ export function useCarousel() {
 
   return context;
 }
+
+// instagram-pagination-dots-animation 🔼

@@ -20,12 +20,12 @@ export const CarouselContent: FC<Props> = ({ renderItem, width }) => {
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
-        pagingEnabled
+        pagingEnabled // Snaps to full image width for Instagram-style navigation
         viewabilityConfig={{
-          itemVisiblePercentThreshold: 55,
+          itemVisiblePercentThreshold: 55, // 55% visibility threshold for accurate pagination tracking
         }}
-        onViewableItemsChanged={onViewableItemsChanged}
-        onScrollToIndexFailed={onScrollToIndexFailed}
+        onViewableItemsChanged={onViewableItemsChanged} // Drives dots synchronization
+        onScrollToIndexFailed={onScrollToIndexFailed} // Fallback for navigation edge cases
       />
     </View>
   );
