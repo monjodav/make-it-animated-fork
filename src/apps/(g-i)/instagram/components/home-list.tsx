@@ -1,11 +1,11 @@
-import { View, Text, useWindowDimensions, ScrollView } from "react-native";
-import { Carousel, CarouselContent, CarouselPagination } from "../components/carousel";
+import { View, useWindowDimensions, ScrollView } from "react-native";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useHomeHeaderHeight } from "../lib/hooks/use-home-header-height";
 import { FC, useCallback } from "react";
 import { useAnimatedScroll } from "../lib/providers/animated-scroll";
 import { Post } from "../lib/types";
 import { FlashList } from "@shopify/flash-list";
+import { PostCard } from "./post-card";
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlashList<Post>);
 
@@ -49,22 +49,7 @@ export const HomeList: FC<Props> = ({ posts }) => {
       data={posts}
       renderItem={({ item, index }) => (
         // instagram-pagination-dots-animation 🔽
-        <Carousel key={index} images={item.images}>
-          <CarouselContent
-            width={width}
-            renderItem={({ item }) => (
-              <View
-                className="bg-neutral-900 items-center justify-center aspect-square"
-                style={{ width }}
-              >
-                <Text className="text-neutral-600 text-5xl">{item}</Text>
-              </View>
-            )}
-          />
-          <View className="p-3 items-center mb-10">
-            <CarouselPagination />
-          </View>
-        </Carousel>
+        <PostCard key={index} index={index} width={width} post={item} />
         // instagram-pagination-dots-animation 🔼
       )}
       ListHeaderComponent={_renderListHeader}
