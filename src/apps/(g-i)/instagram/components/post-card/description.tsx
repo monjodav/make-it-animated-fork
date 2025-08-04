@@ -8,15 +8,20 @@ import { cn } from "@/src/shared/lib/utils/cn";
 
 type Props = {
   text: string;
-  numberOfLines: number;
+  numberOfLines: number; // Maximum lines to show in truncated state
 };
 
 export const Description: FC<Props> = ({ text, numberOfLines }: Props) => {
+  // TextLayoutLine array contains precise text measurement data for each line
+  // Enables accurate truncation without guessing character counts
   const [lines, setLines] = useState<TextLayoutLine[]>([]);
+
+  // Controls expand/collapse state - starts truncated for Instagram-style UX
   const [isTruncated, setIsTruncated] = useState<boolean>(true);
 
   useEffect(() => {
-    // we re-calculating here on text change
+    // Reset layout measurements when text prop changes
+    // Forces onTextLayout to recalculate line breaks for new content
     if (lines.length > 0) {
       setLines([]);
     }
@@ -24,26 +29,31 @@ export const Description: FC<Props> = ({ text, numberOfLines }: Props) => {
   }, [text]);
 
   return (
+    // Entire description area is pressable for Instagram-style expand/collapse
     <Pressable onPress={() => setIsTruncated(!isTruncated)}>
+      {/* Hidden measurement text - gets precise line break data without visual impact */}
       <Text
-        style={StyleSheet.absoluteFill}
+        style={StyleSheet.absoluteFill} // Overlays exactly on top of visible text
         className={cn(postDescriptionClassNames.text, "opacity-0 pointer-events-none")}
         onTextLayout={(e) => {
+          // Only measure once to prevent infinite re-renders
           if (lines.length === 0) {
-            setLines(e.nativeEvent.lines);
+            setLines(e.nativeEvent.lines); // Each line contains text, width, height, x, y
           }
         }}
       >
         {text}
       </Text>
+
+      {/* Render visible text lines based on truncation state */}
       {lines &&
         lines
-          .slice(0, isTruncated ? numberOfLines : lines.length)
+          .slice(0, isTruncated ? numberOfLines : lines.length) // Show limited lines when truncated
           .map((line, index) => (
             <TextLine
               key={index}
               index={index}
-              line={line}
+              line={line} // Contains precise text measurement data
               totalLines={lines.length}
               numberOfLines={numberOfLines}
               isTruncated={isTruncated}
