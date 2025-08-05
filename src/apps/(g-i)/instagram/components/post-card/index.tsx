@@ -16,6 +16,7 @@ type Props = {
 export const PostCard: FC<Props> = ({ index, width, post }: Props) => {
   return (
     <Animated.View
+      // This is crucial for the truncation animation to work properly
       layout={LinearTransition.springify().damping(28).stiffness(260)}
       className="mb-20"
     >
