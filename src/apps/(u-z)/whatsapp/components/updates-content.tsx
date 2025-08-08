@@ -12,6 +12,8 @@ type Props = {
 
 export const UpdatesContent: FC<Props> = ({ offsetY }) => {
   // whatsapp-updates-screen-header-animation 🔽
+  // Measurement target: marks the Y position at which the header background/blur should appear
+  // useHeaderBackground reads this ref's pageY vs headerHeight to compute the trigger threshold
   const { targetRef, onTargetLayout } = useHeaderBackground({ offsetY });
   // whatsapp-updates-screen-header-animation 🔼
 
