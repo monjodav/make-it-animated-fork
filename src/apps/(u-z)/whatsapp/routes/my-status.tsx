@@ -30,6 +30,8 @@ const tailwindColors = {
   rose: { darkBg: "bg-rose-950", lightBg: "bg-rose-600" },
 };
 
+// Timing: single source for the background pulse entrance
+// 200ms matches WhatsApp's snappy feedback without feeling abrupt
 const _duration = 200;
 
 export default function MyStatus() {
@@ -38,6 +40,7 @@ export default function MyStatus() {
 
   const { width, height } = useWindowDimensions();
 
+  // Why: Content respects navigation header height so our background pulse aligns below it
   const headerHeight = useHeaderHeight();
 
   useEffect(() => {
@@ -46,6 +49,8 @@ export default function MyStatus() {
     setRandomColor(colorKeys[randomIndex] as keyof typeof tailwindColors);
   }, []);
 
+  // Purpose: Drives the expanding soft background behind the editor
+  // Visual intent: fade + radial scale + vertical fill to create a "lighting up" effect
   const rShadowStyle = useAnimatedStyle(() => {
     if (!isMounted)
       return {
@@ -55,8 +60,13 @@ export default function MyStatus() {
       };
 
     return {
+      // Opacity: quick reveal in sync with scale for cohesive pulse
       opacity: withTiming(1, { duration: _duration }),
+      // Scale: radial growth from a quarter-width circle → large soft background
+      // Scale target 10 chosen empirically to cover screen with ample feathering
       transform: [{ scale: withTiming(10, { duration: _duration }) }],
+      // Height: slight delayed fill prevents harsh jump; fills to full screen height
+      // Delay = duration-50 to stagger behind the opacity/scale for layered feel
       height: withDelay(_duration - 50, withTiming(height, { duration: _duration - 50 })),
     };
   });
@@ -69,6 +79,8 @@ export default function MyStatus() {
     >
       <Animated.View
         className={cn("absolute rounded-full opacity-75", tailwindColors[randomColor].lightBg)}
+        // Seed circle: starts small at left-of-center to mimic a soft directional glow
+        // width/4 sets base radius; left = -width/8 centers the circle's midpoint on x=0
         style={[{ width: width / 4, top: width / 2, left: -width / 8 }, rShadowStyle]}
       />
       <View className="absolute inset-0 bg-black/50" />
