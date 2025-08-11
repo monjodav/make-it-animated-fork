@@ -17,17 +17,23 @@ export default function Tabs() {
   const setFocusedTabName = useTabsStore.use.setFocusedTabName();
 
   return (
+    // Provider exposes shared animated values (e.g., offsetY) to header/footer.
+    // This keeps scroll-driven header background and tab indicator in sync.
     <TabsScreenAnimatedProvider>
       <View className="flex-1 bg-neutral-950">
         <ScreenTabs.Container
+          // Transparent header; background/blur are fully controlled by CustomHeader.
           headerContainerStyle={{
             backgroundColor: "transparent",
             shadowColor: "transparent",
           }}
+          // CustomHeader receives indexDecimal for continuous tab interpolation.
           renderHeader={(props) => <CustomHeader {...props} />}
+          // Hide default tab bar; we render a Chrome-like capsule bar in header.
           renderTabBar={() => null}
           initialTabName={TabName.Main}
           onTabChange={(data) => {
+            // Store sync can be used by other UI (e.g., footer) to reflect focus.
             setFocusedTabName(data.tabName as TabName);
           }}
         >

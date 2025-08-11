@@ -16,6 +16,12 @@ import { cn } from "@/src/shared/lib/utils/cn";
 
 // google-chrome-top-tabs-indicator-animation 🔽
 
+/**
+ * Constants drive all positioning/size math for the indicator and buttons.
+ * _tabButtonWidth: fixed width enables pixel-perfect translate math across 3 tabs
+ * _tabButtonHeight: used for indicator height to create an inset pill look
+ * _padding: 2px vertical inset to reveal container background edge (Chrome-like)
+ */
 const _tabButtonWidth = 60;
 const _tabButtonHeight = 42;
 const _padding = 2;
@@ -39,6 +45,8 @@ const TabButton: FC<PropsWithChildren<TabButtonProps>> = ({ onPress, children })
 type Props = Pick<TabBarProps<string>, "indexDecimal" | "onTabPress">;
 
 export const TabBar: FC<Props> = ({ indexDecimal, onTabPress }) => {
+  // Indicator container slides horizontally to sit under the active tab.
+  // indexDecimal interpolates 0→1→2 to left offsets with subtle edge padding on first/last.
   const rIndicatorContainerStyle = useAnimatedStyle(() => {
     return {
       left: interpolate(
@@ -50,6 +58,9 @@ export const TabBar: FC<Props> = ({ indexDecimal, onTabPress }) => {
     };
   });
 
+  // Inner content counter-translates so the black icons remain centered
+  // under the white pill while the container slides. This mimics Chrome's
+  // indicator that reveals the corresponding filled icon.
   const rIndicatorContentStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -65,6 +76,9 @@ export const TabBar: FC<Props> = ({ indexDecimal, onTabPress }) => {
     };
   });
 
+  // Vertical separators fade quickly (50ms) to emulate Chrome's subtle
+  // divider lines around the center tab. Thresholds: show left line when
+  // index > 1, show right line when index < 1 (snappy but not distracting).
   const rLeftVerticalLineStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(indexDecimal.value > 1 ? 1 : 0, { duration: 50 }),
@@ -81,11 +95,14 @@ export const TabBar: FC<Props> = ({ indexDecimal, onTabPress }) => {
     <View
       className={cn(
         "flex-row items-center justify-center rounded-2xl  overflow-hidden",
+        // Android gets a tinted solid background; iOS uses BlurView below.
+        // This mirrors native Chrome where iOS leans on system blur materials.
         Platform.OS === "android" && "bg-neutral-700/75"
       )}
       style={styles.borderCurve}
     >
       {Platform.OS === "ios" && (
+        // iOS blurred capsule matches system UltraThin material for on-brand depth.
         <BlurView tint="systemUltraThinMaterialLight" style={StyleSheet.absoluteFill} />
       )}
       {/* Tabs */}
@@ -127,6 +144,9 @@ export const TabBar: FC<Props> = ({ indexDecimal, onTabPress }) => {
   );
 };
 
+// Styling notes:
+// - borderCurve: 'continuous' produces iOS 16+ smooth pill edges (less sharp than 'circular')
+// - indicator: vertical size subtracts 2*padding to create an inset, revealing container rim
 const styles = StyleSheet.create({
   borderCurve: {
     borderCurve: "continuous",
