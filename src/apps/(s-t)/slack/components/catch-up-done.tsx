@@ -5,6 +5,7 @@ import { useCatchUpAnimation } from "../lib/provider/catch-up-animation";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
+// Smooth out curve to make the completion overlay feel gentle, not abrupt
 const EASING = Easing.out(Easing.ease);
 
 export const CatchUpDone: FC = () => {
@@ -12,7 +13,9 @@ export const CatchUpDone: FC = () => {
 
   const rContainerStyle = useAnimatedStyle(() => {
     return {
+      // Fade & scale gate based on isDone shared value set by provider when last card is dismissed
       opacity: withTiming(isDone.get() ? 1 : 0, { easing: EASING }),
+      // Disable touches until visible to avoid accidental presses during the transition
       pointerEvents: isDone.get() ? "auto" : "none",
       transform: [{ scale: withTiming(isDone.get() ? 1 : 0.5, { easing: EASING }) }],
     };

@@ -11,12 +11,14 @@ export const ColorBackground: FC = () => {
 
   const rGreenStyle = useAnimatedStyle(() => {
     return {
+      // Right swipe reveals green (mark as read). Max at panDistance, clamped to avoid overshooting
       opacity: interpolate(panX.get(), [0, panDistance], [0, 0.8], Extrapolation.CLAMP),
     };
   });
 
   const rBlueStyle = useAnimatedStyle(() => {
     return {
+      // Left swipe reveals blue (keep unread). Mirror of rGreenStyle
       opacity: interpolate(panX.get(), [0, -panDistance], [0, 0.8], Extrapolation.CLAMP),
     };
   });

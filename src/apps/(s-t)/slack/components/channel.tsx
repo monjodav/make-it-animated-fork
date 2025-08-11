@@ -20,6 +20,7 @@ export const Channel: FC<Props> = ({ channel, index }) => {
 
   const rSwipeIndicationContainerStyle = useAnimatedStyle(() => {
     return {
+      // Show hint UI only while user is actively dragging
       opacity: withTiming(isDragging.get() ? 1 : 0, { duration: 150 }),
     };
   });
@@ -31,6 +32,10 @@ export const Channel: FC<Props> = ({ channel, index }) => {
         style={[StyleSheet.absoluteFill, rSwipeIndicationContainerStyle]}
         className="pointer-events-none"
       >
+        {/**
+         * Background gradients indicate direction: green = right (read), blue = left (keep unread).
+         * MarkView overlays provide icon + circular progress arc.
+         */}
         <ColorBackground />
         <View className="absolute top-5 left-5 right-5 flex-row items-center justify-between">
           <MarkView variant="keep-read" />

@@ -14,6 +14,10 @@ type Props = {
 const MemoizedListOfChannels: FC<Props> = memo(({ unreadChannels }) => {
   return (
     <View className="flex-1">
+      {/**
+       * One ChannelAnimationProvider per item keeps gesture/shared values scoped to a single card.
+       * Why: prevents cross-talk between cards and allows independent pan/rotation per stack element.
+       */}
       {unreadChannels.map((channel, index) => (
         <ChannelAnimationProvider key={channel.id}>
           <Channel channel={channel} index={index} />

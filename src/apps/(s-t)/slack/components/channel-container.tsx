@@ -22,15 +22,20 @@ const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => 
   useFooterControlsAnimation(index);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    // Compute neighbors relative to the active index to limit work to only visible cards
     const isLast = index === currentChannelIndex.get();
     const isSecondLast = index === currentChannelIndex.get() - 1;
     const isThirdLast = index === currentChannelIndex.get() - 2;
     const isNextToLast = index === currentChannelIndex.get() + 1;
 
+    // Interpolate based on the visual progress in "card index" space
     const inputRange = [index - 2, index - 1, index, index + 1, index + 2];
 
+    // Rotation direction: dragging from bottom half tilts opposite for a natural hinge effect
     const sign = absoluteYAnchor.get() > height / 2 ? -1 : 1;
 
+    // Subtle parallax: cards below the top one slide down slightly as the top card moves away
+    // Range: at current index => 0, next card => width*0.07, then easing down
     const top = interpolate(
       animatedChannelIndex.get(),
       inputRange,
@@ -38,8 +43,10 @@ const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => 
       Extrapolation.CLAMP
     );
 
+    // Rotate top card up to 4deg as user drags by panDistance; clamped via panDistance from provider
     const rotate = interpolate(panX.get(), [0, panDistance], [0, sign * 4]);
 
+    // Scale stack: next cards scale down slightly to create depth and avoid z-fighting
     const scale = interpolate(
       animatedChannelIndex.get(),
       inputRange,
@@ -49,6 +56,7 @@ const ChannelContainer: FC<PropsWithChildren<Props>> = ({ children, index }) => 
 
     return {
       top,
+      // Hide far cards to reduce overdraw and avoid rendering cost beyond the stack
       opacity: isLast || isSecondLast || isThirdLast || isNextToLast ? 1 : 0,
       transform: [
         {

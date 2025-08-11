@@ -37,10 +37,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     useCatchUpAnimation();
 
   const { width } = useWindowDimensions();
+  // Threshold: quarter of screen width feels reachable yet deliberate
+  // Used for both visual progress (animatedChannelIndex) and commit decision on release
   const panDistance = width / 4;
 
+  // panX, panY are used to move the channel along the screen
   const panX = useSharedValue(0);
   const panY = useSharedValue(0);
+  // Anchor used downstream for rotation direction (top drag tilts one way, bottom the other)
   const absoluteYAnchor = useSharedValue(0);
 
   // hook to add haptic when we pan the card more than panDistance
@@ -53,6 +57,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
   const handleChannelStatus = useCallback((status: ChannelStatus) => {
     if (currentChannelIndex.get() === -1 && prevChannelIndex.get() === 0) {
+      // When last item is swiped, signal completion and give light haptics
       isDone.set(true);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
@@ -72,13 +77,16 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Main pan gesture: updates visual progress during drag and commits on release
   const gesture = Gesture.Pan()
     .onBegin((event) => {
       isDragging.set(true);
       absoluteYAnchor.set(event.absoluteY);
     })
     .onChange((event) => {
+      // Progress in "card index" space: 1.0 shift equals one card dismissed
       const progress = currentChannelIndex.get() - Math.abs(event.translationX) / panDistance;
+      // Clamp progress to at most one card ahead to avoid skipping
       animatedChannelIndex.set(
         progress < currentChannelIndex.get() - 1 ? currentChannelIndex.get() - 1 : progress
       );
@@ -92,12 +100,14 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
       isDragging.set(false);
 
       if (Math.abs(event.translationX) > panDistance) {
+        // Commit: move to next card (left or right) and remember previous for undo logic
         prevChannelIndex.set(Math.round(currentChannelIndex.get()));
         currentChannelIndex.set(Math.round(currentChannelIndex.get() - 1));
 
         const status = event.translationX > 0 ? "read" : "unread";
         const sign = event.translationX > 0 ? 1 : -1;
 
+        // Fling card off-screen horizontally; vertical uses a quick decay for natural release
         panX.set(withTiming(sign * width * 2));
         panY.set(
           withSequence(
@@ -111,6 +121,7 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
         runOnJS(handleChannelStatus)(status);
       } else {
         // We reset panX and panY to 0 on release
+        // Spring back feels snappy but controlled; high stiffness + moderate damping
         panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
         panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
 
@@ -131,6 +142,10 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
 
   return (
     <ChannelAnimationContext.Provider value={value}>
+      {/**
+       * We wrap children with GestureDetector to intercept pan gestures at the provider level.
+       * Why: centralizes gesture handling and keeps card components focused on visuals.
+       */}
       <GestureDetector gesture={gesture}>{children}</GestureDetector>
     </ChannelAnimationContext.Provider>
   );

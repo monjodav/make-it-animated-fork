@@ -4,6 +4,11 @@ import { useCatchUpStore } from "../store/catch-up";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
+/**
+ * Animation coordination context for the Slack Catch Up flow.
+ * Why: Header/Footer controls live outside the swipable card tree, so we use shared values here
+ * to coordinate animations between independent components without prop drilling.
+ */
 type ContextValue = {
   isDragging: SharedValue<boolean>;
   // I separated animatedChannelIndex from currentChannelIndex to be able to animate the channel while it's being dragged
@@ -27,13 +32,20 @@ export const CatchUpAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
   const total = useCatchUpStore.use.total();
   const lastItemIndex = total - 1;
 
+  // Shared state driving cross-component animations:
+  // - isDragging gates header/footer reactions to avoid fighting with gesture springs
+  // - animatedChannelIndex allows fractional indices while swiping (visual progress)
+  // - current/prev indices are integers for business logic and post-gesture settling
   const isDragging = useSharedValue(false);
   const animatedChannelIndex = useSharedValue(lastItemIndex);
   const currentChannelIndex = useSharedValue(lastItemIndex);
   const prevChannelIndex = useSharedValue(lastItemIndex);
+  // Footer buttons (Keep Unread / Mark as Read) set these flags; hooks listen and animate cards off-screen
   const isKeepUnreadPressed = useSharedValue(false);
   const isMarkAsReadPressed = useSharedValue(false);
+  // Triggers "All caught up" state once currentChannelIndex crosses -1
   const isDone = useSharedValue(false);
+  // When non-null, header Undo animation re-inserts a card back by incrementing indices
   const undoChannelIndex = useSharedValue<number | null>(null);
 
   const value = {

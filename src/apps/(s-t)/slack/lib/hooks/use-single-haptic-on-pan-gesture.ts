@@ -14,25 +14,30 @@ type Params = {
 };
 
 export const useSingleHapticOnPanGesture = ({ triggerOffset, axis }: Params) => {
+  // Gate haptics so we only fire once per threshold crossing
   const isHapticTriggered = useSharedValue(false);
 
+  // Haptics must run on the JS thread; we call via runOnJS from the UI worklet
   const handleHaptics = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     isHapticTriggered.set(true);
   };
 
-  // We insert singleHapticOnChange in onChange of the gesture to be able to trigger haptics when we pan the card more than triggerOffset
+  // Use in gesture.onChange to emit a single haptic once the drag passes the threshold along the chosen axis
   const singleHapticOnChange = (
     event: GestureUpdateEvent<PanGestureHandlerEventPayload & PanGestureChangeEventPayload>
   ) => {
     "worklet";
 
+    // Project gesture to axis and compare to absolute threshold
     const offset = axis === "x" ? event.translationX : event.translationY;
 
+    // Fire when crossing forward over threshold (once)
     if (Math.abs(offset) > triggerOffset && !isHapticTriggered.value) {
       runOnJS(handleHaptics)();
     }
 
+    // Reset when moving back under threshold so a new crossing can haptic again
     if (Math.abs(offset) < triggerOffset && isHapticTriggered.value) {
       isHapticTriggered.set(false);
     }

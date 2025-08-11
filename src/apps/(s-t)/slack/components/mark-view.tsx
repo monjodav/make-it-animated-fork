@@ -10,10 +10,12 @@ import { colorKit } from "reanimated-color-picker";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
+// Dimensions chosen to read clearly over the card without stealing attention
 const SIZE = 60;
 const STROKE_WIDTH = 3;
 const ICON_SIZE = 24;
 
+// Transparent white via colorKit for consistent platform alpha handling
 const TRANSPARENT = colorKit.setAlpha("#fff", 0).hex();
 
 type Props = {
@@ -23,11 +25,13 @@ type Props = {
 export const MarkView: FC<Props> = ({ variant }) => {
   const { panX, panDistance } = useChannelAnimation();
 
+  // Map variant to direction sign so the same interpolation works for left/right
   const sign = variant === "keep-read" ? 1 : -1;
 
   const rContainerStyle = useAnimatedStyle(() => {
     if (variant === "keep-read") {
       return {
+        // Reveal label proportionally to drag distance; fully visible at threshold (panDistance)
         opacity: interpolate(panX.get(), [0, sign * panDistance], [0, 1], Extrapolation.CLAMP),
       };
     }
@@ -38,6 +42,8 @@ export const MarkView: FC<Props> = ({ variant }) => {
 
   const rIconContainerStyle = useAnimatedStyle(() => {
     return {
+      // Fill the circular icon background when the arc completes
+      // Small +STROKE_WIDTH/2 buffer ensures we flip when visually complete
       backgroundColor: withTiming(
         Math.abs(panX.get()) + STROKE_WIDTH / 2 > panDistance ? "white" : TRANSPARENT,
         {
@@ -52,6 +58,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
     const skPath = Skia.Path.Make();
 
     // Calculate the end angle based on panX (0 to 2π)
+    // progress: 0.0 at center, 1.0 at threshold; we turn it into degrees for Skia's addArc
     const progress = Math.abs(panX.get()) / panDistance;
     const endAngle = 2 * Math.PI * progress;
 
@@ -63,7 +70,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
         width: SIZE - STROKE_WIDTH,
         height: SIZE - STROKE_WIDTH,
       },
-      -90, // Start from top (0 is right, -90 is top)
+      -90, // Start from top (0° is right; -90° rotates start to 12 o'clock for intuitive progress)
       endAngle * (180 / Math.PI) // Convert to degrees
     );
 
@@ -72,6 +79,7 @@ export const MarkView: FC<Props> = ({ variant }) => {
 
   const rIconStyle = useAnimatedStyle(() => {
     return {
+      // Show the colored icon only after the progress passes threshold; 200ms feels responsive
       opacity: withTiming(Math.abs(panX.get()) + STROKE_WIDTH / 2 > panDistance ? 1 : 0, {
         duration: 200,
       }),
