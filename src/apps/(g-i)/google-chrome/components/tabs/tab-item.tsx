@@ -7,6 +7,9 @@ import { BlurView } from "expo-blur";
 
 // google-chrome-tab-item-layout-animation 🔽
 
+// createAnimatedComponent is required to enable Reanimated-driven entering/exiting/layout
+// animations on Pressable. Without this wrapper, transitions would run on JS thread
+// and risk dropped frames during rapid grid reflows.
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = {
@@ -20,14 +23,21 @@ type Props = {
 const TabItem: FC<Props> = ({
   index,
   isActive,
+  // Accent color used for the "active" highlight pill behind the tab preview.
+  // Keep this subtle to avoid overpowering the screenshot content.
   activeColor = "#60a5fa",
   onItemPress,
   onRemovePress,
 }) => {
+  // We size tiles to half of the screen width to create a responsive 2‑column grid.
+  // Using raw width here keeps layout math simple for LinearTransition diffing.
   const { width } = useWindowDimensions();
 
   return (
     <AnimatedPressable
+      // Enter/exit: quick fade/zoom keeps grid reflows feeling light and snappy
+      // when items are added/removed. Layout uses LinearTransition to animate
+      // position/size changes between frames without expensive re-measure loops.
       entering={FadeIn}
       exiting={ZoomOut}
       layout={LinearTransition}
@@ -37,6 +47,7 @@ const TabItem: FC<Props> = ({
     >
       {isActive && (
         <Animated.View
+          // Subtle highlight appears under active tab with a fade to avoid popping.
           entering={FadeIn}
           className={cn(
             "absolute top-1 bottom-1 rounded-[26px]",
@@ -52,6 +63,8 @@ const TabItem: FC<Props> = ({
             Platform.OS === "android" && "bg-neutral-800"
           )}
         >
+          {/* iOS: use native blur to mimic Chrome toolbar translucency.
+             Android: fall back to a solid color for performance parity. */}
           {Platform.OS === "ios" && (
             <BlurView tint="systemUltraThinMaterialDark" style={StyleSheet.absoluteFill} />
           )}
@@ -69,6 +82,8 @@ const TabItem: FC<Props> = ({
 
 const styles = StyleSheet.create({
   borderCurve: {
+    // Continuous curves align with iOS 16+ design language and help
+    // grid transitions feel smoother when items reflow.
     borderCurve: "continuous",
   },
   image: {
