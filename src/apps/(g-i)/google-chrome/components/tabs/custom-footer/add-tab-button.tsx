@@ -7,12 +7,17 @@ import { TabName } from "../../../lib/types";
 
 // google-chrome-footer-animation 🔽
 
+// Wrap Pressable to allow Reanimated to drive its style/props on UI thread.
+// Ref: createAnimatedComponent docs – needed for opacity/pointerEvents animation.
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const AddTabButton = () => {
   const focusedTabName = useTabsStore.use.focusedTabName();
   const addTabItem = useTabsStore.use.addTabItem();
 
+  // Container animates visibility based on which tab is focused.
+  // WHY: Chrome shows a blue (+) in Main and a white (+) in Incognito; hide otherwise.
+  // pointerEvents toggles interactivity in sync with opacity to avoid ghost taps during transitions.
   const rContainerStyle = useAnimatedStyle(() => {
     if (focusedTabName === TabName.Main) {
       return {

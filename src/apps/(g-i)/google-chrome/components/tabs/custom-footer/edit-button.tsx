@@ -7,11 +7,15 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // google-chrome-footer-animation 🔽
 
+// Make Pressable animatable so opacity/pointerEvents can be driven on the UI thread.
+// See Reanimated createAnimatedComponent docs for rationale.
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const EditButton = () => {
   const focusedTabName = useTabsStore.use.focusedTabName();
 
+  // Show Edit only on tab screens (Main/Incognito). Hidden on Groups/others.
+  // WHY: Mirrors Chrome's footer controls availability and prevents accidental taps when hidden.
   const rContainerStyle = useAnimatedStyle(() => {
     if (focusedTabName === TabName.Main) {
       return {
