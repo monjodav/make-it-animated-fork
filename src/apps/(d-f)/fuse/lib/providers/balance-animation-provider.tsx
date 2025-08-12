@@ -4,6 +4,8 @@ import { SharedValue, useSharedValue } from "react-native-reanimated";
 // fuse-balance-secure-view-toggle-animation 🔽
 // fuse-balance-change-toggle-animation 🔽
 
+// Animation timing: long-press threshold used consistently across components to
+// synchronize press feedback + enter/exit motions. Matches common iOS long-press UX.
 export const LONG_PRESS_DELAY = 500;
 
 type BalanceChangeView = "percent" | "currency";
@@ -23,11 +25,14 @@ const BalanceAnimationContext = createContext<ContextValue>({} as ContextValue);
 export const BalanceAnimationProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isBalanceSecure, setIsBalanceSecure] = useState(false);
   const [balanceChangeView, setBalanceChangeView] = useState<BalanceChangeView>("currency");
-  // NOTE: I add here additional balanceChangeTappedValue to control which value is tapped
-  // so if percentage is chosen then I skip animations inside balance-change-toggle and I skip setting balanceChangeView inside balance component.
-  // This is the behavior from Fuse app.
+  // Shared coordination flag: captures the last explicitly tapped view.
+  // Why: prevents double-triggering and avoids conflicting animations when
+  // Balance and Toggle try to update in the same frame. When set to "percent",
+  // the Toggle skips its micro-translation to mirror Fuse's UX.
   const balanceChangeTappedValue = useSharedValue<BalanceChangeView>("currency");
 
+  // Touch states shared across components to drive subtle press transforms
+  // on both the secure and insecure presentations (keeps motion in sync as layout swaps).
   const isBalanceSecureTouched = useSharedValue(false);
   const isBalanceInsecureTouched = useSharedValue(false);
 

@@ -35,9 +35,13 @@ export const Dashboard: FC = () => {
         <Text className="text-neutral-400 font-medium mb-4">Balance</Text>
         <View className="flex-row items-center justify-between mb-5">
           {/* fuse-balance-secure-view-toggle-animation 🔽 */}
+          {/* Provider scope: wraps Balance + BalanceChangeToggle so they can share
+              touch states and the tapped-view flag without prop drilling. */}
           <BalanceAnimationProvider>
             <Balance />
             {/* fuse-balance-change-toggle-animation 🔽 */}
+            {/* Toggle reads the same shared values to micro-shift during long-press
+                and to skip animations when percent view was explicitly tapped. */}
             <BalanceChangeToggle />
             {/* fuse-balance-change-toggle-animation 🔼 */}
           </BalanceAnimationProvider>

@@ -10,11 +10,16 @@ import * as Haptics from "expo-haptics";
 
 // fuse-balance-secure-view-toggle-animation 🔽
 
+// Animated wrapper over Pressable so Reanimated can drive its props/styles on the UI thread.
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+// Enter/exit timing tuned to feel snappy but readable for flip-ish motion.
 const DURATION = 175;
+// Out-ease prevents overshoot when elements settle from 3D skew/rotation.
 const EASING = Easing.out(Easing.ease);
 
+// Off-screen, skewed/rotated start state: creates the "cards slide-and-flip in" illusion.
+// Negative Y pulls up and left; small rotations keep motion lively without nausea.
 const TRANSFORM_BALANCE_SECURE_DEFAULT = [
   { translateY: -35 },
   { translateX: -4 },
@@ -23,6 +28,7 @@ const TRANSFORM_BALANCE_SECURE_DEFAULT = [
   { rotateY: "3deg" },
 ];
 
+// Mirror of secure start pose: enters from below/right to accent the toggle contrast.
 const TRANSFORM_BALANCE_INSECURE_DEFAULT = [
   { translateY: 30 },
   { translateX: 4 },
@@ -31,6 +37,7 @@ const TRANSFORM_BALANCE_INSECURE_DEFAULT = [
   { rotateY: "3deg" },
 ];
 
+// Rest pose for both: no skew/rotation so content remains crisp when settled.
 const TRANSFORM_ZERO = [
   { translateY: 0 },
   { translateX: 0 },
@@ -39,6 +46,8 @@ const TRANSFORM_ZERO = [
   { rotateY: "0deg" },
 ];
 
+// Keyframe: secure view fades in while unskewing and unrotating to rest pose.
+// Using keyframes keeps the 3D transform atomic and on the UI thread.
 const balanceSecureEntering = new Keyframe({
   0: {
     opacity: 0,
@@ -51,6 +60,7 @@ const balanceSecureEntering = new Keyframe({
   },
 });
 
+// Keyframe: reverse the motion for a cohesive out animation.
 const balanceSecureExiting = new Keyframe({
   0: {
     opacity: 1,
@@ -63,6 +73,7 @@ const balanceSecureExiting = new Keyframe({
   },
 });
 
+// Insecure enters from its mirrored default so the swap feels like a 2-sided flip.
 const balanceInsecureEntering = new Keyframe({
   0: {
     opacity: 0,
@@ -75,6 +86,7 @@ const balanceInsecureEntering = new Keyframe({
   },
 });
 
+// Insecure exits back to its default mirrored pose.
 const balanceInsecureExiting = new Keyframe({
   0: {
     opacity: 1,
@@ -97,35 +109,37 @@ export const Balance: FC = () => {
     isBalanceInsecureTouched,
   } = useBalanceAnimation();
 
+  // Micro press feedback for secure view, synced with LONG_PRESS_DELAY so the
+  // long-press gesture and press deformation complete together.
   const rBalanceSecureStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: withTiming(isBalanceSecureTouched.value ? -4 : 0, {
+          translateY: withTiming(isBalanceSecureTouched.get() ? -4 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          translateX: withTiming(isBalanceSecureTouched.value ? 2 : 0, {
+          translateX: withTiming(isBalanceSecureTouched.get() ? 2 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          scale: withTiming(isBalanceSecureTouched.value ? 0.97 : 1, {
+          scale: withTiming(isBalanceSecureTouched.get() ? 0.97 : 1, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          rotateX: withTiming(isBalanceSecureTouched.value ? "5deg" : "0deg", {
+          rotateX: withTiming(isBalanceSecureTouched.get() ? "5deg" : "0deg", {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          skewX: withTiming(isBalanceSecureTouched.value ? "2deg" : "0deg", {
+          skewX: withTiming(isBalanceSecureTouched.get() ? "2deg" : "0deg", {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
@@ -134,35 +148,37 @@ export const Balance: FC = () => {
     };
   });
 
+  // Same micro feedback for insecure view; uses its own touch shared value to
+  // avoid cross-contamination when the conditional layout swaps children.
   const rBalanceInsecureStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: withTiming(isBalanceInsecureTouched.value ? 5 : 0, {
+          translateY: withTiming(isBalanceInsecureTouched.get() ? 5 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          translateX: withTiming(isBalanceInsecureTouched.value ? 2.5 : 0, {
+          translateX: withTiming(isBalanceInsecureTouched.get() ? 2.5 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          scale: withTiming(isBalanceInsecureTouched.value ? 0.97 : 1, {
+          scale: withTiming(isBalanceInsecureTouched.get() ? 0.97 : 1, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          rotateX: withTiming(isBalanceInsecureTouched.value ? "5deg" : "0deg", {
+          rotateX: withTiming(isBalanceInsecureTouched.get() ? "5deg" : "0deg", {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          skewX: withTiming(isBalanceInsecureTouched.value ? "2deg" : "0deg", {
+          skewX: withTiming(isBalanceInsecureTouched.get() ? "2deg" : "0deg", {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
@@ -175,7 +191,7 @@ export const Balance: FC = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsBalanceSecure(!isBalanceSecure);
     // NOTE: See balance-animation-provider for more info why I use balanceChangeTappedValue here
-    if (balanceChangeTappedValue.value === "percent") {
+    if (balanceChangeTappedValue.get() === "percent") {
       return;
     }
     setBalanceChangeView("currency");
@@ -185,7 +201,7 @@ export const Balance: FC = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setIsBalanceSecure(!isBalanceSecure);
     // NOTE: See balance-animation-provider for more info why I use balanceChangeTappedValue here
-    if (balanceChangeTappedValue.value === "percent") {
+    if (balanceChangeTappedValue.get() === "percent") {
       return;
     }
     setBalanceChangeView("percent");
@@ -203,6 +219,7 @@ export const Balance: FC = () => {
             onTouchStart={() => {
               isBalanceSecureTouched.set(true);
             }}
+            // Reset touch state on layout to avoid a stuck pressed pose after tree switches.
             onLayout={() => isBalanceSecureTouched.set(false)}
             onTouchEnd={() => isBalanceSecureTouched.set(false)}
             onLongPress={onLongPressBalanceSecure}
@@ -215,6 +232,7 @@ export const Balance: FC = () => {
                 size={30}
                 color="#171717"
                 strokeWidth={3}
+                // Slight negative gap pulls stars together for a denser mask feel.
                 style={styles.asteriskIcon}
               />
             ))}
@@ -227,6 +245,7 @@ export const Balance: FC = () => {
             entering={balanceInsecureEntering.duration(DURATION)}
             exiting={balanceInsecureExiting.duration(DURATION)}
             className="flex-row"
+            // Same stuck-state guard when swapping from the secure layout.
             onLayout={() => isBalanceInsecureTouched.set(false)}
             onTouchStart={() => {
               isBalanceInsecureTouched.set(true);
@@ -251,4 +270,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// fuse-balance-insecure-view-toggle-animation 🔼
+// fuse-balance-secure-view-toggle-animation 🔼

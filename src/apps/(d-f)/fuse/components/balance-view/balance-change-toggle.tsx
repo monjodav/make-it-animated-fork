@@ -21,9 +21,12 @@ import {
 // fuse-balance-secure-view-toggle-animation 🔽
 // fuse-balance-change-toggle-animation 🔽
 
+// Enter/exit timing for label swap; longer than Balance to improve legibility.
 const DURATION = 250;
+// Gentle out-ease keeps vertical slide from feeling springy.
 const EASING = Easing.out(Easing.ease);
 
+// Animated wrapper over Pressable to run scale/transform on UI thread.
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const BalanceChangeToggle: FC = () => {
@@ -39,6 +42,8 @@ export const BalanceChangeToggle: FC = () => {
   const scale = useSharedValue(1);
 
   const handlePress = () => {
+    // Guard: when balance is secure and already showing percent, ignore taps.
+    // Mirrors Fuse behavior to avoid redundant state toggles/animations.
     if (isBalanceSecure && balanceChangeView === "percent") {
       return;
     }
@@ -49,13 +54,14 @@ export const BalanceChangeToggle: FC = () => {
 
   const rContainerStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: withTiming(scale.value, { duration: 150 }) }],
+      // Press feedback: quick scale to emphasize tap without jank.
+      transform: [{ scale: withTiming(scale.get(), { duration: 150 }) }],
     };
   });
 
   const rPercentContainerStyle = useAnimatedStyle(() => {
     // NOTE: See balance-animation-provider for more info why I use balanceChangeTappedValue here
-    if (balanceChangeTappedValue.value === "percent") {
+    if (balanceChangeTappedValue.get() === "percent") {
       return {
         transform: [
           {
@@ -71,13 +77,15 @@ export const BalanceChangeToggle: FC = () => {
     return {
       transform: [
         {
-          translateY: withTiming(isBalanceSecureTouched.value ? -2 : 0, {
+          // Micro shift up/left when the secure (masked) balance is touched.
+          // Duration synced to LONG_PRESS_DELAY for cohesive long-press feel.
+          translateY: withTiming(isBalanceSecureTouched.get() ? -2 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          translateX: withTiming(isBalanceSecureTouched.value ? 0.5 : 0, {
+          translateX: withTiming(isBalanceSecureTouched.get() ? 0.5 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
@@ -88,7 +96,7 @@ export const BalanceChangeToggle: FC = () => {
 
   const rCurrencyContainerStyle = useAnimatedStyle(() => {
     // NOTE: See balance-animation-provider for more info why I use balanceChangeTappedValue here
-    if (balanceChangeTappedValue.value === "percent") {
+    if (balanceChangeTappedValue.get() === "percent") {
       return {
         transform: [
           {
@@ -103,13 +111,14 @@ export const BalanceChangeToggle: FC = () => {
     return {
       transform: [
         {
-          translateY: withTiming(isBalanceInsecureTouched.value ? 2 : 0, {
+          // Micro shift down/right when insecure (visible) balance is touched.
+          translateY: withTiming(isBalanceInsecureTouched.get() ? 2 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
         },
         {
-          translateX: withTiming(isBalanceInsecureTouched.value ? -0.5 : 0, {
+          translateX: withTiming(isBalanceInsecureTouched.get() ? -0.5 : 0, {
             duration: LONG_PRESS_DELAY,
             easing: EASING,
           }),
@@ -120,6 +129,7 @@ export const BalanceChangeToggle: FC = () => {
 
   return (
     <AnimatedPressable
+      // Layout animation ensures container reflows smoothly when label swaps.
       layout={LinearTransition.duration(DURATION)}
       style={rContainerStyle}
       className="flex-row items-center gap-0.5 px-1.5 py-1 border border-neutral-300 rounded-[10px] overflow-hidden"
@@ -133,6 +143,7 @@ export const BalanceChangeToggle: FC = () => {
         <Animated.View key="percent-container" style={rPercentContainerStyle}>
           <Animated.Text
             key="percent-text"
+            // Percent variant slides up when appearing; pairs with EASING above.
             entering={FadeInUp.duration(DURATION)}
             exiting={FadeOutUp.duration(DURATION)}
             onLayout={() => isBalanceSecureTouched.set(false)}
@@ -145,6 +156,7 @@ export const BalanceChangeToggle: FC = () => {
         <Animated.View key="currency-container" style={rCurrencyContainerStyle}>
           <Animated.Text
             key="currency-text"
+            // Currency variant slides down when appearing to mirror the swap direction.
             entering={FadeInDown.duration(DURATION)}
             exiting={FadeOutDown.duration(DURATION)}
             onLayout={() => isBalanceInsecureTouched.set(false)}
