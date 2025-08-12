@@ -11,13 +11,18 @@ type DotProps = {
 };
 
 const Dot: React.FC<DotProps> = ({ scrollOffsetX, index }) => {
+  // Card width defines page step; keeps dot logic responsive to orientation/size changes
   const { width: cardWidth } = useWindowDimensions();
 
   const dotStyle = useAnimatedStyle(() => {
+    // Interpolate around the current page center: prev → current → next
+    // Using absolute offsets (index * width) keeps math simple with pagingEnabled
     const inputRange = [(index - 1) * cardWidth, index * cardWidth, (index + 1) * cardWidth];
 
+    // Opacity focus ring: 25% when adjacent, 100% when centered
+    // Opacity chosen over scale to avoid layout jitter and visual jumpiness
     const opacity = interpolate(
-      scrollOffsetX.value,
+      scrollOffsetX.get(),
       inputRange,
       [0.25, 1, 0.25],
       Extrapolation.CLAMP
@@ -39,6 +44,7 @@ interface PaginationDotsProps {
 export const PaginationDots = ({ numberOfItems, scrollOffsetX }: PaginationDotsProps) => {
   return (
     <View className="flex-row items-center justify-center gap-2">
+      {/* Each dot subscribes to the same shared scroll value for lockstep updates */}
       {Array.from({ length: numberOfItems }).map((_, index) => {
         return <Dot key={index} scrollOffsetX={scrollOffsetX} index={index} />;
       })}
