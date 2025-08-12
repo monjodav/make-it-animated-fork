@@ -10,18 +10,24 @@ import ColorPickerComponent, { ColorFormatsObject, ColorPickerRef } from "reanim
 
 // colorsapp-color-picker-background-animation 🔽
 
+// Seed color used to initialize both the gradient background and the picker value.
+// Sets the first frame to a pleasant, non-black tone to avoid a harsh flash.
 const _inputColor = "#F9a8d4";
 
 export default function ColorPicker() {
   const pickerRef = useRef<ColorPickerRef>(null);
 
+  // Single source of truth for the chosen color.
+  // SharedValue keeps Header label and background gradient in perfect sync on UI thread.
   const selectedColor = useSharedValue(_inputColor);
 
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
+  // Derived gradient stops: top uses the selected color, bottom fades into app background.
+  // Using derivedValue ensures Skia receives the updates without re-creating component trees.
   const gradientColors = useDerivedValue(() => {
-    return [selectedColor.value, "#27272a"];
+    return [selectedColor.get(), "#27272a"];
   }, []);
 
   return (
@@ -32,20 +38,28 @@ export default function ColorPicker() {
         paddingBottom: insets.bottom + 16,
       }}
     >
+      {/**
+       * Background fill rendered by Skia for GPU-accelerated gradients.
+       * Placed absolutely under content; opacity tuned in styles to prevent overpowering UI.
+       */}
       <Canvas style={styles.canvas}>
         <Rect x={0} y={0} width={width} height={height}>
+          {/** Vertical gradient: top (y=0) -> bottom (y=height). */}
           <LinearGradient start={vec(0, 0)} end={vec(0, height)} colors={gradientColors} />
         </Rect>
       </Canvas>
       <ColorPickerComponent
         ref={pickerRef}
         style={styles.colorPicker}
-        value={selectedColor.value}
+        // Initialize picker state from shared value so thumb matches the background immediately.
+        value={selectedColor.get()}
         thumbSize={sharedConfigs.thumbPanelSize}
+        // Ring keeps the swatch visible under the thumb for better color confirmation.
         thumbShape="ring"
         onChange={(colors: ColorFormatsObject) => {
           "worklet";
-          selectedColor.value = colors.hex;
+          // Update on UI thread for low-latency feedback in both header and gradient.
+          selectedColor.set(colors.hex);
         }}
       >
         <Header inputColor={_inputColor} selectedColor={selectedColor} />
@@ -59,6 +73,7 @@ export default function ColorPicker() {
 const styles = StyleSheet.create({
   canvas: {
     ...StyleSheet.absoluteFillObject,
+    // 50% keeps the gradient atmospheric without washing out content.
     opacity: 0.5,
   },
   colorPicker: {

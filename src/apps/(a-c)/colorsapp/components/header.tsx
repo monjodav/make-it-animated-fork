@@ -15,16 +15,20 @@ type Props = {
 };
 
 export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
+  // Uppercase the selected hex on UI thread to keep text changes in lockstep with color changes.
   const rSelectedColor = useDerivedValue(() => {
-    return selectedColor.value.toUpperCase();
+    return selectedColor.get().toUpperCase();
   });
 
+  // Keep the chip background in sync with the live selected color.
   const rSelectedColorContainerStyle = useAnimatedStyle(() => ({
-    backgroundColor: selectedColor.value,
+    backgroundColor: selectedColor.get(),
   }));
 
+  // Determine readable text color based on current background.
+  // runOnUI ensures contrast check stays on UI thread for zero jank during scrubbing.
   const rSelectedColorTextStyle = useAnimatedStyle(() => ({
-    color: colorKit.runOnUI().isDark(selectedColor.value) ? "#fff" : "#333",
+    color: colorKit.runOnUI().isDark(selectedColor.get()) ? "#fff" : "#333",
   }));
 
   return (
@@ -47,6 +51,7 @@ export const Header: FC<Props> = ({ inputColor, selectedColor }) => {
           />
         </Animated.View>
       </View>
+      {/** Lightweight back control for demos; replaced by navigation in real screen. */}
       <TouchableOpacity className="absolute top-0 left-4" onPress={simulatePress}>
         <ArrowLeft size={30} color="#fff" strokeWidth={1.5} />
       </TouchableOpacity>
@@ -59,6 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   selectedColorText: {
+    // iOS measures differently; small platform tweak avoids vertical clipping for ReText.
     lineHeight: Platform.OS === "ios" ? 14 : 6,
   },
 });
