@@ -18,6 +18,8 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 // colorsapp-palette-picker-color-change-animation 🔽
 
+// Base tempo for the breathing animation. 1500ms chosen to feel calm but responsive;
+// other durations are derived (1.25x, 0.75x) to create asymmetric inhale/exhale.
 const BASE_DURATION = 1500;
 
 type Props = {
@@ -41,11 +43,13 @@ export const PalettePickerPanel: FC<Props> = ({
 
   const _circleWidth = width - 32;
 
+  // Outer faint circle: larger scale swing for noticeable depth, slower ramp up then ease down.
+  // When `state` switches to active, withRepeat(-1, true) mirrors inhale/exhale around midpoint.
   const rCircle1Style = useAnimatedStyle(() => ({
     transform: [
       {
         scale:
-          state.value === "idle"
+          state.get() === "idle"
             ? withTiming(1.25, { duration: BASE_DURATION })
             : withRepeat(
                 withSequence(
@@ -57,17 +61,19 @@ export const PalettePickerPanel: FC<Props> = ({
               ),
       },
     ],
+    // Opacity lags by half tempo to avoid popping; creates softer overlap between rings.
     opacity: withDelay(
       BASE_DURATION / 2,
-      withTiming(state.value === "idle" ? 0.25 : 0.5, { duration: BASE_DURATION })
+      withTiming(state.get() === "idle" ? 0.25 : 0.5, { duration: BASE_DURATION })
     ),
   }));
 
+  // Mid circle: medium swing to create parallax feeling between layers.
   const rCircle2Style = useAnimatedStyle(() => ({
     transform: [
       {
         scale:
-          state.value === "idle"
+          state.get() === "idle"
             ? withTiming(1.1, { duration: BASE_DURATION })
             : withRepeat(
                 withSequence(
@@ -79,17 +85,19 @@ export const PalettePickerPanel: FC<Props> = ({
               ),
       },
     ],
+    // Same stagger as circle1 to keep the glow layers in phase but offset.
     opacity: withDelay(
       BASE_DURATION / 2,
-      withTiming(state.value === "idle" ? 0.25 : 0.5, { duration: BASE_DURATION })
+      withTiming(state.get() === "idle" ? 0.25 : 0.5, { duration: BASE_DURATION })
     ),
   }));
 
+  // Inner circle (stroke): smallest amplitude to anchor the composition.
   const rCircle3Style = useAnimatedStyle(() => ({
     transform: [
       {
         scale:
-          state.value === "idle"
+          state.get() === "idle"
             ? withTiming(1, { duration: BASE_DURATION })
             : withRepeat(
                 withSequence(
@@ -101,9 +109,10 @@ export const PalettePickerPanel: FC<Props> = ({
               ),
       },
     ],
+    // Faster onset for stroked circle so it "catches" the viewer's eye.
     opacity: withDelay(
       BASE_DURATION / 4,
-      withTiming(state.value === "idle" ? 0 : 0.5, { duration: BASE_DURATION })
+      withTiming(state.get() === "idle" ? 0 : 0.5, { duration: BASE_DURATION })
     ),
   }));
 
@@ -131,6 +140,8 @@ export const PalettePickerPanel: FC<Props> = ({
       <View className="px-4 pb-8 pt-4">
         <BrightnessSlider
           thumbShape="circle"
+          // Slider visuals coordinated via shared sizing so interaction feels consistent
+          // with the panel thumbs; thinner rails highlight color content over chrome.
           sliderThickness={sharedConfigs.sliderThickness}
           thumbSize={sharedConfigs.thumbSliderSize}
         />

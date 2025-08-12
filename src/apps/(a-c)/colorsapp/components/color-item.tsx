@@ -12,6 +12,8 @@ import { ReText } from "react-native-redash";
 
 // colorsapp-palette-picker-color-change-animation 🔽
 
+// Using Animated.createAnimatedComponent to animate TouchableOpacity props (backgroundColor/opacity)
+// directly on the UI thread. Avoids re-renders and enables withTiming to drive color transitions smoothly.
 const AnimatedPressable = Animated.createAnimatedComponent(TouchableOpacity);
 
 type Props = {
@@ -20,12 +22,16 @@ type Props = {
 };
 
 export const ColorItem: FC<Props> = ({ color, handleEditPress }) => {
+  // Smooth color swatch transition when the shared color value updates.
+  // 100ms keeps feedback snappy as user drags the picker without feeling flickery.
   const rContainerStyle = useAnimatedStyle(() => ({
-    backgroundColor: withTiming(color.value, { duration: 100 }),
+    backgroundColor: withTiming(color.get(), { duration: 100 }),
   }));
 
+  // Derive uppercase HEX for display. Using useDerivedValue keeps computation on the UI thread
+  // and plays nicely with ReText (which reads from a shared/derived value directly).
   const rColor = useDerivedValue(() => {
-    return color.value.toUpperCase();
+    return color.get().toUpperCase();
   });
 
   return (

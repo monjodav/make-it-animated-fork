@@ -24,12 +24,18 @@ export const ColorPanel: FC<Props> = ({ state, lightAccentColor, darkAccentColor
 
   const { width } = useWindowDimensions();
 
+  // Panel is a centered square; subtract 32px to align with outer layout padding for
+  // perfect edge rhythm between animated rings and interactive spectrum.
   const _width = width - 32;
 
   return (
     <Animated.View
-      onTouchStart={() => (state.value = "active")}
-      onTouchEnd={() => (state.value = "idle")}
+      // Touch toggles breathing mode: active while dragging to convey energy,
+      // idle when released for calmer background motion.
+      onTouchStart={() => state.set("active")}
+      onTouchEnd={() => state.set("idle")}
+      // Randomize enter rotation for variety across mounts (keeps demo lively).
+      // 500ms gives a quick but not jarring arrival.
       entering={
         randomNumber % 2 === 0 ? RotateInDownLeft.duration(500) : RotateInDownRight.duration(500)
       }
@@ -48,10 +54,12 @@ export const ColorPanel: FC<Props> = ({ state, lightAccentColor, darkAccentColor
           thumbShape="solid"
           thumbSize={sharedConfigs.thumbSliderSize * 0.75}
           thumbColor={colorKit.setAlpha(colors.zinc[800], 0.25).hex()}
+          // Triadic: +120° hue shift from the primary.
           hueTransform={120}
+          // Worklet ensures assignment runs on UI thread, keeping dependent animations in sync.
           onChange={(colors: ColorFormatsObject) => {
             "worklet";
-            lightAccentColor.value = colors.hex;
+            lightAccentColor.set(colors.hex);
           }}
         />
         <ExtraThumb
@@ -59,10 +67,12 @@ export const ColorPanel: FC<Props> = ({ state, lightAccentColor, darkAccentColor
           thumbShape="solid"
           thumbSize={sharedConfigs.thumbSliderSize * 0.75}
           thumbColor={colorKit.setAlpha(colors.zinc[800], 0.25).hex()}
+          // Triadic: +240° hue shift from the primary.
           hueTransform={240}
+          // Same worklet rationale as above; avoids JS<->UI bridge churn during drags.
           onChange={(colors: ColorFormatsObject) => {
             "worklet";
-            darkAccentColor.value = colors.hex;
+            darkAccentColor.set(colors.hex);
           }}
         />
       </Panel3>

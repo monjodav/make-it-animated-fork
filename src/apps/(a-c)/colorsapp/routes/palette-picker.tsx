@@ -15,14 +15,20 @@ export default function PalettePicker() {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
+  // Shared UI state used to coordinate panel pulsation (idle) vs tight breathing (active)
+  // across components. Updated from touch events inside `ColorPanel`.
   const state = useSharedValue<"idle" | "active">("idle");
 
+  // Core palette shared values. Other components derive hues from these (triadic accents)
+  // so updates propagate instantly on the UI thread without React re-renders.
   const lightShadeColor = useSharedValue("#E5E5E5");
   const lightAccentColor = useSharedValue("#F8C2A9");
   const primaryColor = useSharedValue("#F9a8d4");
   const darkAccentColor = useSharedValue("#A5A8F9");
   const darkShadeColor = useSharedValue("#231E2B");
 
+  // Background gradient reacts to primary/dark shade for immediate context feedback
+  // while dragging. Derived array avoids object churn on each frame.
   const linearGradientColors = useDerivedValue(() => {
     return [primaryColor.value, darkShadeColor.value];
   }, []);
@@ -31,6 +37,8 @@ export default function PalettePicker() {
     <View
       className="flex-1 bg-zinc-800"
       style={{
+        // Insets ensure content doesn't collide with system bars while giving extra
+        // space so gradient + animated circles have breathing room.
         paddingTop: insets.top + 16,
         paddingBottom: insets.bottom + 32,
       }}
@@ -44,13 +52,17 @@ export default function PalettePicker() {
         ref={pickerRef}
         style={styles.palettePicker}
         value={primaryColor.value}
+        // onComplete flips state back to idle for slow breathing loop.
+        // Marked as a worklet so it runs on the UI thread with no bridge hops.
         onComplete={() => {
           "worklet";
-          state.value = "idle";
+          state.set("idle");
         }}
+        // onChange streams the current color while dragging. Using shared value ensures
+        // dependent animations (swatches/gradient) update at 60fps with no React setState.
         onChange={(colors: ColorFormatsObject) => {
           "worklet";
-          primaryColor.value = colors.hex;
+          primaryColor.set(colors.hex);
         }}
       >
         <View className="flex-row items-center justify-between px-4">
