@@ -4,6 +4,7 @@ import Animated, { interpolateColor, SharedValue, useAnimatedStyle } from "react
 
 // fuse-home-tabs-transition-animation 🔽
 
+// Muted → active → muted colors for a subtle spotlight effect as the page center crosses a tab.
 const _defaultColor = "#a3a3a3";
 const _activeColor = "#171717";
 
@@ -24,12 +25,15 @@ export const TabItem: FC<TabItemProps> = ({
   onPressOut,
   onLayout,
 }) => {
+  // Width drives the normalization of horizontalListOffsetX into page progress.
   const { width } = useWindowDimensions();
 
   const rTextStyle = useAnimatedStyle(() => {
-    const progress = horizontalListOffsetX.value / width;
+    const progress = horizontalListOffsetX.get() / width;
 
     return {
+      // Three-point interpolation: [index-1, index, index+1]
+      // Output: default → active → default to highlight only the focused tab.
       color: interpolateColor(
         progress,
         [index - 1, index, index + 1],
@@ -41,6 +45,7 @@ export const TabItem: FC<TabItemProps> = ({
   return (
     <Pressable
       className="py-2 px-1"
+      // onPressIn saves previous index upstream for jump detection; onPressOut drives scroll.
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       onLayout={onLayout}

@@ -11,8 +11,12 @@ import Animated, {
 
 // fuse-home-tabs-transition-animation 🔽
 
+// createAnimatedComponent allows BlurView props to be driven from UI thread
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
+// Horizontal/vertical gaps applied during cross-fade/slide to avoid a flat swap.
+// _translateXGap (20px) pulls cards slightly toward center; _translateYGap (5px)
+// adds a subtle parallax lift. These are aesthetic “magic numbers” tuned by eye.
 const _translateXGap = 20;
 const _translateYGap = 5;
 
@@ -35,23 +39,33 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
   const { width } = useWindowDimensions();
 
   const rContainerStyle = useAnimatedStyle(() => {
+    // Android fallback: avoid layered fades + blur while paging
+    // (perf cost on Android GPU). iOS gets full treatment below.
     if (Platform.OS === "android") {
       return {};
     }
 
+    // Skip rendering offscreen when the tab jump spans >1 page and we're not
+    // currently dragging. This prevents flashing during programmatic jumps.
     if (
-      Math.abs(activeTabIndex.value - prevActiveTabIndex.value) > 1 &&
-      index !== activeTabIndex.value &&
-      !isHorizontalListScrollingX.value
+      Math.abs(activeTabIndex.get() - prevActiveTabIndex.get()) > 1 &&
+      index !== activeTabIndex.get() &&
+      !isHorizontalListScrollingX.get()
     ) {
       return { opacity: 0 };
     }
 
-    const progress = horizontalListOffsetX.value / width;
+    // Convert pixel offset to page progress for interpolation math.
+    const progress = horizontalListOffsetX.get() / width;
 
+    // Opacity cross-fade: current page fades out over 70% of a page width,
+    // next page fades in over the final 30%. CLAMP prevents overshooting.
     const fadeOut = interpolate(progress, [index, index + 0.7], [1, 0], Extrapolation.CLAMP);
     const fadeIn = interpolate(progress, [index - 0.3, index], [0, 1], Extrapolation.CLAMP);
 
+    // X parallax: outgoing slides right by 70% width minus a small gap so it
+    // doesn't look like a rigid snap; incoming slides from left by 30% width
+    // plus a small gap toward center.
     const translateXOut = interpolate(
       progress,
       [index, index + 0.7],
@@ -65,6 +79,7 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
       Extrapolation.CLAMP
     );
 
+    // Y parallax: small vertical lift while transitioning to add depth.
     const translateYOut = interpolate(
       progress,
       [index, index + 0.7],
@@ -79,6 +94,7 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
     );
 
     return {
+      // Multiply fades to create a quick cross-dissolve at the midpoint.
       opacity: fadeOut * fadeIn,
       transform: [
         {
@@ -92,8 +108,10 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
   });
 
   const blurAnimatedProps = useAnimatedProps(() => {
+    // Blur intensity: sharp at the focused tab (center), blurred for neighbors.
+    // Interpolates across three pages: [prev, current, next] with CLAMP.
     const intensity = interpolate(
-      horizontalListOffsetX.value,
+      horizontalListOffsetX.get(),
       [(index - 1) * width, index * width, (index + 1) * width],
       [75, 0, 75],
       Extrapolation.CLAMP
@@ -105,6 +123,7 @@ export const HomeListItemContainer: FC<PropsWithChildren<Props>> = ({
   });
 
   return (
+    // Absolute BlurView overlays the item; pointerEvents=none lets touches pass.
     <Animated.View style={[{ width }, rContainerStyle]} className="bg-neutral-200">
       {children}
       <AnimatedBlurView

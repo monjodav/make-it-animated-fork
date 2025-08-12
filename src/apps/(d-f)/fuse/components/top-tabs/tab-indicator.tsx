@@ -9,6 +9,7 @@ import Animated, {
 
 // fuse-home-tabs-transition-animation 🔽
 
+// Duration for tap-driven indicator moves; short to feel snappy but noticeable.
 const _duration = 250;
 
 type Props = {
@@ -31,23 +32,26 @@ export const TabIndicator: FC<Props> = ({
   const { width: windowWidth } = useWindowDimensions();
 
   const rIndicatorStyle = useAnimatedStyle(() => {
-    const left = isHorizontalListScrollingX.value
+    // While dragging pages, indicator position/width track the content directly
+    // via interpolation across tab indices; when not dragging, we animate to
+    // the target index with a timed transition.
+    const left = isHorizontalListScrollingX.get()
       ? interpolate(
-          horizontalListOffsetX.value / windowWidth,
-          Object.keys(tabOffsets.value).map(Number),
-          tabOffsets.value
+          horizontalListOffsetX.get() / windowWidth,
+          Object.keys(tabOffsets.get()).map(Number),
+          tabOffsets.get()
         )
-      : withTiming(tabOffsets.value[activeTabIndex.value], {
+      : withTiming(tabOffsets.get()[activeTabIndex.get()], {
           duration: _duration,
         });
 
-    const width = isHorizontalListScrollingX.value
+    const width = isHorizontalListScrollingX.get()
       ? interpolate(
-          horizontalListOffsetX.value / windowWidth,
-          Object.keys(tabWidths.value).map(Number),
-          tabWidths.value
+          horizontalListOffsetX.get() / windowWidth,
+          Object.keys(tabWidths.get()).map(Number),
+          tabWidths.get()
         )
-      : withTiming(tabWidths.value[activeTabIndex.value], {
+      : withTiming(tabWidths.get()[activeTabIndex.get()], {
           duration: _duration,
         });
 
@@ -56,9 +60,12 @@ export const TabIndicator: FC<Props> = ({
       width,
       transform: [
         {
-          translateX: -tabBarOffsetX.value,
+          // Compensate for the tabs list own horizontal scroll so the indicator
+          // stays visually anchored under the active tab.
+          translateX: -tabBarOffsetX.get(),
         },
         {
+          // Slight compression to reduce visual weight of the underline.
           scaleX: 0.5,
         },
       ],

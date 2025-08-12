@@ -19,6 +19,8 @@ const tabs: Tab[] = [
 ];
 
 export const Home: FC = () => {
+  // Android shows a simplified transition (no complex blur/layering) for smoother perf.
+  // iOS retains richer motion/blur until an Android-optimized path is found.
   useAndroidNote(
     "Performance of tabs transition animation is not optimal. There is a safe fallback for android platform until I found a better solution."
   );
@@ -28,21 +30,25 @@ export const Home: FC = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
+  // Shared values used across TopTabs, TabIndicator and item containers.
+  // They coordinate cross-fade/slide (content) and underline (tabs) in sync.
   const horizontalListOffsetX = useSharedValue(0);
   const isHorizontalListScrollingX = useSharedValue(false);
   const prevActiveTabIndex = useSharedValue(0);
   const activeTabIndex = useSharedValue(0);
 
+  // Single scroll handler keeps all animations on UI thread.
+  // onBeginDrag toggles a live-follow mode for the indicator; onMomentumEnd snaps state.
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
-      isHorizontalListScrollingX.value = true;
+      isHorizontalListScrollingX.set(true);
     },
     onScroll: (event) => {
-      horizontalListOffsetX.value = event.contentOffset.x;
+      horizontalListOffsetX.set(event.contentOffset.x);
     },
     onMomentumEnd: (event) => {
-      isHorizontalListScrollingX.value = false;
-      activeTabIndex.value = Math.round(event.contentOffset.x / width);
+      isHorizontalListScrollingX.set(false);
+      activeTabIndex.set(Math.round(event.contentOffset.x / width));
     },
   });
 
@@ -91,7 +97,9 @@ export const Home: FC = () => {
           pagingEnabled
           decelerationRate="fast"
           onScroll={scrollHandler}
+          // 16ms (~60fps) ensures smooth interpolation updates during drag.
           scrollEventThrottle={16}
+          // Disable bounce to keep interpolation bounds stable at page edges.
           bounces={false}
         />
       </View>

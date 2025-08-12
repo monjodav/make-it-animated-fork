@@ -13,6 +13,7 @@ import * as Haptics from "expo-haptics";
 
 // fuse-home-tabs-transition-animation 🔽
 
+// Outer padding and gap feed into measurement math so indicator aligns precisely.
 const _sidePadding = 16;
 const _gap = 8;
 
@@ -33,6 +34,8 @@ export const TopTabs: FC<Props> = ({
   activeTabIndex,
   prevActiveTabIndex,
 }) => {
+  // Measures each tab width and its left offset accounting for padding/gaps.
+  // Values are stored as shared arrays for fast UI-thread interpolation.
   const { tabWidths, tabOffsets } = useMeasureFlatListTabsLayout({
     tabsLength: tabs.length,
     sidePadding: _sidePadding,
@@ -41,11 +44,12 @@ export const TopTabs: FC<Props> = ({
 
   const tabsListRef = useRef<FlatList>(null);
 
+  // Tracks the tabs list scroll so the indicator can counter-translate.
   const tabsListOffsetX = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      tabsListOffsetX.value = event.contentOffset.x;
+      tabsListOffsetX.set(event.contentOffset.x);
     },
   });
 
@@ -55,18 +59,24 @@ export const TopTabs: FC<Props> = ({
         index={index}
         label={item.label}
         horizontalListOffsetX={horizontalListOffsetX}
-        onPressIn={() => (prevActiveTabIndex.value = activeTabIndex.value)}
+        // Save previous index to detect long jumps and to control iOS-only fades elsewhere.
+        onPressIn={() => prevActiveTabIndex.set(activeTabIndex.get())}
         onPressOut={() => {
+          // Light haptic to confirm tab selection without being distracting.
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
-          activeTabIndex.value = item.value;
+          // Update the active index immediately; a small timeout mirrors the
+          // list momentum and prevents flicker in cross-fade logic.
+          activeTabIndex.set(item.value);
           setTimeout(() => {
-            prevActiveTabIndex.value = item.value;
+            prevActiveTabIndex.set(item.value);
           }, 300);
+          // Keep both the tabs bar and the content list in sync.
           tabsListRef.current?.scrollToIndex({ index, animated: true });
           horizontalListRef.current?.scrollToIndex({ index, animated: true });
         }}
         onLayout={(event) => {
           const { width } = event.nativeEvent.layout;
+          // Write width into shared array on UI thread; used by indicator width interpolation.
           tabWidths.modify((value) => {
             "worklet";
             value[index] = width;
@@ -95,7 +105,9 @@ export const TopTabs: FC<Props> = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         onScroll={scrollHandler}
+        // Throttle aligned to ~60fps for smooth indicator compensation.
         scrollEventThrottle={1000 / 60}
+        // Padding + gap must match measurement to keep offsets correct.
         contentContainerStyle={{ paddingHorizontal: _sidePadding, gap: _gap }}
         bounces={false}
       />
