@@ -6,7 +6,15 @@ import { CarouselItem } from "./carousel-item";
 
 // colorsapp-card-blurry-circles-animation 🔽
 
-const DATA = [
+type CarouselCard = {
+  color: "primary" | "secondary" | "tertiary";
+  text1: string;
+  text2: string;
+  colorAnimationVariant: 1 | 2 | 3;
+};
+
+// Static copy for showcase. Order alternates color + variant to keep rotations/desync interesting.
+const DATA: CarouselCard[] = [
   {
     color: "primary",
     text1: "Test",
@@ -41,7 +49,7 @@ const DATA = [
 
 export const Carousel: FC = () => {
   return (
-    <FlatList
+    <FlatList<CarouselCard>
       horizontal
       data={DATA}
       renderItem={({ item, index }) => (
