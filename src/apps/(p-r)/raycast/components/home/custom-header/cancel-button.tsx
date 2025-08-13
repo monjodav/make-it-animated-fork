@@ -9,11 +9,15 @@ import {
 
 // raycast-home-search-transition-animation 🔽
 
+// Why: We animate Pressable container width/opacity directly; wrapping lets Reanimated
+// update layout on the UI thread without React re-render cycles.
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const CancelButton: FC = () => {
   const { screenView, onGoToFavorites } = useHomeAnimation();
 
+  // Why: Expand to CANCEL width and fade in only in commands view.
+  // withTiming avoids spring bounce on text/button.
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       width: withTiming(

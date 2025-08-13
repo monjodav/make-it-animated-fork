@@ -20,17 +20,25 @@ export const Home: FC = () => {
   const insets = useSafeAreaInsets();
 
   return (
+    // Centralizes shared animated values (offsetY, blurIntensity, screenView)
+    // for all child components without prop drilling.
     <HomeAnimationProvider>
       <View className="flex-1 bg-neutral-900">
+        {/* Favorites is the default view; list drives offsetY/blurIntensity. */}
         <Favorites />
+        {/* DummyHeader sits behind RealHeader to avoid layout shift during transitions. */}
         <DummyHeader />
         <View
           className="absolute left-5 right-5 h-[100px] rounded-[24px] bg-neutral-200/10 mb-2"
           style={{ bottom: insets.bottom + 8 }}
         />
+        {/* Fullscreen blur layer controlled by shared blurIntensity. Absolute to cover content. */}
         <AnimatedBlur />
+        {/* Commands list overlays favorites during pull, pointerEvents toggled via state. */}
         <CommandsList />
+        {/* Chevron occupies the gap revealed by negative pull; absolute for precise anchoring. */}
         <AnimatedChevron />
+        {/* RealHeader is interactive (search/cancel/side buttons) with high z-index. */}
         <RealHeader />
       </View>
     </HomeAnimationProvider>

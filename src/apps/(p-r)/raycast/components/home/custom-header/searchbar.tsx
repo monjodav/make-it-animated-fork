@@ -15,6 +15,9 @@ import {
 export const Searchbar: FC = () => {
   const { screenView, offsetY, isListDragging, inputRef, onGoToCommands } = useHomeAnimation();
 
+  // Why: Search width animates between two target widths based on view.
+  // Spring config (mass 0.2, damping 15) gives quick but non-bouncy settle matching Raycast feel.
+  // During active pull beyond trigger, we add a small scale bump for tactile feedback.
   const rContainerStyle = useAnimatedStyle(() => {
     if (isListDragging.value && offsetY.value < 0 && offsetY.value < TRIGGER_DRAG_DISTANCE) {
       return {
@@ -32,6 +35,8 @@ export const Searchbar: FC = () => {
         }
       ),
       transform: [{ scale: withTiming(1) }],
+      // Why: While dragging the list we center the origin to avoid noticeable skew.
+      // Otherwise we anchor to the right so width change feels like the Cancel button appears.
       transformOrigin: isListDragging.value ? "center" : "right",
     };
   });
@@ -45,6 +50,7 @@ export const Searchbar: FC = () => {
         className="bg-neutral-800 text-stone-200 pl-10 pr-3 rounded-2xl text-base/5"
         style={styles.input}
         selectionColor="#e5e5e5"
+        // Why: Tapping search transitions to commands, focuses input via provider.
         onPress={onGoToCommands}
       />
       <View className="absolute left-3">

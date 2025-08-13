@@ -20,6 +20,7 @@ export const SettingsButton: FC = () => {
 
 const styles = StyleSheet.create({
   imageContainer: {
+    // Why: Fixed container width feeds searchbar width math; keeps alignment symmetrical.
     width: SETTINGS_CONTAINER_WIDTH,
   },
   image: {

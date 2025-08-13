@@ -14,6 +14,8 @@ export const RealHeader: FC = () => {
   const { insetTop, netHeight } = useHeaderHeight();
   const { offsetY, screenView } = useHomeAnimation();
 
+  // Why: Side buttons hide during pull-down and in commands view to reduce clutter
+  // and prevent interaction conflicts with the search bar. Delay avoids flashing.
   const rSideButtonsContainerStyle = useAnimatedStyle(() => {
     if (offsetY.value < 0 || screenView.value === "commands") {
       return {
@@ -31,10 +33,12 @@ export const RealHeader: FC = () => {
   return (
     <View
       className="absolute top-0 w-full flex-row items-center justify-end z-[999]"
+      // Why: Place above content; pointerEvents box-none lets children receive touches.
       style={{ paddingTop: insetTop, pointerEvents: "box-none" }}
     >
       <Animated.View
         className="absolute w-full flex-row items-center justify-center"
+        // Why: Size/position matches header height so side buttons align with search.
         style={[rSideButtonsContainerStyle, { height: netHeight, top: insetTop }]}
       >
         <EditHomeButton />

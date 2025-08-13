@@ -12,6 +12,8 @@ export const TopGradient: FC = () => {
   const { grossHeight } = useHeaderHeight();
 
   if (Platform.OS === "android") {
+    // Why: Use pure gradient on Android—software blur is expensive and inconsistent across devices.
+    // 0.9 → 0 alpha creates a soft fade; height * 1.2 covers overscroll and header parallax.
     return (
       <LinearGradient
         style={[StyleSheet.absoluteFillObject, { height: grossHeight * 1.2 }]}
@@ -22,6 +24,8 @@ export const TopGradient: FC = () => {
   }
 
   return (
+    // Why: On iOS, combine BlurView with a gradient mask to mimic native frosted header
+    // while keeping edges feathered. MaskedView applies transparency via the gradient.
     <MaskedView
       maskElement={
         <LinearGradient
@@ -32,6 +36,7 @@ export const TopGradient: FC = () => {
       }
       style={[StyleSheet.absoluteFill, { height: grossHeight * 1.2 }]}
     >
+      {/* Why: Dark tint matches app theme; actual blur amount is handled externally when needed. */}
       <BlurView tint="dark" style={StyleSheet.absoluteFill} />
     </MaskedView>
   );

@@ -42,15 +42,21 @@ export const Favorites = () => {
 
   const { screenView, offsetY, isListDragging, blurIntensity, onGoToCommands } = useHomeAnimation();
 
+  // Why: Track scroll direction including negative pulls to coordinate haptics and thresholds.
   const { onScroll: scrollDirectionOnScroll, scrollDirection } =
     useScrollDirection("include-negative");
 
+  // Why: Provide a single haptic feedback exactly when crossing trigger offset upward.
   const { singleHapticOnScroll } = useHapticOnScroll({
     isListDragging,
     scrollDirection,
     triggerOffset: TRIGGER_DRAG_DISTANCE,
   });
 
+  // Why: Central scroll handler drives shared values used across components.
+  // - offsetY: negative when pulling down
+  // - blurIntensity: interpolates 0→100 up to FULL_DRAG_DISTANCE while in favorites
+  // - onEndDrag: switches to commands when threshold exceeded
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
       isListDragging.value = true;
@@ -61,6 +67,7 @@ export const Favorites = () => {
       offsetY.value = offsetYValue;
 
       if (screenView.value === "favorites") {
+        // Map pull distance to blur intensity; clamp to 0..100 to avoid spikes.
         blurIntensity.value = interpolate(
           offsetYValue,
           [0, FULL_DRAG_DISTANCE],
@@ -75,6 +82,7 @@ export const Favorites = () => {
     onEndDrag: (event) => {
       isListDragging.value = false;
       const scrollY = event.contentOffset.y;
+      // Switch to commands when pulled beyond trigger. Use runOnJS to keep UI thread responsive.
       if (scrollY < TRIGGER_DRAG_DISTANCE) {
         runOnJS(onGoToCommands)();
       }
@@ -89,6 +97,8 @@ export const Favorites = () => {
 
   const rTopGradientStyle = useAnimatedStyle(() => {
     return {
+      // Why: Keep top gradient on during favorites (non-negative offset) for depth.
+      // withTiming smooths appearance/disappearance when toggling views.
       opacity: offsetY.value < 0 ? 0 : screenView.value === "favorites" ? withTiming(1) : 0,
     };
   });
@@ -101,6 +111,7 @@ export const Favorites = () => {
           paddingBottom: insets.bottom + 8,
           paddingTop: grossHeight + 40,
         }}
+        // Why: ~60fps scroll updates for smooth interpolation and haptic thresholding.
         scrollEventThrottle={16}
         onScroll={scrollHandler}
       >

@@ -12,6 +12,8 @@ export const AnimatedChevron = () => {
 
   const { offsetY } = useHomeAnimation();
 
+  // Why: Show chevron only during pull-down (negative y). Height mirrors abs drag
+  // so the icon sits centered in the revealed gap. Opacity ramps from 0→1 until trigger.
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       height: interpolate(
@@ -19,6 +21,7 @@ export const AnimatedChevron = () => {
         [0, TRIGGER_DRAG_DISTANCE],
         [0, Math.abs(TRIGGER_DRAG_DISTANCE)]
       ),
+      // Clamp to avoid overshooting when pulled beyond trigger distance
       opacity: interpolate(offsetY.value, [0, TRIGGER_DRAG_DISTANCE], [0, 1], Extrapolation.CLAMP),
     };
   });
@@ -26,6 +29,7 @@ export const AnimatedChevron = () => {
   return (
     <Animated.View
       className="absolute left-0 right-0 items-center justify-center pointer-events-none"
+      // Why: Position below header chrome using grossHeight for accurate visual anchor
       style={[{ top: grossHeight }, rContainerStyle]}
     >
       <View style={{ transform: [{ scaleX: 2 }] }}>
