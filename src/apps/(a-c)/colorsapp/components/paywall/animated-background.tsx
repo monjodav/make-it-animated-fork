@@ -13,6 +13,8 @@ import { useSharedValue, withDelay, withRepeat, withTiming } from "react-native-
 
 // colorsapp-blurry-background-animation 🔽
 
+// TIMING: Global cycle duration (ms) for scaling blobs
+// - 2500ms balances calm motion with responsiveness; kept consistent to simplify phase offsets
 const DURATION = 2500;
 
 type Props = {
@@ -33,6 +35,7 @@ const AnimatedBackground: FC<Props> = ({
   /*---------------------------------------------*
    * TOP
    *---------------------------------------------*/
+  // SHAPE: Thin cap across the top edge; uses % of width/height for responsiveness
   const topPathBase = Skia.Path.Make();
   topPathBase.moveTo(0, 0);
   topPathBase.lineTo(0, height * 0.1);
@@ -45,12 +48,14 @@ const AnimatedBackground: FC<Props> = ({
 
   const topPath = usePathValue((path) => {
     "worklet";
+    // ANIM: UI-thread path transform; scale drives subtle breathing along the top band
     path.transform(processTransform3d([{ scale: scaleTop.value }]));
   }, topPathBase);
 
   /*---------------------------------------------*
    * MIDDLE
    *---------------------------------------------*/
+  // SHAPE: Central amorphous blob; wider footprint to blend primary color under title/content
   const middlePathBase = Skia.Path.Make();
   middlePathBase.moveTo(width, height * 0.1);
   middlePathBase.lineTo(width * 0.3, height * 0.2);
@@ -64,12 +69,14 @@ const AnimatedBackground: FC<Props> = ({
 
   const middlePath = usePathValue((path) => {
     "worklet";
+    // ANIM: Scaling creates depth breathing; offset timing prevents uniform pulsing with top blob
     path.transform(processTransform3d([{ scale: scaleMiddle.value }]));
   }, middlePathBase);
 
   /*---------------------------------------------*
    * BOTTOM RIGHT
    *---------------------------------------------*/
+  // SHAPE: Small accent on bottom-right; adds color balance and parallax against middle blob
   const bottomRightPathBase = Skia.Path.Make();
   bottomRightPathBase.moveTo(width, height * 0.15);
   bottomRightPathBase.lineTo(width * 0.75, height * 0.35);
@@ -80,12 +87,14 @@ const AnimatedBackground: FC<Props> = ({
 
   const bottomRightPath = usePathValue((path) => {
     "worklet";
+    // ANIM: Slightly lower amplitude than others to keep corner motion subtle
     path.transform(processTransform3d([{ scale: scaleBottomRight.value }]));
   }, bottomRightPathBase);
 
   /*---------------------------------------------*
    * BOTTOM
    *---------------------------------------------*/
+  // SHAPE: Wide base blob anchoring the composition at the bottom-left
   const bottomPathBase = Skia.Path.Make();
   bottomPathBase.moveTo(0, height * 0.1);
   bottomPathBase.lineTo(width * 0.2, height * 0.2);
@@ -97,10 +106,17 @@ const AnimatedBackground: FC<Props> = ({
 
   const bottomPath = usePathValue((path) => {
     "worklet";
+    // ANIM: Gentle base breathing to avoid drawing attention away from CTA
     path.transform(processTransform3d([{ scale: scaleBottom.value }]));
   }, bottomPathBase);
 
   useEffect(() => {
+    // TIMELINE & PHASING:
+    // - withRepeat(..., -1, true): infinite ping-pong (expand/contract) for natural breathing
+    // - Offsets stagger blobs to avoid synchronous pulses and create organic motion
+    // RANGES:
+    // - Top/Middle: 1.0 → 1.2 (20% growth) noticeable yet soft for large shapes
+    // - Bottom/BottomRight: 1.0 → 1.1 (10% growth) to keep peripheral motion subtle
     scaleTop.value = withRepeat(withTiming(1.2, { duration: DURATION }), -1, true);
     scaleMiddle.value = withDelay(
       DURATION / 2,
@@ -115,6 +131,8 @@ const AnimatedBackground: FC<Props> = ({
 
   return (
     <Canvas style={styles.canvas}>
+      {/* RENDERING: Skia runs on GPU; paths re-render with transformed geometry only (no JS involvement) */}
+      {/* BLUR: 60 radius yields soft, glassy glow without visible edges; ordered back-to-front for color blending */}
       <Path path={topPath} color={accentLightColor}>
         <Blur blur={60} />
       </Path>
