@@ -18,10 +18,15 @@ export const Backdrop: FC<Props> = ({ ...props }) => {
   const insets = useSafeAreaInsets();
 
   return (
+    // VISIBILITY: Backdrop shows when sheet index >= 0 and fully hides at -1 (closed)
+    // opacity=1 delegates fade to the sheet library while keeping our content fully opaque
     <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={1}>
       <View className="w-full h-full" style={{ paddingTop: insets.top + 20 }}>
+        {/* Branded background image fills the entire screen behind the sheet */}
         <Image source={PaywallBg} style={StyleSheet.absoluteFill} />
         <LinearGradient
+          // GRADIENT: Top → transparent toward center to focus attention on the modal
+          // Alpha 0.7 chosen to ensure foreground text remains legible across images
           colors={[colorKit.setAlpha("#070609", 0.7).hex(), colorKit.setAlpha("#070609", 0).hex()]}
           style={StyleSheet.absoluteFill}
         />
@@ -38,6 +43,7 @@ const styles = StyleSheet.create({
   iconImage: {
     width: 40,
     height: 40,
+    // Slight fade to avoid competing with foreground text
     opacity: 0.8,
   },
 });

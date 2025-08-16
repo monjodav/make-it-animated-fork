@@ -26,6 +26,8 @@ export const Paywall: FC = () => {
         ))}
       </ScrollView>
       {/* colorsapp-upgrade-to-pro-modal-animation 🔽 */}
+      {/* ARCH: Modal mounted at route root ensures backdrop covers entire screen and avoids z-index issues */}
+      {/* STATE: Route owns isVisible to coordinate open/close; BottomSheet animates internally */}
       <UpgradeToProModal isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
       {/* colorsapp-upgrade-to-pro-modal-animation 🔼 */}
     </View>

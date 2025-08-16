@@ -28,6 +28,8 @@ export const UpgradeToProModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   const ref = useRef<BottomSheet>(null);
 
   useEffect(() => {
+    // WHY: Drive sheet open/close from external state to keep animation source-of-truth at route level
+    // BottomSheet handles the spring/timing internally; we only toggle imperative methods here
     if (isVisible) {
       ref.current?.expand();
     } else {
@@ -36,14 +38,24 @@ export const UpgradeToProModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   }, [isVisible]);
 
   const renderBackdrop = useCallback(
+    // WHY: Custom backdrop enables branded background + gradient while still binding to sheet's animated index
     (props: BottomSheetBackdropProps) => <Backdrop {...props} />,
     []
   );
 
+  // ANIMATION: Pulsing "Upgrade now" button background
+  // - Visual goal: subtle breathing effect to attract attention without being noisy
+  // - Timeline: scale 1.2 ↔ 2.0 in a yoyo loop (3s expand + 3s contract)
+  // - withRepeat -1: infinite; reverse=true: ping-pong for symmetric motion
+  // Note: Worklet runs on UI thread, long durations don't block JS
   const rSubmitBtnStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
+          // Interpolation explained:
+          // withSequence(1.0 → 2.0 → 1.2) over 6000ms total, then repeats reversed:
+          //  - 1st withTiming: 1.0 → 2.0 (3000ms) = slow expand under blurred image for soft glow
+          //  - 2nd withTiming: 2.0 → 1.2 (3000ms) = gentle settle, keeps slight emphasis over 1.0
           scale: withRepeat(
             withSequence(withTiming(2, { duration: 3000 }), withTiming(1.2, { duration: 3000 })),
             -1,
@@ -127,7 +139,6 @@ const styles = StyleSheet.create({
   container: {
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    // backgroundColor: "#4C415D",
     overflow: "hidden",
   },
   btnImage: {
