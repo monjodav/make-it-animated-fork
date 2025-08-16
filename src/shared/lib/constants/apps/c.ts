@@ -45,5 +45,13 @@ export const colorsApp: App = {
       name: "Card blurry circles animation",
       href: "/colorsapp/home",
     },
+    {
+      name: "Blurry background animation",
+      href: "/colorsapp/paywall",
+    },
+    {
+      name: "Upgrade to PRO modal animation",
+      href: "/colorsapp/paywall",
+    },
   ],
 };
