@@ -112,6 +112,16 @@ export default ({ config }: { config: ExpoConfig }) => ({
           cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
         },
       ],
+      [
+        "expo-build-properties",
+        {
+          android: {
+            compileSdkVersion: 35,
+            targetSdkVersion: 35,
+            buildToolsVersion: "35.0.0",
+          },
+        },
+      ],
     ],
     experiments: {
       typedRoutes: true,
