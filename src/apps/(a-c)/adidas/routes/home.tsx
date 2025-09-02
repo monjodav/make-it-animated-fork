@@ -7,6 +7,14 @@ import { Marquee } from "@/src/shared/components/marquee";
 
 // adidas-home-header-marquee-animation 🔽
 
+/**
+ * Motion intent: A continuous top ticker that surfaces promos while the header stays collapsible.
+ * The marquee should feel effortless (low velocity) and never compete with scroll momentum.
+ *
+ * Architecture: Marquee lives inside the collapsible header (Tabs.Container renderHeader), so it
+ * remains visible at the top and keeps animating independently as content scrolls underneath.
+ */
+
 type MarqueeItemProps = {
   icon: React.ReactNode;
   text: string;
@@ -14,7 +22,13 @@ type MarqueeItemProps = {
 
 const Header = () => {
   return (
-    <View className="py-5 border-b border-neutral-200">
+    <View className="py-3 border-b border-neutral-200">
+      {/*
+        spacing: Horizontal gap between repeated chunks to prevent visual collision when looping.
+        48px chosen to create a readable pause between items at this speed and text size.
+        speed: Lower value = slower travel. 0.6 tuned for legibility at ~60fps without stutter.
+        Note: Keep speed and spacing correlated—doubling speed usually requires ~+16–24px spacing.
+      */}
       <Marquee spacing={48} speed={0.6}>
         <View className="flex-row items-center gap-12">
           <MarqueeItem
@@ -58,6 +72,8 @@ const TabItem = ({ label, isActive }: TabItemProps) => {
 };
 
 export default function Home() {
+  // Safe area ensures header content (marquee + toolbar) avoids notch/status bar overlap.
+  // Using paddingTop (vs extra spacer views) keeps layout simpler for the collapsible container.
   const insets = useSafeAreaInsets();
 
   return (
@@ -72,6 +88,11 @@ export default function Home() {
           </View>
         </View>
       </View>
+      {/*
+       * Collapsible header container:
+       * - renderHeader: Injects marquee band as the collapsible header content.
+       * - headerContainerStyle: Disable platform shadows to avoid double borders/elevation flicker when snapping.
+       */}
       <Tabs.Container
         renderHeader={Header}
         renderTabBar={() => {
