@@ -35,7 +35,7 @@ export const Search: FC = () => {
         style={{ paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 50 }}
       >
         <Pressable onPress={simulatePress} className="p-3 rounded-full bg-[#303030]">
-          <X size={22} color="#E3E3E3" />
+          <X size={22} color="#E5E7EB" />
         </Pressable>
 
         <View className="flex-1 rounded-2xl justify-center bg-[#303030]">
@@ -100,7 +100,7 @@ export const Search: FC = () => {
             return (
               <View className="items-center mt-[90]">
                 <SearchIcon size={30} color="#CCCCCC" strokeWidth={3} />
-                <Text className="text-lg text-[#616161] mt-4">No recent searches</Text>
+                <Text className="text-lg text-gray-700 mt-4">No recent searches</Text>
               </View>
             );
           }}

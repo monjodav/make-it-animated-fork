@@ -52,8 +52,8 @@ const FilterItem = ({
       }}
       className={containerStyle}
     >
-      {item === "All filters" ? <ListFilter size={18} color={"#E3E3E3"} /> : null}
-      <Text className="text-lg text-[#E3E3E3]">{item}</Text>
+      {item === "All filters" ? <ListFilter size={18} color={"#E5E7EB"} /> : null}
+      <Text className="text-lg text-gray-200 ">{item}</Text>
     </Pressable>
   );
 };
