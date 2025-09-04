@@ -2,6 +2,7 @@ import React, { FC, useRef, useState } from "react";
 import { FlatList, TextInput, View, StyleSheet, Text, Pressable, Platform } from "react-native";
 import { X, ScanBarcode, CircleX, Search as SearchIcon } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSharedValue } from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import FilterItem from "../components/search-filter-item";
 
@@ -19,7 +20,8 @@ export const Search: FC = () => {
 
   const [textInputValue, setTextInputValue] = useState<string>("");
   const [activeFilterItem, setActiveFilterItem] = useState<string>("All");
-  const [pressedItem, setPressedItem] = useState<string | null>(null);
+
+  const pressedItem = useSharedValue<string | null>(null);
 
   // FlatList ref used for programmatic horizontal scroll when filters are selected
   const flatListRef = useRef<FlatList<string>>(null);
@@ -79,7 +81,6 @@ export const Search: FC = () => {
               pressedItem={pressedItem}
               activeFilterItem={activeFilterItem}
               flatListRef={flatListRef}
-              setPressedItem={setPressedItem}
               setActiveFilterItem={setActiveFilterItem}
             />
           )}
