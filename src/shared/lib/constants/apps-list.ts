@@ -12,7 +12,7 @@ import { queue } from "./apps/q";
 import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
 import { raycast } from "./apps/r";
-import { showcase, slack } from "./apps/s";
+import { shopify, showcase, slack } from "./apps/s";
 import { discord } from "./apps/d";
 
 type Animation = {
@@ -73,6 +73,7 @@ export const apps: App[] = [
   raycast,
   // -----------------------
   // S
+  shopify,
   slack,
   showcase,
   // T
