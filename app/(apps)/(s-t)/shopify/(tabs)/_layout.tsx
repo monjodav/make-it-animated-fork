@@ -13,7 +13,7 @@ const TabsLayout = () => {
         tabBarStyle: { display: "none" },
       }}
     >
-      <Tabs.Screen name={Tab.Search} options={{}} />
+      <Tabs.Screen name={Tab.Search} />
     </Tabs>
   );
 };

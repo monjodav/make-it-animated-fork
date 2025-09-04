@@ -1,8 +1,9 @@
 import React, { FC, useRef, useState } from "react";
 import { FlatList, TextInput, View, StyleSheet, Text, Pressable, Platform } from "react-native";
-import { X, ScanBarcode, ListFilter, CircleX, Search as SearchIcon } from "lucide-react-native";
+import { X, ScanBarcode, CircleX, Search as SearchIcon } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import FilterItem from "../components/search-filter-item";
 
 // shopify-search-screen-animation 🔽
 
@@ -11,7 +12,7 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
  * "All filters" is treated as an action button for filter modal rather than a category.
  */
 
-const FILTERS = ["All", "Orders", "Products", "Customers", "All filters"];
+const FILTERS = ["All", "Orders", "Products", "Customers", "All filters"] as const;
 
 export const Search: FC = () => {
   const insets = useSafeAreaInsets();
@@ -23,49 +24,12 @@ export const Search: FC = () => {
   // FlatList ref used for programmatic horizontal scroll when filters are selected
   const flatListRef = useRef<FlatList<string>>(null);
 
-  const _renderItemFilter = ({ item, index }: { item: string; index: number }) => {
-    const isActive = activeFilterItem === item;
-    const isPressed = pressedItem === item;
-
-    // These color states simulate "press in/out" and active highlighting.
-    // Darker shade when active, mid-gray when pressed for tactile feedback.
-    let containerStyle = "flex-row gap-2 items-center justify-center px-[16] py-[5] rounded-full";
-
-    if (isPressed) {
-      containerStyle += " bg-[#737373]";
-    } else if (isActive) {
-      containerStyle += " bg-[#303030]";
-    }
-
-    return (
-      <Pressable
-        key={item}
-        onPressIn={() => setPressedItem(item)}
-        onPressOut={() => setPressedItem(null)}
-        onPress={() => {
-          setActiveFilterItem(item);
-          /**
-           * Scroll-to-index centers the tapped filter ~45% across the screen.
-           * This ensures visibility without snapping hard to edges.
-           * "viewPosition: 0.45" is tuned to balance UX across iOS/Android.
-           */
-          flatListRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.45 });
-        }}
-        className={containerStyle}
-      >
-        {item === "All filters" ? <ListFilter size={18} color={"#E3E3E3"} strokeWidth={2} /> : null}
-        <Text className="text-lg text-[#E3E3E3]">{item}</Text>
-      </Pressable>
-    );
-  };
-
-  const _renderItemList = ({ item }: { item: string }) => (
+  const _renderListItem = ({ item }: { item: string }) => (
     <View key={item} className="items-center justify-center"></View>
   );
 
   return (
     <View className="flex-1 bg-black">
-      {/* Top bar uses safe-area insets to align correctly with iOS notch/Android status bar */}
       <View
         className="flex-row gap-3 items-center px-5 bg-black"
         style={{ paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 50 }}
@@ -74,18 +38,14 @@ export const Search: FC = () => {
           <X size={22} color="#E3E3E3" />
         </Pressable>
 
-        {/* Search input container doubles as animated zone for clear/scan icons */}
         <View className="flex-1 rounded-2xl justify-center bg-[#303030]">
-          <SearchIcon size={18} color="#B5B5B5" strokeWidth={2} style={styles.searchIcon} />
+          <SearchIcon size={18} color="#B5B5B5" style={styles.searchIcon} />
           <TextInput
             value={textInputValue}
-            onChangeText={(text) => {
-              setTextInputValue(text);
-            }}
-            placeholder={`Search`}
+            onChangeText={setTextInputValue}
+            placeholder="Search"
             placeholderTextColor="#B5B5B5"
-            className="px-10 py-4 text-[#B5B5B5]"
-            style={styles.input}
+            className="px-10 py-4 text-base text-[#B5B5B5]"
           />
 
           {textInputValue ? (
@@ -96,12 +56,12 @@ export const Search: FC = () => {
               }}
               style={styles.scanIcon}
             >
-              <CircleX size={18} color="#B5B5B5" strokeWidth={2} />
+              <CircleX size={18} color="#B5B5B5" />
             </Pressable>
           ) : (
             // Otherwise show scan icon; same layout slot, swapped visuals
             <Pressable style={styles.scanIcon}>
-              <ScanBarcode size={18} color="#B5B5B5" strokeWidth={2} />
+              <ScanBarcode size={18} color="#B5B5B5" />
             </Pressable>
           )}
         </View>
@@ -111,11 +71,21 @@ export const Search: FC = () => {
         <FlatList
           ref={flatListRef}
           data={FILTERS}
-          keyExtractor={(item) => item?.toString()}
-          renderItem={_renderItemFilter}
+          keyExtractor={(item) => item.toString()}
+          renderItem={({ item, index }) => (
+            <FilterItem
+              item={item}
+              index={index}
+              pressedItem={pressedItem}
+              activeFilterItem={activeFilterItem}
+              flatListRef={flatListRef}
+              setPressedItem={setPressedItem}
+              setActiveFilterItem={setActiveFilterItem}
+            />
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerClassName="gap-1 py-[13] mx-[15] bg-black"
+          contentContainerClassName="gap-1 py-3 px-5 bg-black"
         />
       </View>
 
@@ -123,7 +93,7 @@ export const Search: FC = () => {
         <FlatList
           data={[]}
           keyExtractor={(item, index) => `${item}-${index}`}
-          renderItem={_renderItemList}
+          renderItem={_renderListItem}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="always"
           ListEmptyComponent={() => {
@@ -148,9 +118,6 @@ const styles = StyleSheet.create({
   scanIcon: {
     position: "absolute",
     right: 13,
-  },
-  input: {
-    fontSize: 16,
   },
 });
 
