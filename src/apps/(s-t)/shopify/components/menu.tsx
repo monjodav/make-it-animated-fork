@@ -8,6 +8,7 @@ import { useMenu } from "../lib/providers/menu-provider";
 
 // shopify-menu-transition-animation 🔽
 
+// Menu items - order matters for animation consistency across screens
 const ITEMS = [
   "Home",
   "Orders",
@@ -23,6 +24,7 @@ const ITEMS = [
 export const Menu = () => {
   const insets = useSafeAreaInsets();
 
+  // Shared value that drives all open/close menu transitions
   const { menuProgress } = useMenu();
 
   const _renderListItem = ({ item }: { item: string }) => (
@@ -35,8 +37,17 @@ export const Menu = () => {
     </View>
   );
 
+  /**
+   * Container animation:
+   * - opacity: fades menu in/out (0→1 with 300ms timing)
+   * - scaleY: slight overscale (1.15→1) for "bounce" effect on open
+   * Both driven by menuProgress (0=closed, 1=open)
+   */
   const rContainerStyle = useAnimatedStyle(() => {
+    // Fade in/out opacity synced with menu progress
     const opacity = withTiming(interpolate(menuProgress.get(), [0, 1], [0, 1]), { duration: 300 });
+
+    // Scale overshoot: starts larger (1.15) then shrinks to natural size (1)
     const scaleY = withTiming(interpolate(menuProgress.get(), [0, 1], [1.15, 1]), {
       duration: 300,
     });
@@ -57,6 +68,7 @@ export const Menu = () => {
       style={[
         rContainerStyle,
         {
+          // Account for notch/status bar height, prevents clipping on iOS
           paddingTop: insets.top + 10,
         },
       ]}
@@ -65,8 +77,10 @@ export const Menu = () => {
         data={ITEMS}
         keyExtractor={(item, index) => `${item}-${index}`}
         renderItem={_renderListItem}
+        // Note: Could add scrollEventThrottle optimization if animating on scroll
       />
 
+      {/* Bottom gradient overlay: creates depth separation with footer */}
       <LinearGradient
         colors={["black", "rgba(0, 0, 0, 0.007)"]}
         start={{ x: 0, y: 0.3 }}

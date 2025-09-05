@@ -19,8 +19,17 @@ export const MenuProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <MenuContext.Provider value={value}>
+      {/* 
+        Root container for menu animation context.
+        Children are rendered below the menu and button overlays.
+        The menuProgress shared value is used by Menu/Button for coordinated transitions.
+      */}
       <View className="flex-1 bg-black">
         <View className="flex-1">{children}</View>
+        {/* 
+          Menu and Button components consume menuProgress for animated transitions.
+          They should use interpolation to animate opacity, translation, etc.
+        */}
         <Menu />
         <Button />
       </View>

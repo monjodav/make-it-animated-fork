@@ -27,20 +27,27 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
     return state.index === index;
   };
 
+  /**
+   * Animated style for entire tab bar
+   * - Uses menuProgress shared value to shift bar vertically
+   * - Interpolates [0 → 1] progress into bottom margin [30 → 20]
+   *   so the bar moves slightly upward when menu opens
+   * - withTiming ensures smooth easing (300ms)
+   */
   const rButtonStyle = useAnimatedStyle(() => {
     const bottom = withTiming(interpolate(menuProgress.get(), [0, 1], [30, 20]), {
-      duration: 300,
+      duration: 300, // chosen for consistent UI timing across transitions
     });
 
     return {
-      marginBottom: bottom,
+      marginBottom: bottom, // applied as bottom spacing to float the bar
     };
   });
 
   return (
     <Animated.View
       className="absolute bottom-0 flex-row items-center justify-between px-5 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]"
-      style={rButtonStyle}
+      style={rButtonStyle} // animated bottom spacing driven by menuProgress
     >
       <View className="p-1 rounded-full bg-white border-2 border-gray-300">
         <TouchableOpacity
@@ -76,6 +83,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
         <TouchableOpacity
           className={cn("p-4 rounded-full", isTabFocused(Tab.Menu) ? "bg-zinc-200" : "white")}
           onPress={() => {
+            // Trigger menu opening animation by driving menuProgress shared value
             menuProgress.set(1);
           }}
         >
@@ -102,8 +110,8 @@ const TabsLayout = () => {
         tabBar={(props) => <CustomTabBar {...props} />}
         screenOptions={{
           headerShown: false,
-          tabBarStyle: { display: "none" },
-          sceneStyle: { backgroundColor: "black" },
+          tabBarStyle: { display: "none" }, // disable default RN bottom tabs for full custom animation control
+          sceneStyle: { backgroundColor: "black" }, // keeps transitions consistent with dark overlay
         }}
       >
         <Tabs.Screen name={Tab.Search} />
