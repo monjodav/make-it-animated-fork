@@ -3,7 +3,11 @@ import { Tabs } from "expo-router";
 import { House, Inbox, Menu, SearchIcon, Tag, User } from "lucide-react-native";
 import React, { FC } from "react";
 import { TouchableOpacity, View } from "react-native";
+import Animated, { interpolate, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { cn } from "@/src/shared/lib/utils/cn";
+import { MenuProvider, useMenu } from "@/src/apps/(s-t)/shopify/lib/providers/menu-provider";
+
+// shopify-menu-transition-animation 🔽
 
 enum Tab {
   Search = "search",
@@ -15,14 +19,29 @@ enum Tab {
 }
 
 const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
+  const { menuProgress } = useMenu();
+
   // Helper to check if a tab is focused
   const isTabFocused = (routeName: string) => {
     const index = state.routes.findIndex((route) => route.name === routeName);
     return state.index === index;
   };
 
+  const rButtonStyle = useAnimatedStyle(() => {
+    const bottom = withTiming(interpolate(menuProgress.get(), [0, 1], [30, 20]), {
+      duration: 300,
+    });
+
+    return {
+      marginBottom: bottom,
+    };
+  });
+
   return (
-    <View className="absolute bottom-0 flex-row items-center justify-between px-5 mb-10 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]">
+    <Animated.View
+      className="absolute bottom-0 flex-row items-center justify-between px-5 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]"
+      style={rButtonStyle}
+    >
       <View className="p-1 rounded-full bg-white border-2 border-gray-300">
         <TouchableOpacity
           className={cn("p-4 rounded-full", isTabFocused(Tab.Search) ? "bg-zinc-200" : "white")}
@@ -32,7 +51,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View className="flex-1 flex-row items-center justify-around py-1  bg-white  rounded-full border-2 border-gray-300">
+      <View className="flex-1 flex-row items-center justify-around py-1 bg-white rounded-full border-2 border-gray-300">
         <TouchableOpacity
           className={cn("p-4 rounded-full", isTabFocused(Tab.Home) ? "bg-zinc-200" : "white")}
           onPress={() => navigation.navigate(Tab.Home)}
@@ -56,7 +75,9 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 
         <TouchableOpacity
           className={cn("p-4 rounded-full", isTabFocused(Tab.Menu) ? "bg-zinc-200" : "white")}
-          onPress={() => navigation.navigate(Tab.Menu)}
+          onPress={() => {
+            menuProgress.set(1);
+          }}
         >
           <Menu size={22} color={isTabFocused(Tab.Menu) ? "#000000" : "#8a8a8a"} />
         </TouchableOpacity>
@@ -70,27 +91,31 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
           <User size={22} color={isTabFocused(Tab.Profile) ? "#000000" : "#8a8a8a"} />
         </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 const TabsLayout = () => {
   return (
-    <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: { display: "none" },
-      }}
-    >
-      <Tabs.Screen name={Tab.Search} />
-      <Tabs.Screen name={Tab.Home} />
-      <Tabs.Screen name={Tab.Orders} />
-      <Tabs.Screen name={Tab.Products} />
-      <Tabs.Screen name={Tab.Menu} />
-      <Tabs.Screen name={Tab.Profile} />
-    </Tabs>
+    <MenuProvider>
+      <Tabs
+        tabBar={(props) => <CustomTabBar {...props} />}
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: { display: "none" },
+          sceneStyle: { backgroundColor: "black" },
+        }}
+      >
+        <Tabs.Screen name={Tab.Search} />
+        <Tabs.Screen name={Tab.Home} />
+        <Tabs.Screen name={Tab.Orders} />
+        <Tabs.Screen name={Tab.Products} />
+        <Tabs.Screen name={Tab.Profile} />
+      </Tabs>
+    </MenuProvider>
   );
 };
 
 export default TabsLayout;
+
+// shopify-menu-transition-animation 🔼

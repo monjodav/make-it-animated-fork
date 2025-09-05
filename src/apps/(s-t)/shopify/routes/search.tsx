@@ -2,9 +2,15 @@ import React, { FC, useRef, useState } from "react";
 import { FlatList, TextInput, View, StyleSheet, Text, Pressable, Platform } from "react-native";
 import { X, ScanBarcode, CircleX, Search as SearchIcon } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import FilterItem from "../components/search-filter-item";
+import { useMenu } from "../lib/providers/menu-provider";
 
 // shopify-search-screen-animation 🔽
 
@@ -17,6 +23,7 @@ const FILTERS = ["All", "Orders", "Products", "Customers", "All filters"] as con
 
 export const Search: FC = () => {
   const insets = useSafeAreaInsets();
+  const { menuProgress } = useMenu();
 
   const [textInputValue, setTextInputValue] = useState<string>("");
   const [activeFilterItem, setActiveFilterItem] = useState<string>("All");
@@ -27,11 +34,24 @@ export const Search: FC = () => {
   const flatListRef = useRef<FlatList<string>>(null);
 
   const _renderListItem = ({ item }: { item: string }) => (
-    <View key={item} className="items-center justify-center"></View>
+    <View key={item} className="items-center justify-center" />
   );
 
+  const rContainerStyle = useAnimatedStyle(() => {
+    const opacity = withTiming(interpolate(menuProgress.get(), [0, 1], [1, 0]), { duration: 300 });
+
+    return {
+      opacity,
+      transform: [
+        {
+          translateY: withTiming(menuProgress.get() === 1 ? 50 : 0, { duration: 300 }),
+        },
+      ],
+    };
+  });
+
   return (
-    <View className="flex-1 bg-black">
+    <Animated.View className="flex-1 bg-black" style={rContainerStyle}>
       <View
         className="flex-row gap-3 items-center px-5 bg-black"
         style={{ paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 50 }}
@@ -107,7 +127,7 @@ export const Search: FC = () => {
           }}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

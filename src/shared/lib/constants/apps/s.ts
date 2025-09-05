@@ -11,6 +11,10 @@ export const shopify: App = {
       name: "Search screen animation",
       href: "/shopify/search",
     },
+    {
+      name: "Menu transition animation",
+      href: "/shopify/home",
+    },
   ],
 };
 
