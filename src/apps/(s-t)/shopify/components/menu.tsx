@@ -59,6 +59,7 @@ export const Menu = () => {
           scaleY,
         },
       ],
+      pointerEvents: menuProgress.get() === 1 ? "auto" : "none", // Disable interactions when closed
     };
   });
 

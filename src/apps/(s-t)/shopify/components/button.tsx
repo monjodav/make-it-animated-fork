@@ -30,6 +30,7 @@ export const Button = () => {
         // 45deg = closed, 90deg = open → matches UX convention of "X" morph
         { rotate: withTiming(menuProgress.get() === 1 ? "90deg" : "45deg", { duration: 300 }) },
       ],
+      pointerEvents: menuProgress.get() === 1 ? "auto" : "none", // Disable interactions when closed
     };
   });
 
