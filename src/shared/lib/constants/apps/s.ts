@@ -12,8 +12,12 @@ export const shopify: App = {
       href: "/shopify/search",
     },
     {
-      name: "Menu transition animation",
+      name: "Custom bottom tabs animation",
       href: "/shopify/home",
+    },
+    {
+      name: "Menu transition animation",
+      href: "/shopify/products",
     },
   ],
 };
