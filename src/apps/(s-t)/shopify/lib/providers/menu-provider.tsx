@@ -1,8 +1,5 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
-import { View } from "react-native";
 import { SharedValue, useSharedValue } from "react-native-reanimated";
-import { Menu } from "../../components/menu";
-import { Button } from "../../components/button";
 
 // shopify-menu-transition-animation 🔽
 
@@ -12,29 +9,16 @@ type ContextValue = {
 
 const MenuContext = createContext<ContextValue>({} as ContextValue);
 
+/**
+ * Context provider for menu animation state
+ * Provides shared menuProgress value to coordinate animations across components
+ */
 export const MenuProvider: FC<PropsWithChildren> = ({ children }) => {
   const menuProgress = useSharedValue(0);
 
   const value = { menuProgress };
 
-  return (
-    <MenuContext.Provider value={value}>
-      {/* 
-        Root container for menu animation context.
-        Children are rendered below the menu and button overlays.
-        The menuProgress shared value is used by Menu/Button for coordinated transitions.
-      */}
-      <View className="flex-1 bg-black">
-        <View className="flex-1">{children}</View>
-        {/* 
-          Menu and Button components consume menuProgress for animated transitions.
-          They should use interpolation to animate opacity, translation, etc.
-        */}
-        <Menu />
-        <Button />
-      </View>
-    </MenuContext.Provider>
-  );
+  return <MenuContext.Provider value={value}>{children}</MenuContext.Provider>;
 };
 
 export const useMenu = () => {

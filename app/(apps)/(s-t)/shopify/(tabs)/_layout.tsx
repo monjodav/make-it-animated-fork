@@ -11,6 +11,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { MenuProvider, useMenu } from "@/src/apps/(s-t)/shopify/lib/providers/menu-provider";
+import { Menu as MenuOverlay } from "@/src/apps/(s-t)/shopify/components/menu";
+import { Button as MenuButton } from "@/src/apps/(s-t)/shopify/components/button";
 
 // shopify-custom-bottom-tabs-animation 🔽
 // shopify-menu-transition-animation 🔽
@@ -186,21 +188,31 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 const TabsLayout = () => {
   return (
     <MenuProvider>
-      <Tabs
-        tabBar={(props) => <CustomTabBar {...props} />}
-        screenOptions={{
-          headerShown: false,
-          tabBarStyle: { display: "none" }, // Hide default tab bar for full custom control
-          sceneStyle: { backgroundColor: "black" }, // Consistent background for menu transitions
-        }}
-      >
-        <Tabs.Screen name={Tab.Search} />
-        <Tabs.Screen name={Tab.Home} />
-        <Tabs.Screen name={Tab.Orders} />
-        <Tabs.Screen name={Tab.Products} />
-        <Tabs.Screen name={Tab.Profile} />
-        {/* Note: Tab.Menu is intentionally excluded - it's a UI trigger, not a route */}
-      </Tabs>
+      <View className="flex-1 bg-black">
+        <View className="flex-1">
+          <Tabs
+            tabBar={(props) => <CustomTabBar {...props} />}
+            screenOptions={{
+              headerShown: false,
+              tabBarStyle: { display: "none" }, // Hide default tab bar for full custom control
+              sceneStyle: { backgroundColor: "black" }, // Consistent background for menu transitions
+            }}
+          >
+            <Tabs.Screen name={Tab.Search} />
+            <Tabs.Screen name={Tab.Home} />
+            <Tabs.Screen name={Tab.Orders} />
+            <Tabs.Screen name={Tab.Products} />
+            <Tabs.Screen name={Tab.Profile} />
+            {/* Note: Tab.Menu is intentionally excluded - it's a UI trigger, not a route */}
+          </Tabs>
+        </View>
+        {/* 
+          Menu overlay and close button are rendered at layout level
+          This prevents circular dependencies while maintaining shared animation state
+        */}
+        <MenuOverlay />
+        <MenuButton />
+      </View>
     </MenuProvider>
   );
 };
