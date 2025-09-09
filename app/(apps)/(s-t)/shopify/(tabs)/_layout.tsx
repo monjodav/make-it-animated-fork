@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Tabs } from "expo-router";
-import { House, Inbox, Menu, SearchIcon, Tag, User } from "lucide-react-native";
+import { Menu, SearchIcon, User } from "lucide-react-native";
 import React, { FC, ReactNode, useEffect } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Animated, {
@@ -12,6 +12,9 @@ import Animated, {
 import { cn } from "@/src/shared/lib/utils/cn";
 import { MenuProvider, useMenu } from "@/src/apps/(s-t)/shopify/lib/providers/menu-provider";
 import { Menu as MenuOverlay } from "@/src/apps/(s-t)/shopify/components/menu";
+import House from "@/src/apps/(s-t)/shopify/icons/houseIcon";
+import Inbox from "@/src/apps/(s-t)/shopify/icons/inboxIcon";
+import Tag from "@/src/apps/(s-t)/shopify/icons/tagIcon";
 
 // shopify-custom-bottom-tabs-animation 🔽
 // shopify-menu-transition-animation 🔽
@@ -135,14 +138,22 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
         style={[styles.buttonBorder, styles.shadow]}
       >
         <TabButton focused={isTabFocused(Tab.Home)} onPress={() => navigation.navigate(Tab.Home)}>
-          <House size={22} color={isTabFocused(Tab.Home) ? "#000000" : "#8a8a8a"} />
+          <House
+            size={22}
+            color={isTabFocused(Tab.Home) ? "#000000" : "#8a8a8a"}
+            fill={isTabFocused(Tab.Home)}
+          />
         </TabButton>
 
         <TabButton
           focused={isTabFocused(Tab.Orders)}
           onPress={() => navigation.navigate(Tab.Orders)}
         >
-          <Inbox size={22} color={isTabFocused(Tab.Orders) ? "#000000" : "#8a8a8a"} />
+          <Inbox
+            size={22}
+            color={isTabFocused(Tab.Orders) ? "#000000" : "#8a8a8a"}
+            fill={isTabFocused(Tab.Orders)}
+          />
         </TabButton>
 
         <TabButton
@@ -152,7 +163,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
           <Tag
             size={22}
             color={isTabFocused(Tab.Products) ? "#000000" : "#8a8a8a"}
-            style={{ transform: [{ rotateY: "180deg" }] }} // Flip tag icon for better visual balance
+            fill={isTabFocused(Tab.Products)}
           />
         </TabButton>
 
