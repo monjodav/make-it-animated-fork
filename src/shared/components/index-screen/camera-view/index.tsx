@@ -129,13 +129,13 @@ export const CameraView: FC = () => {
         className="absolute left-0 right-0 p-4"
         style={[{ bottom: insets.bottom + 20 }, rBadgeStyle]}
       >
-        <View className="self-center px-4 py-1 rounded-full bg-stone-200">
-          <Text className="text-stone-900 font-medium">Scan QR code</Text>
+        <View className="self-center px-4 py-1 rounded-full bg-neutral-200">
+          <Text className="text-neutral-900 font-poppins-medium">Scan QR code</Text>
         </View>
       </Animated.View>
       <Animated.View
         style={[StyleSheet.absoluteFill, rOverlayStyle]}
-        className="bg-[#131316] pointer-events-none"
+        className="bg-neutral-900 pointer-events-none"
       />
     </View>
   );

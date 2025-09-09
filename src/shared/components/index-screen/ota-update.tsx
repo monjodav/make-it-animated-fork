@@ -18,14 +18,15 @@ export const OtaUpdate = () => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => Updates.reloadAsync()}
-        className="px-3 py-5 rounded-3xl bg-[#212126] flex-row items-center gap-4"
+        className="px-3 py-5 rounded-3xl bg-neutral-800/50 border border-neutral-700/50 flex-row items-center gap-4"
         style={styles.borderCurve}
       >
-        <Bell color="gray" fill="gray" strokeWidth={1.5} />
+        <Bell color="#a3a3a3" fill="#a3a3a3" strokeWidth={1.5} />
         <View className="gap-1 flex-1">
-          <Text className="text-white text-base">{updateAlert.title}</Text>
-          <Text className="text-white text-sm font-light">
-            {updateAlert.message} <Text className="underline text-orange-200">Refresh now.</Text>
+          <Text className="text-neutral-50 text-base font-poppins-medium">{updateAlert.title}</Text>
+          <Text className="text-neutral-400 text-sm font-poppins-normal">
+            {updateAlert.message}{" "}
+            <Text className="underline text-sm text-brand font-poppins-medium">Refresh now.</Text>
           </Text>
         </View>
       </TouchableOpacity>

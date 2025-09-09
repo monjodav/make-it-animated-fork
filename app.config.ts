@@ -61,7 +61,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
       ...config.android,
       adaptiveIcon: {
         foregroundImage: "./assets/images/icon-android.png",
-        backgroundColor: "#131316",
+        backgroundColor: "#fffff4",
       },
       package: getEnvironmentValues().package,
       googleServicesFile: getGoogleServicesFile(),
@@ -83,7 +83,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
           image: "./assets/images/splash.png",
           imageWidth: 150,
           resizeMode: "contain",
-          backgroundColor: "#131316",
+          backgroundColor: "#171717",
         },
       ],
       [

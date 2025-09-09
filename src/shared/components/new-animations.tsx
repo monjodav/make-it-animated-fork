@@ -18,10 +18,8 @@ const AnimationItem = ({ label, onPress }: AnimationItemProps) => {
       onPress={onPress}
       className="flex-row items-center gap-2"
     >
-      <View className="rounded-full bg-lime-300 px-1.5 py-0.5">
-        <Text className="text-lime-900 text-xs font-semibold">New</Text>
-      </View>
-      <Text className="text-stone-400 text-base flex-1" numberOfLines={1}>
+      <Text className="text-brand text-sm font-poppins-medium">New</Text>
+      <Text className="text-neutral-400 text-base flex-1 font-poppins-medium" numberOfLines={1}>
         {label}
       </Text>
     </TouchableOpacity>

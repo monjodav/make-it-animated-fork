@@ -3,7 +3,6 @@ import { useRouter } from "expo-router";
 import React, { FC, memo, useCallback, useMemo, useState } from "react";
 import {
   FlatList,
-  Image,
   ListRenderItemInfo,
   Text,
   View,
@@ -19,11 +18,11 @@ import { useDrawer } from "../lib/providers/drawer-provider";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { QrCode } from "lucide-react-native";
-import { useAppStore } from "../lib/store/app";
+import LogoWithText from "@/assets/images/misc/logo-with-text.png";
+import { Image } from "expo-image";
+import CurvedDivider from "./curved-divider";
 
 type AppSection = {
   title: string;
@@ -39,8 +38,6 @@ type Props = DrawerContentComponentProps;
 
 const Animations: FC<Props> = ({ navigation }) => {
   const [query, setQuery] = useState("");
-
-  const indexView = useAppStore.use.indexView();
 
   const { drawerTextInputRef } = useDrawer();
 
@@ -67,15 +64,20 @@ const Animations: FC<Props> = ({ navigation }) => {
 
   const _renderSectionHeader = useCallback(
     ({ section }: { section: AppSection }) => (
-      <View className="bg-[#131316]">
+      <View className="bg-neutral-900">
         <View className="flex-row items-center gap-2 px-5 pt-4 pb-1">
-          <Image source={section.imageSource} className="w-6 h-6" />
-          <Text className="text-stone-50 text-base font-medium">{section.title}</Text>
-          <View className="h-[2px] flex-1 rounded-full bg-[#212126]" />
+          <Image
+            source={section.imageSource}
+            style={{ height: 20, width: 20 }}
+            contentFit="contain"
+          />
+          <Text className="text-neutral-50 text-base font-poppins-semibold">{section.title}</Text>
+          <CurvedDivider />
+          <View className="absolute top-0 bottom-0 right-0 w-5 bg-neutral-900" />
         </View>
         <View className="absolute -bottom-3 left-0 right-0 h-4">
           <LinearGradient
-            colors={["#131316", colorKit.setAlpha("#131316", 0.25).hex()]}
+            colors={["#171717", colorKit.setAlpha("#171717", 0.25).hex()]}
             style={StyleSheet.absoluteFill}
             locations={[0.25, 1]}
           />
@@ -88,7 +90,7 @@ const Animations: FC<Props> = ({ navigation }) => {
   const _renderEmptyListComponent = useCallback(
     () => (
       <Animated.View entering={FadeInDown} className="flex-1 items-center justify-center">
-        <Text className="text-stone-400 text-base">No animations found</Text>
+        <Text className="text-neutral-400 text-base font-poppins-medium">No animations found</Text>
       </Animated.View>
     ),
     []
@@ -139,7 +141,9 @@ const Animations: FC<Props> = ({ navigation }) => {
           }}
           style={styles.listItem}
         >
-          <Text className="text-stone-400 text-base">{item.animation.name}</Text>
+          <Text className="text-neutral-400 text-base font-poppins-medium">
+            {item.animation.name}
+          </Text>
         </Pressable>
       );
     },
@@ -148,29 +152,24 @@ const Animations: FC<Props> = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView className="flex-1" behavior="padding">
-      <View className="flex-1 bg-[#131316]" style={{ paddingTop: insets.top + 16 }}>
-        <View className="flex-row items-center justify-between gap-2 px-5 pb-5">
+      <View className="flex-1 bg-neutral-900" style={{ paddingTop: insets.top + 16 }}>
+        <View className="flex-row items-end justify-between gap-2 px-5 pb-5">
           <Pressable
             hitSlop={20}
             style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
             onPress={() => router.replace("/")}
           >
-            {indexView === "home" ? (
-              <MaterialCommunityIcons name="home-circle" size={24} color="#fafaf9" />
-            ) : (
-              <QrCode size={20} color="#fafaf9" />
-            )}
-            <Text className="text-stone-50 text-sm/4">Home</Text>
+            <Image source={LogoWithText} style={{ height: 40, width: 80 }} contentFit="contain" />
           </Pressable>
-          <View className="flex-row items-center gap-2">
-            <Text className="text-stone-400 text-sm">
-              <Text className="text-stone-50">
+          <View className="flex-row items-center gap-2 mb-1">
+            <Text className="text-neutral-400 text-sm font-poppins-normal">
+              <Text className="text-neutral-50">
                 {sections.reduce((acc, section) => acc + section.data.length, 0)}
               </Text>{" "}
               animations
             </Text>
-            <Text className="text-stone-400 text-sm">
-              <Text className="text-stone-50">{sections.length}</Text>{" "}
+            <Text className="text-neutral-400 text-sm font-poppins-normal">
+              <Text className="text-neutral-50">{sections.length}</Text>{" "}
               {sections.length === 1 ? "app" : "apps"}
             </Text>
           </View>
@@ -179,7 +178,7 @@ const Animations: FC<Props> = ({ navigation }) => {
           ref={drawerTextInputRef}
           placeholder="Search app..."
           placeholderTextColor="#a8a29e"
-          className="bg-[#212126] rounded-xl p-3 text-stone-400 mx-4 mb-1"
+          className="bg-neutral-800/50 rounded-xl p-3 text-neutral-400 font-poppins-medium border border-neutral-800 mx-4 mb-1"
           value={query}
           onChangeText={setQuery}
         />
@@ -204,7 +203,7 @@ const Animations: FC<Props> = ({ navigation }) => {
           />
           <View className="absolute top-0 left-0 right-0 h-4">
             <LinearGradient
-              colors={["#131316", colorKit.setAlpha("#131316", 0.1).hex()]}
+              colors={["#171717", colorKit.setAlpha("#171717", 0.1).hex()]}
               style={StyleSheet.absoluteFill}
               locations={[0.25, 1]}
             />

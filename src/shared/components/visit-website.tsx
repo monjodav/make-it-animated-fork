@@ -7,7 +7,6 @@ import { WebBrowserPresentationStyle } from "expo-web-browser";
 import { useWarmUpBrowser } from "../lib/hooks/use-warm-up-browser";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colorKit } from "reanimated-color-picker";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 export const VisitWebsite = () => {
   useWarmUpBrowser();
@@ -21,16 +20,16 @@ export const VisitWebsite = () => {
           presentationStyle: WebBrowserPresentationStyle.FORM_SHEET,
         })
       }
-      className="px-4 pt-4 items-center bg-[#131316]"
+      className="px-4 pt-4 items-center bg-neutral-900"
       style={{ paddingBottom: insets.bottom + 8 }}
     >
-      <View className="flex-row gap-2 items-baseline">
-        <Text className="text-pink-300 font-medium text-lg">Get code</Text>
-        <AntDesign name="codesquare" size={16} color="#f9a8d4" />
+      <View className="flex-row gap-2 items-center">
+        <Text className="text-brand font-poppins-medium text-lg">Get code</Text>
+        <View className="size-4 rounded-full bg-brand" />
       </View>
       <View className="absolute -top-9 left-0 right-0 h-10 pointer-events-none">
         <LinearGradient
-          colors={[colorKit.setAlpha("#131316", 0).hex(), "#131316"]}
+          colors={[colorKit.setAlpha("#171717", 0).hex(), "#171717"]}
           style={StyleSheet.absoluteFill}
           locations={[0, 1]}
         />
