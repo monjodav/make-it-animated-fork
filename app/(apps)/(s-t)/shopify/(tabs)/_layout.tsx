@@ -12,7 +12,6 @@ import Animated, {
 import { cn } from "@/src/shared/lib/utils/cn";
 import { MenuProvider, useMenu } from "@/src/apps/(s-t)/shopify/lib/providers/menu-provider";
 import { Menu as MenuOverlay } from "@/src/apps/(s-t)/shopify/components/menu";
-import { Button as MenuButton } from "@/src/apps/(s-t)/shopify/components/button";
 
 // shopify-custom-bottom-tabs-animation 🔽
 // shopify-menu-transition-animation 🔽
@@ -211,7 +210,6 @@ const TabsLayout = () => {
           This prevents circular dependencies while maintaining shared animation state
         */}
         <MenuOverlay />
-        <MenuButton />
       </View>
     </MenuProvider>
   );
