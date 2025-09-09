@@ -15,6 +15,7 @@ import { Menu as MenuOverlay } from "@/src/apps/(s-t)/shopify/components/menu";
 import House from "@/src/apps/(s-t)/shopify/icons/houseIcon";
 import Inbox from "@/src/apps/(s-t)/shopify/icons/inboxIcon";
 import Tag from "@/src/apps/(s-t)/shopify/icons/tagIcon";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // shopify-custom-bottom-tabs-animation 🔽
 // shopify-menu-transition-animation 🔽
@@ -94,6 +95,7 @@ const TabButton: FC<TabButtonProps> = ({ focused, onPress, children }) => {
  * Coordinates with menu overlay state via shared menuProgress value
  */
 const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
+  const insets = useSafeAreaInsets();
   const { menuProgress } = useMenu(); // Shared animation state with menu overlay
 
   // Helper to check if a tab is focused
@@ -119,8 +121,8 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 
   return (
     <Animated.View
-      className="absolute bottom-0 flex-row items-center justify-between px-5 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]"
-      style={rButtonStyle} // Animated bottom spacing driven by menu state
+      className="absolute flex-row items-center justify-between px-5 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]"
+      style={[rButtonStyle, { bottom: insets.bottom - 15}]} // Animated bottom spacing driven by menu state
     >
       {/* Search tab: Isolated in its own container for visual separation */}
       <View className="p-1 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>

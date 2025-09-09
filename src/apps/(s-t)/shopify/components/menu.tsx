@@ -1,4 +1,4 @@
-import { FlatList, Pressable, Text, View, StyleSheet } from "react-native";
+import { FlatList, Pressable, Text, View, StyleSheet, Platform } from "react-native";
 import { Settings, X } from "lucide-react-native";
 import Animated, {
   interpolate,
@@ -144,7 +144,7 @@ export const Menu = () => {
           renderItem={_renderListItem}
           contentContainerStyle={[
             {
-              paddingTop: insets.top + 10,
+              paddingTop: insets.top + (Platform.OS === "ios" ? 15 : 30),
               backgroundColor: "black",
               paddingBottom: 60, // Extra bottom padding for gradient fade effect
             },
