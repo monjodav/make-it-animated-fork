@@ -53,7 +53,6 @@
     "react-native-collapsible-tab-view": "^8.0.1",
     "react-native-css-interop": "^0.1.22",
     "react-native-gesture-handler": "~2.24.0",
-    "react-native-inner-shadow": "^2.3.1",
     "react-native-keyboard-controller": "^1.18.5",
     "react-native-onesignal": "^5.2.11",
     "react-native-pager-view": "6.7.1",
