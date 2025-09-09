@@ -24,7 +24,7 @@ const Tag: React.FC<TagProps> = ({ size = 24, color = "#000", fill = false, ...p
           stroke="#fff"
           strokeLinecap="round"
           strokeLinejoin="round"
-          strokeWidth={6}
+          strokeWidth={4}
           d="M16.5 9a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"
         />
       </>
