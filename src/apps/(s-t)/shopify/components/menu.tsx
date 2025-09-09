@@ -13,15 +13,13 @@ import { MOCK_FLAT_LIST_ITEMS } from "../constants/constants";
 
 // shopify-menu-transition-animation 🔽
 
-// Menu items - order matters for animation consistency across screens
-
 export const Menu = () => {
   const insets = useSafeAreaInsets();
 
-  // Shared value that drives all open/close menu transitions
+  // Shared animation driver (0=closed, 1=open) - coordinates with MenuButton component
   const { menuProgress } = useMenu();
 
-  // Press animation state for close button
+  // Local press state for close button feedback - independent of menu open/close state
   const isPressed = useSharedValue(false);
 
   const _renderListItem = ({ item }: { item: (typeof MOCK_FLAT_LIST_ITEMS)[number] }) => (
@@ -35,12 +33,12 @@ export const Menu = () => {
   );
 
   /**
-   * Container animation:
-   * - opacity: fades menu in/out (0→1 with 300ms timing)
-   * Both driven by menuProgress (0=closed, 1=open)
+   * Main overlay entrance animation
+   * - opacity: 0→1 fade in with 300ms timing for smooth appearance
+   * - translateY: 120→0 slide up from bottom, creating upward motion feel
+   * - pointerEvents: auto/none prevents interaction blocking when closed
    */
   const rContainerStyle = useAnimatedStyle(() => {
-    // Fade in/out opacity synced with menu progress
     const opacity = withTiming(interpolate(menuProgress.get(), [0, 1], [0, 1]), { duration: 300 });
 
     const translateY = withTiming(interpolate(menuProgress.get(), [0, 1], [120, 0]), {
@@ -54,10 +52,15 @@ export const Menu = () => {
           translateY,
         },
       ],
-      pointerEvents: menuProgress.get() === 1 ? "auto" : "none", // Disable interactions when closed
+      pointerEvents: menuProgress.get() === 1 ? "auto" : "none", // Critical: prevents touch conflicts when menu closed
     };
   });
 
+  /**
+   * List content scaling animation
+   * - scale: 0.8→1 creates subtle "pop" effect on menu open
+   * - Runs parallel with container animation for layered motion
+   */
   const rFlatListStyle = useAnimatedStyle(() => {
     const scale = withTiming(interpolate(menuProgress.get(), [0, 1], [0.8, 1]), {
       duration: 300,
@@ -72,12 +75,13 @@ export const Menu = () => {
     };
   });
 
-  // Shadow view animation: hide when button is pressed (red)
+  /**
+   * Shadow visibility animation - synced with button press state
+   * - opacity: 1→0 hides shadow when button turns red (pressed state)
+   * - 150ms timing matches button color transition for unified feedback
+   */
   const rShadowStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(
-      isPressed.get() ? 0 : 1, // Hide shadow when pressed, show when normal
-      { duration: 150 } // Synchronized with button animation
-    );
+    const opacity = withTiming(isPressed.get() ? 0 : 1, { duration: 150 });
 
     return {
       opacity,
@@ -107,15 +111,16 @@ export const Menu = () => {
       >
         <Pressable
           className="p-3 rounded-full"
-          onPress={() => menuProgress.set(0)}
+          onPress={() => menuProgress.set(0)} // Direct SharedValue update triggers all menu animations
           onPressIn={() => {
-            isPressed.set(true);
+            isPressed.set(true); // Immediate press feedback
           }}
           onPressOut={() => {
-            isPressed.set(false);
+            isPressed.set(false); // Reset on release (handles cancel/drag scenarios)
           }}
         >
           <Animated.View className="p-3 rounded-full bg-neutral-700">
+            {/* Shadow layer - fades out during press for cleaner red button appearance */}
             <Animated.View
               className="absolute h-10 w-10 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]"
               style={rShadowStyle}
@@ -124,6 +129,7 @@ export const Menu = () => {
           </Animated.View>
         </Pressable>
         <View className="flex-row items-center gap-3  bg-neutral-700 px-4 py-3 rounded-full">
+          {/* Static shadow for settings button - no animation needed */}
           <View className="absolute h-10 w-32 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
 
           <Settings size={20} color="#E5E7EB" />
@@ -137,11 +143,16 @@ export const Menu = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
           renderItem={_renderListItem}
           contentContainerStyle={[
-            { paddingTop: insets.top + 10, backgroundColor: "black", paddingBottom: 60 },
+            {
+              paddingTop: insets.top + 10,
+              backgroundColor: "black",
+              paddingBottom: 60, // Extra bottom padding for gradient fade effect
+            },
           ]}
         />
       </Animated.View>
 
+      {/* Bottom fade gradient - ensures smooth visual transition at scroll end */}
       <LinearGradient
         colors={["rgba(0, 0, 0, 0.005)", "black"]}
         start={{ x: 0, y: 0 }}
