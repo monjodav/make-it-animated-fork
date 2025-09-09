@@ -51,7 +51,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default function RootLayout() {
-  useFonts({
+  let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
     Poppins_400Regular,
     Poppins_500Medium,
@@ -78,6 +78,10 @@ export default function RootLayout() {
       OneSignal.Notifications.requestPermission(true);
     }, 1000);
   }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>

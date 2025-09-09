@@ -30,7 +30,7 @@ export const ExploreAnimationsBtn: FC = () => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             navigation.dispatch(DrawerActions.openDrawer());
           }}
-          className="h-16 bg-brand rounded-3xl border-[3px] border-neutral-300/25 flex items-center justify-center"
+          className="h-16 bg-brand rounded-3xl flex items-center justify-center"
           style={[styles.borderCurve, { width: width * 0.8 }]}
         >
           <Text className="text-neutral-50 text-xl font-poppins-semibold">Explore animations</Text>

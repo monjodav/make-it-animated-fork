@@ -29,11 +29,11 @@ const CurvedDivider = ({
   const { width: screenWidth } = useWindowDimensions();
 
   const dividerWidth = width ?? screenWidth;
-  const dividerHeight = height ?? 25;
+  const dividerHeight = height ?? 20;
 
   if (variant === "wave") {
     const wlRandom = Math.random() * 16 + 16;
-    const ampRandom = Math.random() * 8 + 8;
+    const ampRandom = Math.random() * 6 + 6;
 
     const wl = Math.max(4, wavelength ?? Math.floor(wlRandom)); // default wavelength
     const amp = Math.max(1, amplitude ?? Math.floor(ampRandom)); // default amplitude

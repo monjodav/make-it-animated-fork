@@ -141,7 +141,7 @@ const Animations: FC<Props> = ({ navigation }) => {
           }}
           style={styles.listItem}
         >
-          <Text className="text-neutral-400 text-base font-poppins-medium">
+          <Text className="text-neutral-400 text-sm font-poppins-medium">
             {item.animation.name}
           </Text>
         </Pressable>
@@ -162,13 +162,13 @@ const Animations: FC<Props> = ({ navigation }) => {
             <Image source={LogoWithText} style={{ height: 40, width: 80 }} contentFit="contain" />
           </Pressable>
           <View className="flex-row items-center gap-2 mb-1">
-            <Text className="text-neutral-400 text-sm font-poppins-normal">
+            <Text className="text-neutral-400 text-sm font-poppins-medium">
               <Text className="text-neutral-50">
                 {sections.reduce((acc, section) => acc + section.data.length, 0)}
               </Text>{" "}
               animations
             </Text>
-            <Text className="text-neutral-400 text-sm font-poppins-normal">
+            <Text className="text-neutral-400 text-sm font-poppins-medium">
               <Text className="text-neutral-50">{sections.length}</Text>{" "}
               {sections.length === 1 ? "app" : "apps"}
             </Text>
