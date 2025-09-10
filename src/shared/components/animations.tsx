@@ -174,14 +174,32 @@ const Animations: FC<Props> = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <TextInput
-          ref={drawerTextInputRef}
-          placeholder="Search app..."
-          placeholderTextColor="#a8a29e"
-          className="bg-neutral-800/50 rounded-xl p-3 text-neutral-400 font-poppins-medium border border-neutral-800 mx-4 mb-1"
-          value={query}
-          onChangeText={setQuery}
-        />
+        <View
+          className="rounded-xl h-11 justify-center px-3 mx-4 mb-1 overflow-hidden"
+          style={{
+            backgroundColor: Platform.OS === "ios" ? "#515151" : "#1C1C1C",
+            borderWidth: Platform.OS === "ios" ? 0 : 1,
+            borderColor: Platform.OS === "ios" ? "transparent" : "#303030",
+          }}
+        >
+          {Platform.OS === "ios" ? (
+            <>
+              <View className="absolute h-11 left-0.5 right-0.5 top-1 bg-[#1C1C1C] rounded-xl shadow-[-4_-3_3_#1C1C1C]" />
+              <View className="absolute h-11 left-0.5 right-0.5 top-1 bg-[#1C1C1C] rounded-xl shadow-[4_-3_3_#1C1C1C]" />
+            </>
+          ) : null}
+
+          <TextInput
+            ref={drawerTextInputRef}
+            placeholder="Search app..."
+            placeholderTextColor="#a8a29e"
+            className="text-neutral-400 font-poppins-medium "
+            value={query}
+            onChangeText={setQuery}
+            textAlignVertical="center" // for Android
+            style={{ paddingVertical: 0, lineHeight: 20 }} // for Android
+          />
+        </View>
         <View className="flex-1">
           <FlatList
             data={flatData}
