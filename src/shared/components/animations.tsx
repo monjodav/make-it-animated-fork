@@ -175,7 +175,7 @@ const Animations: FC<Props> = ({ navigation }) => {
           </View>
         </View>
         <View
-          className="rounded-xl h-11 justify-center px-3 mx-4 mb-1 overflow-hidden"
+          className="rounded-xl h-11 px-3 mx-4 mb-1 overflow-hidden"
           style={{
             backgroundColor: Platform.OS === "ios" ? "#515151" : "#1C1C1C",
             borderWidth: Platform.OS === "ios" ? 0 : 1,
@@ -193,11 +193,9 @@ const Animations: FC<Props> = ({ navigation }) => {
             ref={drawerTextInputRef}
             placeholder="Search app..."
             placeholderTextColor="#a8a29e"
-            className="text-neutral-400 font-poppins-medium "
+            className="text-neutral-400 font-poppins-medium h-full py-0"
             value={query}
             onChangeText={setQuery}
-            textAlignVertical="center" // for Android
-            style={{ paddingVertical: 0, lineHeight: 20 }} // for Android
           />
         </View>
         <View className="flex-1">
