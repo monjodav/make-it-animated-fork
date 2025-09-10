@@ -4,9 +4,9 @@ import { Menu, SearchIcon, User } from "lucide-react-native";
 import React, { FC, ReactNode, useEffect } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import Animated, {
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { cn } from "@/src/shared/lib/utils/cn";
@@ -16,6 +16,8 @@ import House from "@/src/apps/(s-t)/shopify/icons/houseIcon";
 import Inbox from "@/src/apps/(s-t)/shopify/icons/inboxIcon";
 import Tag from "@/src/apps/(s-t)/shopify/icons/tagIcon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MENU_TRANSITION_SPRING_CONFIG } from "@/src/apps/(s-t)/shopify/lib/constants/animation-configs";
+import { AnimatedTabsContainer } from "@/src/apps/(s-t)/shopify/components/animated-tabs-container";
 
 // shopify-custom-bottom-tabs-animation 🔽
 // shopify-menu-transition-animation 🔽
@@ -24,7 +26,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const BUTTON_SCALE_DURATION = 150; // Fast enough for instant feedback, slow enough to see the animation
 const BUTTON_SCALE_PRESSED = 0.9; // 10% scale reduction creates noticeable but not excessive squeeze effect
 const BG_SYNC_DELAY = 32; // Prevents background flash on rapid navigation changes
-const TAB_BAR_ANIMATION_DURATION = 300; // Matches menu transition for visual cohesion
 
 enum Tab {
   Search = "search",
@@ -104,25 +105,10 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
     return state.index === index;
   };
 
-  /**
-   * Tab bar position animation coordinated with menu overlay
-   * Range [30→20]: Moves tab bar 10px upward when menu opens to create depth
-   * Timing matches menu animation for synchronized motion
-   */
-  const rButtonStyle = useAnimatedStyle(() => {
-    const bottom = withTiming(interpolate(menuProgress.value, [0, 1], [30, 20]), {
-      duration: TAB_BAR_ANIMATION_DURATION, // Synchronized with menu transition timing
-    });
-
-    return {
-      marginBottom: bottom, // Bottom spacing creates floating effect above safe area
-    };
-  });
-
   return (
-    <Animated.View
+    <View
       className="absolute flex-row items-center justify-between px-5 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]"
-      style={[rButtonStyle, { bottom: insets.bottom - 15}]} // Animated bottom spacing driven by menu state
+      style={{ bottom: insets.bottom + 12 }}
     >
       {/* Search tab: Isolated in its own container for visual separation */}
       <View className="p-1 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>
@@ -172,9 +158,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
         {/* Menu trigger: Opens overlay instead of navigating to a screen */}
         <TabButton
           focused={isTabFocused(Tab.Menu)}
-          onPress={() => {
-            menuProgress.value = 1; // Trigger menu overlay animation
-          }}
+          onPress={() => menuProgress.set(withSpring(1, MENU_TRANSITION_SPRING_CONFIG))}
         >
           <Menu size={22} color={isTabFocused(Tab.Menu) ? "#000000" : "#8a8a8a"} />
         </TabButton>
@@ -189,7 +173,7 @@ const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
           <User size={22} color={isTabFocused(Tab.Profile) ? "#000000" : "#8a8a8a"} />
         </TabButton>
       </View>
-    </Animated.View>
+    </View>
   );
 };
 
@@ -201,12 +185,11 @@ const TabsLayout = () => {
   return (
     <MenuProvider>
       <View className="flex-1 bg-black">
-        <View className="flex-1">
+        <AnimatedTabsContainer>
           <Tabs
             tabBar={(props) => <CustomTabBar {...props} />}
             screenOptions={{
               headerShown: false,
-              tabBarStyle: { display: "none" }, // Hide default tab bar for full custom control
               sceneStyle: { backgroundColor: "black" }, // Consistent background for menu transitions
             }}
           >
@@ -217,7 +200,7 @@ const TabsLayout = () => {
             <Tabs.Screen name={Tab.Profile} />
             {/* Note: Tab.Menu is intentionally excluded - it's a UI trigger, not a route */}
           </Tabs>
-        </View>
+        </AnimatedTabsContainer>
         {/* 
           Menu overlay and close button are rendered at layout level
           This prevents circular dependencies while maintaining shared animation state
