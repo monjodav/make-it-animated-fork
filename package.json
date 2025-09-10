@@ -1,7 +1,7 @@
 {
   "name": "make-it-animated",
   "main": "expo-router/entry",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "scripts": {
     "dev": "APP_VARIANT=development expo start -c",
     "ios": "APP_VARIANT=development expo run:ios --device",
