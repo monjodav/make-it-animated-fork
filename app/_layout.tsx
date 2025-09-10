@@ -16,6 +16,12 @@ import { DrawerProvider } from "@/src/shared/lib/providers/drawer-provider";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { useFonts } from "expo-font";
 import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
+import {
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+} from "@expo-google-fonts/poppins";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -45,8 +51,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default function RootLayout() {
-  useFonts({
+  let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
   });
 
   useVersionCheck();
@@ -69,6 +79,10 @@ export default function RootLayout() {
     }, 1000);
   }, []);
 
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
       <KeyboardProvider>
@@ -80,7 +94,7 @@ export default function RootLayout() {
               drawerStyle: {
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                backgroundColor: "#131316",
+                backgroundColor: "#171717",
               },
             }}
           />
