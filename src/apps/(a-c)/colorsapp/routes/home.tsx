@@ -10,6 +10,7 @@ import { View } from "react-native";
 import { HomeHeader, Scroll_Distance } from "../components/home-header";
 import { Carousel } from "../components/carousel";
 import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
+import { THEME } from "../lib/constants/theme";
 
 // colorsapp-home-header-animation 🔽
 
@@ -17,6 +18,8 @@ const Home: FC = () => {
   // Single source of truth for scroll offset; shared across header and local styles.
   // The hook exposes a UI-thread scroll handler to keep animations at 60fps.
   const { scrollOffsetY, scrollHandler } = useScrollViewOffset();
+
+  const [theme, setTheme] = React.useState<"light" | "dark">("dark");
 
   // Thin separator bar expands/collapses with the header.
   // Interpolates height from 8px → 1px over extended range [0, Scroll_Distance*2].
@@ -28,11 +31,11 @@ const Home: FC = () => {
   }));
 
   return (
-    <View className="flex-1 bg-[#231E2B]">
+    <View className="flex-1" style={{ backgroundColor: THEME[theme].background }}>
       {/* Header consumes the SAME shared scrollOffsetY for perfect sync of height, color, and parallax */}
-      <HomeHeader scrollOffsetY={scrollOffsetY} />
+      <HomeHeader scrollOffsetY={scrollOffsetY} theme={theme} setTheme={setTheme} />
       <Animated.View className="overflow-hidden" style={animatedHeight}>
-        <View className="h-2 w-full bg-[#1B1721]" />
+        <View className="h-2 w-full" style={{ backgroundColor: THEME[theme].bgLine }} />
       </Animated.View>
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
@@ -45,13 +48,16 @@ const Home: FC = () => {
           <Carousel />
           {/* colorsapp-card-blurry-circles-animation 🔼 */}
         </View>
-        <View className="h-2 w-full bg-[#1B1721] my-5" />
+        <View className="h-2 w-full my-5" style={{ backgroundColor: THEME[theme].bgLine }} />
         <View className="h-[300px]" />
-        <View className="h-2 w-full bg-[#1B1721] my-5" />
+        <View className="h-2 w-full my-5" style={{ backgroundColor: THEME[theme].bgLine }} />
         <View className="h-[300px]" />
-        <View className="h-2 w-full bg-[#1B1721] my-5" />
+        <View className="h-2 w-full my-5" style={{ backgroundColor: THEME[theme].bgLine }} />
         <View className="h-[300px]" />
-        <View className="absolute -bottom-[1000px] left-0 right-0 h-[1000px] bg-[#1B1721]" />
+        <View
+          className="absolute -bottom-[1000px] left-0 right-0 h-[1000px]"
+          style={{ backgroundColor: THEME[theme].bgLine }}
+        />
       </Animated.ScrollView>
     </View>
   );
