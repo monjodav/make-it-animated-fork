@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMenu } from "../lib/providers/menu-provider";
-import { MOCK_FLAT_LIST_ITEMS } from "../constants/constants";
+import { MOCK_FLAT_LIST_ITEMS } from "../lib/constants/menu";
 import { MENU_TRANSITION_SPRING_CONFIG } from "../lib/constants/animation-configs";
 import { useCallback } from "react";
 
