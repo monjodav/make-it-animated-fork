@@ -1,6 +1,7 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import { Pressable } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
 // shopify-custom-bottom-tab-bar-animation 🔽
 
@@ -37,7 +38,10 @@ export const TabButton: FC<TabButtonProps> = ({ focused, onPress, children }) =>
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+        onPress();
+      }}
       onPressIn={() => {
         if (focused) {
           scale.set(BUTTON_SCALE_PRESSED); // Quick press feedback for already active tab

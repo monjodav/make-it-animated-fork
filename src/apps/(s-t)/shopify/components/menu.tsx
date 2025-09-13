@@ -11,6 +11,7 @@ import { useMenu } from "../lib/providers/menu-provider";
 import { MOCK_FLAT_LIST_ITEMS } from "../lib/constants/menu";
 import { MENU_TRANSITION_SPRING_CONFIG } from "../lib/constants/animation-configs";
 import { useCallback } from "react";
+import * as Haptics from "expo-haptics";
 
 // shopify-menu-transition-animation 🔽
 
@@ -18,12 +19,15 @@ export const Menu = () => {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
 
+  // Motion distance for entry animation (15% of screen height)
+  // Rationale: proportional value keeps the slide distance feeling consistent across devices
+  // and avoids hard-coded pixels. Small enough to feel snappy, large enough to imply depth.
   const translateYDistance = height * 0.15;
 
-  // Shared animation driver (0=closed, 1=open) - coordinates with MenuButton component
   const { menuProgress } = useMenu();
 
-  // Local press state for close button feedback - independent of menu open/close state
+  // Used for press feedback on the close button. Kept as a shared value so any
+  // future visual response can run on the UI thread without a re-render.
   const isPressed = useSharedValue(false);
 
   const _renderListItem = useCallback(
@@ -39,15 +43,22 @@ export const Menu = () => {
     []
   );
 
+  // Container fades in with the menu progress.
+  // Interpolation: [0,1] -> opacity [0,1]. We keep it simple to avoid visual lag.
+  // Pointer events are toggled at end-state to prevent tapping underlying content during transition.
+  // Note: withSpring may briefly overshoot; using equality check here enforces only fully-open menu is interactive.
   const rContainerStyle = useAnimatedStyle(() => {
     const opacity = interpolate(menuProgress.get(), [0, 1], [0, 1]);
 
     return {
       opacity,
-      pointerEvents: menuProgress.get() === 1 ? "auto" : "none", // Critical: prevents touch conflicts when menu closed
+      pointerEvents: menuProgress.get() === 1 ? "auto" : "none",
     };
   });
 
+  // Header slides up into place.
+  // Interpolation: progress [0,1] -> translateY [translateYDistance, 0]
+  // Visual intent: content lifts from below to imply a modal sheet overlay rather than a hard cut.
   const rHeaderStyle = useAnimatedStyle(() => {
     const translateY = interpolate(menuProgress.get(), [0, 1], [translateYDistance, 0]);
 
@@ -60,6 +71,11 @@ export const Menu = () => {
     };
   });
 
+  // List content mirrors the header's vertical slide and adds a subtle scale.
+  // Interpolations
+  // - progress [0,1] -> translateY [translateYDistance, 0]
+  // - progress [0,1] -> scale [0.8, 1]
+  // The scale-down-at-start implies depth and reduces visual weight during the transition.
   const rFlatListStyle = useAnimatedStyle(() => {
     const translateY = interpolate(menuProgress.get(), [0, 1], [translateYDistance, 0]);
 
@@ -84,6 +100,7 @@ export const Menu = () => {
         StyleSheet.absoluteFill,
         rContainerStyle,
         {
+          // Maintain safe area + slight spacing to keep header controls reachable
           paddingTop: insets.top + 12,
         },
       ]}
@@ -92,7 +109,11 @@ export const Menu = () => {
       <Animated.View style={rHeaderStyle} className="flex-row items-center justify-between">
         <Pressable
           className="p-3 rounded-full"
-          onPress={() => menuProgress.set(withSpring(0, MENU_TRANSITION_SPRING_CONFIG))}
+          // Close uses spring for a natural deceleration and to stay consistent with the open motion
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+            menuProgress.set(withSpring(0, MENU_TRANSITION_SPRING_CONFIG));
+          }}
           onPressIn={() => isPressed.set(true)}
           onPressOut={() => isPressed.set(false)}
         >
@@ -108,6 +129,7 @@ export const Menu = () => {
         </View>
       </Animated.View>
       {/* Menu */}
+      {/* Matches header translation + scale to read as a single group entering the viewport */}
       <Animated.View style={rFlatListStyle}>
         <FlatList
           data={MOCK_FLAT_LIST_ITEMS}

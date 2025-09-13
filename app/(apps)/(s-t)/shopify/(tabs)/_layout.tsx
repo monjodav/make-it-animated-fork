@@ -12,12 +12,15 @@ const TabsLayout = () => {
   return (
     <MenuProvider>
       <View className="flex-1 bg-black">
-        {/* AnimatedTabsContainer hosts cross-screen shared values (e.g., scroll offsets, menu progress)
-            to coordinate header and tab bar animations at the layout level */}
+        {/* AnimatedTabsContainer
+            Why: centralizes cross-screen shared values (scroll offsets, menuProgress)
+            so header/tab/menu animations can run on the UI thread without prop-drilling. */}
         <AnimatedTabsContainer>
           <Tabs
             // shopify-custom-bottom-tab-bar-animation 🔽
-            // Inject custom tab bar here so it can read navigation focus state and drive per-button animations
+            // Custom tab bar injected at the router level so it can:
+            // - read focus state to drive per-tab animations
+            // - react to shared values (e.g., menuProgress) for coordinated choreography
             tabBar={(props) => <CustomTabBar {...props} />}
             // shopify-custom-bottom-tab-bar-animation 🔼
             screenOptions={{
@@ -33,10 +36,11 @@ const TabsLayout = () => {
           </Tabs>
         </AnimatedTabsContainer>
         {/* 
-          Menu overlay and close button are rendered at layout level
-          This prevents circular dependencies while maintaining shared animation state
+          Menu overlay and close button live at the layout level.
+          Why: render above all tabs to animate in-place across screens, avoid remounts,
+          and prevent circular dependencies while still accessing shared values.
         */}
-        {/* Overlay sits outside Tabs so the menu animation can spring in over any tab without remounting */}
+        {/* Overlay sits outside <Tabs> so the spring-in animation can cover any tab content. */}
         <MenuOverlay />
       </View>
     </MenuProvider>

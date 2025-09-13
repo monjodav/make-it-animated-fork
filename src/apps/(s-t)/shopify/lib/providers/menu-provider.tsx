@@ -9,11 +9,10 @@ type ContextValue = {
 
 const MenuContext = createContext<ContextValue>({} as ContextValue);
 
-/**
- * Context provider for menu animation state
- * Provides shared menuProgress value to coordinate animations across components
- */
 export const MenuProvider: FC<PropsWithChildren> = ({ children }) => {
+  // Single source of truth for menu open/close progress shared across the tab layout.
+  // Range: 0 (fully closed) → 1 (fully open). Using a shared value keeps
+  // animations on the UI thread and avoids prop-drilling between screens.
   const menuProgress = useSharedValue(0);
 
   const value = { menuProgress };
