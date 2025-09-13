@@ -8,7 +8,7 @@ export const shopify: App = {
   imageSource: ShopifyImage,
   animations: [
     {
-      name: "Search screen animation",
+      name: "Search screen top tabs animation",
       href: "/shopify/search",
     },
     {

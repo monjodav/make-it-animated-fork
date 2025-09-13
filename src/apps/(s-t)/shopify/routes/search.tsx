@@ -6,13 +6,12 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import FilterItem from "../components/search-filter-item";
 import { useSharedValue } from "react-native-reanimated";
 
-// shopify-search-screen-animation 🔽
+// shopify-search-screen-top-tabs-animation 🔽
 
 /**
- * Filter tabs drive the scrollable horizontal animation of categories.
- * "All filters" is treated as an action button for filter modal rather than a category.
+ * FILTERS acts as the source of truth for the top tabs. Order matters because
+ * FlatList uses the index for `scrollToIndex` centering math in `FilterItem` (viewPosition: 0.5).
  */
-
 const FILTERS = ["All", "Orders", "Products", "Customers", "All filters"] as const;
 
 export const Search: FC = () => {
@@ -21,9 +20,18 @@ export const Search: FC = () => {
   const [textInputValue, setTextInputValue] = useState<string>("");
   const [activeFilterItem, setActiveFilterItem] = useState<string>("All");
 
+  /**
+   * SharedValue used by all tab items to reflect instantaneous press state
+   * without triggering React re-renders. Using a shared value enables UI-thread
+   * updates for press-in/press-out feedback at 60fps.
+   */
   const pressedItem = useSharedValue<string | null>(null);
 
-  // FlatList ref used for programmatic horizontal scroll when filters are selected
+  /**
+   * Ref used by tab items to programmatically center the active tab.
+   * This allows each `FilterItem` to call `scrollToIndex({ viewPosition: 0.5 })`
+   * so the selected tab is brought into focus.
+   */
   const flatListRef = useRef<FlatList<string>>(null);
 
   const _renderListItem = ({ item }: { item: string }) => (
@@ -51,7 +59,6 @@ export const Search: FC = () => {
           />
 
           {textInputValue ? (
-            // When text is present, fade-in "clear" icon for quick reset
             <Pressable
               onPress={() => {
                 setTextInputValue("");
@@ -61,7 +68,6 @@ export const Search: FC = () => {
               <CircleX size={18} color="#B5B5B5" />
             </Pressable>
           ) : (
-            // Otherwise show scan icon; same layout slot, swapped visuals
             <Pressable style={styles.scanIcon}>
               <ScanBarcode size={18} color="#B5B5B5" />
             </Pressable>
@@ -74,6 +80,10 @@ export const Search: FC = () => {
           ref={flatListRef}
           data={FILTERS}
           keyExtractor={(item) => item.toString()}
+          /* Top tabs list. Keeping it horizontal and lightweight so `FilterItem`
+           * can animate press feedback purely on the UI thread via shared values.
+           * We avoid extra state here to reduce re-renders while flicking.
+           */
           renderItem={({ item, index }) => (
             <FilterItem
               item={item}
@@ -87,6 +97,7 @@ export const Search: FC = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerClassName="gap-1 py-3 px-5 bg-black"
+          keyboardShouldPersistTaps="handled"
         />
       </View>
 
@@ -96,7 +107,6 @@ export const Search: FC = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
           renderItem={_renderListItem}
           keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="always"
           ListEmptyComponent={() => {
             return (
               <View className="items-center mt-[90]">
@@ -122,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// shopify-search-screen-animation 🔼
+// shopify-search-screen-top-tabs-animation 🔼

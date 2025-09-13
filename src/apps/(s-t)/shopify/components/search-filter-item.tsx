@@ -5,7 +5,7 @@ import type { FlatList } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 import Animated, { useAnimatedStyle, useDerivedValue } from "react-native-reanimated";
 
-// shopify-search-screen-animation 🔽
+// shopify-search-screen-top-tabs-animation 🔽
 
 type FilterItemProps = {
   item: string;
@@ -26,10 +26,18 @@ const FilterItem = ({
 }: FilterItemProps) => {
   const isActive = activeFilterItem === item;
 
-  // Derive press state from shared value so it updates without React re-render
+  /**
+   * useDerivedValue keeps press state on the UI thread (no React re-render).
+   * This makes press-in feedback instantaneous even while the list is scrolling.
+   */
   const isPressed = useDerivedValue(() => pressedItem.get() === item, [item]);
 
-  // Animated background that reacts to both pressed and active states
+  /**
+   * Animated style toggles chip background based on two signals:
+   * - isPressed (transient): darker gray for tactile feedback (#737373)
+   * - isActive (selected): persistent state color (#303030)
+   * Priority: pressed overrides active for immediate feedback.
+   */
   const animatedContainerStyle = useAnimatedStyle(() => {
     const bg = isPressed.get() ? "#737373" : isActive ? "#303030" : "transparent";
     return { backgroundColor: bg };
@@ -37,16 +45,19 @@ const FilterItem = ({
 
   return (
     <Pressable
+      /* SharedValue write avoids triggering React state updates.
+       * onPressIn/out provide fast visual feedback vs onPress only.
+       */
       onPressIn={() => pressedItem.set(item)}
       onPressOut={() => pressedItem.set(null)}
       onPress={() => {
         setActiveFilterItem(item);
+        // Center the selected tab in view for better discoverability (viewPosition: 0.5)
         flatListRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
       }}
       className="rounded-full"
     >
       <Animated.View
-        // static layout via className; dynamic bg via animated style
         className="flex-row gap-2 items-center justify-center px-4 py-1 rounded-full"
         style={animatedContainerStyle}
       >
@@ -59,4 +70,4 @@ const FilterItem = ({
 
 export default FilterItem;
 
-// shopify-search-screen-animation 🔼
+// shopify-search-screen-top-tabs-animation 🔼
