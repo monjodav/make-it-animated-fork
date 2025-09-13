@@ -1,10 +1,10 @@
 import { useRouter } from "expo-router";
 import React, { FC } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { colorsApp } from "@/src/shared/lib/constants/apps/c";
 import { App } from "../lib/constants/apps-list";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
+import { shopify } from "../lib/constants/apps/s";
 
 type AnimationItemProps = {
   label: string;
@@ -48,12 +48,12 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
-        label={getItemProps(colorsApp, 4).label}
-        onPress={getItemProps(colorsApp, 4).onPress}
+        label={getItemProps(shopify, 1).label}
+        onPress={getItemProps(shopify, 1).onPress}
       />
       <AnimationItem
-        label={getItemProps(colorsApp, 5).label}
-        onPress={getItemProps(colorsApp, 5).onPress}
+        label={getItemProps(shopify, 2).label}
+        onPress={getItemProps(shopify, 2).onPress}
       />
     </View>
   );

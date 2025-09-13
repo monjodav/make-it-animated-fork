@@ -8,8 +8,16 @@ export const shopify: App = {
   imageSource: ShopifyImage,
   animations: [
     {
-      name: "Search screen animation",
+      name: "Search screen top tabs animation",
       href: "/shopify/search",
+    },
+    {
+      name: "Custom bottom tab bar animation",
+      href: "/shopify/home",
+    },
+    {
+      name: "Menu transition animation",
+      href: "/shopify/products",
     },
   ],
 };
