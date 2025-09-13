@@ -1,4 +1,12 @@
-import { FlatList, Pressable, Text, View, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  Text,
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  Platform,
+} from "react-native";
 import { Settings, X } from "lucide-react-native";
 import Animated, {
   interpolate,
@@ -118,12 +126,16 @@ export const Menu = () => {
           onPressOut={() => isPressed.set(false)}
         >
           <Animated.View className="p-3 rounded-full bg-neutral-700">
-            <View className="absolute h-10 w-10 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
+            {Platform.OS === "ios" && (
+              <View className="absolute h-10 w-10 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
+            )}
             <X size={20} color="#E5E7EB" />
           </Animated.View>
         </Pressable>
         <View className="flex-row items-center gap-3  bg-neutral-700 px-4 py-3 rounded-full">
-          <View className="absolute h-10 w-32 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
+          {Platform.OS === "ios" && (
+            <View className="absolute h-10 w-32 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
+          )}
           <Settings size={20} color="#E5E7EB" />
           <Text className="text-md font-semibold text-[#E5E7EB]">Settings</Text>
         </View>
