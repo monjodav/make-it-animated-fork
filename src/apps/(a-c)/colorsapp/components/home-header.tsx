@@ -10,8 +10,10 @@ import Animated, {
 import { Pressable, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Home, Sun } from "lucide-react-native";
+import { Home } from "lucide-react-native";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { ThemeToggleButton } from "./theme-toggle-button";
+import { THEME, ThemeToggleButtonProps } from "../lib/constants/theme";
 
 // colorsapp-home-header-animation 🔽
 
@@ -22,9 +24,13 @@ const Base_Header_Max_Height = 210;
 const Base_Header_Min_Height = 50;
 export const Scroll_Distance = Base_Header_Max_Height - Base_Header_Min_Height;
 
-type Props = { scrollOffsetY: SharedValue<number> };
+type Props = {
+  scrollOffsetY: SharedValue<number>;
+  theme: ThemeToggleButtonProps["theme"];
+  setTheme: ThemeToggleButtonProps["setTheme"];
+};
 
-export const HomeHeader: FC<Props> = ({ scrollOffsetY }) => {
+export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
   const insets = useSafeAreaInsets();
   const paddingTop = insets.top;
   const paddingBottom = 12;
@@ -50,7 +56,7 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY }) => {
     backgroundColor: interpolateColor(
       scrollOffsetY.get(),
       [0, Scroll_Distance * 2],
-      ["#231E2B", "#1B1721"]
+      [THEME[theme].background, THEME[theme].bgLine]
     ),
   }));
 
@@ -88,25 +94,39 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY }) => {
       <Animated.View style={animatedTranslateContainer}>
         <Animated.View style={animatedOpacityContainer}>
           <View className="flex-row flex-wrap items-center justify-between mb-[30]">
-            <Text className="font-p-sb text-lg text-neutral-300">👋 Hello</Text>
+            <Text className="font-p-sb text-lg" style={{ color: THEME[theme].text }}>
+              👋 Hello
+            </Text>
             <View className="flex-row items-center gap-2">
-              <Text className="text-neutral-300">Explore more</Text>
+              <Text style={{ color: THEME[theme].text }}>Explore more</Text>
               <Pressable className="p-2 rounded-full bg-pink-400" onPress={simulatePress}>
-                <Home size={20} color="black" strokeWidth={1.5} />
+                <Home
+                  size={20}
+                  color={theme === "light" ? THEME.dark.text : THEME.light.text}
+                  strokeWidth={1.5}
+                />
               </Pressable>
             </View>
           </View>
-          <Text className="text-2xl font-bold text-neutral-300">Welcome to your</Text>
-          <Text className="text-2xl font-bold mb-5 text-neutral-300">app colors playground!</Text>
+          <Text className="text-2xl font-bold" style={{ color: THEME[theme].text }}>
+            Welcome to your
+          </Text>
+          <Text className="text-2xl font-bold mb-5" style={{ color: THEME[theme].text }}>
+            app colors playground!
+          </Text>
           <View className="h-px w-full opacity-20 my-3 bg-neutral-500" />
         </Animated.View>
         <View className="flex-row items-center">
-          <Pressable className="p-3 rounded-full border border-neutral-600" onPress={simulatePress}>
-            <Sun size={14} color="white" />
-          </Pressable>
+          {/* colorsapp-theme-toggle-animation 🔽 */}
+          <ThemeToggleButton theme={theme} setTheme={setTheme} />
+          {/* colorsapp-theme-toggle-animation 🔼 */}
           <View className="w-2" />
-          <Pressable className="py-3 px-4 rounded-full bg-neutral-700/50" onPress={simulatePress}>
-            <Text className="text-neutral-300">Set colors</Text>
+          <Pressable
+            className="py-3 px-4 rounded-full"
+            style={{ backgroundColor: THEME[theme].bgElement }}
+            onPress={simulatePress}
+          >
+            <Text style={{ color: THEME[theme].text }}>Set colors</Text>
           </Pressable>
         </View>
         <View style={{ height: paddingBottom }} />
