@@ -193,6 +193,7 @@ const Animations: FC<Props> = ({ navigation }) => {
             ref={drawerTextInputRef}
             placeholder="Search app..."
             placeholderTextColor="#a8a29e"
+            selectionColor="#fffff4"
             className="text-neutral-400 font-poppins-medium h-full py-0"
             value={query}
             onChangeText={setQuery}
