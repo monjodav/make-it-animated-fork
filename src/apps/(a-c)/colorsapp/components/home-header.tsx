@@ -56,7 +56,7 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
     backgroundColor: interpolateColor(
       scrollOffsetY.get(),
       [0, Scroll_Distance * 2],
-      [THEME[theme].background, "#1B1721"]
+      [THEME[theme].background, THEME[theme].bgLine]
     ),
   }));
 
@@ -117,7 +117,9 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
           <View className="h-px w-full opacity-20 my-3 bg-neutral-500" />
         </Animated.View>
         <View className="flex-row items-center">
+          {/* colorsapp-theme-toggle-animation 🔽 */}
           <ThemeToggleButton theme={theme} setTheme={setTheme} />
+          {/* colorsapp-theme-toggle-animation 🔼 */}
           <View className="w-2" />
           <Pressable
             className="py-3 px-4 rounded-full"

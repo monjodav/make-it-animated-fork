@@ -13,6 +13,7 @@ import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offs
 import { THEME } from "../lib/constants/theme";
 
 // colorsapp-home-header-animation 🔽
+// colorsapp-theme-toggle-animation 🔽
 
 const Home: FC = () => {
   // Single source of truth for scroll offset; shared across header and local styles.
@@ -65,4 +66,5 @@ const Home: FC = () => {
 
 export default Home;
 
+// colorsapp-theme-toggle-animation 🔼
 // colorsapp-home-header-animation 🔼

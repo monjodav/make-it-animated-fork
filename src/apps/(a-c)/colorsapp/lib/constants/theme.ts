@@ -1,3 +1,10 @@
+// colorsapp-theme-toggle-animation 🔽
+
+/**
+ * Demo-only theme configuration.
+ * Not intended for production or practical usage.
+ * Values are simplified and may not meet accessibility or design token requirements.
+ */
 export const THEME = {
   light: {
     background: "#FFFFFF",
@@ -19,3 +26,5 @@ export interface ThemeToggleButtonProps {
   theme: ThemeType;
   setTheme: (theme: ThemeType) => void;
 }
+
+// colorsapp-theme-toggle-animation 🔼
