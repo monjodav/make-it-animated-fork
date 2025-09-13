@@ -21,8 +21,8 @@ const tabs: Tabs = [
     value: Tab.Following,
   },
   {
-    label: "Next.js",
-    value: Tab.NextJs,
+    label: "React Native",
+    value: Tab.ReactNative,
   },
 ];
 

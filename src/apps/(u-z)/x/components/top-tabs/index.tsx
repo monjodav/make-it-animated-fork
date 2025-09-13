@@ -13,7 +13,7 @@ import { TabItem } from "./tab-item";
 export enum Tab {
   ForYou = 0,
   Following = 1,
-  NextJs = 2,
+  ReactNative = 2,
 }
 
 export type Tabs = { label: string; value: Tab }[];

@@ -1,7 +1,7 @@
 # Make it Animated
 
 <p align="center">
-  <img src="./assets/images/misc/logo-with-text.png" alt="Make it Animated Logo" width="200"/>
+  <img src="./assets/images/misc/github-banner.png" alt="Make it Animated Logo" width="100%"/>
 </p>
 
 ## Thank you for purchasing access to Make it Animated!
