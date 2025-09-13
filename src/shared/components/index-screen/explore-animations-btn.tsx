@@ -1,15 +1,15 @@
 import React, { FC } from "react";
-import { Text } from "react-native";
+import { Pressable, Text, StyleSheet, View, Platform } from "react-native";
 import Animated, { FadeInDown, interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { Pressable } from "react-native";
 import { DrawerActions } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { useIndexAnimation } from "../../lib/providers/index-animation";
-
-const AnimatedTouchable = Animated.createAnimatedComponent(Pressable);
+import { useWindowDimensions } from "react-native";
+import * as Haptics from "expo-haptics";
 
 export const ExploreAnimationsBtn: FC = () => {
+  const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
   const navigation = useNavigation();
@@ -24,13 +24,37 @@ export const ExploreAnimationsBtn: FC = () => {
 
   return (
     <Animated.View className="absolute" style={[{ bottom: insets.bottom + 24 }, rContainerStyle]}>
-      <AnimatedTouchable
-        entering={FadeInDown.delay(1400)}
-        onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        className="px-20 py-5 rounded-full items-center self-center bg-stone-300"
-      >
-        <Text className="text-stone-900 text-lg font-semibold">Explore animations</Text>
-      </AnimatedTouchable>
+      <Animated.View entering={FadeInDown.delay(1400)}>
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            navigation.dispatch(DrawerActions.openDrawer());
+          }}
+          className="h-16 rounded-3xl flex items-center justify-center overflow-hidden"
+          style={[
+            styles.borderCurve,
+            {
+              width: width * 0.8,
+              backgroundColor: Platform.OS === "ios" ? "#FF8989" : "#FF4A3D",
+            },
+          ]}
+        >
+          {Platform.OS === "ios" ? (
+            <>
+              <View className="absolute h-16 left-1.5 right-1.5 top-2 bg-brand rounded-3xl rounded-tr-2.5xl rounded-tl-2.5xl shadow-[-3_-2_3_#FE4A3D]" />
+              <View className="absolute h-16 left-1.5 right-1.5 top-2 bg-brand rounded-3xl rounded-tr-2xl rounded-tl-2xl shadow-[3_-2_3_#FE4A3D]" />
+            </>
+          ) : null}
+
+          <Text className="text-neutral-50 text-xl font-poppins-semibold">Explore animations</Text>
+        </Pressable>
+      </Animated.View>
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  borderCurve: {
+    borderCurve: "continuous",
+  },
+});

@@ -97,11 +97,11 @@ export const PressToScanBtn: FC = () => {
       <Animated.View style={rInnerContainerStyle}>
         <Pressable onPress={handlePress} className="gap-1.5 items-center">
           <Animated.View entering={FadeIn.delay(1000)}>
-            <QrCodeIcon size={60} color="#e7e5e4" />
+            <QrCodeIcon size={60} color="#e5e5e5" />
           </Animated.View>
           <Animated.Text
             entering={FadeInDown.delay(1200)}
-            className="text-stone-200 font-medium text-sm"
+            className="text-neutral-200 font-poppins-medium text-sm"
           >
             Press to scan
           </Animated.Text>

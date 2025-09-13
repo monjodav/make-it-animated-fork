@@ -42,6 +42,10 @@ export const colorsApp: App = {
       href: "/colorsapp/home",
     },
     {
+      name: "Theme toggle animation",
+      href: "/colorsapp/home",
+    },
+    {
       name: "Card blurry circles animation",
       href: "/colorsapp/home",
     },
