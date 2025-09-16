@@ -7,7 +7,15 @@ import TimeSlider from "../components/time-slider";
 export const Home: FC = () => {
   const insets = useSafeAreaInsets();
   const width = Dimensions.get("window").width;
-  const [sliderValue, setSliderValue] = useState(0);
+  const [sliderValue, setSliderValue] = useState(5);
+
+  const formatMinutes = (m: number) => {
+    const hours = Math.floor(m / 60);
+    const minutes = m % 60;
+    if (hours === 0) return `${minutes}m`;
+    if (minutes === 0) return `${hours}h`;
+    return `${hours}h ${minutes}m`;
+  };
 
   return (
     <View className="flex-1 bg-black justify-end" style={{ paddingTop: insets.top }}>
@@ -21,14 +29,16 @@ export const Home: FC = () => {
           }}
         >
           <Text className="text-xl font-semibold" style={{ color: "#1E1E20" }}>
-            {sliderValue}
+            {formatMinutes(sliderValue)}
           </Text>
         </View>
         <View className="ml-auto">
           <TimeSlider
             sliderWidth={width * 0.7}
             sliderHeight={44}
-            step={36}
+            dividerCount={35}
+            min={5}
+            max={180}
             onValueChange={(value) => setSliderValue(value)}
           />
         </View>

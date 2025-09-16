@@ -15,25 +15,27 @@ import { BlurView } from "expo-blur";
 type TimeSliderProps = {
   sliderWidth: number;
   sliderHeight: number;
-  step: number;
+  dividerCount?: number;
   min?: number;
   max?: number;
   onValueChange?: (value: number, progress: number) => void;
+  valueFormatter?: (value: number) => number;
 };
 
 const TimeSlider = ({
   sliderWidth,
   sliderHeight,
-  step,
+  dividerCount = 5,
   min = 0,
-  max = step - 1,
+  max = dividerCount,
   onValueChange,
+  valueFormatter,
 }: TimeSliderProps) => {
   const SLIDER_WIDTH = sliderWidth;
   const SLIDER_HEIGHT = sliderHeight;
   const DIVIDER_WIDTH = 2;
 
-  const STEPS = Array.from({ length: step - 1 });
+  const STEPS = Array.from({ length: dividerCount });
 
   const sliderProgress = useSharedValue(0);
   const isActive = useSharedValue(false);
@@ -41,51 +43,56 @@ const TimeSlider = ({
 
   const panGesture = Gesture.Pan()
     .onBegin(() => {
-      isActive.value = true;
+      isActive.set(true);
     })
     .onUpdate((event) => {
       const progress = event.x / SLIDER_WIDTH;
 
-      if (sliderProgress.value === 0 && event.x < 0) {
+      if (sliderProgress.get() === 0 && event.x < 0) {
         const stretch = Math.abs(event.x) / 1.7;
-        stretchAmount.value = Math.min(stretch, 70);
-        sliderProgress.value = 0;
+        stretchAmount.set(Math.min(stretch, 70));
+        sliderProgress.set(0);
       } else {
-        stretchAmount.value = 0;
-        sliderProgress.value = Math.max(0, Math.min(1, progress));
+        stretchAmount.set(0);
+        sliderProgress.set(Math.max(0, Math.min(1, progress)));
       }
     })
     .onFinalize(() => {
-      isActive.value = false;
+      isActive.set(false);
 
-      stretchAmount.value = withSpring(0, {
-        stiffness: 1300,
-        damping: 110,
-        mass: 8,
-      });
+      stretchAmount.set(
+        withSpring(0, {
+          stiffness: 1300,
+          damping: 110,
+          mass: 8,
+        })
+      );
 
-      sliderProgress.value = withSpring(sliderProgress.value);
+      sliderProgress.set(withSpring(sliderProgress.get()));
     });
 
   // Update displayed number when progress changes (avoids re-rendering whole animated tree)
   useAnimatedReaction(
-    () => sliderProgress.value,
+    () => sliderProgress.get(),
     (progress) => {
       if (!onValueChange) return;
-      const value = Math.round(min + (max - min) * progress);
-      runOnJS(onValueChange)(value, progress);
+      const clamped = Math.min(1, Math.max(0, progress));
+      const rawValue = min + clamped * (max - min);
+      const snapped = Math.round(rawValue);
+      const finalValue = valueFormatter ? valueFormatter(snapped) : snapped;
+      runOnJS(onValueChange)(finalValue, clamped);
     },
-    [min, max, onValueChange]
+    [min, max, onValueChange, valueFormatter]
   );
 
   const rFillStyle = useAnimatedStyle(() => {
-    const currentSliderWidth = SLIDER_WIDTH + stretchAmount.value;
+    const currentSliderWidth = SLIDER_WIDTH + stretchAmount.get();
 
     const minFillWidth = currentSliderWidth * 0.03;
     const maxFillWidth = currentSliderWidth * 1;
 
     const fillWidth = interpolate(
-      sliderProgress.value,
+      sliderProgress.get(),
       [0, 1],
       [minFillWidth, maxFillWidth],
       Extrapolation.CLAMP
@@ -97,10 +104,10 @@ const TimeSlider = ({
   });
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const scale = withSpring(isActive.value ? 1.034 : 1);
+    const scale = withSpring(isActive.get() ? 1.034 : 1);
 
-    const stretchWidth = SLIDER_WIDTH + stretchAmount.value;
-    const stretchHeight = SLIDER_HEIGHT - stretchAmount.value * 0.15;
+    const stretchWidth = SLIDER_WIDTH + stretchAmount.get();
+    const stretchHeight = SLIDER_HEIGHT - stretchAmount.get() * 0.15;
 
     return {
       width: stretchWidth,
@@ -121,11 +128,10 @@ const TimeSlider = ({
         <BlurView intensity={45} tint="default" style={StyleSheet.absoluteFillObject} />
         {STEPS.map((_, index) => {
           const rDividerStyle = useAnimatedStyle(() => {
-            const currentWidth = SLIDER_WIDTH + stretchAmount.value;
-            const part = currentWidth / step;
-            return {
-              left: part * (index + 1) - DIVIDER_WIDTH / 2,
-            };
+            const currentWidth = SLIDER_WIDTH + stretchAmount.get();
+            const segments = dividerCount + 1;
+            const part = currentWidth / segments;
+            return { left: part * (index + 1) - DIVIDER_WIDTH / 2 };
           });
           return (
             <Animated.View
