@@ -22,8 +22,6 @@ const TimeSlider = ({
   const SLIDER_HEIGHT = sliderHeight;
   const DIVIDER_WIDTH = 2;
 
-  const PART = SLIDER_WIDTH / step;
-
   const STEPS = Array.from({ length: step - 1 });
 
   const sliderProgress = useSharedValue(0);
@@ -38,8 +36,8 @@ const TimeSlider = ({
       const progress = event.x / SLIDER_WIDTH;
 
       if (sliderProgress.value === 0 && event.x < 0) {
-        const stretch = Math.abs(event.x) / 2;
-        stretchAmount.value = Math.min(stretch, 60);
+        const stretch = Math.abs(event.x) / 1.7;
+        stretchAmount.value = Math.min(stretch, 70);
         sliderProgress.value = 0;
       } else {
         stretchAmount.value = 0;
@@ -50,8 +48,9 @@ const TimeSlider = ({
       isActive.value = false;
 
       stretchAmount.value = withSpring(0, {
-        damping: 15,
-        stiffness: 150,
+        stiffness: 1300,
+        damping: 110,
+        mass: 8,
       });
 
       sliderProgress.value = withSpring(sliderProgress.value);
@@ -60,7 +59,7 @@ const TimeSlider = ({
   const rFillStyle = useAnimatedStyle(() => {
     const currentSliderWidth = SLIDER_WIDTH + stretchAmount.value;
 
-    const minFillWidth = currentSliderWidth * 0.035;
+    const minFillWidth = currentSliderWidth * 0.03;
     const maxFillWidth = currentSliderWidth * 1;
 
     const fillWidth = interpolate(
@@ -76,10 +75,10 @@ const TimeSlider = ({
   });
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const scale = withSpring(isActive.value ? 1.03 : 1);
+    const scale = withSpring(isActive.value ? 1.034 : 1);
 
     const stretchWidth = SLIDER_WIDTH + stretchAmount.value;
-    const stretchHeight = SLIDER_HEIGHT - stretchAmount.value * 0.3;
+    const stretchHeight = SLIDER_HEIGHT - stretchAmount.value * 0.15;
 
     return {
       width: stretchWidth,
@@ -104,7 +103,7 @@ const TimeSlider = ({
           rContainerStyle,
         ]}
       >
-        <BlurView intensity={30} tint="default" style={StyleSheet.absoluteFillObject} />
+        <BlurView intensity={45} tint="default" style={StyleSheet.absoluteFillObject} />
 
         {STEPS.map((_, index) => {
           const rDividerStyle = useAnimatedStyle(() => {
@@ -121,7 +120,7 @@ const TimeSlider = ({
               style={[
                 {
                   position: "absolute",
-                  height: index % 2 === 0 ? SLIDER_HEIGHT * 0.5 : SLIDER_HEIGHT * 0.33,
+                  height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.5 : SLIDER_HEIGHT * 0.33,
                   width: DIVIDER_WIDTH,
                   backgroundColor: index % 2 === 0 ? "#6f6e6e" : "#636164",
                 },
@@ -148,5 +147,3 @@ const TimeSlider = ({
 };
 
 export default TimeSlider;
-
-const styles = StyleSheet.create({});

@@ -14,13 +14,13 @@ export const Home: FC = () => {
         <View
           className="absolute left-4 bg-white"
           style={{
-            height: 40,
-            width: 40 * 2.1,
+            height: 44,
+            width: 80,
             borderRadius: 15,
           }}
         />
         <View className="ml-auto">
-          <TimeSlider sliderWidth={width * 0.7} sliderHeight={40} step={30} />
+          <TimeSlider sliderWidth={width * 0.7} sliderHeight={44} step={36} />
         </View>
       </View>
       <View className="justify-center items-center flex-row gap-2 h-[50] my-5 rounded-full border-[2] border-[#636164] bg-gray-300 mx-4">
