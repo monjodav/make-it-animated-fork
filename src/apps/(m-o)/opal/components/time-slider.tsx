@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -5,19 +6,29 @@ import Animated, {
   withSpring,
   interpolate,
   Extrapolation,
+  useAnimatedReaction,
+  runOnJS,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BlurView } from "expo-blur";
+
+type TimeSliderProps = {
+  sliderWidth: number;
+  sliderHeight: number;
+  step: number;
+  min?: number;
+  max?: number;
+  onValueChange?: (value: number, progress: number) => void;
+};
 
 const TimeSlider = ({
   sliderWidth,
   sliderHeight,
   step,
-}: {
-  sliderWidth: number;
-  sliderHeight: number;
-  step: number;
-}) => {
+  min = 0,
+  max = step - 1,
+  onValueChange,
+}: TimeSliderProps) => {
   const SLIDER_WIDTH = sliderWidth;
   const SLIDER_HEIGHT = sliderHeight;
   const DIVIDER_WIDTH = 2;
@@ -56,6 +67,17 @@ const TimeSlider = ({
       sliderProgress.value = withSpring(sliderProgress.value);
     });
 
+  // Update displayed number when progress changes (avoids re-rendering whole animated tree)
+  useAnimatedReaction(
+    () => sliderProgress.value,
+    (progress) => {
+      if (!onValueChange) return;
+      const value = Math.round(min + (max - min) * progress);
+      runOnJS(onValueChange)(value, progress);
+    },
+    [min, max, onValueChange]
+  );
+
   const rFillStyle = useAnimatedStyle(() => {
     const currentSliderWidth = SLIDER_WIDTH + stretchAmount.value;
 
@@ -91,20 +113,12 @@ const TimeSlider = ({
     <GestureDetector gesture={panGesture}>
       <Animated.View
         style={[
-          {
-            borderWidth: 1,
-            borderColor: "#636164",
-            flexDirection: "row",
-            alignItems: "center",
-            borderRadius: 15,
-            overflow: "hidden",
-            position: "relative",
-          },
+          styles.sliderContainer,
+          { borderRadius: SLIDER_HEIGHT / 3, width: SLIDER_WIDTH },
           rContainerStyle,
         ]}
       >
         <BlurView intensity={45} tint="default" style={StyleSheet.absoluteFillObject} />
-
         {STEPS.map((_, index) => {
           const rDividerStyle = useAnimatedStyle(() => {
             const currentWidth = SLIDER_WIDTH + stretchAmount.value;
@@ -113,15 +127,13 @@ const TimeSlider = ({
               left: part * (index + 1) - DIVIDER_WIDTH / 2,
             };
           });
-
           return (
             <Animated.View
               key={index}
               style={[
+                styles.divider,
                 {
-                  position: "absolute",
                   height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.5 : SLIDER_HEIGHT * 0.33,
-                  width: DIVIDER_WIDTH,
                   backgroundColor: index % 2 === 0 ? "#6f6e6e" : "#636164",
                 },
                 rDividerStyle,
@@ -129,21 +141,32 @@ const TimeSlider = ({
             />
           );
         })}
-        <Animated.View
-          style={[
-            {
-              height: "100%",
-              position: "absolute",
-              left: 0,
-              top: 0,
-              backgroundColor: "#FFFFFF",
-            },
-            rFillStyle,
-          ]}
-        />
+        <Animated.View style={[styles.fill, rFillStyle]} />
       </Animated.View>
     </GestureDetector>
   );
 };
 
 export default TimeSlider;
+
+const styles = StyleSheet.create({
+  sliderContainer: {
+    borderWidth: 1,
+    borderColor: "#636164",
+    flexDirection: "row",
+    alignItems: "center",
+    overflow: "hidden",
+    position: "relative",
+  },
+  divider: {
+    position: "absolute",
+    width: 2,
+  },
+  fill: {
+    height: "100%",
+    position: "absolute",
+    left: 0,
+    top: 0,
+    backgroundColor: "#FFFFFF",
+  },
+});
