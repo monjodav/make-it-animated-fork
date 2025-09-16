@@ -14,6 +14,7 @@ import { fuse } from "./apps/f";
 import { raycast } from "./apps/r";
 import { shopify, showcase, slack } from "./apps/s";
 import { discord } from "./apps/d";
+import { opal } from "./apps/o";
 
 type Animation = {
   name: string;
@@ -64,6 +65,7 @@ export const apps: App[] = [
   // M
   // N
   // O
+  opal,
   //------------------------
   // P
   pinterest,
