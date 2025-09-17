@@ -178,6 +178,7 @@ const TimeSlider = ({
             />
           );
         })}
+
         <Animated.View style={[styles.fill, rFillStyle]} />
       </Animated.View>
     </GestureDetector>
