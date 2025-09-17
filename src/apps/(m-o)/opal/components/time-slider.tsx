@@ -1,3 +1,4 @@
+import React from "react";
 import { Platform, StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -19,6 +20,7 @@ type TimeSliderProps = {
   max?: number;
   onValueChange?: (value: number, progress: number) => void;
   valueFormatter?: (value: number) => number;
+  enableTap?: boolean;
 };
 
 const TimeSlider = ({
@@ -29,6 +31,7 @@ const TimeSlider = ({
   max = dividerCount,
   onValueChange,
   valueFormatter,
+  enableTap = true,
 }: TimeSliderProps) => {
   const SLIDER_WIDTH = sliderWidth;
   const SLIDER_HEIGHT = sliderHeight;
@@ -40,38 +43,63 @@ const TimeSlider = ({
   const isActive = useSharedValue(false);
   const stretchAmount = useSharedValue(0);
 
+  const startProgress = useSharedValue(0);
+
   const panGesture = Gesture.Pan()
-    .onBegin(() => {
-      isActive.set(true);
+    .onBegin((event) => {
+      isActive.value = true;
+      const localX = event.x;
+      const initialProgress = Math.max(0, Math.min(1, localX / SLIDER_WIDTH));
+      sliderProgress.value = initialProgress;
+      startProgress.value = sliderProgress.value;
     })
     .onUpdate((event) => {
-      const progress = event.x / SLIDER_WIDTH;
-
-      if (sliderProgress.get() === 0 && event.x < 0) {
-        const stretch = Math.abs(event.x) / 1.7;
-        stretchAmount.set(Math.min(stretch, 70));
-        sliderProgress.set(0);
+      const delta = event.translationX / SLIDER_WIDTH;
+      let next = startProgress.value + delta;
+      if (next < 0) {
+        const overflow = Math.abs(next) * SLIDER_WIDTH;
+        const stretch = overflow / 1.7;
+        stretchAmount.value = Math.min(stretch, 70);
+        next = 0;
       } else {
-        stretchAmount.set(0);
-        sliderProgress.set(Math.max(0, Math.min(1, progress)));
+        stretchAmount.value = 0;
       }
+      sliderProgress.value = Math.max(0, Math.min(1, next));
+    })
+    .onEnd(() => {
+      isActive.value = false;
+      stretchAmount.value = withSpring(0, {
+        stiffness: 1300,
+        damping: 110,
+        mass: 6,
+      });
+      sliderProgress.value = withSpring(sliderProgress.value);
     })
     .onFinalize(() => {
-      isActive.set(false);
-
-      stretchAmount.set(
-        withSpring(0, {
-          stiffness: 1300,
-          damping: 110,
-          mass: 6,
-        })
-      );
-
-      sliderProgress.set(withSpring(sliderProgress.get()));
+      isActive.value = false;
     });
 
+  const tapGesture = Gesture.Tap()
+    .enabled(enableTap)
+    .hitSlop({ left: 10, right: 10, top: 10, bottom: 10 })
+    .onBegin((e) => {
+      isActive.value = true;
+      const p = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
+      sliderProgress.value = p;
+    })
+    .onEnd((e, success) => {
+      if (success) {
+        const progress = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
+        sliderProgress.value = withSpring(progress, { stiffness: 900, damping: 120 });
+      }
+      isActive.value = false;
+      stretchAmount.value = withSpring(0);
+    });
+
+  const composedGesture = enableTap ? Gesture.Race(tapGesture, panGesture) : panGesture;
+
   useAnimatedReaction(
-    () => sliderProgress.get(),
+    () => sliderProgress.value,
     (progress) => {
       if (!onValueChange) return;
       const clamped = Math.min(1, Math.max(0, progress));
@@ -84,13 +112,13 @@ const TimeSlider = ({
   );
 
   const rFillStyle = useAnimatedStyle(() => {
-    const currentSliderWidth = SLIDER_WIDTH + stretchAmount.get();
+    const currentSliderWidth = SLIDER_WIDTH + stretchAmount.value;
 
     const minFillWidth = currentSliderWidth * 0.03;
     const maxFillWidth = currentSliderWidth * 1;
 
     const fillWidth = interpolate(
-      sliderProgress.get(),
+      sliderProgress.value,
       [0, 1],
       [minFillWidth, maxFillWidth],
       Extrapolation.CLAMP
@@ -102,10 +130,10 @@ const TimeSlider = ({
   });
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const scale = withSpring(isActive.get() ? 1.034 : 1);
+    const scale = withSpring(isActive.value ? 1.034 : 1);
 
-    const stretchWidth = SLIDER_WIDTH + stretchAmount.get();
-    const stretchHeight = SLIDER_HEIGHT - stretchAmount.get() * 0.15;
+    const stretchWidth = SLIDER_WIDTH + stretchAmount.value;
+    const stretchHeight = SLIDER_HEIGHT - stretchAmount.value * 0.15;
 
     return {
       width: stretchWidth,
@@ -115,7 +143,7 @@ const TimeSlider = ({
   });
 
   return (
-    <GestureDetector gesture={panGesture}>
+    <GestureDetector gesture={composedGesture}>
       <Animated.View
         style={[
           styles.sliderContainer,
@@ -131,7 +159,7 @@ const TimeSlider = ({
 
         {STEPS.map((_, index) => {
           const rDividerStyle = useAnimatedStyle(() => {
-            const currentWidth = SLIDER_WIDTH + stretchAmount.get();
+            const currentWidth = SLIDER_WIDTH + stretchAmount.value;
             const segments = dividerCount + 1;
             const part = currentWidth / segments;
             return { left: part * (index + 1) - DIVIDER_WIDTH / 2 };
