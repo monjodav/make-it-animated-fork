@@ -1,8 +1,10 @@
 import React, { FC, useState } from "react";
 import { Dimensions, View, Text } from "react-native";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TimeSlider from "../components/time-slider";
+import StartTimerButton from "../components/start-timer-button";
+
+const HEIGHT = 44;
 
 export const Home: FC = () => {
   const insets = useSafeAreaInsets();
@@ -19,11 +21,11 @@ export const Home: FC = () => {
 
   return (
     <View className="flex-1 bg-black justify-end" style={{ paddingTop: insets.top }}>
-      <View className="w-screen mb-1 pr-4 flex-row items-center">
+      <View className="w-screen mb-4 pr-4 flex-row items-center">
         <View
           className="absolute left-4 bg-white justify-center items-center"
           style={{
-            height: 44,
+            height: HEIGHT,
             width: 80,
             borderRadius: 15,
           }}
@@ -35,7 +37,7 @@ export const Home: FC = () => {
         <View className="ml-auto">
           <TimeSlider
             sliderWidth={width * 0.7}
-            sliderHeight={44}
+            sliderHeight={HEIGHT}
             dividerCount={35}
             min={5}
             max={180}
@@ -43,10 +45,8 @@ export const Home: FC = () => {
           />
         </View>
       </View>
-      <View className="justify-center items-center flex-row gap-2 h-[50] my-5 rounded-full border-[2] border-[#636164] bg-gray-300 mx-4">
-        <FontAwesome6 name="play" size={20} color="white" />
-        <Text className="text-white text-xl">Start Timer</Text>
-      </View>
+
+      <StartTimerButton />
     </View>
   );
 };
