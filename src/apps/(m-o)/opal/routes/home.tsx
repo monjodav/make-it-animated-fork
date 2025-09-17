@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import { Dimensions, View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import TimeSlider from "../components/time-slider";
@@ -26,7 +26,7 @@ export const Home: FC = () => {
           className="absolute left-4 bg-white justify-center items-center"
           style={{
             height: HEIGHT,
-            width: 80,
+            width: width * 0.2,
             borderRadius: 15,
           }}
         >

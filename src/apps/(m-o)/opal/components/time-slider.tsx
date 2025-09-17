@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -123,7 +123,12 @@ const TimeSlider = ({
           rContainerStyle,
         ]}
       >
-        <BlurView intensity={45} tint="default" style={StyleSheet.absoluteFillObject} />
+        <BlurView
+          intensity={Platform.OS === "ios" ? 40 : 25}
+          experimentalBlurMethod="dimezisBlurView"
+          style={StyleSheet.absoluteFillObject}
+        />
+
         {STEPS.map((_, index) => {
           const rDividerStyle = useAnimatedStyle(() => {
             const currentWidth = SLIDER_WIDTH + stretchAmount.get();

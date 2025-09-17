@@ -17,7 +17,7 @@ const StartTimerButton = () => {
           <Svg height="900" width="900">
             <Defs>
               <RadialGradient id="grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                <Stop offset="50%" stopColor="#ffffff00" stopOpacity="0" />
+                <Stop offset="50%" stopColor="#ffffff" stopOpacity="0" />
                 <Stop offset="90%" stopColor="#000000" stopOpacity="0.9" />
               </RadialGradient>
             </Defs>
@@ -25,7 +25,7 @@ const StartTimerButton = () => {
           </Svg>
         </View>
         <View className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center">
-          <Ionicons name="play" size={20} color="#fff" />
+          <Ionicons name="play" size={20} color="white" />
           <Text className="text-white text-xl font-medium">Start Timer</Text>
         </View>
       </LinearGradient>
@@ -43,5 +43,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginHorizontal: 12,
     marginBottom: 15,
+    overflow: "hidden",
   },
 });
