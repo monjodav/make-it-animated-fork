@@ -47,59 +47,61 @@ const TimeSlider = ({
 
   const panGesture = Gesture.Pan()
     .onBegin((event) => {
-      isActive.value = true;
+      isActive.set(true);
       const localX = event.x;
       const initialProgress = Math.max(0, Math.min(1, localX / SLIDER_WIDTH));
-      sliderProgress.value = initialProgress;
-      startProgress.value = sliderProgress.value;
+      sliderProgress.set(initialProgress);
+      startProgress.set(sliderProgress.get());
     })
     .onUpdate((event) => {
       const delta = event.translationX / SLIDER_WIDTH;
-      let next = startProgress.value + delta;
+      let next = startProgress.get() + delta;
       if (next < 0) {
         const overflow = Math.abs(next) * SLIDER_WIDTH;
         const stretch = overflow / 1.7;
-        stretchAmount.value = Math.min(stretch, 70);
+        stretchAmount.set(Math.min(stretch, 70));
         next = 0;
       } else {
-        stretchAmount.value = 0;
+        stretchAmount.set(0);
       }
-      sliderProgress.value = Math.max(0, Math.min(1, next));
+      sliderProgress.set(Math.max(0, Math.min(1, next)));
     })
     .onEnd(() => {
-      isActive.value = false;
-      stretchAmount.value = withSpring(0, {
-        stiffness: 1300,
-        damping: 110,
-        mass: 6,
-      });
-      sliderProgress.value = withSpring(sliderProgress.value);
+      isActive.set(false);
+      stretchAmount.set(
+        withSpring(0, {
+          stiffness: 1300,
+          damping: 110,
+          mass: 6,
+        })
+      );
+      sliderProgress.set(withSpring(sliderProgress.get()));
     })
     .onFinalize(() => {
-      isActive.value = false;
+      isActive.set(false);
     });
 
   const tapGesture = Gesture.Tap()
     .enabled(enableTap)
     .hitSlop({ left: 10, right: 10, top: 10, bottom: 10 })
     .onBegin((e) => {
-      isActive.value = true;
+      isActive.set(true);
       const p = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
-      sliderProgress.value = p;
+      sliderProgress.set(p);
     })
     .onEnd((e, success) => {
       if (success) {
         const progress = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
-        sliderProgress.value = withSpring(progress, { stiffness: 900, damping: 120 });
+        sliderProgress.set(withSpring(progress, { stiffness: 900, damping: 120 }));
       }
-      isActive.value = false;
-      stretchAmount.value = withSpring(0);
+      isActive.set(false);
+      stretchAmount.set(withSpring(0));
     });
 
   const composedGesture = enableTap ? Gesture.Race(tapGesture, panGesture) : panGesture;
 
   useAnimatedReaction(
-    () => sliderProgress.value,
+    () => sliderProgress.get(),
     (progress) => {
       if (!onValueChange) return;
       const clamped = Math.min(1, Math.max(0, progress));
@@ -112,13 +114,13 @@ const TimeSlider = ({
   );
 
   const rFillStyle = useAnimatedStyle(() => {
-    const currentSliderWidth = SLIDER_WIDTH + stretchAmount.value;
+    const currentSliderWidth = SLIDER_WIDTH + stretchAmount.get();
 
     const minFillWidth = currentSliderWidth * 0.03;
     const maxFillWidth = currentSliderWidth * 1;
 
     const fillWidth = interpolate(
-      sliderProgress.value,
+      sliderProgress.get(),
       [0, 1],
       [minFillWidth, maxFillWidth],
       Extrapolation.CLAMP
@@ -130,10 +132,10 @@ const TimeSlider = ({
   });
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const scale = withSpring(isActive.value ? 1.034 : 1);
+    const scale = withSpring(isActive.get() ? 1.034 : 1);
 
-    const stretchWidth = SLIDER_WIDTH + stretchAmount.value;
-    const stretchHeight = SLIDER_HEIGHT - stretchAmount.value * 0.15;
+    const stretchWidth = SLIDER_WIDTH + stretchAmount.get();
+    const stretchHeight = SLIDER_HEIGHT - stretchAmount.get() * 0.15;
 
     return {
       width: stretchWidth,
@@ -159,7 +161,7 @@ const TimeSlider = ({
 
         {STEPS.map((_, index) => {
           const rDividerStyle = useAnimatedStyle(() => {
-            const currentWidth = SLIDER_WIDTH + stretchAmount.value;
+            const currentWidth = SLIDER_WIDTH + stretchAmount.get();
             const segments = dividerCount + 1;
             const part = currentWidth / segments;
             return { left: part * (index + 1) - DIVIDER_WIDTH / 2 };
@@ -171,7 +173,7 @@ const TimeSlider = ({
                 styles.divider,
                 {
                   height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.47 : SLIDER_HEIGHT * 0.3,
-                  backgroundColor: index % 2 === 0 ? "#454545ff" : "#636164",
+                  backgroundColor: index % 2 === 0 ? "#454545" : "#636164",
                 },
                 rDividerStyle,
               ]}
