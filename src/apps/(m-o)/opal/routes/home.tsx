@@ -30,9 +30,7 @@ export const Home: FC = () => {
             borderRadius: 15,
           }}
         >
-          <Text className="text-xl font-semibold" style={{ color: "#1E1E20" }}>
-            {formatMinutes(sliderValue)}
-          </Text>
+          <Text className="text-xl">{formatMinutes(sliderValue)}</Text>
         </View>
         <View className="ml-auto">
           <TimeSlider

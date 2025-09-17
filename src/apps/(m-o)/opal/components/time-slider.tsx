@@ -1,5 +1,4 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -64,14 +63,13 @@ const TimeSlider = ({
         withSpring(0, {
           stiffness: 1300,
           damping: 110,
-          mass: 8,
+          mass: 6,
         })
       );
 
       sliderProgress.set(withSpring(sliderProgress.get()));
     });
 
-  // Update displayed number when progress changes (avoids re-rendering whole animated tree)
   useAnimatedReaction(
     () => sliderProgress.get(),
     (progress) => {
@@ -139,8 +137,8 @@ const TimeSlider = ({
               style={[
                 styles.divider,
                 {
-                  height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.5 : SLIDER_HEIGHT * 0.33,
-                  backgroundColor: index % 2 === 0 ? "#6f6e6e" : "#636164",
+                  height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.47 : SLIDER_HEIGHT * 0.3,
+                  backgroundColor: index % 2 === 0 ? "#454545ff" : "#636164",
                 },
                 rDividerStyle,
               ]}
