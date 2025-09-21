@@ -15,18 +15,12 @@ export const SharedTabsHeader = () => {
   const insets = useSafeAreaInsets();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    console.log("🔴", pathname); // VS --------- Remove Log
     const searchScreenHeaderHeight = insets.top + 18 + SEARCH_BAR_HEIGHT + SEARCH_FILTERS_HEIGHT;
-    const menuScreenHeaderHeight = insets.top + 12;
     const restScreenHeaderHeight = insets.top + 50;
 
     return {
       height: withSpring(
-        pathname.endsWith(Tab.Search)
-          ? searchScreenHeaderHeight
-          : pathname.endsWith(Tab.Menu)
-            ? menuScreenHeaderHeight
-            : restScreenHeaderHeight,
+        pathname.endsWith(Tab.Search) ? searchScreenHeaderHeight : restScreenHeaderHeight,
         {
           damping: 32,
           stiffness: 320,
@@ -36,10 +30,7 @@ export const SharedTabsHeader = () => {
   });
 
   return (
-    <Animated.View
-      className="bg-red-500 px-5"
-      style={[{ paddingTop: insets.top + 12 }, rContainerStyle]}
-    >
+    <Animated.View className="px-5" style={[{ paddingTop: insets.top + 12 }, rContainerStyle]}>
       {pathname.endsWith(Tab.Search) && <Search />}
       {pathname.endsWith(Tab.Home) && <Home />}
       {(pathname.endsWith(Tab.Orders) || pathname.endsWith(Tab.Products)) && <OrdersProducts />}
