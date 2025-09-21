@@ -34,7 +34,7 @@ export const TabButton: FC<TabButtonProps> = ({ focused, onPress, children }) =>
     setTimeout(() => {
       bg.set(focused ? "#F5F5F5" : "white");
     }, BG_SYNC_DELAY); // Prevents flash when rapidly switching tabs
-  }, [focused]);
+  }, [focused, bg]);
 
   return (
     <Pressable

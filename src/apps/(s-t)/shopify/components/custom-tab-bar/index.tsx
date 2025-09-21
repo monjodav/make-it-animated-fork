@@ -107,7 +107,6 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 const styles = StyleSheet.create({
   buttonBorder: { borderWidth: 1, borderColor: "#F1F1F1" },
   shadow: {
-    // Subtle elevation for Android parity; iOS uses shadow props. Low values avoid muddying white surfaces.
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
