@@ -1,16 +1,19 @@
 import React, { FC } from "react";
 import { View, Pressable, StyleSheet } from "react-native";
 import { SearchBar } from "./search-bar";
-import { useRouter } from "expo-router";
+import { useGlobalSearchParams, useRouter } from "expo-router";
 import { X } from "lucide-react-native";
 import { SearchFilters } from "./search-filters";
 import { SEARCH_BAR_HEIGHT } from "../../../lib/constants/styles";
 import Animated, { FadeIn } from "react-native-reanimated";
+import { Tab } from "../../custom-tab-bar";
 
 // shopify-tabs-shared-header-animation 🔽
 
 export const Search: FC = () => {
   const router = useRouter();
+
+  const params = useGlobalSearchParams<{ lastRoute: string }>();
 
   return (
     <Animated.View
@@ -24,7 +27,12 @@ export const Search: FC = () => {
     >
       <View className="flex-row items-center gap-2" style={styles.searchBarContainer}>
         <Pressable
-          onPress={router.back}
+          onPress={() => {
+            router.push(`/shopify/${params?.lastRoute || Tab.Home}`);
+            router.setParams({
+              lastRoute: params.lastRoute,
+            });
+          }}
           className="h-full aspect-square rounded-full items-center justify-center bg-[#303030]"
         >
           <X size={22} color="#E5E7EB" />
