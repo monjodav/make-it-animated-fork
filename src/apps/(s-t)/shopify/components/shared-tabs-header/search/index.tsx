@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, Pressable, StyleSheet } from "react-native";
+import { View, Pressable, StyleSheet, Keyboard } from "react-native";
 import { SearchBar } from "./search-bar";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { X } from "lucide-react-native";
@@ -32,6 +32,7 @@ export const Search: FC = () => {
             router.setParams({
               lastRoute: params.lastRoute,
             });
+            Keyboard.dismiss();
           }}
           className="h-full aspect-square rounded-full items-center justify-center bg-[#303030]"
         >
