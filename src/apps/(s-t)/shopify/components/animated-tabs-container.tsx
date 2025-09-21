@@ -2,6 +2,8 @@ import React, { FC, PropsWithChildren } from "react";
 import { useMenu } from "../lib/providers/menu-provider";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 
+// shopify-menu-transition-animation 🔽
+
 export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
   const { menuProgress } = useMenu();
 
@@ -23,3 +25,5 @@ export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
     </Animated.View>
   );
 };
+
+// shopify-menu-transition-animation 🔼

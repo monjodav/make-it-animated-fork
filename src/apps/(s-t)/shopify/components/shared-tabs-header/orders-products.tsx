@@ -6,6 +6,8 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { ChevronDown, PlusCircle } from "lucide-react-native";
 import { Tab } from "../custom-tab-bar";
 
+// shopify-tabs-shared-header-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const OrdersProducts: FC = () => {
@@ -25,7 +27,7 @@ export const OrdersProducts: FC = () => {
         {pathname.includes(Tab.Orders) && (
           <Animated.Text
             key="orders"
-            entering={FadeIn}
+            entering={FadeIn.duration(150)}
             layout={LinearTransition}
             className="text-2xl font-bold text-white"
           >
@@ -35,7 +37,7 @@ export const OrdersProducts: FC = () => {
         {pathname.includes(Tab.Products) && (
           <Animated.Text
             key="products"
-            entering={FadeIn}
+            entering={FadeIn.duration(150)}
             layout={LinearTransition}
             className="text-2xl font-bold text-white"
           >
@@ -53,3 +55,5 @@ export const OrdersProducts: FC = () => {
     </Animated.View>
   );
 };
+
+// shopify-tabs-shared-header-animation 🔼

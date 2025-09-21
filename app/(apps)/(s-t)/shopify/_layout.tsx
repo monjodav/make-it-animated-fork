@@ -5,6 +5,8 @@ import { View } from "react-native";
 import { Menu } from "@/src/apps/(s-t)/shopify/components/menu";
 import { AnimatedTabsContainer } from "@/src/apps/(s-t)/shopify/components/animated-tabs-container";
 
+// shopify-menu-transition-animation 🔽
+
 export default function ShopifyLayout() {
   return (
     <MenuProvider>
@@ -17,7 +19,9 @@ export default function ShopifyLayout() {
         <AnimatedTabsContainer>
           <Stack
             screenOptions={{
+              // shopify-tabs-shared-header-animation 🔽
               header: () => <SharedTabsHeader />,
+              // shopify-tabs-shared-header-animation 🔼
               contentStyle: {
                 backgroundColor: "black",
               },
@@ -35,3 +39,5 @@ export default function ShopifyLayout() {
     </MenuProvider>
   );
 }
+
+// shopify-menu-transition-animation 🔼

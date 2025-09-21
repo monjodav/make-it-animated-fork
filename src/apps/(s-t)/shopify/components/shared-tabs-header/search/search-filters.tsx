@@ -5,6 +5,9 @@ import { useSharedValue } from "react-native-reanimated";
 import { SEARCH_FILTERS_HEIGHT } from "../../../lib/constants/styles";
 import { useRouter } from "expo-router";
 
+// shopify-tabs-shared-header-animation 🔽
+// shopify-search-screen-top-tabs-animation 🔽
+
 /**
  * FILTERS acts as the source of truth for the top tabs. Order matters because
  * FlatList uses the index for `scrollToIndex` centering math in `FilterItem` (viewPosition: 0.5).
@@ -70,3 +73,6 @@ const styles = StyleSheet.create({
     height: SEARCH_FILTERS_HEIGHT,
   },
 });
+
+// shopify-search-screen-top-tabs-animation 🔼
+// shopify-tabs-shared-header-animation 🔼

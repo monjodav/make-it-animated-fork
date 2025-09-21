@@ -48,12 +48,8 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
-        label={getItemProps(shopify, 1).label}
-        onPress={getItemProps(shopify, 1).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(shopify, 2).label}
-        onPress={getItemProps(shopify, 2).onPress}
+        label={getItemProps(shopify, 3).label}
+        onPress={getItemProps(shopify, 3).onPress}
       />
     </View>
   );

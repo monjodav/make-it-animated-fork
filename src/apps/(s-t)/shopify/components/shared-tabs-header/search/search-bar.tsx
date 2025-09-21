@@ -5,6 +5,8 @@ import { CircleX, ScanBarcode, SearchIcon } from "lucide-react-native";
 import { TextInput } from "react-native";
 import { useRouter } from "expo-router";
 
+// shopify-tabs-shared-header-animation 🔽
+
 export const SearchBar: FC = () => {
   const [query, setQuery] = useState<string>("");
 
@@ -54,3 +56,5 @@ const styles = StyleSheet.create({
     right: 13,
   },
 });
+
+// shopify-tabs-shared-header-animation 🔼

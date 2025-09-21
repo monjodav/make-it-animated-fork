@@ -3,8 +3,6 @@ import { FlatList, View, Text } from "react-native";
 import { Search as SearchIcon } from "lucide-react-native";
 import { TabScreenContainer } from "../components/tab-screen-container";
 
-// shopify-search-screen-top-tabs-animation 🔽
-
 export const Search: FC = () => {
   const _renderListItem = ({ item }: { item: string }) => (
     <View key={item} className="items-center justify-center" />
@@ -29,5 +27,3 @@ export const Search: FC = () => {
     </TabScreenContainer>
   );
 };
-
-// shopify-search-screen-top-tabs-animation 🔼

@@ -7,6 +7,8 @@ import { SearchFilters } from "./search-filters";
 import { SEARCH_BAR_HEIGHT } from "../../../lib/constants/styles";
 import Animated, { FadeIn } from "react-native-reanimated";
 
+// shopify-tabs-shared-header-animation 🔽
+
 export const Search: FC = () => {
   const router = useRouter();
 
@@ -31,3 +33,5 @@ const styles = StyleSheet.create({
     height: SEARCH_BAR_HEIGHT,
   },
 });
+
+// shopify-tabs-shared-header-animation 🔼

@@ -4,6 +4,8 @@ import React, { FC } from "react";
 import { View, Text, Pressable } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
+// shopify-tabs-shared-header-animation 🔽
+
 export const Home: FC = () => {
   return (
     <Animated.View
@@ -33,3 +35,5 @@ export const Home: FC = () => {
     </Animated.View>
   );
 };
+
+// shopify-tabs-shared-header-animation 🔼

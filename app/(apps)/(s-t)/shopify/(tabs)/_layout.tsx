@@ -2,8 +2,6 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { CustomTabBar, Tab } from "@/src/apps/(s-t)/shopify/components/custom-tab-bar";
 
-// shopify-menu-transition-animation 🔽
-
 const TabsLayout = () => {
   return (
     <Tabs
@@ -28,5 +26,3 @@ const TabsLayout = () => {
 };
 
 export default TabsLayout;
-
-// shopify-menu-transition-animation 🔼

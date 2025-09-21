@@ -7,7 +7,9 @@ import { Search } from "./search";
 import { SEARCH_BAR_HEIGHT, SEARCH_FILTERS_HEIGHT } from "../../lib/constants/styles";
 import { Home } from "./home";
 import { OrdersProducts } from "./orders-products";
-import { Profile } from "./Profile";
+import { Profile } from "./profile";
+
+// shopify-tabs-shared-header-animation 🔽
 
 export const SharedTabsHeader = () => {
   const pathname = usePathname();
@@ -38,3 +40,5 @@ export const SharedTabsHeader = () => {
     </Animated.View>
   );
 };
+
+// shopify-tabs-shared-header-animation 🔼
