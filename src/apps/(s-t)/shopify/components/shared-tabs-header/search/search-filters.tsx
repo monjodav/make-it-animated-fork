@@ -40,7 +40,12 @@ export const SearchFilters = () => {
   }, [activeFilterItem, router]);
 
   return (
-    <View className="-mx-5" style={styles.searchBarContainer}>
+    <View
+      className="-mx-5"
+      /* Fixed container height ties into the shared header stack so the
+       * filters row can animate in/out without layout jumps. */
+      style={styles.searchBarContainer}
+    >
       <FlatList
         ref={flatListRef}
         data={FILTERS}
@@ -61,6 +66,8 @@ export const SearchFilters = () => {
         )}
         horizontal
         showsHorizontalScrollIndicator={false}
+        /* Content spacing ensures chips don't clip and keeps center-on-select math
+         * stable across devices (padding is part of scrollToIndex positioning). */
         contentContainerClassName="gap-1 px-5 items-center"
         keyboardShouldPersistTaps="handled"
       />
@@ -70,6 +77,7 @@ export const SearchFilters = () => {
 
 const styles = StyleSheet.create({
   searchBarContainer: {
+    // Magic number documented in constants; sets row height for animation math.
     height: SEARCH_FILTERS_HEIGHT,
   },
 });

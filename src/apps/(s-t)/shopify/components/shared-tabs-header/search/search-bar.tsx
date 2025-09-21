@@ -13,7 +13,12 @@ export const SearchBar: FC = () => {
   const router = useRouter();
 
   return (
-    <View className="flex-1 rounded-2xl justify-center bg-[#303030]">
+    <View
+      /* Fixed paddings and absolute icons prevent intrinsic text width changes from
+       * shifting layout while the header animates. This keeps the bar visually stable
+       * as other parts fade/translate. */
+      className="flex-1 rounded-2xl justify-center bg-[#303030]"
+    >
       <SearchIcon size={18} color="#B5B5B5" style={styles.searchIcon} />
       <TextInput
         value={query}
@@ -23,6 +28,8 @@ export const SearchBar: FC = () => {
         }}
         placeholder="Search"
         placeholderTextColor="#B5B5B5"
+        /* Horizontal padding reserves space for absolute icons, avoiding text reflow
+         * during press/clear toggles for smoother perceived animation. */
         className="px-10 h-full text-base/5 text-[#B5B5B5]"
         autoFocus
       />

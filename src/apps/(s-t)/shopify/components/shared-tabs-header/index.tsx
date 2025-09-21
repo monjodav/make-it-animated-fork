@@ -16,11 +16,23 @@ export const SharedTabsHeader = () => {
 
   const insets = useSafeAreaInsets();
 
+  /**
+   * Animated container height that morphs based on the active tab.
+   * Why: Search has a 2-row header (search bar + filters), other tabs are single-row.
+   * We compute exact pixel heights up front using safe-area top inset + section constants
+   * to avoid runtime measurement jitter.
+   */
   const rContainerStyle = useAnimatedStyle(() => {
+    // Search header: status bar (insets.top) + padding (18) + search (42) + filters (56)
     const searchScreenHeaderHeight = insets.top + 18 + SEARCH_BAR_HEIGHT + SEARCH_FILTERS_HEIGHT;
+    // Other tabs: status bar (insets.top) + compact row (approx 50)
     const restScreenHeaderHeight = insets.top + 50;
 
     return {
+      /* Spring smooths between header heights on tab change.
+       * Damping/Stiffness tuned for a quick but not snappy feel akin to Shopify.
+       * Running on the UI thread keeps the morphing jank-free.
+       */
       height: withSpring(
         pathname.endsWith(Tab.Search) ? searchScreenHeaderHeight : restScreenHeaderHeight,
         {
@@ -32,7 +44,16 @@ export const SharedTabsHeader = () => {
   });
 
   return (
-    <Animated.View className="px-5" style={[{ paddingTop: insets.top + 12 }, rContainerStyle]}>
+    <Animated.View
+      /* Animated wrapper is required so the height spring runs on the UI thread
+       * (createAnimatedComponent). Padding uses safe-area top to align content
+       * with OS status bar on both iOS/Android. */
+      className="px-5"
+      style={[{ paddingTop: insets.top + 12 }, rContainerStyle]}
+    >
+      {/* Route-driven rendering triggers consistent entrance animations per tab.
+       * Keeping content split by tab clarifies which section participates in the
+       * shared header height calculation above. */}
       {pathname.endsWith(Tab.Search) && <Search />}
       {pathname.endsWith(Tab.Home) && <Home />}
       {(pathname.endsWith(Tab.Orders) || pathname.endsWith(Tab.Products)) && <OrdersProducts />}

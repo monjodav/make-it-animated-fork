@@ -6,7 +6,12 @@ import Animated, { FadeIn } from "react-native-reanimated";
 
 export const Profile: FC = () => {
   return (
-    <Animated.View entering={FadeIn.duration(150)}>
+    <Animated.View
+      /* Simple 150ms fade keeps tab header transitions consistent.
+       * Using Animated.View ensures the effect runs on the UI thread via
+       * createAnimatedComponent for jank-free entrance. */
+      entering={FadeIn.duration(150)}
+    >
       <Text className="text-2xl font-bold text-white">Profile</Text>
     </Animated.View>
   );

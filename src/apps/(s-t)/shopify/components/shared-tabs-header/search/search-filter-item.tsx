@@ -29,6 +29,7 @@ const FilterItem = ({
   /**
    * useDerivedValue keeps press state on the UI thread (no React re-render).
    * This makes press-in feedback instantaneous even while the list is scrolling.
+   * Dependency on `item` is intentional so index-based closures don't go stale.
    */
   const isPressed = useDerivedValue(() => pressedItem.get() === item, [item]);
 
@@ -37,6 +38,7 @@ const FilterItem = ({
    * - isPressed (transient): darker gray for tactile feedback (#737373)
    * - isActive (selected): persistent state color (#303030)
    * Priority: pressed overrides active for immediate feedback.
+   * No withTiming here on purpose—the change should feel instant under the finger.
    */
   const animatedContainerStyle = useAnimatedStyle(() => {
     const bg = isPressed.get() ? "#737373" : isActive ? "#303030" : "transparent";

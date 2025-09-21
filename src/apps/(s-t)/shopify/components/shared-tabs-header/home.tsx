@@ -9,6 +9,12 @@ import Animated, { FadeIn } from "react-native-reanimated";
 export const Home: FC = () => {
   return (
     <Animated.View
+      /* Enter animation for tab header content.
+       * Why 150ms: quick enough to feel responsive without lingering; matches other
+       * header parts for consistent rhythm across tabs.
+       * Animated.View is required so Reanimated can run the entering animation on
+       * the UI thread via createAnimatedComponent (no JS thread jank).
+       */
       entering={FadeIn.duration(150)}
       className="flex-row items-center justify-between"
     >

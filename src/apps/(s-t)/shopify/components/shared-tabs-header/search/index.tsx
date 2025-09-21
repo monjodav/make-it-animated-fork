@@ -13,7 +13,15 @@ export const Search: FC = () => {
   const router = useRouter();
 
   return (
-    <Animated.View entering={FadeIn.delay(200).duration(150)}>
+    <Animated.View
+      /* Staggered entrance for search header stack.
+       * Delay 200ms: lets the parent tab header settle before this section fades in,
+       * preventing competing motions. Duration 150ms keeps it snappy.
+       * Animated.View ensures the entering animation runs on the UI thread
+       * via createAnimatedComponent for smoothness.
+       */
+      entering={FadeIn.delay(200).duration(150)}
+    >
       <View className="flex-row items-center gap-2" style={styles.searchBarContainer}>
         <Pressable
           onPress={router.back}
@@ -30,6 +38,8 @@ export const Search: FC = () => {
 
 const styles = StyleSheet.create({
   searchBarContainer: {
+    /* Fixed height ensures predictable vertical rhythm and keeps
+     * touch targets aligned with the shared header animation measurements. */
     height: SEARCH_BAR_HEIGHT,
   },
 });
