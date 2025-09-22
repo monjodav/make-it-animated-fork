@@ -32,8 +32,8 @@ import Animated, {
 import { useEffect, useState } from "react";
 
 const OVAL_BREATHE_DURATION = 2500;
-const OVAL_PRIMARY_COLOR = "#039e81ff";
-const OVAL_SECONDARY_COLOR = "#418140ff";
+const OVAL_PRIMARY_COLOR = "#04cea9ff";
+const OVAL_SECONDARY_COLOR = "#5c8e5bff";
 
 const SHIMMER_DELAY = 6000;
 const SHIMMER_BASE_DURATION = 500;
