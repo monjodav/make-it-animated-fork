@@ -12,17 +12,33 @@ import { BlurView } from "expo-blur";
 import {
   Blur,
   Canvas,
+  Circle,
   Path,
   processTransform3d,
+  RadialGradient,
   Skia,
   usePathValue,
+  vec,
 } from "@shopify/react-native-skia";
-import { useSharedValue, withDelay, withRepeat, withTiming } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { useEffect, useState } from "react";
 
-const DURATION = 2500;
-const PRIMARY_COLOR = "#039e81ff";
-const SECONDARY_COLOR = "#418140ff";
+const OVAL_BREATHE_DURATION = 2500;
+const OVAL_PRIMARY_COLOR = "#039e81ff";
+const OVAL_SECONDARY_COLOR = "#418140ff";
+
+const SHIMMER_DELAY = 7000;
+const SHIMMER_BASE_DURATION = 500;
+const SHIMMER_REFERENCE_WIDTH = 200;
+const SHIMMER_OVERSHOOT = 1.2;
 
 const StartTimerButton = () => {
   const [width, setWidth] = useState(0);
@@ -59,10 +75,10 @@ const StartTimerButton = () => {
   }, rightOvalPathBase);
 
   useEffect(() => {
-    scaleLeft.value = withRepeat(withTiming(1.2, { duration: DURATION }), -1, true);
+    scaleLeft.value = withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true);
     scaleRight.value = withDelay(
-      DURATION / 1.25,
-      withRepeat(withTiming(1.2, { duration: DURATION }), -1, true)
+      OVAL_BREATHE_DURATION / 1.25,
+      withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true)
     );
   }, []);
 
@@ -70,7 +86,44 @@ const StartTimerButton = () => {
     const { width, height } = event.nativeEvent.layout;
     setWidth(width);
     setHeight(height);
+    containerWidth.set(width);
   };
+
+  const shimmerComponentWidth = useSharedValue(0);
+  const containerWidth = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (shimmerComponentWidth.value === 0) {
+      return {
+        opacity: 0,
+      };
+    }
+
+    const duration = SHIMMER_BASE_DURATION * (containerWidth.value / SHIMMER_REFERENCE_WIDTH);
+
+    return {
+      opacity: 1,
+      transform: [
+        {
+          translateX: withRepeat(
+            withSequence(
+              withDelay(
+                SHIMMER_DELAY,
+                withTiming(-shimmerComponentWidth.value * SHIMMER_OVERSHOOT, { duration: 0 })
+              ),
+
+              withTiming(containerWidth.value * SHIMMER_OVERSHOOT, {
+                duration: Math.max(duration, SHIMMER_BASE_DURATION),
+                easing: Easing.in(Easing.ease),
+              })
+            ),
+            -1,
+            false
+          ),
+        },
+      ],
+    };
+  });
 
   return (
     <TouchableOpacity
@@ -89,10 +142,10 @@ const StartTimerButton = () => {
               flex: 1,
             }}
           >
-            <Path path={leftOvalPath} color={PRIMARY_COLOR}>
+            <Path path={leftOvalPath} color={OVAL_PRIMARY_COLOR}>
               <Blur blur={30} />
             </Path>
-            <Path path={rightOvalPath} color={SECONDARY_COLOR}>
+            <Path path={rightOvalPath} color={OVAL_SECONDARY_COLOR}>
               <Blur blur={30} />
             </Path>
           </Canvas>
@@ -102,6 +155,34 @@ const StartTimerButton = () => {
           </View>
         </>
       )}
+
+      <Animated.View
+        className="absolute"
+        style={[
+          animatedStyle,
+          {
+            top: -37.5 - 20, // Center the 130px circle vertically in the 55px button: (130-55)/2 = 37.5
+            left: -65, // Offset by circle radius to center horizontally
+          },
+        ]}
+        onLayout={(e) => shimmerComponentWidth.set(e.nativeEvent.layout.width)}
+      >
+        <Canvas style={{ width: 130, height: 130 }}>
+          <Circle cx={65} cy={65} r={65}>
+            <Blur blur={30} />
+            <RadialGradient
+              c={vec(65, 65)}
+              r={65}
+              colors={[
+                "rgba(255, 255, 255, 0.3)",
+                "rgba(255, 255, 255, 0.2)",
+                "rgba(255, 255, 255, 0.1)",
+                "rgba(255, 255, 255, 0)",
+              ]}
+            />
+          </Circle>
+        </Canvas>
+      </Animated.View>
     </TouchableOpacity>
   );
 };
