@@ -138,7 +138,7 @@ const StartTimerButton = () => {
     );
   });
 
-  const animatedStyle = useAnimatedStyle(() => {
+  const rShimmerStyle = useAnimatedStyle(() => {
     if (shimmerComponentWidth.get() === 0) {
       return {
         opacity: 0,
@@ -205,7 +205,7 @@ const StartTimerButton = () => {
       <Animated.View
         className="absolute"
         style={[
-          animatedStyle,
+          rShimmerStyle,
           {
             top: -(2 * SHIMMER_RADIUS - 55) / 2 - SHIMMER_VERTICAL_SHIFT,
             left: -SHIMMER_RADIUS,
