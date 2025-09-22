@@ -62,7 +62,7 @@ const StartTimerButton = () => {
   const scaleLeft = useSharedValue(1);
   const leftOvalPath = usePathValue((path) => {
     "worklet";
-    path.transform(processTransform3d([{ scale: scaleLeft.value }]));
+    path.transform(processTransform3d([{ scale: scaleLeft.get() }]));
   }, leftOvalPathBase);
 
   const rightOvalRect = {
@@ -75,14 +75,16 @@ const StartTimerButton = () => {
   const scaleRight = useSharedValue(1);
   const rightOvalPath = usePathValue((path) => {
     "worklet";
-    path.transform(processTransform3d([{ scale: scaleRight.value }]));
+    path.transform(processTransform3d([{ scale: scaleRight.get() }]));
   }, rightOvalPathBase);
 
   useEffect(() => {
-    scaleLeft.value = withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true);
-    scaleRight.value = withDelay(
-      OVAL_BREATHE_DURATION / 1.25,
-      withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true)
+    scaleLeft.set(withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true));
+    scaleRight.set(
+      withDelay(
+        OVAL_BREATHE_DURATION / 1.25,
+        withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true)
+      )
     );
   }, []);
 
@@ -93,7 +95,7 @@ const StartTimerButton = () => {
   };
 
   const animatedStyle = useAnimatedStyle(() => {
-    if (shimmerComponentWidth.value === 0) {
+    if (shimmerComponentWidth.get() === 0) {
       return {
         opacity: 0,
       };
@@ -109,7 +111,7 @@ const StartTimerButton = () => {
             withSequence(
               withDelay(
                 SHIMMER_DELAY,
-                withTiming(-shimmerComponentWidth.value * SHIMMER_OVERSHOOT, { duration: 0 })
+                withTiming(-shimmerComponentWidth.get() * SHIMMER_OVERSHOOT, { duration: 0 })
               ),
 
               withTiming(width * SHIMMER_OVERSHOOT, {
