@@ -35,12 +35,16 @@ const OVAL_BREATHE_DURATION = 2500;
 const OVAL_PRIMARY_COLOR = "#039e81ff";
 const OVAL_SECONDARY_COLOR = "#418140ff";
 
-const SHIMMER_DELAY = 7000;
+const SHIMMER_DELAY = 6000;
 const SHIMMER_BASE_DURATION = 500;
 const SHIMMER_REFERENCE_WIDTH = 200;
 const SHIMMER_OVERSHOOT = 1.2;
+const SHIMMER_RADIUS = 65;
+const SHIMMER_VERTICAL_SHIFT = 20;
 
 const StartTimerButton = () => {
+  const shimmerComponentWidth = useSharedValue(0);
+
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
 
@@ -86,11 +90,7 @@ const StartTimerButton = () => {
     const { width, height } = event.nativeEvent.layout;
     setWidth(width);
     setHeight(height);
-    containerWidth.set(width);
   };
-
-  const shimmerComponentWidth = useSharedValue(0);
-  const containerWidth = useSharedValue(0);
 
   const animatedStyle = useAnimatedStyle(() => {
     if (shimmerComponentWidth.value === 0) {
@@ -99,7 +99,7 @@ const StartTimerButton = () => {
       };
     }
 
-    const duration = SHIMMER_BASE_DURATION * (containerWidth.value / SHIMMER_REFERENCE_WIDTH);
+    const duration = SHIMMER_BASE_DURATION * (width / SHIMMER_REFERENCE_WIDTH);
 
     return {
       opacity: 1,
@@ -112,7 +112,7 @@ const StartTimerButton = () => {
                 withTiming(-shimmerComponentWidth.value * SHIMMER_OVERSHOOT, { duration: 0 })
               ),
 
-              withTiming(containerWidth.value * SHIMMER_OVERSHOOT, {
+              withTiming(width * SHIMMER_OVERSHOOT, {
                 duration: Math.max(duration, SHIMMER_BASE_DURATION),
                 easing: Easing.in(Easing.ease),
               })
@@ -161,18 +161,18 @@ const StartTimerButton = () => {
         style={[
           animatedStyle,
           {
-            top: -37.5 - 20, // Center the 130px circle vertically in the 55px button: (130-55)/2 = 37.5
-            left: -65, // Offset by circle radius to center horizontally
+            top: -(2 * SHIMMER_RADIUS - 55) / 2 - SHIMMER_VERTICAL_SHIFT,
+            left: -SHIMMER_RADIUS,
           },
         ]}
         onLayout={(e) => shimmerComponentWidth.set(e.nativeEvent.layout.width)}
       >
-        <Canvas style={{ width: 130, height: 130 }}>
-          <Circle cx={65} cy={65} r={65}>
+        <Canvas style={{ width: 2 * SHIMMER_RADIUS, height: 2 * SHIMMER_RADIUS }}>
+          <Circle cx={SHIMMER_RADIUS} cy={SHIMMER_RADIUS} r={SHIMMER_RADIUS}>
             <Blur blur={30} />
             <RadialGradient
-              c={vec(65, 65)}
-              r={65}
+              c={vec(SHIMMER_RADIUS, SHIMMER_RADIUS)}
+              r={SHIMMER_RADIUS}
               colors={[
                 "rgba(255, 255, 255, 0.3)",
                 "rgba(255, 255, 255, 0.2)",
