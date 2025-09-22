@@ -22,7 +22,9 @@ import {
 } from "@shopify/react-native-skia";
 import Animated, {
   Easing,
+  interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDelay,
   withRepeat,
@@ -31,7 +33,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useEffect, useState } from "react";
 
-const OVAL_BREATHE_DURATION = 2500;
+const OVAL_BREATHE_DURATION = 5000;
 const OVAL_PRIMARY_COLOR = "#04cea9ff";
 const OVAL_SECONDARY_COLOR = "#5c8e5bff";
 
@@ -60,6 +62,7 @@ const StartTimerButton = () => {
   };
   const leftOvalPathBase = Skia.Path.Make().addOval(leftOvalRect);
   const scaleLeft = useSharedValue(1);
+  const colorProgressLeft = useSharedValue(0);
   const leftOvalPath = usePathValue((path) => {
     "worklet";
     path.transform(processTransform3d([{ scale: scaleLeft.get() }]));
@@ -73,6 +76,7 @@ const StartTimerButton = () => {
   };
   const rightOvalPathBase = Skia.Path.Make().addOval(rightOvalRect);
   const scaleRight = useSharedValue(1);
+  const colorProgressRight = useSharedValue(1);
   const rightOvalPath = usePathValue((path) => {
     "worklet";
     path.transform(processTransform3d([{ scale: scaleRight.get() }]));
@@ -82,8 +86,32 @@ const StartTimerButton = () => {
     scaleLeft.set(withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true));
     scaleRight.set(
       withDelay(
-        OVAL_BREATHE_DURATION / 1.25,
+        OVAL_BREATHE_DURATION,
         withRepeat(withTiming(1.2, { duration: OVAL_BREATHE_DURATION }), -1, true)
+      )
+    );
+
+    colorProgressLeft.set(
+      withRepeat(
+        withSequence(
+          withTiming(0, { duration: OVAL_BREATHE_DURATION / 2 }),
+          withTiming(1, { duration: OVAL_BREATHE_DURATION / 2 })
+        ),
+        -1,
+        true
+      )
+    );
+    colorProgressRight.set(
+      withDelay(
+        OVAL_BREATHE_DURATION,
+        withRepeat(
+          withSequence(
+            withTiming(1, { duration: OVAL_BREATHE_DURATION / 2 }),
+            withTiming(0, { duration: OVAL_BREATHE_DURATION / 2 })
+          ),
+          -1,
+          true
+        )
       )
     );
   }, []);
@@ -93,6 +121,22 @@ const StartTimerButton = () => {
     setWidth(width);
     setHeight(height);
   };
+
+  const leftOvalColor = useDerivedValue(() => {
+    return interpolateColor(
+      colorProgressLeft.get(),
+      [0, 1],
+      [OVAL_PRIMARY_COLOR, OVAL_SECONDARY_COLOR]
+    );
+  });
+
+  const rightOvalColor = useDerivedValue(() => {
+    return interpolateColor(
+      colorProgressRight.get(),
+      [0, 1],
+      [OVAL_PRIMARY_COLOR, OVAL_SECONDARY_COLOR]
+    );
+  });
 
   const animatedStyle = useAnimatedStyle(() => {
     if (shimmerComponentWidth.get() === 0) {
@@ -144,10 +188,10 @@ const StartTimerButton = () => {
               flex: 1,
             }}
           >
-            <Path path={leftOvalPath} color={OVAL_PRIMARY_COLOR}>
+            <Path path={leftOvalPath} color={leftOvalColor}>
               <Blur blur={30} />
             </Path>
-            <Path path={rightOvalPath} color={OVAL_SECONDARY_COLOR}>
+            <Path path={rightOvalPath} color={rightOvalColor}>
               <Blur blur={30} />
             </Path>
           </Canvas>
