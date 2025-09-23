@@ -10,6 +10,7 @@ import Tag from "@/src/apps/(s-t)/shopify/components/icons/tag-icon";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MENU_TRANSITION_SPRING_CONFIG } from "@/src/apps/(s-t)/shopify/lib/constants/animation-configs";
 import { TabButton } from "./tab-button";
+import { useRouter } from "expo-router";
 
 // shopify-custom-bottom-tab-bar-animation 🔽
 
@@ -23,6 +24,8 @@ export enum Tab {
 }
 
 export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
+  const router = useRouter();
+
   const insets = useSafeAreaInsets();
 
   const { menuProgress } = useMenu();
@@ -41,7 +44,12 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
       <View className="p-1 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>
         <TabButton
           focused={isTabFocused(Tab.Search)}
-          onPress={() => navigation.navigate(Tab.Search)}
+          onPress={() => {
+            navigation.navigate(Tab.Search);
+            router.setParams({
+              lastRoute: state.routes[state.index].name,
+            });
+          }}
         >
           <SearchIcon size={22} color={isTabFocused(Tab.Search) ? "#000000" : "#8a8a8a"} />
         </TabButton>
@@ -107,7 +115,6 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 const styles = StyleSheet.create({
   buttonBorder: { borderWidth: 1, borderColor: "#F1F1F1" },
   shadow: {
-    // Subtle elevation for Android parity; iOS uses shadow props. Low values avoid muddying white surfaces.
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
