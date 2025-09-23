@@ -8,6 +8,7 @@ import Animated, {
   interpolate,
   SharedValue,
   useAnimatedProps,
+  Extrapolation,
 } from "react-native-reanimated";
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
@@ -54,7 +55,7 @@ const CarouselItem = ({
       distanceFromScreenCenter,
       [0, fullyVisibleRange, partiallyVisibleRange],
       [1, 1, 0.88],
-      "clamp"
+      Extrapolation.CLAMP
     );
 
     return {
@@ -77,7 +78,7 @@ const CarouselItem = ({
       distanceFromScreenCenter,
       [0, fullyVisibleRange, partiallyVisibleRange],
       [0, 0, 15],
-      "clamp"
+      Extrapolation.CLAMP
     );
 
     return {
