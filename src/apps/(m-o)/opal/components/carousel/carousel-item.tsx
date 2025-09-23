@@ -1,17 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
 import { Image } from "expo-image";
 import { Plus } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-
-const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 import Animated, {
   useAnimatedStyle,
   interpolate,
   SharedValue,
   useAnimatedProps,
 } from "react-native-reanimated";
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 interface CarouselItemProps {
   item: {
@@ -23,6 +22,8 @@ interface CarouselItemProps {
   index: number;
   scrollX: SharedValue<number>;
   itemSize: number;
+  itemWidth: number;
+  itemMargin: number;
   screenWidth: number;
   horizontalPadding: number;
 }
@@ -32,64 +33,50 @@ const CarouselItem = ({
   index,
   scrollX,
   itemSize,
+  itemWidth,
+  itemMargin,
   screenWidth,
   horizontalPadding,
 }: CarouselItemProps) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    const availableWidth = screenWidth - horizontalPadding * 2;
-    const itemsFullyVisible = Math.floor(availableWidth / itemSize);
-    const centerOffset = (itemsFullyVisible * itemSize) / 2;
+  const rItemStyle = useAnimatedStyle(() => {
+    const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
-    const itemCenter = index * itemSize + itemSize / 2;
-    const scrollCenter = scrollX.value + centerOffset;
-    const distanceFromCenter = Math.abs(itemCenter - scrollCenter);
+    const itemLeftEdge = index * itemSize - scrollX.value;
+    const itemCenter = itemLeftEdge + itemWidth / 2;
 
-    const fullyVisibleRange = (itemsFullyVisible * itemSize) / 2;
-    const partiallyVisibleRange = fullyVisibleRange + itemSize;
+    const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
+
+    const fullyVisibleRange = itemWidth;
+
+    const partiallyVisibleRange = itemWidth * 1.5;
 
     const scale = interpolate(
-      distanceFromCenter,
+      distanceFromScreenCenter,
       [0, fullyVisibleRange, partiallyVisibleRange],
-      [1, 1, 0.7],
-      "clamp"
-    );
-
-    const opacity = interpolate(
-      distanceFromCenter,
-      [0, fullyVisibleRange, partiallyVisibleRange],
-      [1, 1, 0.5],
-      "clamp"
-    );
-
-    const blurIntensity = interpolate(
-      distanceFromCenter,
-      [0, fullyVisibleRange, partiallyVisibleRange],
-      [0, 0, 15],
+      [1, 1, 0.88],
       "clamp"
     );
 
     return {
       transform: [{ scale }],
-      opacity,
     };
   });
 
-  const animatedBlurProps = useAnimatedProps(() => {
-    const availableWidth = screenWidth - horizontalPadding * 2;
-    const itemsFullyVisible = Math.floor(availableWidth / itemSize);
-    const centerOffset = (itemsFullyVisible * itemSize) / 2;
+  const rBlurProps = useAnimatedProps(() => {
+    const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
-    const itemCenter = index * itemSize + itemSize / 2;
-    const scrollCenter = scrollX.value + centerOffset;
-    const distanceFromCenter = Math.abs(itemCenter - scrollCenter);
+    const itemLeftEdge = index * itemSize - scrollX.value;
+    const itemCenter = itemLeftEdge + itemWidth / 2;
 
-    const fullyVisibleRange = (itemsFullyVisible * itemSize) / 2;
-    const partiallyVisibleRange = fullyVisibleRange + itemSize;
+    const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
+
+    const fullyVisibleRange = itemWidth;
+    const partiallyVisibleRange = itemWidth * 1.5;
 
     const blurIntensity = interpolate(
-      distanceFromCenter,
+      distanceFromScreenCenter,
       [0, fullyVisibleRange, partiallyVisibleRange],
-      [0, 0, 20],
+      [0, 0, 15],
       "clamp"
     );
 
@@ -103,9 +90,9 @@ const CarouselItem = ({
       style={[
         {
           height: 220,
-          width: 150,
+          width: itemWidth,
           backgroundColor: "grey",
-          marginRight: 10,
+          marginRight: itemMargin,
           borderRadius: 30,
           padding: 10,
           borderWidth: 1.5,
@@ -113,7 +100,7 @@ const CarouselItem = ({
           alignSelf: "flex-start",
           overflow: "hidden",
         },
-        animatedStyle,
+        rItemStyle,
       ]}
     >
       <Image
@@ -123,7 +110,7 @@ const CarouselItem = ({
         style={StyleSheet.absoluteFill}
       />
       <LinearGradient
-        colors={["rgba(0,0,0,0.0001)", "black"]}
+        colors={["transparent", "black"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 0.6 }}
         style={{
@@ -136,7 +123,7 @@ const CarouselItem = ({
       />
       <View className="mt-auto">
         <Text className="text-md text-[#fff] font-bold">{item.title}</Text>
-        <Text className="text-sm text-[#B0B0B0] font-bold">{item.description}</Text>
+        <Text className="text-sm text-[#B0B0B0] font-bold mb-3">{item.description}</Text>
         <View className="flex-row justify-center items-center gap-1 rounded-full bg-[#2D2B2E] p-1">
           <Plus size={18} color="white" strokeWidth={3} />
           <Text className="text-md text-[#fff] font-bold">Add </Text>
@@ -144,7 +131,7 @@ const CarouselItem = ({
       </View>
 
       <AnimatedBlurView
-        animatedProps={animatedBlurProps}
+        animatedProps={rBlurProps}
         style={[StyleSheet.absoluteFill]}
         pointerEvents="none"
       />

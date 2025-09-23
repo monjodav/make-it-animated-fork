@@ -41,12 +41,17 @@ const DATA = [
   },
 ];
 
-const ITEM_WIDTH = 150;
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const HORIZONTAL_PADDING = 15;
+
+const AVAILABLE_WIDTH = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
+const TARGET_ITEMS_CENTERED = 2;
+const PARTIAL_ITEM_VISIBLE_RATIO = 0.15;
+
+const TOTAL_VISIBLE_RATIO = TARGET_ITEMS_CENTERED + PARTIAL_ITEM_VISIBLE_RATIO * 2;
+const ITEM_WIDTH = AVAILABLE_WIDTH / TOTAL_VISIBLE_RATIO;
 const ITEM_MARGIN = 10;
 const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN;
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const HORIZONTAL_PADDING = 20;
 
 const Carousel = () => {
   const scrollX = useSharedValue(0);
@@ -72,6 +77,8 @@ const Carousel = () => {
           index={index}
           scrollX={scrollX}
           itemSize={ITEM_SIZE}
+          itemWidth={ITEM_WIDTH}
+          itemMargin={ITEM_MARGIN}
           screenWidth={SCREEN_WIDTH}
           horizontalPadding={HORIZONTAL_PADDING}
         />
