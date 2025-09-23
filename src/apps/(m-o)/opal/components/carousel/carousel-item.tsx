@@ -41,7 +41,7 @@ const CarouselItem = ({
   const rItemStyle = useAnimatedStyle(() => {
     const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
-    const itemLeftEdge = index * itemSize - scrollX.value;
+    const itemLeftEdge = index * itemSize - scrollX.get();
     const itemCenter = itemLeftEdge + itemWidth / 2;
 
     const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
@@ -65,7 +65,7 @@ const CarouselItem = ({
   const rBlurProps = useAnimatedProps(() => {
     const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
-    const itemLeftEdge = index * itemSize - scrollX.value;
+    const itemLeftEdge = index * itemSize - scrollX.get();
     const itemCenter = itemLeftEdge + itemWidth / 2;
 
     const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
@@ -91,7 +91,6 @@ const CarouselItem = ({
         {
           height: 220,
           width: itemWidth,
-          backgroundColor: "grey",
           marginRight: itemMargin,
           borderRadius: 30,
           padding: 10,
@@ -109,18 +108,15 @@ const CarouselItem = ({
         placeholder={{ blurhash: item.blurhash }}
         style={StyleSheet.absoluteFill}
       />
+
       <LinearGradient
-        colors={["transparent", "black"]}
+        colors={["transparent", "rgba(0,0,0,0.95)", "black", "black"]}
+        locations={[0, 0.81, 0.88, 1]}
         start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 0.6 }}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "60%",
-        }}
+        end={{ x: 0, y: 1 }}
+        style={StyleSheet.absoluteFill}
       />
+
       <View className="mt-auto">
         <Text className="text-md text-[#fff] font-bold">{item.title}</Text>
         <Text className="text-sm text-[#B0B0B0] font-bold mb-3">{item.description}</Text>
