@@ -60,21 +60,23 @@ const AnimatedDashedBorder: React.FC<Props> = ({
   const dashCycle = adjustedDashLength + adjustedGapLength;
 
   useEffect(() => {
-    rPhase.value = 0;
+    rPhase.set(0);
     const targetValue = direction === "clockwise" ? -dashCycle : dashCycle;
-    rPhase.value = withRepeat(
-      withTiming(targetValue, {
-        duration: animationSpeed,
-        easing: Easing.linear,
-      }),
-      -1,
-      false
+    rPhase.set(
+      withRepeat(
+        withTiming(targetValue, {
+          duration: animationSpeed,
+          easing: Easing.linear,
+        }),
+        -1,
+        false
+      )
     );
   }, [animationSpeed, dashCycle, adjustedDashLength, direction]);
 
   const skPhase = useSharedValue(0);
   useDerivedValue(() => {
-    skPhase.value = rPhase.value;
+    skPhase.set(rPhase.get());
   });
 
   const path = useMemo(() => {
