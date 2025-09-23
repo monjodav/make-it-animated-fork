@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Platform, Dimensions, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { BlurView } from "expo-blur";
 import {
   Blur,
@@ -27,6 +26,7 @@ import { memo, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 // opal-start-timer-button-animation 🔽
 
@@ -196,53 +196,59 @@ const StartTimerButton = () => {
   }, [shimmerProgress]);
 
   return (
-    <AnimatedPressable
-      // Entering motion: subtle drop-in reinforces prominence without stealing focus
-      entering={FadeInDown}
-      onPressIn={() => {
-        // Light haptic to reinforce intent at the moment of press
-        impactAsync(ImpactFeedbackStyle.Light).catch(() => {});
-        pressScale.set(withTiming(0.96, { duration: 150, easing: Easing.out(Easing.quad) }));
-      }}
-      onPressOut={() => {
-        pressScale.set(withTiming(1, { duration: 150, easing: Easing.out(Easing.quad) }));
-      }}
-      className="self-center border-neutral-600 rounded-full mb-4 overflow-hidden"
-      style={[styles.container, rPressStyle]}
-    >
-      {/* Breathing shapes */}
-      {Platform.OS === "ios" && (
-        <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
-      )}
-      <Canvas style={styles.canvas}>
-        <Path path={leftOvalPath} color={leftOvalColor}>
-          <Blur blur={35} />
-        </Path>
-        <Path path={rightOvalPath} color={rightOvalColor}>
-          <Blur blur={35} />
-        </Path>
-      </Canvas>
-      <View className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center">
-        <Ionicons name="play" size={20} color="white" />
-        <Text className="text-white text-xl font-medium">Start Timer</Text>
-      </View>
-      {/* Shimmer */}
-      <Animated.View
-        className="absolute left-0 top-0 bottom-0 w-[100px] flex-row"
-        style={rShimmerStyle}
-        // Capture measured width to compute initial offscreen start
-        onLayout={(e) => shimmerComponentWidth.set(e.nativeEvent.layout.width)}
+    <Animated.View entering={FadeInDown}>
+      <AnimatedPressable
+        onPressIn={() => {
+          impactAsync(ImpactFeedbackStyle.Light).catch(() => {});
+          pressScale.set(withTiming(0.96, { duration: 150, easing: Easing.out(Easing.quad) }));
+        }}
+        onPressOut={() => {
+          pressScale.set(withTiming(1, { duration: 150, easing: Easing.out(Easing.quad) }));
+        }}
+        className={cn(
+          "self-center rounded-full mb-4 overflow-hidden",
+          Platform.OS === "android" ? "border-neutral-900" : "border-neutral-600"
+        )}
+        style={[styles.container, rPressStyle]}
       >
-        <LinearGradient
-          // Three-stop gradient: transparent → white → transparent to simulate light sweep
-          colors={[colorKit.setAlpha("#fff", 0).hex(), "#fff", colorKit.setAlpha("#fff", 0).hex()]}
-          locations={[0, 0.5, 1]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={{ flex: 1 }}
-        />
-      </Animated.View>
-    </AnimatedPressable>
+        {/* Breathing shapes */}
+        {Platform.OS === "ios" && (
+          <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+        )}
+        <Canvas style={styles.canvas}>
+          <Path path={leftOvalPath} color={leftOvalColor}>
+            <Blur blur={35} />
+          </Path>
+          <Path path={rightOvalPath} color={rightOvalColor}>
+            <Blur blur={35} />
+          </Path>
+        </Canvas>
+        <View className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center">
+          <Ionicons name="play" size={18} color="white" />
+          <Text className="text-white text-xl font-medium">Start Timer</Text>
+        </View>
+        {/* Shimmer */}
+        <Animated.View
+          className="absolute left-0 top-0 bottom-0 w-1/4 flex-row"
+          style={rShimmerStyle}
+          // Capture measured width to compute initial offscreen start
+          onLayout={(e) => shimmerComponentWidth.set(e.nativeEvent.layout.width)}
+        >
+          <LinearGradient
+            // Three-stop gradient: transparent → white → transparent to simulate light sweep
+            colors={[
+              colorKit.setAlpha("#fff", 0).hex(),
+              "#fff",
+              colorKit.setAlpha("#fff", 0).hex(),
+            ]}
+            locations={[0, 0.5, 1]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ flex: 1 }}
+          />
+        </Animated.View>
+      </AnimatedPressable>
+    </Animated.View>
   );
 };
 
@@ -250,7 +256,7 @@ const styles = StyleSheet.create({
   container: {
     height: BUTTON_HEIGHT,
     width: BUTTON_WIDTH,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: Platform.OS === "ios" ? StyleSheet.hairlineWidth : 1,
     borderCurve: "continuous",
   },
   canvas: {
