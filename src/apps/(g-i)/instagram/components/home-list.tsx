@@ -27,7 +27,7 @@ export const HomeList: FC<Props> = ({ posts }) => {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerClassName="px-5 gap-5"
+        contentContainerClassName="px-5 gap-"
       >
         {Array.from({ length: 10 }).map((_, index) => (
           <View key={index} className="items-center gap-3">

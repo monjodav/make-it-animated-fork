@@ -6,7 +6,7 @@ export const opal: App = {
   imageSource: OpaltImage,
   animations: [
     {
-      name: "Time slider animation",
+      name: "Start timer button animation",
       href: "/opal/home",
     },
   ],
