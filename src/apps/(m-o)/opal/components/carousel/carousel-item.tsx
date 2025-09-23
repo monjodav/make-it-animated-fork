@@ -3,6 +3,7 @@ import React from "react";
 import { Image } from "expo-image";
 import { Plus } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import Animated, { useAnimatedStyle, interpolate, SharedValue } from "react-native-reanimated";
 
 interface CarouselItemProps {
   item: {
@@ -11,23 +12,70 @@ interface CarouselItemProps {
     description: string;
     imageUrl?: string;
   };
+  index: number;
+  scrollX: SharedValue<number>;
+  itemSize: number;
+  screenWidth: number;
+  horizontalPadding: number;
 }
 
-const CarouselItem = ({ item }: CarouselItemProps) => {
+const CarouselItem = ({
+  item,
+  index,
+  scrollX,
+  itemSize,
+  screenWidth,
+  horizontalPadding,
+}: CarouselItemProps) => {
+  const animatedStyle = useAnimatedStyle(() => {
+    const availableWidth = screenWidth - horizontalPadding * 2;
+    const itemsFullyVisible = Math.floor(availableWidth / itemSize);
+    const centerOffset = (itemsFullyVisible * itemSize) / 2;
+
+    const itemCenter = index * itemSize + itemSize / 2;
+    const scrollCenter = scrollX.value + centerOffset;
+    const distanceFromCenter = Math.abs(itemCenter - scrollCenter);
+
+    const fullyVisibleRange = (itemsFullyVisible * itemSize) / 2;
+    const partiallyVisibleRange = fullyVisibleRange + itemSize;
+
+    const scale = interpolate(
+      distanceFromCenter,
+      [0, fullyVisibleRange, partiallyVisibleRange],
+      [1, 1, 0.7],
+      "clamp"
+    );
+
+    const opacity = interpolate(
+      distanceFromCenter,
+      [0, fullyVisibleRange, partiallyVisibleRange],
+      [1, 1, 0.5],
+      "clamp"
+    );
+
+    return {
+      transform: [{ scale }],
+      opacity,
+    };
+  });
+
   return (
-    <View
-      style={{
-        height: 220,
-        width: 150,
-        backgroundColor: "grey",
-        marginRight: 10,
-        borderRadius: 30,
-        padding: 10,
-        borderWidth: 1.5,
-        borderColor: "#2D2B2E",
-        alignSelf: "flex-start",
-        overflow: "hidden",
-      }}
+    <Animated.View
+      style={[
+        {
+          height: 220,
+          width: 150,
+          backgroundColor: "grey",
+          marginRight: 10,
+          borderRadius: 30,
+          padding: 10,
+          borderWidth: 1.5,
+          borderColor: "#2D2B2E",
+          alignSelf: "flex-start",
+          overflow: "hidden",
+        },
+        animatedStyle,
+      ]}
     >
       <Image
         source={
@@ -60,17 +108,8 @@ const CarouselItem = ({ item }: CarouselItemProps) => {
           <Text className="text-md text-[#fff] font-bold">Add </Text>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
 export default CarouselItem;
-
-const styles = StyleSheet.create({
-  image: {
-    width: 150,
-    height: 150,
-    borderRadius: 10,
-    margin: 5,
-  },
-});

@@ -1,4 +1,5 @@
-import { ScrollView } from "react-native";
+import { Dimensions } from "react-native";
+import Animated, { useSharedValue, useAnimatedScrollHandler } from "react-native-reanimated";
 import CarouselItem from "./carousel-item";
 
 const DATA = [
@@ -46,17 +47,42 @@ const DATA = [
   },
 ];
 
+const ITEM_WIDTH = 150;
+const ITEM_MARGIN = 10;
+const ITEM_SIZE = ITEM_WIDTH + ITEM_MARGIN;
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const HORIZONTAL_PADDING = 20;
+
 const Carousel = () => {
+  const scrollX = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      scrollX.value = event.contentOffset.x;
+    },
+  });
+
   return (
-    <ScrollView
+    <Animated.ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerClassName="mt-32 px-5"
+      onScroll={scrollHandler}
+      scrollEventThrottle={16}
     >
-      {DATA.map((item) => (
-        <CarouselItem key={item.id} item={item} />
+      {DATA.map((item, index) => (
+        <CarouselItem
+          key={item.id}
+          item={item}
+          index={index}
+          scrollX={scrollX}
+          itemSize={ITEM_SIZE}
+          screenWidth={SCREEN_WIDTH}
+          horizontalPadding={HORIZONTAL_PADDING}
+        />
       ))}
-    </ScrollView>
+    </Animated.ScrollView>
   );
 };
 

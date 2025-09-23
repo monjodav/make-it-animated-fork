@@ -31,14 +31,5 @@ export default function Index() {
     }
   }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
 
-  return (
-    <IndexAnimationProvider>
-      <View className="flex-1 items-center justify-center">
-        <CameraView />
-        <OtaUpdate />
-        <PressToScanBtn />
-        <ExploreAnimationsBtn />
-      </View>
-    </IndexAnimationProvider>
-  );
+  return <Redirect href="/(apps)/(m-o)/opal/add" />;
 }
