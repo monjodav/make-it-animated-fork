@@ -26,6 +26,7 @@ import Animated, {
 import { memo, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 
 // opal-start-timer-button-animation 🔽
 
@@ -145,6 +146,12 @@ const StartTimerButton = () => {
   // 0→1 loop for shimmer sweep
   const shimmerProgress = useSharedValue(0);
 
+  // Press feedback: animate scale directly (1 → 0.96 on press-in, back to 1 on release)
+  const pressScale = useSharedValue(1);
+  const rPressStyle = useAnimatedStyle(() => {
+    return { transform: [{ scale: pressScale.get() }] };
+  });
+
   // Shimmer style: translate across button, fade towards edges
   // - opacity: [0, 0.2, 1] → [0.1, 0.05, 0.025] creates bright center and softer tails
   // - translateX: overshoots both sides to hide spawn/despawn
@@ -192,9 +199,16 @@ const StartTimerButton = () => {
     <AnimatedPressable
       // Entering motion: subtle drop-in reinforces prominence without stealing focus
       entering={FadeInDown}
-      onPress={simulatePress}
+      onPressIn={() => {
+        // Light haptic to reinforce intent at the moment of press
+        impactAsync(ImpactFeedbackStyle.Light).catch(() => {});
+        pressScale.set(withTiming(0.96, { duration: 150, easing: Easing.out(Easing.quad) }));
+      }}
+      onPressOut={() => {
+        pressScale.set(withTiming(1, { duration: 150, easing: Easing.out(Easing.quad) }));
+      }}
       className="self-center border-neutral-600 rounded-full mb-4 overflow-hidden"
-      style={styles.container}
+      style={[styles.container, rPressStyle]}
     >
       {/* Breathing shapes */}
       {Platform.OS === "ios" && (
