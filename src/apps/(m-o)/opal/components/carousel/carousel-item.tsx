@@ -3,14 +3,22 @@ import React from "react";
 import { Image } from "expo-image";
 import { Plus } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Animated, { useAnimatedStyle, interpolate, SharedValue } from "react-native-reanimated";
+import { BlurView } from "expo-blur";
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+import Animated, {
+  useAnimatedStyle,
+  interpolate,
+  SharedValue,
+  useAnimatedProps,
+} from "react-native-reanimated";
 
 interface CarouselItemProps {
   item: {
     id: number;
     title: string;
     description: string;
-    imageUrl?: string;
+    blurhash: string;
   };
   index: number;
   scrollX: SharedValue<number>;
@@ -53,9 +61,40 @@ const CarouselItem = ({
       "clamp"
     );
 
+    const blurIntensity = interpolate(
+      distanceFromCenter,
+      [0, fullyVisibleRange, partiallyVisibleRange],
+      [0, 0, 15],
+      "clamp"
+    );
+
     return {
       transform: [{ scale }],
       opacity,
+    };
+  });
+
+  const animatedBlurProps = useAnimatedProps(() => {
+    const availableWidth = screenWidth - horizontalPadding * 2;
+    const itemsFullyVisible = Math.floor(availableWidth / itemSize);
+    const centerOffset = (itemsFullyVisible * itemSize) / 2;
+
+    const itemCenter = index * itemSize + itemSize / 2;
+    const scrollCenter = scrollX.value + centerOffset;
+    const distanceFromCenter = Math.abs(itemCenter - scrollCenter);
+
+    const fullyVisibleRange = (itemsFullyVisible * itemSize) / 2;
+    const partiallyVisibleRange = fullyVisibleRange + itemSize;
+
+    const blurIntensity = interpolate(
+      distanceFromCenter,
+      [0, fullyVisibleRange, partiallyVisibleRange],
+      [0, 0, 20],
+      "clamp"
+    );
+
+    return {
+      intensity: blurIntensity,
     };
   });
 
@@ -78,14 +117,9 @@ const CarouselItem = ({
       ]}
     >
       <Image
-        source={
-          item.imageUrl
-            ? { uri: item.imageUrl }
-            : "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-        }
         contentFit="cover"
         className="w-full h-full rounded-2xl"
-        placeholder={{ blurhash: "LKO2:N%2Tw=w]~RBVZRi};RPxuwH" }}
+        placeholder={{ blurhash: item.blurhash }}
         style={StyleSheet.absoluteFill}
       />
       <LinearGradient
@@ -108,6 +142,12 @@ const CarouselItem = ({
           <Text className="text-md text-[#fff] font-bold">Add </Text>
         </View>
       </View>
+
+      <AnimatedBlurView
+        animatedProps={animatedBlurProps}
+        style={[StyleSheet.absoluteFill]}
+        pointerEvents="none"
+      />
     </Animated.View>
   );
 };

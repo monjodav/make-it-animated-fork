@@ -7,43 +7,37 @@ const DATA = [
     id: 1,
     title: "🕯️ Laser Focus",
     description: "Your daily focus hour from 2-3pm, Weekdays",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    blurhash: "LKO2:N%2Tw=w]~RBVZRi};RPxuwH",
   },
   {
     id: 2,
     title: "🌅 Rise & Shine",
     description: "Wake up without distraction 6-9am Daily",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    blurhash: "LGF5?xYk^6#M@-5c,1J5@[or[Q6.",
   },
   {
     id: 3,
     title: "🚀 Creative",
     description: "Protect your energy 10-11am Weekdays",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    blurhash: "LEHLh[WB2yk8pyoJadR*.7kCMdnj",
   },
   {
     id: 4,
     title: "🕯️ Laser Focus",
     description: "Your daily focus hour from 2-3pm, Weekdays",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    blurhash: "LKO2:N%2Tw=w]~RBVZRi};RPxuwH",
   },
   {
     id: 5,
     title: "🌅 Rise & Shine",
     description: "Wake up without distraction 6-9am Daily",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    blurhash: "L6PZfSi_.AyE_3t7t7R**0o#DgR4",
   },
   {
     id: 6,
     title: "🚀 Creative",
     description: "Protect your energy 10-11am Weekdays",
-    imageUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    blurhash: "LKN]Rv%2Tw=w]~RBVZRi};RPxuwH",
   },
 ];
 
