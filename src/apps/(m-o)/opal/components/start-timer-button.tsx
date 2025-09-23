@@ -207,7 +207,7 @@ const StartTimerButton = () => {
         }}
         className={cn(
           "self-center rounded-full mb-4 overflow-hidden",
-          Platform.OS === "android" ? "border-neutral-900" : "border-neutral-600"
+          Platform.OS === "android" ? "border-neutral-900" : "border-neutral-700"
         )}
         style={[styles.container, rPressStyle]}
       >
