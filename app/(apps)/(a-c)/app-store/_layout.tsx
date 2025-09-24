@@ -72,7 +72,7 @@ const AppStoreStackScreen = () => {
           right: 10,
           flexDirection: "row",
           alignItems: "center",
-          gap: 80,
+          gap: 90,
         },
         headerButtonsStyle,
       ]}

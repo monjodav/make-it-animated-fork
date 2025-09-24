@@ -61,7 +61,11 @@ export const App = () => {
         </Animated.View>
 
         <View className="px-5 pt-3">
-          {Array.from({ length: 20 }).map((_, index) => (
+          <View className="p-10 mb-4 bg-neutral-900 rounded-lg" />
+          <View className="p-3 w-[100] mb-3 bg-neutral-900 rounded-lg" />
+          <View className="p-3 w-[190] mb-8 bg-neutral-900 rounded-lg" />
+          <View className="p-10 w-[190] mb-4 bg-neutral-900 rounded-lg" />
+          {Array.from({ length: 17 }).map((_, index) => (
             <View key={index} className="p-5 mb-2 bg-neutral-900 rounded-lg" />
           ))}
         </View>
