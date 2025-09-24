@@ -49,7 +49,14 @@ export default function AppStoreLayout() {
       duration: 300,
     });
 
-    return { opacity };
+    const translateY = withTiming(shouldShowHeaderButtons.value ? 0 : 6, {
+      duration: 300,
+    });
+
+    return {
+      opacity,
+      transform: [{ translateY }],
+    };
   });
 
   const headerBackground = () => (
@@ -58,7 +65,7 @@ export default function AppStoreLayout() {
         intensity={75}
         style={{
           flex: 1,
-          backgroundColor: "rgba(0,0,0,0.3)",
+          backgroundColor: "transparent",
         }}
       />
     </Animated.View>
