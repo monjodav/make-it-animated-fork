@@ -1,18 +1,23 @@
-import { createContext, useContext } from "react";
-import Animated, { SharedValue } from "react-native-reanimated";
+import { createContext, FC, PropsWithChildren, useContext } from "react";
+import { SharedValue, useSharedValue } from "react-native-reanimated";
 
-export interface ScrollProviderType {
-  scrollY: SharedValue<number> | null;
-  setScrollY: (value: SharedValue<number>) => void;
-}
+type ContextValue = {
+  scrollY: SharedValue<number>;
+};
 
-export const ScrollProvider = createContext<ScrollProviderType>({
-  scrollY: null,
-  setScrollY: () => {},
-});
+const ScrollContext = createContext<ContextValue>({} as ContextValue);
+
+export const ScrollProvider: FC<PropsWithChildren> = ({ children }) => {
+  const scrollY = useSharedValue(0);
+
+  const value = { scrollY };
+
+  return <ScrollContext.Provider value={value}>{children}</ScrollContext.Provider>;
+};
 
 export const useScrollContext = () => {
-  const context = useContext(ScrollProvider);
+  const context = useContext(ScrollContext);
+
   if (!context) {
     throw new Error("useScrollContext must be used within ScrollProvider");
   }

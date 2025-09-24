@@ -2,12 +2,10 @@ import { HardDriveUpload } from "lucide-react-native";
 import { View, Text } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
-  useSharedValue,
   useAnimatedStyle,
   withTiming,
   useDerivedValue,
 } from "react-native-reanimated";
-import { useEffect } from "react";
 import { useScrollContext } from "@/src/apps/(a-c)/app-store/lib/providers/scroll-provider";
 import { APP_STORE_CONSTANTS } from "@/src/apps/(a-c)/app-store/lib/constants/animation-config";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -16,13 +14,7 @@ const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
 export const App = () => {
   const headerHeight = useHeaderHeight();
-
-  const scrollY = useSharedValue(0);
-  const { setScrollY } = useScrollContext();
-
-  useEffect(() => {
-    setScrollY(scrollY);
-  }, [scrollY, setScrollY]);
+  const { scrollY } = useScrollContext();
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
