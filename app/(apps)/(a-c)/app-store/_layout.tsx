@@ -8,12 +8,12 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from "react-native-reanimated";
+import { BlurView } from "expo-blur";
 import {
   ScrollProvider,
   useScrollContext,
 } from "@/src/apps/(a-c)/app-store/lib/providers/scroll-provider";
 import { APP_STORE_CONSTANTS } from "@/src/apps/(a-c)/app-store/lib/constants/animation-config";
-import { BlurView } from "expo-blur";
 
 const BLUR_START_OFFSET = APP_STORE_CONSTANTS.BLUR_START_OFFSET;
 const BLUR_END_OFFSET = APP_STORE_CONSTANTS.BLUR_END_OFFSET;
@@ -25,7 +25,7 @@ const AppStoreStackScreen = () => {
 
   const headerBlurStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
-      scrollY.value,
+      scrollY.get(),
       [BLUR_START_OFFSET, BLUR_END_OFFSET],
       [0, 1],
       Extrapolation.CLAMP
@@ -35,15 +35,15 @@ const AppStoreStackScreen = () => {
   });
 
   const shouldShowHeaderButtons = useDerivedValue(() => {
-    return scrollY.value >= CONTENT_DISAPPEAR_OFFSET - 30;
+    return scrollY.get() >= CONTENT_DISAPPEAR_OFFSET - 30;
   });
 
   const headerButtonsStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(shouldShowHeaderButtons.value ? 1 : 0, {
+    const opacity = withTiming(shouldShowHeaderButtons.get() ? 1 : 0, {
       duration: 300,
     });
 
-    const translateY = withTiming(shouldShowHeaderButtons.value ? 0 : 6, {
+    const translateY = withTiming(shouldShowHeaderButtons.get() ? 0 : 6, {
       duration: 300,
     });
 
@@ -98,7 +98,7 @@ const AppStoreStackScreen = () => {
           headerLeft: () => (
             <Pressable className="flex-row items-center g-2" onPress={router.back}>
               <ChevronLeft size={28} color="#007AFF" />
-              <Text className="text-gray-200 text-lg font-bold">Search</Text>
+              <Text className="text-[#007AFF] text-xl font-bold">Search</Text>
             </Pressable>
           ),
           headerRight: headerRight,

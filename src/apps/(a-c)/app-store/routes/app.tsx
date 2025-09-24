@@ -6,9 +6,9 @@ import Animated, {
   withTiming,
   useDerivedValue,
 } from "react-native-reanimated";
+import { useHeaderHeight } from "@react-navigation/elements";
 import { useScrollContext } from "@/src/apps/(a-c)/app-store/lib/providers/scroll-provider";
 import { APP_STORE_CONSTANTS } from "@/src/apps/(a-c)/app-store/lib/constants/animation-config";
-import { useHeaderHeight } from "@react-navigation/elements";
 
 const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
@@ -18,16 +18,16 @@ export const App = () => {
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
+      scrollY.set(event.contentOffset.y);
     },
   });
 
   const shouldShowContent = useDerivedValue(() => {
-    return scrollY.value < CONTENT_DISAPPEAR_OFFSET - 30;
+    return scrollY.get() < CONTENT_DISAPPEAR_OFFSET - 30;
   });
 
   const appContentStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(shouldShowContent.value ? 1 : 0, {
+    const opacity = withTiming(shouldShowContent.get() ? 1 : 0, {
       duration: 300,
     });
 
@@ -50,7 +50,7 @@ export const App = () => {
           <View className="h-[120] w-[120] bg-white rounded-[20]" />
           <View className="flex-1">
             <Text className="text-white text-2xl font-bold">App Title</Text>
-            <Text className="text-white text-lg font-bold">Description</Text>
+            <Text className="text-[#868487] text-lg font-bold">Description</Text>
             <View className="flex-row justify-between mt-auto">
               <View className="bg-blue-600 rounded-full px-4 py-1">
                 <Text className="text-white text-base font-bold">Open</Text>
