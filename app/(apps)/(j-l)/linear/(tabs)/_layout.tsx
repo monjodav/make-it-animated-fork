@@ -1,3 +1,4 @@
+import { ScrollProvider, useScrollContext } from "@/src/apps/(j-l)/linear/lib/scroll-provider";
 import Foundation from "@expo/vector-icons/Foundation";
 import { Tabs } from "expo-router";
 import { Inbox, Scan, Search, SquarePen } from "lucide-react-native";
@@ -12,10 +13,12 @@ enum Tab {
 }
 
 const TabsLayout = () => {
+  const { scrollY } = useScrollContext();
+
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
         tabBarShowLabel: false,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "gray",
@@ -68,4 +71,10 @@ const TabsLayout = () => {
   );
 };
 
-export default TabsLayout;
+export default function LinearLayout() {
+  return (
+    <ScrollProvider>
+      <TabsLayout />
+    </ScrollProvider>
+  );
+}
