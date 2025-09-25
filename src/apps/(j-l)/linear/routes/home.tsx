@@ -1,6 +1,5 @@
 import { LinearIssues } from "../components/linear-issues";
 import { TabBar } from "../components/tab-bar";
-import { ArrowLeft, MoreHorizontal, SquareArrowOutUpRight } from "lucide-react-native";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -23,11 +22,6 @@ export default function Home() {
         {/* linear-button-tabs-indicator-animation 🔼 */}
       </View>
       <LinearIssues />
-      <View className="flex-row items-center justify-between px-8 pt-4">
-        <ArrowLeft size={18} color="#3a3446" />
-        <SquareArrowOutUpRight size={20} color="#3a3446" />
-        <MoreHorizontal size={20} color="#3a3446" />
-      </View>
     </View>
   );
 }
