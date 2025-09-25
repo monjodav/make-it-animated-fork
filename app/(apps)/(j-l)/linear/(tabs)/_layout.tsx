@@ -20,31 +20,38 @@ enum Tab {
 }
 const TITLE_SWITCH_OFFSET = 30;
 const TITLE_ROW_HEIGHT = 28;
-
 const MID = 0.5;
 const WIDTH = 0.24;
-const START = MID - WIDTH / 2;
-const END = MID + WIDTH / 2;
+
+const clamp = (x: number, min: number, max: number) => {
+  "worklet";
+  return Math.max(min, Math.min(max, x));
+};
+const smoothStep = (t: number) => {
+  "worklet";
+  return t * t * (3 - 2 * t);
+};
 
 const TabsLayout = () => {
   const { scrollY, title } = useScrollContext();
 
-  const HeaderLeftAnimated = ({ title }: { title: string }) => {
+  const HeaderLeftAnimated = () => {
     const progress = useSharedValue(0);
     useDerivedValue(() => {
-      const target = scrollY.value >= TITLE_SWITCH_OFFSET ? 1 : 0;
-      if (progress.value !== target) {
-        progress.value = withTiming(target, { duration: 300, easing: Easing.out(Easing.cubic) });
+      const target = scrollY.get() >= TITLE_SWITCH_OFFSET ? 1 : 0;
+      if (progress.get() !== target) {
+        progress.set(withTiming(target, { duration: 300, easing: Easing.out(Easing.cubic) }));
       }
     });
 
-    const outgoingStyle = useAnimatedStyle(() => {
-      const p = progress.value;
+    const rOutgoingStyle = useAnimatedStyle(() => {
+      const p = progress.get();
       const angle = 90 * p;
       const ty = -TITLE_ROW_HEIGHT * p;
-
-      const t = Math.max(0, Math.min(1, (p - START) / (END - START)));
-      const smooth = t * t * (3 - 2 * t);
+      const start = MID - WIDTH * 0.5;
+      const end = MID + WIDTH * 0.5;
+      const t = clamp((p - start) / (end - start), 0, 1);
+      const smooth = smoothStep(t);
       return {
         opacity: 1 - smooth,
         transform: [{ perspective: 700 }, { rotateX: `${angle}deg` }, { translateY: ty }],
@@ -52,13 +59,14 @@ const TabsLayout = () => {
       };
     });
 
-    const incomingStyle = useAnimatedStyle(() => {
-      const p = progress.value;
+    const rIncomingStyle = useAnimatedStyle(() => {
+      const p = progress.get();
       const angle = -90 * (1 - p);
       const ty = TITLE_ROW_HEIGHT * (1 - p);
-
-      const t = Math.max(0, Math.min(1, (p - START) / (END - START)));
-      const smooth = t * t * (3 - 2 * t);
+      const start = MID - WIDTH * 0.5;
+      const end = MID + WIDTH * 0.5;
+      const t = clamp((p - start) / (end - start), 0, 1);
+      const smooth = smoothStep(t);
       return {
         opacity: smooth,
         transform: [{ perspective: 700 }, { rotateX: `${angle}deg` }, { translateY: ty }],
@@ -77,15 +85,15 @@ const TabsLayout = () => {
         }}
       >
         <Animated.Text
-          style={[outgoingStyle, { position: "absolute", left: 0, top: 0 }]}
+          style={[rOutgoingStyle, { position: "absolute", left: 0, top: 0 }]}
           className="text-[#777777] text-lg font-bold"
         >
           Title
         </Animated.Text>
 
         <Animated.Text
-          style={[incomingStyle, { position: "absolute", left: 0, top: 0 }]}
-          className="text-[#777777]  text-lg font-bold"
+          style={[rIncomingStyle, { position: "absolute", left: 0, top: 0 }]}
+          className="text-[#777777] text-lg font-bold"
         >
           {title}
         </Animated.Text>
@@ -93,9 +101,7 @@ const TabsLayout = () => {
     );
   };
 
-  const headerLeftFor = (_routeName: string) => {
-    return () => <HeaderLeftAnimated title={title} />;
-  };
+  const headerLeft = () => <HeaderLeftAnimated />;
 
   return (
     <Tabs
@@ -120,7 +126,7 @@ const TabsLayout = () => {
             <Settings size={28} color="#777777" />
           </Pressable>
         ),
-        headerLeft: headerLeftFor(route.name),
+        headerLeft,
       })}
     >
       <Tabs.Screen
