@@ -37,6 +37,7 @@ const TabsLayout = () => {
 
   const HeaderLeftAnimated = () => {
     const progress = useSharedValue(0);
+
     useDerivedValue(() => {
       const target = scrollY.get() >= TITLE_SWITCH_OFFSET ? 1 : 0;
       if (progress.get() !== target) {
