@@ -1,15 +1,7 @@
-import { ScrollProvider, useScrollContext } from "@/src/apps/(j-l)/linear/lib/scroll-provider";
 import Foundation from "@expo/vector-icons/Foundation";
 import { router, Tabs } from "expo-router";
 import { Inbox, Scan, Search, Settings, SquarePen } from "lucide-react-native";
-import { Pressable, View } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { Pressable } from "react-native";
 
 enum Tab {
   Home = "home",
@@ -18,92 +10,8 @@ enum Tab {
   Issues = "issues",
   Profile = "profile",
 }
-const TITLE_SWITCH_OFFSET = 30;
-const TITLE_ROW_HEIGHT = 28;
-const MID = 0.5;
-const WIDTH = 0.24;
-
-const clamp = (x: number, min: number, max: number) => {
-  "worklet";
-  return Math.max(min, Math.min(max, x));
-};
-const smoothStep = (t: number) => {
-  "worklet";
-  return t * t * (3 - 2 * t);
-};
 
 const TabsLayout = () => {
-  const { scrollY, title } = useScrollContext();
-
-  const HeaderLeftAnimated = () => {
-    const progress = useSharedValue(0);
-
-    useDerivedValue(() => {
-      const target = scrollY.get() >= TITLE_SWITCH_OFFSET ? 1 : 0;
-      if (progress.get() !== target) {
-        progress.set(withTiming(target, { duration: 300, easing: Easing.out(Easing.cubic) }));
-      }
-    });
-
-    const rOutgoingStyle = useAnimatedStyle(() => {
-      const p = progress.get();
-      const angle = 90 * p;
-      const ty = -TITLE_ROW_HEIGHT * p;
-      const start = MID - WIDTH * 0.5;
-      const end = MID + WIDTH * 0.5;
-      const t = clamp((p - start) / (end - start), 0, 1);
-      const smooth = smoothStep(t);
-      return {
-        opacity: 1 - smooth,
-        transform: [{ perspective: 700 }, { rotateX: `${angle}deg` }, { translateY: ty }],
-        backfaceVisibility: "hidden",
-      };
-    });
-
-    const rIncomingStyle = useAnimatedStyle(() => {
-      const p = progress.get();
-      const angle = -90 * (1 - p);
-      const ty = TITLE_ROW_HEIGHT * (1 - p);
-      const start = MID - WIDTH * 0.5;
-      const end = MID + WIDTH * 0.5;
-      const t = clamp((p - start) / (end - start), 0, 1);
-      const smooth = smoothStep(t);
-      return {
-        opacity: smooth,
-        transform: [{ perspective: 700 }, { rotateX: `${angle}deg` }, { translateY: ty }],
-        backfaceVisibility: "hidden",
-      };
-    });
-
-    return (
-      <View
-        style={{
-          left: 15,
-          overflow: "hidden",
-          height: TITLE_ROW_HEIGHT,
-          justifyContent: "center",
-          minWidth: 80,
-        }}
-      >
-        <Animated.Text
-          style={[rOutgoingStyle, { position: "absolute", left: 0, top: 0 }]}
-          className="text-[#777777] text-lg font-bold"
-        >
-          Title
-        </Animated.Text>
-
-        <Animated.Text
-          style={[rIncomingStyle, { position: "absolute", left: 0, top: 0 }]}
-          className="text-[#777777] text-lg font-bold"
-        >
-          {title}
-        </Animated.Text>
-      </View>
-    );
-  };
-
-  const headerLeft = () => <HeaderLeftAnimated />;
-
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -127,7 +35,6 @@ const TabsLayout = () => {
             <Settings size={28} color="#777777" />
           </Pressable>
         ),
-        headerLeft,
       })}
     >
       <Tabs.Screen
@@ -165,9 +72,5 @@ const TabsLayout = () => {
 };
 
 export default function LinearLayout() {
-  return (
-    <ScrollProvider>
-      <TabsLayout />
-    </ScrollProvider>
-  );
+  return <TabsLayout />;
 }
