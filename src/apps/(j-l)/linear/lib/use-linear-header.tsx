@@ -78,26 +78,28 @@ export const useLinearHeader = ({ offsetY, title, switchOffset = TITLE_SWITCH_OF
   });
 
   useEffect(() => {
-    navigation.setOptions({
-      headerTitle: "",
-      headerLeft: () => (
-        <View
-          style={{
-            left: 15,
-            overflow: "hidden",
-            height: TITLE_ROW_HEIGHT,
-            justifyContent: "center",
-            minWidth: 80,
-          }}
-        >
-          <Animated.Text className="text-[#777777] text-lg font-bold" style={rOutgoingStyle}>
-            Title
-          </Animated.Text>
-          <Animated.Text className="text-[#777777] text-lg font-bold" style={rIncomingStyle}>
-            {title}
-          </Animated.Text>
-        </View>
-      ),
-    });
+    const headerLeft = () => (
+      <View
+        style={{
+          left: 15,
+          overflow: "hidden",
+          height: TITLE_ROW_HEIGHT,
+          justifyContent: "center",
+          width: "80%",
+        }}
+      >
+        <Animated.Text className="text-[#777777] text-lg font-bold" style={rOutgoingStyle}>
+          Title of project
+        </Animated.Text>
+        <Animated.Text className="text-[#777777] text-lg font-bold" style={rIncomingStyle}>
+          {title}
+        </Animated.Text>
+      </View>
+    );
+
+    navigation.setOptions({ headerTitle: "", headerLeft });
+
+    const parent = (navigation as any).getParent?.();
+    parent?.setOptions?.({ headerTitle: "", headerLeft });
   }, [navigation, rOutgoingStyle, rIncomingStyle, title]);
 };
