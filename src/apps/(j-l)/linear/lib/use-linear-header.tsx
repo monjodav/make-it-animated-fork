@@ -42,16 +42,24 @@ export const useLinearHeader = ({ offsetY, title, switchOffset = TITLE_SWITCH_OF
   });
 
   const rOutgoingStyle = useAnimatedStyle(() => {
-    const p = progress.get();
-    const angle = 90 * p;
-    const ty = -TITLE_ROW_HEIGHT * p;
-    const start = MID - WIDTH * 0.5;
-    const end = MID + WIDTH * 0.5;
-    const t = clamp((p - start) / (end - start), 0, 1);
-    const smooth = smoothStep(t);
+    const rawProgress = progress.get();
+    const rotationDegrees = 90 * rawProgress;
+    const translateYShift = -TITLE_ROW_HEIGHT * rawProgress;
+    const crossfadeStart = MID - WIDTH * 0.5;
+    const crossfadeEnd = MID + WIDTH * 0.5;
+    const crossfadeWindowProgress = clamp(
+      (rawProgress - crossfadeStart) / (crossfadeEnd - crossfadeStart),
+      0,
+      1
+    );
+    const easedCrossfade = smoothStep(crossfadeWindowProgress);
     return {
-      opacity: 1 - smooth,
-      transform: [{ perspective: 700 }, { rotateX: `${angle}deg` }, { translateY: ty }],
+      opacity: 1 - easedCrossfade,
+      transform: [
+        { perspective: 700 },
+        { rotateX: `${rotationDegrees}deg` },
+        { translateY: translateYShift },
+      ],
       backfaceVisibility: "hidden" as const,
       position: "absolute" as const,
       left: 0,
@@ -60,16 +68,24 @@ export const useLinearHeader = ({ offsetY, title, switchOffset = TITLE_SWITCH_OF
   });
 
   const rIncomingStyle = useAnimatedStyle(() => {
-    const p = progress.get();
-    const angle = -90 * (1 - p);
-    const ty = TITLE_ROW_HEIGHT * (1 - p);
-    const start = MID - WIDTH * 0.5;
-    const end = MID + WIDTH * 0.5;
-    const t = clamp((p - start) / (end - start), 0, 1);
-    const smooth = smoothStep(t);
+    const rawProgress = progress.get();
+    const rotationDegrees = -90 * (1 - rawProgress);
+    const translateYShift = TITLE_ROW_HEIGHT * (1 - rawProgress);
+    const crossfadeStart = MID - WIDTH * 0.5;
+    const crossfadeEnd = MID + WIDTH * 0.5;
+    const crossfadeWindowProgress = clamp(
+      (rawProgress - crossfadeStart) / (crossfadeEnd - crossfadeStart),
+      0,
+      1
+    );
+    const easedCrossfade = smoothStep(crossfadeWindowProgress);
     return {
-      opacity: smooth,
-      transform: [{ perspective: 700 }, { rotateX: `${angle}deg` }, { translateY: ty }],
+      opacity: easedCrossfade,
+      transform: [
+        { perspective: 700 },
+        { rotateX: `${rotationDegrees}deg` },
+        { translateY: translateYShift },
+      ],
       backfaceVisibility: "hidden" as const,
       position: "absolute" as const,
       left: 0,
