@@ -1,20 +1,11 @@
-import { FlatList, Platform, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 import React from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { TabScreenContainer } from "../components/tab-screen-container";
 
 export const Orders = () => {
-  const insets = useSafeAreaInsets();
-
   return (
     <View className="flex-1 bg-black">
-      <View
-        className="px-5 py-5 bg-black"
-        style={{ paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 50 }}
-      >
-        <Text className="text-2xl font-bold text-white">Orders</Text>
-      </View>
-
-      <View className="flex-1 rounded-tl-[20] rounded-tr-[20] overflow-hidden bg-white ">
+      <TabScreenContainer>
         <FlatList
           data={[]}
           keyExtractor={(item, index) => `${item}-${index}`}
@@ -31,7 +22,7 @@ export const Orders = () => {
             );
           }}
         />
-      </View>
+      </TabScreenContainer>
     </View>
   );
 };

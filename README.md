@@ -1,5 +1,3 @@
-# Make it Animated
-
 <p align="center">
   <img src="./assets/images/misc/github-banner.png" alt="Make it Animated Logo" width="100%"/>
 </p>

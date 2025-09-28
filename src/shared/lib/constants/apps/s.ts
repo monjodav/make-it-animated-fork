@@ -19,6 +19,10 @@ export const shopify: App = {
       name: "Menu transition animation",
       href: "/shopify/products",
     },
+    {
+      name: "Tabs shared header animation",
+      href: "/shopify/home",
+    },
   ],
 };
 
