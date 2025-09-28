@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { View } from "react-native";
 
-export const Search: FC = () => {
+export const Blocks: FC = () => {
   return <View className="flex-1 bg-black" />;
 };
