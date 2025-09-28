@@ -7,9 +7,9 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 enum Tab {
   Home = "home",
-  Search = "search",
-  Add = "add",
-  Updates = "updates",
+  Blocks = "blocks",
+  ScreenTime = "screen-time",
+  Leaderboard = "leaderboard",
   Account = "account",
 }
 
@@ -43,19 +43,19 @@ const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name={Tab.Add}
+        name={Tab.Blocks}
         options={{
           tabBarIcon: ({ color }) => <Foundation name="folder-add" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
-        name={Tab.Search}
+        name={Tab.ScreenTime}
         options={{
           tabBarIcon: ({ color }) => <FontAwesome6 name="chart-simple" size={22} color={color} />,
         }}
       />
       <Tabs.Screen
-        name={Tab.Updates}
+        name={Tab.Leaderboard}
         options={{
           tabBarIcon: ({ color }) => <FontAwesome name="trophy" size={22} color={color} />,
         }}

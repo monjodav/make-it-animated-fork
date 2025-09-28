@@ -9,5 +9,9 @@ export const opal: App = {
       name: "Start timer button animation",
       href: "/opal/home",
     },
+    {
+      name: "Horizontal carousel animation",
+      href: "/opal/blocks",
+    },
   ],
 };
