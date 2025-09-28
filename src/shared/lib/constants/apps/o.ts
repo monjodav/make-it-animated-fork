@@ -9,5 +9,9 @@ export const opal: App = {
       name: "Start timer button animation",
       href: "/opal/home",
     },
+    {
+      name: "Moving dashed border animation",
+      href: "/opal/blocks",
+    },
   ],
 };
