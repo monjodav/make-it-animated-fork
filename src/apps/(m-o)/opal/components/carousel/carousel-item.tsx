@@ -141,11 +141,14 @@ const CarouselItem = ({
 
       {/* Platform: iOS blur adds depth cue; Android omits for perf/parity */}
       {Platform.OS === "ios" && (
-        <AnimatedBlurView
-          animatedProps={rBlurProps}
-          pointerEvents="none"
-          style={StyleSheet.absoluteFill}
-        />
+        <View className="rounded-[24px] overflow-hidden" style={StyleSheet.absoluteFill}>
+          <AnimatedBlurView
+            animatedProps={rBlurProps}
+            pointerEvents="none"
+            tint="systemThinMaterialDark"
+            style={StyleSheet.absoluteFill}
+          />
+        </View>
       )}
     </AnimatedPressable>
   );
