@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { Plus } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,6 +12,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { memo } from "react";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 // opal-blurred-carousel-animation 🔽
 
@@ -93,7 +94,10 @@ const CarouselItem = ({
       onPress={simulatePress}
     >
       <Animated.View
-        className="flex-1 p-3 rounded-[30px] overflow-hidden border border-white/40"
+        className={cn(
+          "flex-1 p-3 rounded-[30px] overflow-hidden border border-white/40",
+          Platform.OS === "android" && "border-white/10"
+        )}
         style={styles.cardContainer}
       >
         <Image
@@ -121,11 +125,13 @@ const CarouselItem = ({
         </View>
       </Animated.View>
 
-      <AnimatedBlurView
-        animatedProps={rBlurProps}
-        pointerEvents="none"
-        style={StyleSheet.absoluteFill}
-      />
+      {Platform.OS === "ios" && (
+        <AnimatedBlurView
+          animatedProps={rBlurProps}
+          pointerEvents="none"
+          style={StyleSheet.absoluteFill}
+        />
+      )}
     </AnimatedPressable>
   );
 };
@@ -133,7 +139,7 @@ const CarouselItem = ({
 const styles = StyleSheet.create({
   cardContainer: {
     borderCurve: "continuous",
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: Platform.OS === "ios" ? StyleSheet.hairlineWidth : 1,
   },
   image: {
     borderRadius: 30,
