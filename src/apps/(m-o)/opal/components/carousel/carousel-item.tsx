@@ -14,8 +14,10 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { memo } from "react";
 import { cn } from "@/src/shared/lib/utils/cn";
 
-// opal-blurred-carousel-animation 🔽
+// opal-horizontal-carousel-animation 🔽
 
+// Reanimated wrapper enables animated styles/props on host components
+// Ref: https://docs.swmansion.com/react-native-reanimated/docs/core/createAnimatedComponent
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -38,18 +40,27 @@ const CarouselItem = ({
   horizontalPadding,
   innerPadding,
 }: CarouselItemProps) => {
+  // Card scale based on distance from screen center (center = 1.0, edges = 0.88)
   const rItemStyle = useAnimatedStyle(() => {
+    // Compute visual center within padded content (not raw screen center)
     const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
+    // Translate fixed index position by current scroll to get on-screen position
     const itemLeftEdge = index * itemWidth - scrollX.get();
     const itemCenter = itemLeftEdge + itemWidth / 2;
 
+    // abs() → symmetric response left/right of center (no directional bias)
     const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
 
+    // Within one card width, treat as fully visible (no scale change)
     const fullyVisibleRange = itemWidth;
 
+    // 1.5x widens the falloff so edges shrink subtly (prevents harsh drop-off)
+    // Values beyond this are clamped to avoid tiny unreadable cards
     const partiallyVisibleRange = itemWidth * 1.5;
 
+    // Interpolate distance→scale: [center, full, partial] => [1, 1, 0.88]
+    // CLAMP: freeze at 0.88 outside the defined range for stability
     const scale = interpolate(
       distanceFromScreenCenter,
       [0, fullyVisibleRange, partiallyVisibleRange],
@@ -58,21 +69,27 @@ const CarouselItem = ({
     );
 
     return {
+      // Scale-only transform to preserve layout; avoids reflow and keeps FPS high
       transform: [{ scale }],
     };
   });
 
+  // iOS-only blur increases as item moves away from center (focus metaphor)
   const rBlurProps = useAnimatedProps(() => {
+    // Same center math as scale to keep effects perfectly in sync
     const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
     const itemLeftEdge = index * itemWidth - scrollX.get();
     const itemCenter = itemLeftEdge + itemWidth / 2;
 
+    // Shared distance drives both scale and blur for coherent visual depth
     const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
 
     const fullyVisibleRange = itemWidth;
     const partiallyVisibleRange = itemWidth * 1.5;
 
+    // Interpolate distance→blur: [center..full] stays sharp, increases towards edges
+    // 15 intensity chosen for subtlety; higher values can overpower text/overlays
     const blurIntensity = interpolate(
       distanceFromScreenCenter,
       [0, fullyVisibleRange, partiallyVisibleRange],
@@ -81,6 +98,7 @@ const CarouselItem = ({
     );
 
     return {
+      // AnimatedProps required because BlurView uses prop-based intensity, not style
       intensity: blurIntensity,
     };
   });
@@ -125,6 +143,7 @@ const CarouselItem = ({
         </View>
       </Animated.View>
 
+      {/* Platform: iOS blur adds depth cue; Android omits for perf/parity */}
       {Platform.OS === "ios" && (
         <AnimatedBlurView
           animatedProps={rBlurProps}
@@ -138,14 +157,16 @@ const CarouselItem = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
+    // iOS continuous curves for premium look; adjust border width per platform
     borderCurve: "continuous",
     borderWidth: Platform.OS === "ios" ? StyleSheet.hairlineWidth : 1,
   },
   image: {
+    // Match container rounding to avoid anti-alias seams over the absolute image
     borderRadius: 30,
   },
 });
 
 export default memo(CarouselItem);
 
-// opal-blurred-carousel-animation 🔼
+// opal-horizontal-carousel-animation 🔼

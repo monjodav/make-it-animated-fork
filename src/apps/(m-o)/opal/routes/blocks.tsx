@@ -16,7 +16,7 @@ export const Blocks: FC = () => {
       <View className="mb-2 w-1/3 h-5 rounded-full bg-neutral-900" />
       <View className="mb-4 w-2/3 h-5 rounded-full bg-neutral-900" />
       <View className="-mx-5 mb-10">
-        {/* opal-blurred-carousel-animation 🔽 */}
+        {/* opal-horizontal-carousel-animation 🔽 */}
         <Carousel
           data={[
             "L87Luf_JHtDk%yx@eUaOH[WByCx[",
@@ -25,7 +25,7 @@ export const Blocks: FC = () => {
             "LJOXU1-pxuoz~XIoRjWBxsNHfOoJ",
           ]}
         />
-        {/* opal-blurred-carousel-animation 🔼 */}
+        {/* opal-horizontal-carousel-animation 🔼 */}
       </View>
       <View className="mb-2 w-1/2 h-5 rounded-full bg-neutral-900" />
       <View className="mb-4 w-[40%] h-5 rounded-full bg-neutral-900" />
