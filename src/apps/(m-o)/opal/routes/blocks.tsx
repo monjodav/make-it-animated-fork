@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import AnimatedDashedBorder from "../components/animated-dashed-border";
 import { Plus } from "lucide-react-native";
+import Carousel from "../components/carousel/carousel";
 
 export const Blocks: FC = () => {
   return (
@@ -34,7 +35,10 @@ export const Blocks: FC = () => {
       {/* opal-moving-dashed-border-animation 🔼 */}
       <View className="mt-8 mb-4 w-16 h-5 rounded-full bg-neutral-900" />
       <View className="mb-4 h-[110px] rounded-2xl bg-neutral-900/70" style={styles.borderCurve} />
-      <View className="mb-4 h-[110px] rounded-2xl bg-neutral-900/70" style={styles.borderCurve} />
+      <View className="mb-8 h-[110px] rounded-2xl bg-neutral-900/70" style={styles.borderCurve} />
+      <View className="-mx-5">
+        <Carousel />
+      </View>
     </ScrollView>
   );
 };

@@ -41,7 +41,7 @@ const DATA = [
   },
 ];
 
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const SCREEN_WIDTH = Dimensions.get("window").width;
 const HORIZONTAL_PADDING = 15;
 
 const AVAILABLE_WIDTH = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
@@ -66,7 +66,7 @@ const Carousel = () => {
     <Animated.ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      contentContainerClassName="mt-32 px-5"
+      contentContainerClassName="px-5"
       onScroll={scrollHandler}
       scrollEventThrottle={16}
     >

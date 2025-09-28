@@ -88,26 +88,20 @@ const CarouselItem = ({
 
   return (
     <Animated.View
+      className="aspect-[2/3] rounded-[30px] p-3 border border-white/40 overflow-hidden self-start"
       style={[
         {
-          height: 220,
           width: itemWidth,
           marginRight: itemMargin,
-          borderRadius: 30,
-          padding: 10,
-          borderWidth: 1.5,
-          borderColor: "#2D2B2E",
-          alignSelf: "flex-start",
-          overflow: "hidden",
         },
+        styles.container,
         rItemStyle,
       ]}
     >
       <Image
         contentFit="cover"
-        className="w-full h-full rounded-2xl"
         placeholder={{ blurhash: item.blurhash }}
-        style={StyleSheet.absoluteFill}
+        style={[StyleSheet.absoluteFill, styles.image]}
       />
 
       <LinearGradient
@@ -119,11 +113,13 @@ const CarouselItem = ({
       />
 
       <View className="mt-auto">
-        <Text className="text-md text-[#fff] font-bold">{item.title}</Text>
-        <Text className="text-sm text-[#B0B0B0] font-bold mb-3">{item.description}</Text>
-        <View className="flex-row justify-center items-center gap-1 rounded-full bg-[#2D2B2E] p-1">
-          <Plus size={18} color="white" strokeWidth={3} />
-          <Text className="text-md text-[#fff] font-bold">Add </Text>
+        <Text className="text-base text-white font-bold mb-1">{item.title}</Text>
+        <Text className="text-sm text-[#B0B0B0] font-medium mb-4" numberOfLines={3}>
+          {item.description}
+        </Text>
+        <View className="flex-row justify-center items-center gap-1 rounded-full bg-neutral-800/70 p-1">
+          <Plus size={15} color="#d4d4d4" strokeWidth={2.5} />
+          <Text className="text-md text-neutral-300 font-semibold">Add </Text>
         </View>
       </View>
 
@@ -135,5 +131,15 @@ const CarouselItem = ({
     </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    borderCurve: "continuous",
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+  image: {
+    borderRadius: 30,
+  },
+});
 
 export default CarouselItem;
