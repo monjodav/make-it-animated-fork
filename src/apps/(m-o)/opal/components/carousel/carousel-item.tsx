@@ -12,7 +12,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { memo } from "react";
-import { cn } from "@/src/shared/lib/utils/cn";
 
 // opal-horizontal-carousel-animation 🔽
 
@@ -112,10 +111,7 @@ const CarouselItem = ({
       onPress={simulatePress}
     >
       <Animated.View
-        className={cn(
-          "flex-1 p-3 rounded-[30px] overflow-hidden border border-white/40",
-          Platform.OS === "android" && "border-white/10"
-        )}
+        className="flex-1 p-3 rounded-[30px] overflow-hidden border border-white/10"
         style={styles.cardContainer}
       >
         <Image
@@ -159,7 +155,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     // iOS continuous curves for premium look; adjust border width per platform
     borderCurve: "continuous",
-    borderWidth: Platform.OS === "ios" ? StyleSheet.hairlineWidth : 1,
   },
   image: {
     // Match container rounding to avoid anti-alias seams over the absolute image
