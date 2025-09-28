@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { View, ViewProps } from "react-native";
 import { Canvas, DashPathEffect, Path, Skia } from "@shopify/react-native-skia";
 import {
@@ -157,6 +157,6 @@ const AnimatedDashedBorder: React.FC<Props> = ({
   );
 };
 
-export default AnimatedDashedBorder;
+export default memo(AnimatedDashedBorder);
 
 // opal-moving-dashed-border-animation 🔼

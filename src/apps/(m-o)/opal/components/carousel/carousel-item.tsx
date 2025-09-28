@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { Plus } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,39 +10,37 @@ import Animated, {
   useAnimatedProps,
   Extrapolation,
 } from "react-native-reanimated";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { memo } from "react";
 
+// opal-blurred-carousel-animation 🔽
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 interface CarouselItemProps {
-  item: {
-    id: number;
-    title: string;
-    description: string;
-    blurhash: string;
-  };
+  item: string;
   index: number;
   scrollX: SharedValue<number>;
-  itemSize: number;
   itemWidth: number;
-  itemMargin: number;
   screenWidth: number;
   horizontalPadding: number;
+  innerPadding: number;
 }
 
 const CarouselItem = ({
   item,
   index,
   scrollX,
-  itemSize,
   itemWidth,
-  itemMargin,
   screenWidth,
   horizontalPadding,
+  innerPadding,
 }: CarouselItemProps) => {
   const rItemStyle = useAnimatedStyle(() => {
     const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
-    const itemLeftEdge = index * itemSize - scrollX.get();
+    const itemLeftEdge = index * itemWidth - scrollX.get();
     const itemCenter = itemLeftEdge + itemWidth / 2;
 
     const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
@@ -66,7 +64,7 @@ const CarouselItem = ({
   const rBlurProps = useAnimatedProps(() => {
     const screenCenter = (screenWidth - horizontalPadding * 2) / 2;
 
-    const itemLeftEdge = index * itemSize - scrollX.get();
+    const itemLeftEdge = index * itemWidth - scrollX.get();
     const itemCenter = itemLeftEdge + itemWidth / 2;
 
     const distanceFromScreenCenter = Math.abs(itemCenter - screenCenter);
@@ -86,54 +84,54 @@ const CarouselItem = ({
     };
   });
 
+  const _innerPadding = Math.max(innerPadding ?? 0, 6);
+
   return (
-    <Animated.View
-      className="aspect-[2/3] rounded-[30px] p-3 border border-white/40 overflow-hidden self-start"
-      style={[
-        {
-          width: itemWidth,
-          marginRight: itemMargin,
-        },
-        styles.container,
-        rItemStyle,
-      ]}
+    <AnimatedPressable
+      style={[{ width: itemWidth, padding: _innerPadding }, rItemStyle]}
+      className="aspect-[2/3] self-start overflow-hidden"
+      onPress={simulatePress}
     >
-      <Image
-        contentFit="cover"
-        placeholder={{ blurhash: item.blurhash }}
-        style={[StyleSheet.absoluteFill, styles.image]}
-      />
+      <Animated.View
+        className="flex-1 p-3 rounded-[30px] overflow-hidden border border-white/40"
+        style={styles.cardContainer}
+      >
+        <Image
+          contentFit="cover"
+          placeholder={{ blurhash: item }}
+          style={[StyleSheet.absoluteFill, styles.image]}
+        />
 
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,0.95)", "black", "black"]}
-        locations={[0, 0.81, 0.88, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={StyleSheet.absoluteFill}
-      />
+        <LinearGradient
+          colors={["transparent", "rgba(0,0,0,0.95)", "black", "black"]}
+          locations={[0, 0.81, 0.88, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
 
-      <View className="mt-auto">
-        <Text className="text-base text-white font-bold mb-1">{item.title}</Text>
-        <Text className="text-sm text-[#B0B0B0] font-medium mb-4" numberOfLines={3}>
-          {item.description}
-        </Text>
-        <View className="flex-row justify-center items-center gap-1 rounded-full bg-neutral-800/70 p-1">
-          <Plus size={15} color="#d4d4d4" strokeWidth={2.5} />
-          <Text className="text-md text-neutral-300 font-semibold">Add </Text>
+        <View className="mt-auto">
+          <View className="mb-2 w-20 h-4 rounded-full bg-neutral-800/70" />
+          <View className="mb-1 h-3 rounded-full bg-neutral-800/70" />
+          <View className="mb-4 w-3/4 h-3 rounded-full bg-neutral-800/70" />
+          <View className="flex-row justify-center items-center gap-1 rounded-full bg-neutral-800/70 p-1">
+            <Plus size={15} color="#d4d4d4" strokeWidth={2.5} />
+            <Text className="text-md text-neutral-300 font-semibold">Add </Text>
+          </View>
         </View>
-      </View>
+      </Animated.View>
 
       <AnimatedBlurView
         animatedProps={rBlurProps}
-        style={[StyleSheet.absoluteFill]}
         pointerEvents="none"
+        style={StyleSheet.absoluteFill}
       />
-    </Animated.View>
+    </AnimatedPressable>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  cardContainer: {
     borderCurve: "continuous",
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -142,4 +140,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarouselItem;
+export default memo(CarouselItem);
+
+// opal-blurred-carousel-animation 🔼

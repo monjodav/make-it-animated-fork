@@ -10,7 +10,7 @@ export const opal: App = {
       href: "/opal/home",
     },
     {
-      name: "Moving dashed border animation",
+      name: "Blurred carousel animation",
       href: "/opal/blocks",
     },
   ],
