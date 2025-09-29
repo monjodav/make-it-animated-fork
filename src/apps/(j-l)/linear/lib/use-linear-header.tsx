@@ -28,7 +28,7 @@ export const useLinearHeader = ({
   offsetY,
   title,
   switchOffset = DEFAULT_SWITCH_OFFSET,
-  placeholderText = "Title of project",
+  placeholderText = "make it animated",
   enableOpacity = true,
   durationMs = DURATION,
 }: Params) => {
