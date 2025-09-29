@@ -17,13 +17,13 @@ const TabsLayout = () => {
       screenOptions={({ route }) => ({
         headerShown: true,
         headerTitle: "",
-        headerStyle: { backgroundColor: "black" },
+        headerStyle: { backgroundColor: "#0A090C" },
         tabBarShowLabel: false,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "gray",
         tabBarStyle: {
           borderTopWidth: 0,
-          backgroundColor: "#000",
+          backgroundColor: "#0A090C",
         },
         tabBarButton: (props) => (
           <Pressable onPress={props.onPress} style={props.style}>
