@@ -1,7 +1,10 @@
+import { SearchProvider, useSearch } from "@/src/apps/(j-l)/linear/lib/providers/search-provider";
 import Foundation from "@expo/vector-icons/Foundation";
 import { router, Tabs } from "expo-router";
 import { Inbox, Scan, Search, Settings, SquarePen } from "lucide-react-native";
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
+import { SearchOverlay } from "@/src/apps/(j-l)/linear/components/search-overlay";
+import { AnimatedTabsContainer } from "@/src/apps/(j-l)/linear/components/animated-tabs-container";
 
 enum Tab {
   Home = "home",
@@ -12,10 +15,11 @@ enum Tab {
 }
 
 const TabsLayout = () => {
+  const { searchProgress, openSearch } = useSearch();
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        headerShown: true,
+        headerShown: searchProgress.get() === 0,
         headerTitle: "",
         headerStyle: { backgroundColor: "#0A090C" },
         tabBarShowLabel: false,
@@ -25,11 +29,19 @@ const TabsLayout = () => {
           borderTopWidth: 0,
           backgroundColor: "#0A090C",
         },
-        tabBarButton: (props) => (
-          <Pressable onPress={props.onPress} style={props.style}>
-            {props.children}
-          </Pressable>
-        ),
+        tabBarButton: (props) => {
+          return (
+            <Pressable
+              onPress={(e) => {
+                props.onPress?.(e);
+                if (route.name === Tab.Search) openSearch();
+              }}
+              style={props.style}
+            >
+              {props.children}
+            </Pressable>
+          );
+        },
         headerRight: () => (
           <Pressable className="flex-row items-center mr-4" onPress={router.back}>
             <Settings size={28} color="#777777" />
@@ -72,5 +84,14 @@ const TabsLayout = () => {
 };
 
 export default function LinearLayout() {
-  return <TabsLayout />;
+  return (
+    <SearchProvider>
+      <View className="flex-1 bg-linear-back">
+        <AnimatedTabsContainer>
+          <TabsLayout />
+        </AnimatedTabsContainer>
+        <SearchOverlay />
+      </View>
+    </SearchProvider>
+  );
 }
