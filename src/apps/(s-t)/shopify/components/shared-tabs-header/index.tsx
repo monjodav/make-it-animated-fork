@@ -7,7 +7,7 @@ import { Search } from "./search";
 import { SEARCH_BAR_HEIGHT, SEARCH_FILTERS_HEIGHT } from "../../lib/constants/styles";
 import { Home } from "./home";
 import { OrdersProducts } from "./orders-products";
-import { Profile } from "./profile";
+import { ProfileTab } from "./profile-tab";
 
 // shopify-tabs-shared-header-animation 🔽
 
@@ -57,7 +57,7 @@ export const SharedTabsHeader = () => {
       {pathname.endsWith(Tab.Search) && <Search />}
       {pathname.endsWith(Tab.Home) && <Home />}
       {(pathname.endsWith(Tab.Orders) || pathname.endsWith(Tab.Products)) && <OrdersProducts />}
-      {pathname.endsWith(Tab.Profile) && <Profile />}
+      {pathname.endsWith(Tab.Profile) && <ProfileTab />}
     </Animated.View>
   );
 };
