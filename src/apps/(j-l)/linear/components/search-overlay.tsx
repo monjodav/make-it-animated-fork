@@ -10,13 +10,15 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSearch } from "../lib/providers/search-provider";
-import Animated, {
+import Animated from "react-native-reanimated";
+import {
   interpolate,
   useAnimatedStyle,
   useDerivedValue,
   runOnJS,
   withTiming,
   useSharedValue,
+  useAnimatedScrollHandler,
 } from "react-native-reanimated";
 import { Search, X } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -30,9 +32,9 @@ export const SearchOverlay = () => {
   const { searchProgress, closeSearch } = useSearch();
   const inputRef = useRef<TextInput>(null);
   const keyboardHeight = useSharedValue(0);
-
   const inputReveal = useSharedValue(0);
   const prevProgress = useSharedValue(0);
+  const scrollY = useSharedValue(0);
 
   const focus = () => inputRef.current?.focus();
   const blur = () => inputRef.current?.blur();
@@ -45,23 +47,19 @@ export const SearchOverlay = () => {
       const h = e.endCoordinates?.height ?? 0;
       const duration = e.duration ?? 300;
 
-      inputReveal.set(0);
-      keyboardHeight.set(withTiming(h, { duration }));
+      inputReveal.value = 0;
+      keyboardHeight.value = withTiming(h, { duration });
 
       const delay = duration;
       setTimeout(() => {
-        inputReveal.set(
-          withTiming(1, {
-            duration: duration,
-          })
-        );
+        inputReveal.value = withTiming(1, { duration });
       }, delay / 3);
     };
 
     const onHide = (e: any) => {
       const duration = e?.duration ?? 200;
-      inputReveal.set(withTiming(0, { duration: duration * 0.5 }));
-      keyboardHeight.set(withTiming(0, { duration }));
+      inputReveal.value = withTiming(0, { duration: duration * 0.5 });
+      keyboardHeight.value = withTiming(0, { duration });
     };
     const subShow = Keyboard.addListener(showEvent, onShow);
     const subHide = Keyboard.addListener(hideEvent, onHide);
@@ -72,13 +70,13 @@ export const SearchOverlay = () => {
   }, []);
 
   useDerivedValue(() => {
-    const prev = prevProgress.get();
-    const curr = searchProgress.get();
+    const prev = prevProgress.value;
+    const curr = searchProgress.value;
 
     if (prev < 0.5 && curr >= 0.5) runOnJS(focus)();
 
     if (prev > 0.05 && curr <= 0.05) runOnJS(blur)();
-    prevProgress.set(curr);
+    prevProgress.value = curr;
   });
 
   const _renderListItem = () => (
@@ -88,10 +86,70 @@ export const SearchOverlay = () => {
     </View>
   );
 
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      scrollY.value = e.contentOffset.y;
+    },
+  });
+
+  const rPullHandleStyle = useAnimatedStyle(() => {
+    const y = scrollY.value;
+
+    const translateY = y < 0 ? -y / 2 : 0;
+    return { transform: [{ translateY }] };
+  });
+
+  const BAR_WIDTH = 28;
+  const MAX_ANGLE = 40;
+  const MORPH_DISTANCE = 60;
+
+  const rLeftBarStyle = useAnimatedStyle(() => {
+    const overscroll = Math.max(-scrollY.value, 0);
+    const progress = Math.min(overscroll / MORPH_DISTANCE, 1);
+    const angle = MAX_ANGLE * progress;
+    const drop = 3 * progress;
+    const shorten = 1 - 0.15 * progress;
+
+    const pivot = BAR_WIDTH / 2;
+    return {
+      transform: [
+        { translateY: drop },
+        { translateX: pivot },
+        { rotate: `${angle}deg` },
+        { translateX: -pivot },
+
+        { translateX: -BAR_WIDTH / 2 },
+        { scaleX: shorten },
+      ],
+    };
+  });
+
+  const rRightBarStyle = useAnimatedStyle(() => {
+    const overscroll = Math.max(-scrollY.value, 0);
+    const progress = Math.min(overscroll / MORPH_DISTANCE, 1);
+    const angle = -MAX_ANGLE * progress;
+    const drop = 3 * progress;
+    const shorten = 1 - 0.15 * progress;
+    const pivot = BAR_WIDTH / 2;
+    return {
+      transform: [
+        { translateY: drop },
+        { translateX: -pivot },
+        { rotate: `${angle}deg` },
+        { translateX: pivot },
+
+        { translateX: BAR_WIDTH / 2 },
+        { scaleX: shorten },
+      ],
+    };
+  });
+
+  const AnimatedFlatList: typeof FlatList = (Animated as any).FlatList || FlatList;
+
   const rContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(searchProgress.get(), [0, 1], [translateYDistance, 0]);
-    const scale = interpolate(searchProgress.get(), [0, 1], [0.96, 1]);
-    const opacity = interpolate(searchProgress.get(), [0, 1], [0, 1]);
+    const translateY = interpolate(searchProgress.value, [0, 1], [translateYDistance, 0]);
+    const scale = interpolate(searchProgress.value, [0, 1], [0.96, 1]);
+    const opacity = interpolate(searchProgress.value, [0, 1], [0, 1]);
 
     return {
       transform: [
@@ -103,19 +161,19 @@ export const SearchOverlay = () => {
         },
       ],
       opacity,
-      pointerEvents: searchProgress.get() === 1 ? "auto" : "none",
+      pointerEvents: searchProgress.value === 1 ? "auto" : "none",
     };
   });
 
   const rInputBarStyle = useAnimatedStyle(() => {
-    const finalY = -keyboardHeight.get() - 0;
-    const startY = -keyboardHeight.get() + 40;
-    const translateY = startY + (finalY - startY) * inputReveal.get();
-    const opacity = interpolate(inputReveal.get(), [0, 1], [0, 1]);
+    const finalY = -keyboardHeight.value - 0;
+    const startY = -keyboardHeight.value + 40;
+    const translateY = startY + (finalY - startY) * inputReveal.value;
+    const opacity = interpolate(inputReveal.value, [0, 1], [0, 1]);
     return {
       transform: [{ translateY }],
       opacity,
-      pointerEvents: inputReveal.get() === 1 ? "auto" : "none",
+      pointerEvents: inputReveal.value === 1 ? "auto" : "none",
     };
   });
 
@@ -154,11 +212,54 @@ export const SearchOverlay = () => {
         </Pressable>
       </Animated.View>
 
-      <FlatList
+      <Animated.View
+        style={rPullHandleStyle}
+        className="self-center items-center justify-center pt-3 pb-1"
+      >
+        <View
+          style={{
+            width: BAR_WIDTH * 2,
+            height: 14,
+            position: "relative",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Animated.View
+            style={[
+              rLeftBarStyle,
+              {
+                position: "absolute",
+                height: 5,
+                borderTopLeftRadius: 10,
+                borderBottomLeftRadius: 10,
+                width: BAR_WIDTH,
+              } as any,
+            ]}
+            className="bg-linear-front"
+          />
+          <Animated.View
+            style={[
+              rRightBarStyle,
+              {
+                position: "absolute",
+                height: 5,
+                borderTopRightRadius: 10,
+                borderBottomRightRadius: 10,
+                width: BAR_WIDTH,
+              } as any,
+            ]}
+            className="bg-linear-front"
+          />
+        </View>
+      </Animated.View>
+
+      <AnimatedFlatList
         data={Array.from({ length: 20 })}
-        keyExtractor={(item, index) => `${item}-${index}`}
+        keyExtractor={(_item: unknown, index: number) => `${index}`}
         renderItem={_renderListItem}
-        contentContainerClassName="pt-3"
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
         keyboardDismissMode="none"
       />
