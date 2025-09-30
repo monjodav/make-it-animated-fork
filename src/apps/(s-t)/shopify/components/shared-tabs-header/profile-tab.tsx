@@ -4,7 +4,7 @@ import Animated, { FadeIn } from "react-native-reanimated";
 
 // shopify-tabs-shared-header-animation 🔽
 
-export const Profile: FC = () => {
+export const ProfileTab: FC = () => {
   return (
     <Animated.View
       /* Simple 150ms fade keeps tab header transitions consistent.
