@@ -15,11 +15,11 @@ enum Tab {
 }
 
 const TabsLayout = () => {
-  const { searchProgress, openSearch } = useSearch();
+  const { searchProgress, toggleSearch } = useSearch();
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        headerShown: searchProgress.get() === 0,
+        headerShown: searchProgress.value === 0,
         headerTitle: "",
         headerStyle: { backgroundColor: "#0A090C" },
         tabBarShowLabel: false,
@@ -30,14 +30,22 @@ const TabsLayout = () => {
           backgroundColor: "#0A090C",
         },
         tabBarButton: (props) => {
+          if (route.name === Tab.Search) {
+            return (
+              <Pressable
+                accessibilityRole="button"
+                style={props.style}
+                onPress={(e) => {
+                  e.preventDefault?.();
+                  toggleSearch();
+                }}
+              >
+                {props.children}
+              </Pressable>
+            );
+          }
           return (
-            <Pressable
-              onPress={(e) => {
-                props.onPress?.(e);
-                if (route.name === Tab.Search) openSearch();
-              }}
-              style={props.style}
-            >
+            <Pressable onPress={props.onPress} style={props.style}>
               {props.children}
             </Pressable>
           );

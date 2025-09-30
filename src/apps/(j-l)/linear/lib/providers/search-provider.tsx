@@ -6,6 +6,7 @@ type ContextValue = {
   searchProgress: SharedValue<number>;
   openSearch: () => void;
   closeSearch: () => void;
+  toggleSearch: () => void;
 };
 
 const SearchContext = createContext<ContextValue>({} as ContextValue);
@@ -14,13 +15,17 @@ export const SearchProvider: FC<PropsWithChildren> = ({ children }) => {
   const searchProgress = useSharedValue(0);
 
   const openSearch = () => {
-    searchProgress.set(withTiming(1, TIMING_CONFIG));
+    searchProgress.value = withTiming(1, TIMING_CONFIG);
   };
   const closeSearch = () => {
-    searchProgress.set(withTiming(0, TIMING_CONFIG));
+    searchProgress.value = withTiming(0, TIMING_CONFIG);
+  };
+  const toggleSearch = () => {
+    if (searchProgress.value > 0) closeSearch();
+    else openSearch();
   };
 
-  const value = { searchProgress, openSearch, closeSearch };
+  const value = { searchProgress, openSearch, closeSearch, toggleSearch };
 
   return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
 };
