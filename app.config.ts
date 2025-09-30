@@ -70,12 +70,6 @@ export default ({ config }: { config: ExpoConfig }) => ({
     },
     plugins: [
       "expo-router",
-      [
-        "expo-dev-launcher",
-        {
-          launchMode: "most-recent",
-        },
-      ],
       "expo-font",
       [
         "expo-splash-screen",
