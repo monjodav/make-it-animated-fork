@@ -24,17 +24,23 @@ import { Search, X } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 
+const BAR_WIDTH = 28;
+const MAX_ANGLE = 40;
+const MORPH_DISTANCE = 60;
+
 export const SearchOverlay = () => {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
   const translateYDistance = height * 0.07;
 
   const { searchProgress, closeSearch } = useSearch();
+
   const inputRef = useRef<TextInput>(null);
   const keyboardHeight = useSharedValue(0);
   const inputReveal = useSharedValue(0);
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
+  const overscrollCloseTriggered = useSharedValue(false);
 
   const focus = () => inputRef.current?.focus();
   const blur = () => inputRef.current?.blur();
@@ -47,19 +53,19 @@ export const SearchOverlay = () => {
       const h = e.endCoordinates?.height ?? 0;
       const duration = e.duration ?? 300;
 
-      inputReveal.value = 0;
-      keyboardHeight.value = withTiming(h, { duration });
+      inputReveal.set(0);
+      keyboardHeight.set(withTiming(h, { duration }));
 
       const delay = duration;
       setTimeout(() => {
-        inputReveal.value = withTiming(1, { duration });
+        inputReveal.set(withTiming(1, { duration }));
       }, delay / 3);
     };
 
     const onHide = (e: any) => {
       const duration = e?.duration ?? 200;
-      inputReveal.value = withTiming(0, { duration: duration * 0.5 });
-      keyboardHeight.value = withTiming(0, { duration });
+      inputReveal.set(withTiming(0, { duration: duration * 0.5 }));
+      keyboardHeight.set(withTiming(0, { duration }));
     };
     const subShow = Keyboard.addListener(showEvent, onShow);
     const subHide = Keyboard.addListener(hideEvent, onHide);
@@ -70,41 +76,48 @@ export const SearchOverlay = () => {
   }, []);
 
   useDerivedValue(() => {
-    const prev = prevProgress.value;
-    const curr = searchProgress.value;
+    const prev = prevProgress.get();
+    const curr = searchProgress.get();
 
     if (prev < 0.5 && curr >= 0.5) runOnJS(focus)();
 
     if (prev > 0.05 && curr <= 0.05) runOnJS(blur)();
-    prevProgress.value = curr;
+
+    if (curr === 0 && overscrollCloseTriggered.get()) {
+      overscrollCloseTriggered.set(false);
+    }
+    prevProgress.set(curr);
   });
 
   const _renderListItem = () => (
     <View className="flex-row px-5 py-3 items-center gap-4">
-      <View className="h-10 w-10 rounded-full bg-linear-front" />
+      <View className="h-8 w-8 rounded-full bg-linear-front" />
       <View className="h-4 w-[150] mt-2 rounded-full bg-linear-front" />
     </View>
   );
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: (e) => {
-      scrollY.value = e.contentOffset.y;
+      const y = e.contentOffset.y;
+      scrollY.set(y);
+
+      if (y <= -150 && !overscrollCloseTriggered.get()) {
+        overscrollCloseTriggered.set(true);
+        runOnJS(blur)();
+        runOnJS(closeSearch)();
+      }
     },
   });
 
   const rPullHandleStyle = useAnimatedStyle(() => {
-    const y = scrollY.value;
+    const y = scrollY.get();
 
     const translateY = y < 0 ? -y / 2 : 0;
     return { transform: [{ translateY }] };
   });
 
-  const BAR_WIDTH = 28;
-  const MAX_ANGLE = 40;
-  const MORPH_DISTANCE = 60;
-
   const rLeftBarStyle = useAnimatedStyle(() => {
-    const overscroll = Math.max(-scrollY.value, 0);
+    const overscroll = Math.max(-scrollY.get(), 0);
     const progress = Math.min(overscroll / MORPH_DISTANCE, 1);
     const angle = MAX_ANGLE * progress;
     const drop = 3 * progress;
@@ -125,7 +138,7 @@ export const SearchOverlay = () => {
   });
 
   const rRightBarStyle = useAnimatedStyle(() => {
-    const overscroll = Math.max(-scrollY.value, 0);
+    const overscroll = Math.max(-scrollY.get(), 0);
     const progress = Math.min(overscroll / MORPH_DISTANCE, 1);
     const angle = -MAX_ANGLE * progress;
     const drop = 3 * progress;
@@ -147,9 +160,9 @@ export const SearchOverlay = () => {
   const AnimatedFlatList: typeof FlatList = (Animated as any).FlatList || FlatList;
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(searchProgress.value, [0, 1], [translateYDistance, 0]);
-    const scale = interpolate(searchProgress.value, [0, 1], [0.96, 1]);
-    const opacity = interpolate(searchProgress.value, [0, 1], [0, 1]);
+    const translateY = interpolate(searchProgress.get(), [0, 1], [translateYDistance, 0]);
+    const scale = interpolate(searchProgress.get(), [0, 1], [0.96, 1]);
+    const opacity = interpolate(searchProgress.get(), [0, 1], [0, 1]);
 
     return {
       transform: [
@@ -161,19 +174,19 @@ export const SearchOverlay = () => {
         },
       ],
       opacity,
-      pointerEvents: searchProgress.value === 1 ? "auto" : "none",
+      pointerEvents: searchProgress.get() === 1 ? "auto" : "none",
     };
   });
 
   const rInputBarStyle = useAnimatedStyle(() => {
-    const finalY = -keyboardHeight.value - 0;
-    const startY = -keyboardHeight.value + 40;
-    const translateY = startY + (finalY - startY) * inputReveal.value;
-    const opacity = interpolate(inputReveal.value, [0, 1], [0, 1]);
+    const finalY = -keyboardHeight.get() - 0;
+    const startY = -keyboardHeight.get() + 40;
+    const translateY = startY + (finalY - startY) * inputReveal.get();
+    const opacity = interpolate(inputReveal.get(), [0, 1], [0, 1]);
     return {
       transform: [{ translateY }],
       opacity,
-      pointerEvents: inputReveal.value === 1 ? "auto" : "none",
+      pointerEvents: inputReveal.get() === 1 ? "auto" : "none",
     };
   });
 
@@ -234,9 +247,9 @@ export const SearchOverlay = () => {
                 borderTopLeftRadius: 10,
                 borderBottomLeftRadius: 10,
                 width: BAR_WIDTH,
-              } as any,
+                backgroundColor: "#484848",
+              },
             ]}
-            className="bg-linear-front"
           />
           <Animated.View
             style={[
@@ -247,9 +260,9 @@ export const SearchOverlay = () => {
                 borderTopRightRadius: 10,
                 borderBottomRightRadius: 10,
                 width: BAR_WIDTH,
-              } as any,
+                backgroundColor: "#484848",
+              },
             ]}
-            className="bg-linear-front"
           />
         </View>
       </Animated.View>

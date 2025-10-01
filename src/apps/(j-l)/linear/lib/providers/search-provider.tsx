@@ -15,13 +15,13 @@ export const SearchProvider: FC<PropsWithChildren> = ({ children }) => {
   const searchProgress = useSharedValue(0);
 
   const openSearch = () => {
-    searchProgress.value = withTiming(1, TIMING_CONFIG);
+    searchProgress.set(withTiming(1, TIMING_CONFIG));
   };
   const closeSearch = () => {
-    searchProgress.value = withTiming(0, TIMING_CONFIG);
+    searchProgress.set(withTiming(0, TIMING_CONFIG));
   };
   const toggleSearch = () => {
-    if (searchProgress.value > 0) closeSearch();
+    if (searchProgress.get() > 0) closeSearch();
     else openSearch();
   };
 
