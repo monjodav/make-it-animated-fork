@@ -59,7 +59,7 @@ export const SearchOverlay = () => {
       const delay = duration;
       setTimeout(() => {
         inputReveal.set(withTiming(1, { duration }));
-      }, delay / 3);
+      }, delay / 2);
     };
 
     const onHide = (e: any) => {
@@ -160,21 +160,16 @@ export const SearchOverlay = () => {
   const AnimatedFlatList: typeof FlatList = (Animated as any).FlatList || FlatList;
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(searchProgress.get(), [0, 1], [translateYDistance, 0]);
-    const scale = interpolate(searchProgress.get(), [0, 1], [0.96, 1]);
-    const opacity = interpolate(searchProgress.get(), [0, 1], [0, 1]);
+    const raw = searchProgress.get();
+    const eased = 1 - (1 - raw) * (1 - raw);
+    const translateY = translateYDistance * (1 - eased);
+    const scale = 0.96 + 0.04 * eased;
+    const opacity = eased;
 
     return {
-      transform: [
-        {
-          translateY,
-        },
-        {
-          scale,
-        },
-      ],
+      transform: [{ translateY }, { scale }],
       opacity,
-      pointerEvents: searchProgress.get() === 1 ? "auto" : "none",
+      pointerEvents: raw === 1 ? "auto" : "none",
     };
   });
 
