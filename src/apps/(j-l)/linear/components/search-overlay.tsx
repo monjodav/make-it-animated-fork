@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSearch } from "../lib/providers/search-provider";
-import Animated from "react-native-reanimated";
+import Animated, { useAnimatedProps } from "react-native-reanimated";
 import {
   interpolate,
   useAnimatedStyle,
@@ -21,12 +21,18 @@ import {
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
 import { Search, X } from "lucide-react-native";
+import Svg, { Path } from "react-native-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 
 const BAR_WIDTH = 28;
-const MAX_ANGLE = 40;
+const LINE_THICKNESS = 5;
 const MORPH_DISTANCE = 60;
+
+const CHEVRON_ANGLE_DEG = 38;
+const CHEVRON_ANGLE_RAD = (CHEVRON_ANGLE_DEG * Math.PI) / 180;
+
+const CHEVRON_RISE = Math.tan(CHEVRON_ANGLE_RAD) * BAR_WIDTH;
 
 export const SearchOverlay = () => {
   const insets = useSafeAreaInsets();
@@ -109,52 +115,45 @@ export const SearchOverlay = () => {
     },
   });
 
-  const rPullHandleStyle = useAnimatedStyle(() => {
+  const rChevronContainerStyle = useAnimatedStyle(() => {
     const rawScrollY = scrollY.get();
-
     const translateY = rawScrollY < 0 ? -rawScrollY / 2 : 0;
     return { transform: [{ translateY }] };
   });
 
-  const rLeftBarStyle = useAnimatedStyle(() => {
+  const morphProgress = useDerivedValue(() => {
     const overscroll = Math.max(-scrollY.get(), 0);
-    const progress = Math.min(overscroll / MORPH_DISTANCE, 1);
-    const angle = MAX_ANGLE * progress;
-    const drop = 3 * progress;
-    const shorten = 1 - 0.15 * progress;
+    return Math.min(overscroll / MORPH_DISTANCE, 1);
+  });
 
-    const pivot = BAR_WIDTH / 2;
+  const AnimatedPath = Animated.createAnimatedComponent(Path);
+
+  const rChevronMetrics = useDerivedValue(() => {
+    const progress = morphProgress.get();
+    const pAdj = Math.pow(progress, 0.85);
+    const midDrop = CHEVRON_RISE * pAdj;
+    const strokeW = LINE_THICKNESS;
+    return { midDrop, strokeW };
+  });
+
+  const animatedPathProps = useAnimatedProps(() => {
+    const { midDrop, strokeW } = rChevronMetrics.get();
+    const vOffset = strokeW / 2;
+    const hInset = strokeW / 2;
+    const left = hInset;
+    const right = 2 * BAR_WIDTH - hInset;
+    const midX = BAR_WIDTH;
+    const midY = (midDrop + vOffset).toFixed(3);
     return {
-      transform: [
-        { translateY: drop },
-        { translateX: pivot },
-        { rotate: `${angle}deg` },
-        { translateX: -pivot },
-
-        { translateX: -BAR_WIDTH / 2 },
-        { scaleX: shorten },
-      ],
+      d: `M${left} ${vOffset} L ${midX} ${midY} L ${right} ${vOffset}`,
+      strokeWidth: strokeW,
     };
   });
 
-  const rRightBarStyle = useAnimatedStyle(() => {
-    const overscroll = Math.max(-scrollY.get(), 0);
-    const progress = Math.min(overscroll / MORPH_DISTANCE, 1);
-    const angle = -MAX_ANGLE * progress;
-    const drop = 3 * progress;
-    const shorten = 1 - 0.15 * progress;
-    const pivot = BAR_WIDTH / 2;
-    return {
-      transform: [
-        { translateY: drop },
-        { translateX: -pivot },
-        { rotate: `${angle}deg` },
-        { translateX: pivot },
-
-        { translateX: BAR_WIDTH / 2 },
-        { scaleX: shorten },
-      ],
-    };
+  const rChevronStyle = useAnimatedStyle(() => {
+    const { midDrop } = rChevronMetrics.get();
+    const translateY = -(midDrop / 2);
+    return { transform: [{ translateY }] };
   });
 
   const AnimatedFlatList: typeof FlatList = (Animated as any).FlatList || FlatList;
@@ -221,45 +220,24 @@ export const SearchOverlay = () => {
       </Animated.View>
 
       <Animated.View
-        style={rPullHandleStyle}
+        style={rChevronContainerStyle}
         className="self-center items-center justify-center pt-3 pb-1"
       >
-        <View
-          style={{
-            width: BAR_WIDTH * 2,
-            height: 14,
-            position: "relative",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Animated.View
-            style={[
-              rLeftBarStyle,
-              {
-                position: "absolute",
-                height: 5,
-                borderTopLeftRadius: 10,
-                borderBottomLeftRadius: 10,
-                width: BAR_WIDTH,
-                backgroundColor: "#484848",
-              },
-            ]}
-          />
-          <Animated.View
-            style={[
-              rRightBarStyle,
-              {
-                position: "absolute",
-                height: 5,
-                borderTopRightRadius: 10,
-                borderBottomRightRadius: 10,
-                width: BAR_WIDTH,
-                backgroundColor: "#484848",
-              },
-            ]}
-          />
-        </View>
+        <Animated.View style={rChevronStyle}>
+          <Svg
+            width={BAR_WIDTH * 2}
+            height={CHEVRON_RISE + LINE_THICKNESS * 2}
+            viewBox={`0 0 ${BAR_WIDTH * 2} ${CHEVRON_RISE + LINE_THICKNESS * 2}`}
+            fill="none"
+          >
+            <AnimatedPath
+              animatedProps={animatedPathProps}
+              stroke="#484848"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Svg>
+        </Animated.View>
       </Animated.View>
 
       <AnimatedFlatList
