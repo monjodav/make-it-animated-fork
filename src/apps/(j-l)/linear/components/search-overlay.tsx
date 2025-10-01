@@ -50,11 +50,11 @@ export const SearchOverlay = () => {
     const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
 
     const onShow = (e: any) => {
-      const h = e.endCoordinates?.height ?? 0;
+      const keyboardHeightValue = e.endCoordinates?.height ?? 0;
       const duration = e.duration ?? 300;
 
       inputReveal.set(0);
-      keyboardHeight.set(withTiming(h, { duration }));
+      keyboardHeight.set(withTiming(keyboardHeightValue, { duration }));
 
       const delay = duration;
       setTimeout(() => {
@@ -98,10 +98,10 @@ export const SearchOverlay = () => {
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: (e) => {
-      const y = e.contentOffset.y;
-      scrollY.set(y);
+      const offsetY = e.contentOffset.y;
+      scrollY.set(offsetY);
 
-      if (y <= -150 && !overscrollCloseTriggered.get()) {
+      if (offsetY <= -150 && !overscrollCloseTriggered.get()) {
         overscrollCloseTriggered.set(true);
         runOnJS(blur)();
         runOnJS(closeSearch)();
@@ -110,9 +110,9 @@ export const SearchOverlay = () => {
   });
 
   const rPullHandleStyle = useAnimatedStyle(() => {
-    const y = scrollY.get();
+    const rawScrollY = scrollY.get();
 
-    const translateY = y < 0 ? -y / 2 : 0;
+    const translateY = rawScrollY < 0 ? -rawScrollY / 2 : 0;
     return { transform: [{ translateY }] };
   });
 
@@ -160,16 +160,16 @@ export const SearchOverlay = () => {
   const AnimatedFlatList: typeof FlatList = (Animated as any).FlatList || FlatList;
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const raw = searchProgress.get();
-    const eased = 1 - (1 - raw) * (1 - raw);
-    const translateY = translateYDistance * (1 - eased);
-    const scale = 0.96 + 0.04 * eased;
-    const opacity = eased;
+    const rawSearchProgress = searchProgress.get();
+    const easedValue = 1 - (1 - rawSearchProgress) * (1 - rawSearchProgress);
+    const translateY = translateYDistance * (1 - easedValue);
+    const scale = 0.96 + 0.04 * easedValue;
+    const opacity = easedValue;
 
     return {
       transform: [{ translateY }, { scale }],
       opacity,
-      pointerEvents: raw === 1 ? "auto" : "none",
+      pointerEvents: rawSearchProgress === 1 ? "auto" : "none",
     };
   });
 
