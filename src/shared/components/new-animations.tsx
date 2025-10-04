@@ -5,6 +5,7 @@ import { App } from "../lib/constants/apps-list";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
 import { opal } from "../lib/constants/apps/o";
+import { linear } from "../lib/constants/apps/l";
 
 type AnimationItemProps = {
   label: string;
@@ -47,7 +48,10 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
 
   return (
     <View className="px-5 gap-5 py-5">
-      <AnimationItem label={getItemProps(opal, 0).label} onPress={getItemProps(opal, 0).onPress} />
+      <AnimationItem
+        label={getItemProps(linear, 1).label}
+        onPress={getItemProps(linear, 1).onPress}
+      />
       <AnimationItem label={getItemProps(opal, 1).label} onPress={getItemProps(opal, 1).onPress} />
     </View>
   );
