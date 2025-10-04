@@ -1,5 +1,6 @@
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Foundation from "@expo/vector-icons/Foundation";
-import { router, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { Inbox, Scan, Search, Settings, SquarePen } from "lucide-react-native";
 import { Pressable } from "react-native";
 
@@ -11,11 +12,10 @@ enum Tab {
   Profile = "profile",
 }
 
-const TabsLayout = () => {
+export default function LinearTabsLayout() {
   return (
     <Tabs
-      screenOptions={({ route }) => ({
-        headerShown: true,
+      screenOptions={{
         headerTitle: "",
         headerStyle: { backgroundColor: "#0A090C" },
         tabBarShowLabel: false,
@@ -25,17 +25,12 @@ const TabsLayout = () => {
           borderTopWidth: 0,
           backgroundColor: "#0A090C",
         },
-        tabBarButton: (props) => (
-          <Pressable onPress={props.onPress} style={props.style}>
-            {props.children}
-          </Pressable>
-        ),
         headerRight: () => (
-          <Pressable className="flex-row items-center mr-4" onPress={router.back}>
-            <Settings size={28} color="#777777" />
+          <Pressable className="flex-row items-center right-4" onPress={simulatePress}>
+            <Settings size={20} color="#777777" />
           </Pressable>
         ),
-      })}
+      }}
     >
       <Tabs.Screen
         name={Tab.Home}
@@ -69,8 +64,4 @@ const TabsLayout = () => {
       />
     </Tabs>
   );
-};
-
-export default function LinearLayout() {
-  return <TabsLayout />;
 }

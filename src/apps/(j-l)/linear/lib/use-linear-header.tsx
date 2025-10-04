@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { View } from "react-native";
+import { useCallback, useEffect } from "react";
+import { View, useWindowDimensions } from "react-native";
 import { useNavigation } from "expo-router";
 import Animated, {
   Easing,
@@ -20,7 +20,6 @@ type Params = {
   title: string;
   switchOffset?: number;
   placeholderText?: string;
-  enableOpacity?: boolean;
   durationMs?: number;
 };
 
@@ -29,14 +28,16 @@ export const useLinearHeader = ({
   title,
   switchOffset = DEFAULT_SWITCH_OFFSET,
   placeholderText = "make it animated",
-  enableOpacity = true,
   durationMs = DURATION,
 }: Params) => {
+  const { width } = useWindowDimensions();
+
   const navigation = useNavigation();
   const progress = useSharedValue(0);
 
   useDerivedValue(() => {
     const scrollY = offsetY.get() >= switchOffset ? 1 : 0;
+
     if (progress.get() !== scrollY) {
       progress.set(withTiming(scrollY, { duration: durationMs, easing: Easing.out(Easing.cubic) }));
     }
@@ -44,57 +45,65 @@ export const useLinearHeader = ({
 
   const rOutgoingStyle = useAnimatedStyle(() => {
     const flipProgress = progress.get();
+
     return {
-      opacity: enableOpacity ? 1 - flipProgress : 1,
+      opacity: 1 - flipProgress,
       transform: [
         { perspective: PERSPECTIVE },
         { rotateX: `${90 * flipProgress}deg` },
         { translateY: -ROW_HEIGHT * flipProgress },
       ],
-      position: "absolute",
-      left: 0,
-      top: 0,
       backfaceVisibility: "hidden",
     };
   });
 
   const rIncomingStyle = useAnimatedStyle(() => {
     const flipProgress = progress.get();
+
     return {
-      opacity: enableOpacity ? flipProgress : 1,
+      opacity: flipProgress,
       transform: [
         { perspective: PERSPECTIVE },
         { rotateX: `${-90 * (1 - flipProgress)}deg` },
         { translateY: ROW_HEIGHT * (1 - flipProgress) },
       ],
-      position: "absolute",
-      left: 0,
-      top: 0,
       backfaceVisibility: "hidden",
     };
   });
 
-  useEffect(() => {
-    const headerLeft = () => (
+  const headerLeft = useCallback(
+    () => (
       <View
+        className="overflow-hidden"
         style={{
-          left: 15,
-          overflow: "hidden",
+          left: 16,
+          width: width / 2,
           height: ROW_HEIGHT,
-          justifyContent: "center",
-          width: "80%",
         }}
       >
-        <Animated.Text className="text-[#777777] text-lg font-bold" style={rOutgoingStyle}>
+        <Animated.Text
+          key="placeholder"
+          className="absolute left-0 text-[#777777] text-lg font-bold"
+          style={rOutgoingStyle}
+        >
           {placeholderText}
         </Animated.Text>
-        <Animated.Text className="text-[#777777] text-lg font-bold" style={rIncomingStyle}>
+        <Animated.Text
+          key="title"
+          className="absolute left-0 text-[#777777] text-lg font-bold"
+          style={rIncomingStyle}
+        >
           {title}
         </Animated.Text>
       </View>
-    );
+    ),
+    [width, rOutgoingStyle, placeholderText, rIncomingStyle, title]
+  );
 
-    navigation.setOptions({ headerTitle: "", headerLeft });
-    navigation.getParent?.()?.setOptions?.({ headerTitle: "", headerLeft });
-  }, [navigation, rOutgoingStyle, rIncomingStyle, title, placeholderText]);
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft,
+    });
+    navigation.getParent()?.setOptions({ headerTitle: "", headerLeft });
+  }, [navigation, headerLeft]);
 };
