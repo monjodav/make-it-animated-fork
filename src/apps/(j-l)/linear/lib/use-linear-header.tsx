@@ -111,7 +111,7 @@ export const useLinearHeader = ({
         className="overflow-hidden"
         style={{
           // Left inset matches design padding; width 1/2 limits layout reflow during flip
-          left: 16,
+          left: 14.5,
           width: width / 2,
           // Ensures the two texts share identical vertical space/baseline math
           height: ROW_HEIGHT,
