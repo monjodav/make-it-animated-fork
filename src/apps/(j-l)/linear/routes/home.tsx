@@ -5,19 +5,24 @@ import { useLinearHeader } from "../lib/use-linear-header";
 import LinearLogo from "@/assets/images/apps/linear.png";
 import GithubLogo from "@/assets/images/apps/github.png";
 
+// linear-header-on-scroll-animation 🔽
+
 const TITLE = "Home";
 
 export default function Home() {
   const router = useRouter();
 
+  // Shared scroll offset drives header flip progress via useLinearHeader.
   const scrollY = useSharedValue(0);
 
+  // UI-thread scroll handler keeps scroll → animation path jank-free.
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.set(event.contentOffset.y);
     },
   });
 
+  // Hook wires the header flip; thresholding and timing handled inside.
   useLinearHeader({ offsetY: scrollY, title: TITLE });
 
   const onTeamPress = () => {
@@ -29,6 +34,7 @@ export default function Home() {
       className="bg-linear-back"
       contentContainerClassName="px-4"
       onScroll={scrollHandler}
+      // ~60fps updates ensure smooth flip timing without overloading JS.
       scrollEventThrottle={16}
     >
       <Text className="text-white text-3xl font-bold mt-2">{TITLE}</Text>
@@ -48,3 +54,5 @@ export default function Home() {
     </Animated.ScrollView>
   );
 }
+
+// linear-header-on-scroll-animation 🔼

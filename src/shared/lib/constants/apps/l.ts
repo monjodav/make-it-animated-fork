@@ -9,6 +9,10 @@ export const linear: App = {
   animations: [
     {
       name: "Button tabs indicator animation",
+      href: "/linear/home/dev-issues",
+    },
+    {
+      name: "Header on scroll animation",
       href: "/linear/home",
     },
   ],

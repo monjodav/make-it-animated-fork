@@ -2,13 +2,18 @@ import { Text, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useLinearHeader } from "../lib/use-linear-header";
 
+// linear-header-on-scroll-animation 🔽
+
 const TITLE = "Inbox";
 
 export const Inbox = () => {
+  // Shared scroll offset drives header flip progress via useLinearHeader.
   const scrollY = useSharedValue(0);
 
+  // Wire the animated header; thresholding/timing handled in the hook.
   useLinearHeader({ offsetY: scrollY, title: TITLE });
 
+  // UI-thread scroll handler keeps scroll → animation path jank-free.
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.set(event.contentOffset.y);
@@ -33,7 +38,10 @@ export const Inbox = () => {
       ListHeaderComponent={() => <Text className="text-white text-3xl font-bold">{TITLE}</Text>}
       showsVerticalScrollIndicator={false}
       onScroll={scrollHandler}
+      // ~60fps updates ensure smooth flip timing without overloading JS.
       scrollEventThrottle={16}
     />
   );
 };
+
+// linear-header-on-scroll-animation 🔼
