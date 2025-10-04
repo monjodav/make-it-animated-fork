@@ -2,6 +2,7 @@ import LinearImage from "@/assets/images/apps/linear.png";
 import LinkedinImage from "@/assets/images/apps/linkedin.png";
 import LumaImage from "@/assets/images/apps/luma.png";
 import { App } from "../apps-list";
+import { Platform } from "react-native";
 
 export const linear: App = {
   name: "Linear",
@@ -13,7 +14,7 @@ export const linear: App = {
     },
     {
       name: "Header on scroll animation",
-      href: "/linear/home",
+      href: Platform.OS === "ios" ? "/linear/home" : "/linear/inbox",
     },
   ],
 };
