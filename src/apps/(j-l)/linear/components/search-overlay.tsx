@@ -275,7 +275,7 @@ export const SearchOverlay = () => {
             placeholder="Quick find"
             placeholderTextColor="#888"
             returnKeyType="search"
-            className="flex-1"
+            className="flex-1 text-white"
             onSubmitEditing={closeSearch}
           />
         </View>
