@@ -20,8 +20,8 @@ export const TabIndicator: FC<Props> = ({ indexDecimal, width }) => {
     // Maps tab index to horizontal position: index 0 = 0px, index 1 = width px, etc.
     // Spring animation provides Discord-style bouncy tab switching feel
     const translateX = withSpring(interpolate(indexDecimal.value, [0, 1], [0, width]), {
-      stiffness: 180, // Medium-high stiffness for responsive but controlled motion
-      damping: 20, // Light damping allows subtle bounce without excessive oscillation
+      damping: 90, // Light damping allows subtle bounce without excessive oscillation
+      stiffness: 900, // Medium-high stiffness for responsive but controlled motion
     });
 
     return {
