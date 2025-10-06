@@ -1,22 +1,18 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import {
   SectionList,
   Pressable,
   StyleSheet,
   View,
   TextInput,
-  Keyboard,
-  Platform,
   useWindowDimensions,
 } from "react-native";
 import { useSearch } from "../lib/providers/search-provider";
 import Animated, { useAnimatedProps, useAnimatedScrollHandler } from "react-native-reanimated";
 import {
-  interpolate,
   useAnimatedStyle,
   useDerivedValue,
   runOnJS,
-  withTiming,
   useSharedValue,
 } from "react-native-reanimated";
 import { Search, X } from "lucide-react-native";
@@ -25,6 +21,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
+import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 
 const createMockData = (length: number): number[] => Array.from({ length });
 const _sections = [
@@ -68,6 +65,8 @@ const CHEVRON_RISE = Math.tan(CHEVRON_ANGLE_RAD) * BAR_WIDTH;
 
 const TRIGGER_THRESHOLD = 100;
 
+const INPUT_BAR_ABOVE_KEYBOARD = 5;
+
 export const SearchOverlay = () => {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -89,8 +88,10 @@ export const SearchOverlay = () => {
 
   const inputRef = useRef<TextInput>(null);
 
-  const keyboardHeight = useSharedValue(0);
-  const inputReveal = useSharedValue(0);
+  const { height: kbHeight, progress: kbProgress } = useReanimatedKeyboardAnimation();
+  const kbTargetHeight = useSharedValue(0);
+  const prevKbH = useSharedValue(0);
+  const inputBarH = useSharedValue(56);
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const overscrollExceeded = useSharedValue(false);
@@ -102,35 +103,16 @@ export const SearchOverlay = () => {
   const focus = () => inputRef.current?.focus();
   const blur = () => inputRef.current?.blur();
 
-  useEffect(() => {
-    const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
-    const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
-
-    const onShow = (e: any) => {
-      const keyboardHeightValue = e.endCoordinates?.height ?? 0;
-      const duration = e.duration ?? 300;
-
-      inputReveal.set(0);
-      keyboardHeight.set(withTiming(keyboardHeightValue, { duration }));
-
-      const delay = duration;
-      setTimeout(() => {
-        inputReveal.set(withTiming(1, { duration }));
-      }, delay / 2);
-    };
-
-    const onHide = (e: any) => {
-      const duration = e?.duration ?? 200;
-      inputReveal.set(withTiming(0, { duration: duration * 0.5 }));
-      keyboardHeight.set(withTiming(0, { duration }));
-    };
-    const subShow = Keyboard.addListener(showEvent, onShow);
-    const subHide = Keyboard.addListener(hideEvent, onHide);
-    return () => {
-      subShow.remove();
-      subHide.remove();
-    };
-  }, []);
+  useDerivedValue(() => {
+    const p = kbProgress.get();
+    const h = Math.max(-kbHeight.get(), 0);
+    if (p === 0) {
+      kbTargetHeight.set(0);
+    } else if (h > kbTargetHeight.get()) {
+      kbTargetHeight.set(h);
+    }
+    prevKbH.set(h);
+  });
 
   const appearProgress = useDerivedValue(() => {
     const rawSearchProgress = searchProgress.get();
@@ -243,19 +225,80 @@ export const SearchOverlay = () => {
   });
 
   const rInputBarStyle = useAnimatedStyle(() => {
-    const finalY = -keyboardHeight.get() - 0;
-    const startY = -keyboardHeight.get() + 40;
-    const translateY = startY + (finalY - startY) * inputReveal.get();
-    const opacity = interpolate(inputReveal.get(), [0, 1], [0, 1]);
+    const h = Math.max(-kbHeight.get(), 0);
+    const underOffset = inputBarH.get() + 12;
+    let translateY = underOffset;
+
+    if (h > 0) {
+      const isHiding = h < prevKbH.get() - 0.5;
+      if (isHiding) {
+        if (h > 50) {
+          translateY = -h - INPUT_BAR_ABOVE_KEYBOARD;
+        } else {
+          const tHide = 1 - h / 50;
+          const start = -h - INPUT_BAR_ABOVE_KEYBOARD;
+          const end = underOffset;
+          translateY = start * (1 - tHide) + end * tHide;
+        }
+      } else {
+        const target = Math.max(kbTargetHeight.get(), h);
+        const remaining = Math.max(target - h, 0);
+        if (remaining > 50) {
+          translateY = underOffset;
+        } else {
+          const tShow = 1 - remaining / 50;
+          const behindPos = Math.min(-h + INPUT_BAR_ABOVE_KEYBOARD, 0);
+          const finalPos = -h - INPUT_BAR_ABOVE_KEYBOARD;
+          translateY = behindPos + (finalPos - behindPos) * tShow;
+        }
+      }
+    }
     return {
       transform: [{ translateY }],
-      opacity,
-      pointerEvents: inputReveal.get() === 1 ? "auto" : "none",
+      opacity: 1,
+      pointerEvents: "auto",
     };
   });
 
   return (
-    <Animated.View style={[{ marginTop: insets.top }, StyleSheet.absoluteFill, rContainerStyle]}>
+    <View style={[{ marginTop: insets.top }, StyleSheet.absoluteFill]}>
+      <Animated.View style={rContainerStyle}>
+        <AnimatedSectionList
+          sections={_sections}
+          keyExtractor={(item, index) => `${item}-${index}`}
+          renderItem={_renderListItem}
+          renderSectionHeader={_renderSectionHeader}
+          ListHeaderComponent={() => (
+            <Animated.View
+              style={rChevronContainerStyle}
+              className="self-center items-center justify-center pt-3 pb-1"
+            >
+              <Animated.View style={rChevronStyle}>
+                <Svg
+                  width={BAR_WIDTH * 2}
+                  height={CHEVRON_RISE + LINE_THICKNESS * 2}
+                  viewBox={`0 0 ${BAR_WIDTH * 2} ${CHEVRON_RISE + LINE_THICKNESS * 2}`}
+                  fill="none"
+                >
+                  <AnimatedPath
+                    animatedProps={animatedPathProps}
+                    stroke="#484848"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </Svg>
+              </Animated.View>
+            </Animated.View>
+          )}
+          SectionSeparatorComponent={() => <View className="h-6" />}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          keyboardShouldPersistTaps="always"
+          keyboardDismissMode="none"
+          stickySectionHeadersEnabled={false}
+        />
+      </Animated.View>
+
       <Animated.View
         className="absolute left-0 right-0 bottom-0 z-10 flex-row items-center p-2 pb-5 gap-2"
         style={[rInputBarStyle]}
@@ -288,41 +331,6 @@ export const SearchOverlay = () => {
           <X size={20} color="#c3c3c3" />
         </Pressable>
       </Animated.View>
-
-      <AnimatedSectionList
-        sections={_sections}
-        keyExtractor={(item, index) => `${item}-${index}`}
-        renderItem={_renderListItem}
-        renderSectionHeader={_renderSectionHeader}
-        ListHeaderComponent={() => (
-          <Animated.View
-            style={rChevronContainerStyle}
-            className="self-center items-center justify-center pt-3 pb-1"
-          >
-            <Animated.View style={rChevronStyle}>
-              <Svg
-                width={BAR_WIDTH * 2}
-                height={CHEVRON_RISE + LINE_THICKNESS * 2}
-                viewBox={`0 0 ${BAR_WIDTH * 2} ${CHEVRON_RISE + LINE_THICKNESS * 2}`}
-                fill="none"
-              >
-                <AnimatedPath
-                  animatedProps={animatedPathProps}
-                  stroke="#484848"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </Svg>
-            </Animated.View>
-          </Animated.View>
-        )}
-        SectionSeparatorComponent={() => <View className="h-6" />}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-        keyboardShouldPersistTaps="always"
-        keyboardDismissMode="none"
-        stickySectionHeadersEnabled={false}
-      />
-    </Animated.View>
+    </View>
   );
 };
