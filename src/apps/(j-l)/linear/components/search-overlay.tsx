@@ -43,7 +43,7 @@ const _sections = [
 ];
 
 const _renderSectionHeader = () => (
-  <View className="h-4 w-[150] mx-5 mt-6 rounded-full bg-linear-front" />
+  <View className="h-4 w-[150] mx-5 rounded-full bg-linear-front" />
 );
 
 const _renderListItem = () => (
@@ -136,9 +136,11 @@ export const SearchOverlay = () => {
     }
   };
 
+  // When inside the SectionList header, content itself moves down by `-scrollY` on overscroll.
+  // To keep the chevron centered in the free space, we shift it UP by half the overscroll.
   const rChevronContainerStyle = useAnimatedStyle(() => {
     const rawScrollY = scrollY.get();
-    const translateY = rawScrollY < 0 ? -rawScrollY / 2 : 0;
+    const translateY = rawScrollY < 0 ? rawScrollY / 2 : 0; // negative half
     return { transform: [{ translateY }] };
   });
 
@@ -238,32 +240,36 @@ export const SearchOverlay = () => {
         </Pressable>
       </Animated.View>
 
-      <Animated.View
-        style={rChevronContainerStyle}
-        className="self-center items-center justify-center pt-3 pb-1"
-      >
-        <Animated.View style={rChevronStyle}>
-          <Svg
-            width={BAR_WIDTH * 2}
-            height={CHEVRON_RISE + LINE_THICKNESS * 2}
-            viewBox={`0 0 ${BAR_WIDTH * 2} ${CHEVRON_RISE + LINE_THICKNESS * 2}`}
-            fill="none"
-          >
-            <AnimatedPath
-              animatedProps={animatedPathProps}
-              stroke="#484848"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg>
-        </Animated.View>
-      </Animated.View>
+      {/* Chevron moved into ListHeaderComponent below */}
 
       <AnimatedSectionList
         sections={_sections}
         keyExtractor={(item, index) => `${item}-${index}`}
         renderItem={_renderListItem}
         renderSectionHeader={_renderSectionHeader}
+        ListHeaderComponent={() => (
+          <Animated.View
+            style={rChevronContainerStyle}
+            className="self-center items-center justify-center pt-3 pb-1"
+          >
+            <Animated.View style={rChevronStyle}>
+              <Svg
+                width={BAR_WIDTH * 2}
+                height={CHEVRON_RISE + LINE_THICKNESS * 2}
+                viewBox={`0 0 ${BAR_WIDTH * 2} ${CHEVRON_RISE + LINE_THICKNESS * 2}`}
+                fill="none"
+              >
+                <AnimatedPath
+                  animatedProps={animatedPathProps}
+                  stroke="#484848"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </Svg>
+            </Animated.View>
+          </Animated.View>
+        )}
+        SectionSeparatorComponent={() => <View className="h-6" />}
         onScroll={onScroll}
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
