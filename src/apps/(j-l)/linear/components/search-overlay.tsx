@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import {
-  FlatList,
+  SectionList,
   Pressable,
   StyleSheet,
   View,
@@ -8,6 +8,8 @@ import {
   Keyboard,
   Platform,
   useWindowDimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 import { useSearch } from "../lib/providers/search-provider";
 import Animated, { useAnimatedProps } from "react-native-reanimated";
@@ -18,12 +20,38 @@ import {
   runOnJS,
   withTiming,
   useSharedValue,
-  useAnimatedScrollHandler,
 } from "react-native-reanimated";
 import { Search, X } from "lucide-react-native";
 import Svg, { Path } from "react-native-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+
+const createMockData = (length: number): number[] => Array.from({ length });
+const _sections = [
+  {
+    key: "s1",
+    data: createMockData(4),
+  },
+  {
+    key: "s2",
+    data: createMockData(2),
+  },
+  {
+    key: "s3",
+    data: createMockData(10),
+  },
+];
+
+const _renderSectionHeader = () => (
+  <View className="h-4 w-[150] mx-5 mt-6 rounded-full bg-linear-front" />
+);
+
+const _renderListItem = () => (
+  <View className="flex-row px-5 py-3 items-center gap-4">
+    <View className="h-8 w-8 rounded-full bg-linear-front" />
+    <View className="h-4 w-[150] mt-2 rounded-full bg-linear-front" />
+  </View>
+);
 
 const BAR_WIDTH = 28;
 const LINE_THICKNESS = 5;
@@ -47,6 +75,8 @@ export const SearchOverlay = () => {
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const overscrollCloseTriggered = useSharedValue(false);
+
+  const AnimatedSectionList: typeof SectionList = SectionList;
 
   const focus = () => inputRef.current?.focus();
   const blur = () => inputRef.current?.blur();
@@ -95,25 +125,16 @@ export const SearchOverlay = () => {
     prevProgress.set(curr);
   });
 
-  const _renderListItem = () => (
-    <View className="flex-row px-5 py-3 items-center gap-4">
-      <View className="h-8 w-8 rounded-full bg-linear-front" />
-      <View className="h-4 w-[150] mt-2 rounded-full bg-linear-front" />
-    </View>
-  );
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetY = e.nativeEvent.contentOffset.y;
+    scrollY.set(offsetY);
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: (e) => {
-      const offsetY = e.contentOffset.y;
-      scrollY.set(offsetY);
-
-      if (offsetY <= -150 && !overscrollCloseTriggered.get()) {
-        overscrollCloseTriggered.set(true);
-        runOnJS(blur)();
-        runOnJS(closeSearch)();
-      }
-    },
-  });
+    if (offsetY <= -150 && !overscrollCloseTriggered.get()) {
+      overscrollCloseTriggered.set(true);
+      blur();
+      closeSearch();
+    }
+  };
 
   const rChevronContainerStyle = useAnimatedStyle(() => {
     const rawScrollY = scrollY.get();
@@ -155,8 +176,6 @@ export const SearchOverlay = () => {
     const translateY = -(midDrop / 2);
     return { transform: [{ translateY }] };
   });
-
-  const AnimatedFlatList: typeof FlatList = (Animated as any).FlatList || FlatList;
 
   const rContainerStyle = useAnimatedStyle(() => {
     const rawSearchProgress = searchProgress.get();
@@ -240,14 +259,16 @@ export const SearchOverlay = () => {
         </Animated.View>
       </Animated.View>
 
-      <AnimatedFlatList
-        data={Array.from({ length: 20 })}
-        keyExtractor={(_item: unknown, index: number) => `${index}`}
+      <AnimatedSectionList
+        sections={_sections}
+        keyExtractor={(item, index) => `${item}-${index}`}
         renderItem={_renderListItem}
+        renderSectionHeader={_renderSectionHeader}
         onScroll={onScroll}
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
         keyboardDismissMode="none"
+        stickySectionHeadersEnabled={false}
       />
     </Animated.View>
   );
