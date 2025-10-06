@@ -104,14 +104,14 @@ export const SearchOverlay = () => {
   const blur = () => inputRef.current?.blur();
 
   useDerivedValue(() => {
-    const p = kbProgress.get();
-    const h = Math.max(-kbHeight.get(), 0);
-    if (p === 0) {
+    const rawKbProgress = kbProgress.get();
+    const rawKbHeight = Math.max(-kbHeight.get(), 0);
+    if (rawKbProgress === 0) {
       kbTargetHeight.set(0);
-    } else if (h > kbTargetHeight.get()) {
-      kbTargetHeight.set(h);
+    } else if (rawKbHeight > kbTargetHeight.get()) {
+      kbTargetHeight.set(rawKbHeight);
     }
-    prevKbH.set(h);
+    prevKbH.set(rawKbHeight);
   });
 
   const appearProgress = useDerivedValue(() => {
@@ -225,30 +225,30 @@ export const SearchOverlay = () => {
   });
 
   const rInputBarStyle = useAnimatedStyle(() => {
-    const h = Math.max(-kbHeight.get(), 0);
+    const keyboardVisibleHeight = Math.max(-kbHeight.get(), 0);
     const underOffset = inputBarH.get() + 12;
     let translateY = underOffset;
 
-    if (h > 0) {
-      const isHiding = h < prevKbH.get() - 0.5;
+    if (keyboardVisibleHeight > 0) {
+      const isHiding = keyboardVisibleHeight < prevKbH.get() - 0.5;
       if (isHiding) {
-        if (h > 50) {
-          translateY = -h - INPUT_BAR_ABOVE_KEYBOARD;
+        if (keyboardVisibleHeight > 50) {
+          translateY = -keyboardVisibleHeight - INPUT_BAR_ABOVE_KEYBOARD;
         } else {
-          const tHide = 1 - h / 50;
-          const start = -h - INPUT_BAR_ABOVE_KEYBOARD;
+          const tHide = 1 - keyboardVisibleHeight / 50;
+          const start = -keyboardVisibleHeight - INPUT_BAR_ABOVE_KEYBOARD;
           const end = underOffset;
           translateY = start * (1 - tHide) + end * tHide;
         }
       } else {
-        const target = Math.max(kbTargetHeight.get(), h);
-        const remaining = Math.max(target - h, 0);
+        const target = Math.max(kbTargetHeight.get(), keyboardVisibleHeight);
+        const remaining = Math.max(target - keyboardVisibleHeight, 0);
         if (remaining > 50) {
           translateY = underOffset;
         } else {
           const tShow = 1 - remaining / 50;
-          const behindPos = Math.min(-h + INPUT_BAR_ABOVE_KEYBOARD, 0);
-          const finalPos = -h - INPUT_BAR_ABOVE_KEYBOARD;
+          const behindPos = Math.min(-keyboardVisibleHeight + INPUT_BAR_ABOVE_KEYBOARD, 0);
+          const finalPos = -keyboardVisibleHeight - INPUT_BAR_ABOVE_KEYBOARD;
           translateY = behindPos + (finalPos - behindPos) * tShow;
         }
       }
