@@ -57,6 +57,10 @@ const BAR_WIDTH = 28;
 const LINE_THICKNESS = 5;
 const MORPH_DISTANCE = 60;
 
+const SECTION_HEADER_HEIGHT = 16;
+const SECTION_HEADER_MARGIN_TOP = 24;
+const ITEM_HEIGHT = 50;
+
 const CHEVRON_ANGLE_DEG = 38;
 const CHEVRON_ANGLE_RAD = (CHEVRON_ANGLE_DEG * Math.PI) / 180;
 
@@ -70,6 +74,7 @@ export const SearchOverlay = () => {
   const { searchProgress, closeSearch } = useSearch();
 
   const inputRef = useRef<TextInput>(null);
+
   const keyboardHeight = useSharedValue(0);
   const inputReveal = useSharedValue(0);
   const prevProgress = useSharedValue(0);
@@ -111,6 +116,11 @@ export const SearchOverlay = () => {
     };
   }, []);
 
+  const appearProgress = useDerivedValue(() => {
+    const rawSearchProgress = searchProgress.get();
+    return 1 - (1 - rawSearchProgress) * (1 - rawSearchProgress);
+  });
+
   useDerivedValue(() => {
     const prev = prevProgress.get();
     const curr = searchProgress.get();
@@ -136,17 +146,28 @@ export const SearchOverlay = () => {
     }
   };
 
-  // When inside the SectionList header, content itself moves down by `-scrollY` on overscroll.
-  // To keep the chevron centered in the free space, we shift it UP by half the overscroll.
   const rChevronContainerStyle = useAnimatedStyle(() => {
     const rawScrollY = scrollY.get();
-    const translateY = rawScrollY < 0 ? rawScrollY / 2 : 0; // negative half
+    const overscrollShift = rawScrollY < 0 ? rawScrollY / 2 : 0;
+
+    const secondItemY = SECTION_HEADER_HEIGHT + SECTION_HEADER_MARGIN_TOP + ITEM_HEIGHT;
+    const entranceOffset = (1 - appearProgress.get()) * secondItemY;
+
+    const translateY = overscrollShift + entranceOffset;
     return { transform: [{ translateY }] };
   });
 
-  const morphProgress = useDerivedValue(() => {
+  const overscrollMorph = useDerivedValue(() => {
     const overscroll = Math.max(-scrollY.get(), 0);
     return Math.min(overscroll / MORPH_DISTANCE, 1);
+  });
+
+  const morphProgress = useDerivedValue(() => {
+    const entranceMorph = 1 - appearProgress.get();
+    const blended = Math.max(overscrollMorph.get(), 0);
+
+    const p = Math.max(blended, entranceMorph);
+    return Math.min(Math.max(p, 0), 1);
   });
 
   const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -239,8 +260,6 @@ export const SearchOverlay = () => {
           <X size={20} color="#c3c3c3" />
         </Pressable>
       </Animated.View>
-
-      {/* Chevron moved into ListHeaderComponent below */}
 
       <AnimatedSectionList
         sections={_sections}
