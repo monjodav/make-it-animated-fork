@@ -8,8 +8,6 @@ import {
   Keyboard,
   Platform,
   useWindowDimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from "react-native";
 import { useSearch } from "../lib/providers/search-provider";
 import Animated, { useAnimatedProps, useAnimatedScrollHandler } from "react-native-reanimated";
@@ -55,7 +53,7 @@ const _renderListItem = () => (
   </View>
 );
 
-const BAR_WIDTH = 28;
+const BAR_WIDTH = 24;
 const LINE_THICKNESS = 5;
 const MORPH_DISTANCE = 60;
 
@@ -156,7 +154,7 @@ export const SearchOverlay = () => {
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
       overscrollExceeded.set(false);
-      isListDragging.value = true;
+      isListDragging.set(true);
     },
     onScroll: (event) => {
       const offsetY = event.contentOffset.y;
@@ -167,7 +165,7 @@ export const SearchOverlay = () => {
       singleHapticOnScroll(event);
     },
     onEndDrag: () => {
-      isListDragging.value = false;
+      isListDragging.set(false);
       if (overscrollExceeded.get()) {
         overscrollExceeded.set(false);
         runOnJS(blur)();
@@ -204,8 +202,8 @@ export const SearchOverlay = () => {
 
   const rChevronMetrics = useDerivedValue(() => {
     const progress = morphProgress.get();
-    const pAdj = Math.pow(progress, 0.85);
-    const midDrop = CHEVRON_RISE * pAdj;
+    const progressAdj = Math.pow(progress, 0.85);
+    const midDrop = CHEVRON_RISE * progressAdj;
     const strokeW = LINE_THICKNESS;
     return { midDrop, strokeW };
   });
