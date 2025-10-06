@@ -12,7 +12,7 @@ import {
   NativeScrollEvent,
 } from "react-native";
 import { useSearch } from "../lib/providers/search-provider";
-import Animated, { useAnimatedProps } from "react-native-reanimated";
+import Animated, { useAnimatedProps, useAnimatedScrollHandler } from "react-native-reanimated";
 import {
   interpolate,
   useAnimatedStyle,
@@ -25,6 +25,8 @@ import { Search, X } from "lucide-react-native";
 import Svg, { Path } from "react-native-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
+import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
 
 const createMockData = (length: number): number[] => Array.from({ length });
 const _sections = [
@@ -75,6 +77,18 @@ export const SearchOverlay = () => {
 
   const { searchProgress, closeSearch } = useSearch();
 
+  const { onScroll: scrollDirectionOnScroll, scrollDirection } =
+    useScrollDirection("include-negative");
+
+  const isListDragging = useSharedValue(false);
+
+  const { singleHapticOnScroll } = useHapticOnScroll({
+    isListDragging,
+    scrollDirection,
+
+    triggerOffset: -TRIGGER_THRESHOLD,
+  });
+
   const inputRef = useRef<TextInput>(null);
 
   const keyboardHeight = useSharedValue(0);
@@ -83,7 +97,9 @@ export const SearchOverlay = () => {
   const scrollY = useSharedValue(0);
   const overscrollExceeded = useSharedValue(false);
 
-  const AnimatedSectionList: typeof SectionList = SectionList;
+  const AnimatedSectionList = Animated.createAnimatedComponent(
+    SectionList as any
+  ) as unknown as typeof SectionList;
 
   const focus = () => inputRef.current?.focus();
   const blur = () => inputRef.current?.blur();
@@ -137,23 +153,28 @@ export const SearchOverlay = () => {
     prevProgress.set(curr);
   });
 
-  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = e.nativeEvent.contentOffset.y;
-    scrollY.set(offsetY);
-    overscrollExceeded.set(offsetY <= -TRIGGER_THRESHOLD);
-  };
-
-  const onScrollBeginDrag = () => {
-    overscrollExceeded.set(false);
-  };
-
-  const onScrollEndDrag = () => {
-    if (overscrollExceeded.get()) {
+  const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {
       overscrollExceeded.set(false);
-      blur();
-      closeSearch();
-    }
-  };
+      isListDragging.value = true;
+    },
+    onScroll: (event) => {
+      const offsetY = event.contentOffset.y;
+      scrollY.set(offsetY);
+      overscrollExceeded.set(offsetY <= -TRIGGER_THRESHOLD);
+
+      scrollDirectionOnScroll(event);
+      singleHapticOnScroll(event);
+    },
+    onEndDrag: () => {
+      isListDragging.value = false;
+      if (overscrollExceeded.get()) {
+        overscrollExceeded.set(false);
+        runOnJS(blur)();
+        runOnJS(closeSearch)();
+      }
+    },
+  });
 
   const rChevronContainerStyle = useAnimatedStyle(() => {
     const rawScrollY = scrollY.get();
@@ -298,9 +319,7 @@ export const SearchOverlay = () => {
           </Animated.View>
         )}
         SectionSeparatorComponent={() => <View className="h-6" />}
-        onScroll={onScroll}
-        onScrollBeginDrag={onScrollBeginDrag}
-        onScrollEndDrag={onScrollEndDrag}
+        onScroll={scrollHandler}
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
         keyboardDismissMode="none"
