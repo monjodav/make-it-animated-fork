@@ -66,6 +66,8 @@ const CHEVRON_ANGLE_RAD = (CHEVRON_ANGLE_DEG * Math.PI) / 180;
 
 const CHEVRON_RISE = Math.tan(CHEVRON_ANGLE_RAD) * BAR_WIDTH;
 
+const TRIGGER_THRESHOLD = 100;
+
 export const SearchOverlay = () => {
   const insets = useSafeAreaInsets();
   const { height } = useWindowDimensions();
@@ -79,7 +81,7 @@ export const SearchOverlay = () => {
   const inputReveal = useSharedValue(0);
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
-  const overscrollCloseTriggered = useSharedValue(false);
+  const overscrollExceeded = useSharedValue(false);
 
   const AnimatedSectionList: typeof SectionList = SectionList;
 
@@ -129,8 +131,8 @@ export const SearchOverlay = () => {
 
     if (prev > 0.05 && curr <= 0.05) runOnJS(blur)();
 
-    if (curr === 0 && overscrollCloseTriggered.get()) {
-      overscrollCloseTriggered.set(false);
+    if (curr === 0 && overscrollExceeded.get()) {
+      overscrollExceeded.set(false);
     }
     prevProgress.set(curr);
   });
@@ -138,9 +140,16 @@ export const SearchOverlay = () => {
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = e.nativeEvent.contentOffset.y;
     scrollY.set(offsetY);
+    overscrollExceeded.set(offsetY <= -TRIGGER_THRESHOLD);
+  };
 
-    if (offsetY <= -150 && !overscrollCloseTriggered.get()) {
-      overscrollCloseTriggered.set(true);
+  const onScrollBeginDrag = () => {
+    overscrollExceeded.set(false);
+  };
+
+  const onScrollEndDrag = () => {
+    if (overscrollExceeded.get()) {
+      overscrollExceeded.set(false);
       blur();
       closeSearch();
     }
@@ -290,6 +299,8 @@ export const SearchOverlay = () => {
         )}
         SectionSeparatorComponent={() => <View className="h-6" />}
         onScroll={onScroll}
+        onScrollBeginDrag={onScrollBeginDrag}
+        onScrollEndDrag={onScrollEndDrag}
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="always"
         keyboardDismissMode="none"
