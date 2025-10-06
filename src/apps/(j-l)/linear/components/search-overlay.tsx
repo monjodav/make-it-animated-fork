@@ -92,6 +92,7 @@ export const SearchOverlay = () => {
   const kbTargetHeight = useSharedValue(0);
   const prevKbH = useSharedValue(0);
   const inputBarH = useSharedValue(56);
+  const wasKeyboardVisible = useSharedValue(false);
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const overscrollExceeded = useSharedValue(false);
@@ -102,6 +103,7 @@ export const SearchOverlay = () => {
 
   const focus = () => inputRef.current?.focus();
   const blur = () => inputRef.current?.blur();
+  const clearInput = () => inputRef.current?.clear();
 
   useDerivedValue(() => {
     const rawKbProgress = kbProgress.get();
@@ -111,6 +113,12 @@ export const SearchOverlay = () => {
     } else if (rawKbHeight > kbTargetHeight.get()) {
       kbTargetHeight.set(rawKbHeight);
     }
+
+    const wasVisible = wasKeyboardVisible.get();
+    if (wasVisible && rawKbHeight === 0) {
+      runOnJS(clearInput)();
+    }
+    wasKeyboardVisible.set(rawKbHeight > 0);
     prevKbH.set(rawKbHeight);
   });
 
