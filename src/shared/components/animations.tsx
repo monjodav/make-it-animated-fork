@@ -218,6 +218,7 @@ const Animations: FC<Props> = ({ navigation }) => {
             })}
             showsVerticalScrollIndicator={false}
             keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="handled"
           />
           <View className="absolute top-0 left-0 right-0 h-4">
             <LinearGradient
