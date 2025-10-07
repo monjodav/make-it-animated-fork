@@ -2,7 +2,6 @@ import { createContext, FC, PropsWithChildren, useCallback, useContext } from "r
 import { useWindowDimensions, InteractionManager } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
-  runOnJS,
   SharedValue,
   useSharedValue,
   withDecay,
@@ -15,8 +14,14 @@ import { useCatchUpStore } from "../store/catch-up";
 import { ChannelStatus } from "../types";
 import * as Haptics from "expo-haptics";
 import { useCatchUpAnimation } from "./catch-up-animation";
+import { scheduleOnRN } from "react-native-worklets";
 
 // slack-catch-up-cards-swipe-animation 🔽
+
+const SPRING_CONFIG = {
+  damping: 60,
+  stiffness: 900,
+};
 
 type ContextValue = {
   // panX, panY are used to move the channel along the screen
@@ -118,12 +123,12 @@ export const ChannelAnimationProvider: FC<PropsWithChildren> = ({ children }) =>
           )
         );
 
-        runOnJS(handleChannelStatus)(status);
+        scheduleOnRN(handleChannelStatus, status);
       } else {
         // We reset panX and panY to 0 on release
         // Spring back feels snappy but controlled; high stiffness + moderate damping
-        panX.set(withSpring(0, { stiffness: 360, damping: 20 }));
-        panY.set(withSpring(0, { stiffness: 360, damping: 20 }));
+        panX.set(withSpring(0, SPRING_CONFIG));
+        panY.set(withSpring(0, SPRING_CONFIG));
 
         // We need, because on release our index can be a float so we ceil it
         animatedChannelIndex.set(

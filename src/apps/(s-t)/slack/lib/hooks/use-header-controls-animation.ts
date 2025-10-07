@@ -8,8 +8,8 @@ import { useCatchUpAnimation } from "../provider/catch-up-animation";
 const DURATION = 300;
 
 const ANIM_CONFIG = {
-  stiffness: 320,
-  damping: 28,
+  damping: 90,
+  stiffness: 1000,
 };
 
 export const useHeaderControlsAnimation = (index: number) => {
