@@ -33,6 +33,7 @@ export default function Layout() {
             ),
           }}
         />
+        <Stack.Screen name="paywall" options={{ headerShown: false }} />
       </Stack>
       <Menu />
     </AttachFileMenuProvider>
