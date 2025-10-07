@@ -10,7 +10,6 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   withTiming,
@@ -19,6 +18,7 @@ import { useHeaderHeight } from "../../lib/hooks/use-header-height";
 import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { TopGradient } from "./top-gradient";
+import { scheduleOnRN } from "react-native-worklets";
 
 // raycast-home-search-transition-animation 🔽
 
@@ -84,7 +84,7 @@ export const Favorites = () => {
       const scrollY = event.contentOffset.y;
       // Switch to commands when pulled beyond trigger. Use runOnJS to keep UI thread responsive.
       if (scrollY < TRIGGER_DRAG_DISTANCE) {
-        runOnJS(onGoToCommands)();
+        scheduleOnRN(onGoToCommands);
       }
     },
   });
@@ -104,7 +104,7 @@ export const Favorites = () => {
   });
 
   return (
-    <View className="flex-1" style={rContainerStyle}>
+    <Animated.View className="flex-1" style={rContainerStyle}>
       <Animated.ScrollView
         className="px-5"
         style={{
@@ -135,7 +135,7 @@ export const Favorites = () => {
       >
         <TopGradient />
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };
 
