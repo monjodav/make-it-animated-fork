@@ -13,11 +13,11 @@ import {
   ThumbsUp,
   X,
 } from "lucide-react-native";
-import SegmentedControl from "@/src/shared/components/segment-control/segment-control";
 import { useState } from "react";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
+import Switcher from "../components/switcher/switcher";
 
 const FEATURES_BLOCK_ONE = [
   { id: "f1", icon: "Sparkle", title: "Higher usage on Fast & Expert" },
@@ -39,19 +39,22 @@ const ICON_COLOR = "#E0E0E1";
 
 const _featureItem = (item: { icon: string; title: string }) => {
   return (
-    <View className="flex-row flex-1 items-center">
-      {item.icon === "Sparkle" && <Sparkle size={20} color={ICON_COLOR} strokeWidth={3} />}
-      {item.icon === "ImagePlus" && <ImagePlus size={20} color={ICON_COLOR} strokeWidth={3} />}
-      {item.icon === "ChartNoAxesColumn" && (
-        <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={3} />
-      )}
-      {item.icon === "Heart" && <Heart size={20} color={ICON_COLOR} strokeWidth={3} />}
-      {item.icon === "Rocket" && <Rocket size={20} color={ICON_COLOR} strokeWidth={3} />}
-      {item.icon === "Orbit" && <Orbit size={20} color={ICON_COLOR} strokeWidth={3} />}
-      {item.icon === "Lightbulb" && <Lightbulb size={20} color={ICON_COLOR} strokeWidth={3} />}
-      {item.icon === "ThumbsUp" && <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={3} />}
-      <Text className="text-[#E0E0E1] text-lg font-bold ml-3">{item.title}</Text>
-    </View>
+    <>
+      <View className="flex-row flex-1 items-center">
+        {item.icon === "Sparkle" && <Sparkle size={20} color={ICON_COLOR} strokeWidth={3} />}
+        {item.icon === "ImagePlus" && <ImagePlus size={20} color={ICON_COLOR} strokeWidth={3} />}
+        {item.icon === "ChartNoAxesColumn" && (
+          <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={3} />
+        )}
+        {item.icon === "Heart" && <Heart size={20} color={ICON_COLOR} strokeWidth={3} />}
+        {item.icon === "Rocket" && <Rocket size={20} color={ICON_COLOR} strokeWidth={3} />}
+        {item.icon === "Orbit" && <Orbit size={20} color={ICON_COLOR} strokeWidth={3} />}
+        {item.icon === "Lightbulb" && <Lightbulb size={20} color={ICON_COLOR} strokeWidth={3} />}
+        {item.icon === "ThumbsUp" && <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={3} />}
+        <Text className="text-[#E0E0E1] text-lg font-bold ml-3">{item.title}</Text>
+      </View>
+      <Check size={18} color={ICON_COLOR} strokeWidth={3} />
+    </>
   );
 };
 
@@ -70,6 +73,7 @@ export const Paywall = () => {
       >
         <X size={14} color="#616161" strokeWidth={4} />
       </Pressable>
+
       <View className="flex-1 w-full relative">
         <Image
           style={{ width: "100%", aspectRatio: 1.3 }}
@@ -100,95 +104,13 @@ export const Paywall = () => {
                 layout={LinearTransition}
               >
                 {_featureItem(item)}
-                <Check size={18} color={ICON_COLOR} strokeWidth={3} />
               </Animated.View>
             ))}
           </Animated.View>
         </Animated.ScrollView>
       </View>
 
-      <SegmentedControl
-        value={value}
-        onValueChange={setValue}
-        className="bg-[#1A1A1A] mx-5 mb-7 self-center justify-between rounded-[20px]"
-      >
-        <SegmentedControl.Indicator className="bg-[#1A1A1A] rounded-[20px] border-[4px] border-white" />
-
-        <SegmentedControl.Item
-          value="1"
-          pressScale={0.95}
-          className="flex-1 px-5 py-4 rounded-full"
-        >
-          {({ isActive }) => (
-            <>
-              <Text
-                className={cn(
-                  isActive ? "text-[#E0E0E1] text-lg font-bold" : "text-[#616161] text-lg font-bold"
-                )}
-              >
-                SuperGrok
-              </Text>
-              <View className="flex-row items-end">
-                <Text
-                  className={cn(
-                    isActive
-                      ? "text-[#E0E0E1] text-2xl font-bold"
-                      : "text-[#616161] text-2xl font-bold"
-                  )}
-                >
-                  40,00 USD
-                </Text>
-                <Text
-                  className={cn(
-                    isActive
-                      ? "text-[#E0E0E1] text-lg font-bold"
-                      : "text-[#616161] text-lg font-bold"
-                  )}
-                >
-                  /mo
-                </Text>
-              </View>
-            </>
-          )}
-        </SegmentedControl.Item>
-        <SegmentedControl.Item
-          value="2"
-          pressScale={0.95}
-          className="flex-1 px-5 py-4 rounded-full"
-        >
-          {({ isActive }) => (
-            <>
-              <Text
-                className={cn(
-                  isActive ? "text-[#E0E0E1] text-lg font-bold" : "text-[#616161] text-lg font-bold"
-                )}
-              >
-                SuperGrok Heavy
-              </Text>
-              <View className="flex-row items-end">
-                <Text
-                  className={cn(
-                    isActive
-                      ? "text-[#E0E0E1] text-2xl font-bold"
-                      : "text-[#616161] text-2xl font-bold"
-                  )}
-                >
-                  400,00 U...
-                </Text>
-                <Text
-                  className={cn(
-                    isActive
-                      ? "text-[#E0E0E1] text-lg font-bold"
-                      : "text-[#616161] text-lg font-bold"
-                  )}
-                >
-                  /mo
-                </Text>
-              </View>
-            </>
-          )}
-        </SegmentedControl.Item>
-      </SegmentedControl>
+      <Switcher value={value} setValue={setValue} />
 
       <Pressable
         onPress={simulatePress}
@@ -196,6 +118,7 @@ export const Paywall = () => {
       >
         <Text className="text-black text-lg font-bold">Upgrade to SuperGrok</Text>
       </Pressable>
+
       <View className="w-full flex-row px-6 mb-8 items-center justify-between self-center">
         <Text onPress={simulatePress} className="text-[#616161] text-sm font-medium">
           Terms & Conditions
