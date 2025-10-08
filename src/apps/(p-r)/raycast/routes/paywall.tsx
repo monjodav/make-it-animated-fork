@@ -21,6 +21,8 @@ import TabsSwitcher from "../components/paywall/tabs-switcher";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
+import TopBlur from "../components/paywall/top-blur";
+import BottomBlur from "../components/paywall/bottom-blur";
 
 const FEATURES_BLOCK_ONE = [
   { id: "f1", icon: "Sparkle", title: "Higher usage on Fast & Expert" },
@@ -91,39 +93,8 @@ export const Paywall = () => {
         style={{ marginTop: insets.top }}
         className="absolute flex-row items-center justify-between w-full px-6 py-5 z-10 "
       >
-        {Platform.OS === "android" ? (
-          <LinearGradient
-            pointerEvents="none"
-            colors={["#800020", "transparent"]}
-            locations={[0, 1]}
-            start={{ x: 0.5, y: 0 }}
-            end={{ x: 0.5, y: 1 }}
-            style={StyleSheet.absoluteFill}
-          />
-        ) : (
-          <MaskedView
-            pointerEvents="none"
-            style={StyleSheet.absoluteFill}
-            maskElement={
-              <LinearGradient
-                colors={["red", "transparent"]}
-                locations={[0.75, 1]}
-                start={{ x: 0.5, y: 0 }}
-                end={{ x: 0.5, y: 1 }}
-                style={StyleSheet.absoluteFill}
-              />
-            }
-          >
-            <BlurView tint="extraLight" intensity={8} style={StyleSheet.absoluteFill} />
-            <LinearGradient
-              colors={["#800020AA", "transparent"]}
-              locations={[0, 1]}
-              start={{ x: 0.5, y: 0 }}
-              end={{ x: 0.5, y: 1 }}
-              style={StyleSheet.absoluteFill}
-            />
-          </MaskedView>
-        )}
+        <TopBlur />
+
         <Pressable
           onPress={simulatePress}
           className="rounded-full p-2 overflow-hidden bg-neutral-700/50"
@@ -175,6 +146,8 @@ export const Paywall = () => {
           style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
           onLayout={(e) => setOverlayHeight(e.nativeEvent.layout.height)}
         >
+          <BottomBlur />
+
           <Switcher value={period} setValue={setPeriod} />
 
           <TabsSwitcher
