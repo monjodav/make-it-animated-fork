@@ -116,6 +116,7 @@ const SegmentedControlIndicator = ({
   const { value, measurements } = use(SegmentedControlContext);
 
   const activeMeasurements = measurements[value];
+  const hasMeasured = useSharedValue(false);
 
   const animatedStyle = useAnimatedStyle(() => {
     if (!activeMeasurements) {
@@ -124,6 +125,16 @@ const SegmentedControlIndicator = ({
         height: 0,
         left: 0,
         opacity: 0,
+      };
+    }
+
+    if (!hasMeasured.value) {
+      hasMeasured.value = true;
+      return {
+        width: activeMeasurements.width,
+        height: activeMeasurements.height,
+        left: activeMeasurements.x,
+        opacity: 1,
       };
     }
 
