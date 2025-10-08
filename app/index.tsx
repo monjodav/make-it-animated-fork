@@ -10,6 +10,7 @@ import { IndexAnimationProvider } from "@/src/shared/lib/providers/index-animati
 import { ExploreAnimationsBtn } from "@/src/shared/components/index-screen/explore-animations-btn";
 import { OtaUpdate } from "@/src/shared/components/index-screen/ota-update";
 import { View } from "react-native";
+import { Redirect } from "expo-router";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -32,12 +33,14 @@ export default function Index() {
 
   return (
     <IndexAnimationProvider>
-      <View className="flex-1 items-center justify-center">
+      {/* <View className="flex-1 items-center justify-center">
         <CameraView />
         <OtaUpdate />
         <PressToScanBtn />
         <ExploreAnimationsBtn />
       </View>
+       */}
+       <Redirect href="/(p-r)/raycast/paywall" />
     </IndexAnimationProvider>
   );
 }
