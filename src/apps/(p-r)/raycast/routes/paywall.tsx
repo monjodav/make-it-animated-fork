@@ -12,7 +12,7 @@ import {
 } from "lucide-react-native";
 import React, { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import Animated, { BounceIn, FadeOut, LinearTransition } from "react-native-reanimated";
+import Animated, { Keyframe, LinearTransition } from "react-native-reanimated";
 import Switcher from "../components/paywall/switcher";
 import TabsSwitcher from "../components/paywall/tabs-switcher";
 import { BlurView } from "expo-blur";
@@ -23,6 +23,32 @@ const PRICE = {
   monthly: [9.99, 19.99],
   yearly: [96.0, 191.99],
 };
+
+const KEYFRAME_IN = new Keyframe({
+  0: {
+    opacity: 0.4,
+    transform: [{ scale: 0.4 }],
+  },
+  60: {
+    opacity: 1,
+    transform: [{ scale: 1.15 }],
+  },
+  100: {
+    opacity: 1,
+    transform: [{ scale: 1 }],
+  },
+});
+
+const KEYFRAME_OUT = new Keyframe({
+  0: {
+    opacity: 1,
+    transform: [{ scale: 1 }],
+  },
+  100: {
+    opacity: 0,
+    transform: [{ scale: 0 }],
+  },
+});
 
 export const Paywall = () => {
   const insets = useSafeAreaInsets();
@@ -161,23 +187,13 @@ export const Paywall = () => {
   const baseCards =
     selectedCard === "1" ? [_cardTwo, _cardThree] : [_cardOne, _cardTwo, _cardThree];
 
-  const buildEntering = (index: number) =>
-    BounceIn.withInitialValues({
-      transform: [{ scale: 0.9 }],
-      opacity: 0,
-    })
-      .springify()
-      .damping(22)
-      .stiffness(180)
-      .mass(0.85)
-      .delay(index * 70);
-
-  const exitingBuilder = FadeOut.springify().damping(18).stiffness(150).mass(0.8);
-  const layoutBuilder = LinearTransition.springify().damping(16).stiffness(160);
+  const enteringBuilder = KEYFRAME_IN.duration(430);
+  const exitingBuilder = KEYFRAME_OUT.duration(200);
+  const layoutBuilder = LinearTransition.springify().damping(18).stiffness(160);
 
   const visibleCards = baseCards.map((card, index) => {
     const animationProps: any = {
-      entering: buildEntering(index),
+      entering: enteringBuilder,
       exiting: exitingBuilder,
       layout: layoutBuilder,
     };
