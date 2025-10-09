@@ -1,9 +1,10 @@
 import { ScrollDirection, useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import type { FC, PropsWithChildren } from "react";
 import React, { createContext, useState } from "react";
-import { runOnJS, SharedValue } from "react-native-reanimated";
+import { SharedValue } from "react-native-reanimated";
 import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/hook/commonTypes";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { scheduleOnRN } from "react-native-worklets";
 
 // x-bottom-tabs-background-animation 🔽
 
@@ -39,9 +40,9 @@ export const XTabsProvider: FC<PropsWithChildren> = ({ children }) => {
     handleScrollDirectionOnScroll(e);
 
     if (scrollDirection.value === "to-bottom") {
-      runOnJS(setIsBottomBlurVisible)(false);
+      scheduleOnRN(setIsBottomBlurVisible, false);
     } else if (scrollDirection.value === "to-top") {
-      runOnJS(setIsBottomBlurVisible)(true);
+      scheduleOnRN(setIsBottomBlurVisible, true);
     }
   };
 

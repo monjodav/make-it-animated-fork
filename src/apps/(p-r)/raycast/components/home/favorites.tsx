@@ -82,7 +82,7 @@ export const Favorites = () => {
     onEndDrag: (event) => {
       isListDragging.value = false;
       const scrollY = event.contentOffset.y;
-      // Switch to commands when pulled beyond trigger. Use runOnJS to keep UI thread responsive.
+      // Switch to commands when pulled beyond trigger. Use scheduleOnRN to keep UI thread responsive.
       if (scrollY < TRIGGER_DRAG_DISTANCE) {
         scheduleOnRN(onGoToCommands);
       }

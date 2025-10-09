@@ -4,13 +4,13 @@ import { View, TextInput } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { useHeaderHeight } from "../lib/hooks/use-header-height";
 import { useAnimatedScrollList } from "../lib/providers/animated-scroll-list-provider";
+import { scheduleOnRN } from "react-native-worklets";
 
 // gmail-header-scroll-animation 🔽
 
@@ -96,11 +96,11 @@ export const CustomHeader: FC = () => {
 
         // Snap to fully visible when scrolling up with partial header
         if (scrollDirection.value === "to-top" && isSearchbarVisible) {
-          runOnJS(scrollTo)(listOffsetY.value - searchBarHeight);
+          scheduleOnRN(scrollTo, listOffsetY.value - searchBarHeight);
         }
         // Snap to fully hidden when scrolling down with partial header
         if (scrollDirection.value === "to-bottom" && isSearchbarVisible) {
-          runOnJS(scrollTo)(listOffsetY.value + searchBarHeight);
+          scheduleOnRN(scrollTo, listOffsetY.value + searchBarHeight);
         }
       }
     }

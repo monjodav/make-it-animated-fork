@@ -4,7 +4,6 @@ import { useWindowDimensions } from "react-native";
 import {
   AnimatedRef,
   Easing,
-  runOnJS,
   ScrollHandlerProcessed,
   SharedValue,
   useAnimatedReaction,
@@ -14,6 +13,7 @@ import {
 } from "react-native-reanimated";
 import { useBottomTabsStore } from "../store/bottom-tabs";
 import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
+import { scheduleOnRN } from "react-native-worklets";
 
 // threads-profile-picture-animation 🔽
 
@@ -95,7 +95,7 @@ export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children 
     "worklet";
 
     // Hide bottom tabs to create immersive view experience
-    runOnJS(setIsBottomTabsHidden)(true);
+    scheduleOnRN(setIsBottomTabsHidden, true);
     // Immediate state change ensures proper rendering order
     imageState.value = "open";
     // Blur intensity 100 matches iOS system blur intensity
@@ -114,7 +114,7 @@ export const ProfileImageAnimationProvider: FC<PropsWithChildren> = ({ children 
     "worklet";
 
     // Restore bottom tabs after animation completes
-    runOnJS(setIsBottomTabsHidden)(false);
+    scheduleOnRN(setIsBottomTabsHidden, false);
 
     // Get the current position of the original profile image accounting for possible layout changes
     const x = measurement.value?.pageX ?? 0;
