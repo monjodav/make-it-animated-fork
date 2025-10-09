@@ -23,7 +23,7 @@ export default function ShopifyLayout() {
               header: () => <SharedTabsHeader />,
               // shopify-tabs-shared-header-animation 🔼
               contentStyle: {
-                backgroundColor: "black",
+                backgroundColor: "white",
               },
             }}
           />

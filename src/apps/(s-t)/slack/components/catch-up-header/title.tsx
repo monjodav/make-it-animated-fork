@@ -20,7 +20,11 @@ import { useCatchUpAnimation } from "../../lib/provider/catch-up-animation";
 // Short timing to keep header responsive; springs provide pleasant bounce
 const DURATION = 200;
 // Stiffness/damping tuned for a crisp but not jittery number flip
-const ANIM_CONFIG = { stiffness: 300, damping: 20, easing: Easing.out(Easing.ease) };
+const ANIM_CONFIG = {
+  damping: 90,
+  stiffness: 1000,
+  easing: Easing.out(Easing.ease),
+};
 
 // Enter "flip" preset for the numeric counter before springing back to rest
 const ENTER_SCALE = 0.6;

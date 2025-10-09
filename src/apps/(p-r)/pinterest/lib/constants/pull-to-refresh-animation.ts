@@ -9,9 +9,8 @@ export const sharedConfigs = {
   wrapperHeightOnRefreshingAnimDuration: 350,
   onRefreshCompleteDuration: 500,
   onRefreshingSpringConfigs: {
-    mass: 0.8,
-    damping: 11,
-    stiffness: 100,
+    damping: 110,
+    stiffness: 900,
   },
 };
 

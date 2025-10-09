@@ -43,8 +43,8 @@ export const CustomSwitch: FC<Props> = ({ value = false, onValueChange }) => {
     // Spring animation for smooth thumb slide with Discord-like feel
     offset.set(
       withSpring(newValue ? SWITCH_MAX_OFFSET : 0, {
-        damping: 25, // Moderate bounce - not too springy
-        stiffness: 300, // Fast response for immediate feedback
+        damping: 100, // Moderate bounce - not too springy
+        stiffness: 1200, // Fast response for immediate feedback
       })
     );
     onValueChange?.(newValue);
