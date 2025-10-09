@@ -2,8 +2,13 @@ import { Pressable, StyleSheet, Text, View, Platform } from "react-native";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
+  AlignHorizontalDistributeCenter,
+  Backpack,
+  CaseUpper,
   ChartNoAxesColumn,
   Check,
+  Cloud,
+  FileTerminal,
   Heart,
   ImagePlus,
   Lightbulb,
@@ -19,8 +24,6 @@ import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanim
 import Switcher from "../components/paywall/switcher";
 import TabsSwitcher from "../components/paywall/tabs-switcher";
 import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
 import TopBlur from "../components/paywall/top-blur";
 import BottomBlur from "../components/paywall/bottom-blur";
 
@@ -48,27 +51,6 @@ const FEATURES_BLOCK_TWO = [
 
 const ICON_COLOR = "#E0E0E1";
 
-const _featureItem = (item: { icon: string; title: string }) => {
-  return (
-    <>
-      <View className="flex-row flex-1 items-center">
-        {item.icon === "Sparkle" && <Sparkle size={20} color={ICON_COLOR} strokeWidth={3} />}
-        {item.icon === "ImagePlus" && <ImagePlus size={20} color={ICON_COLOR} strokeWidth={3} />}
-        {item.icon === "ChartNoAxesColumn" && (
-          <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={3} />
-        )}
-        {item.icon === "Heart" && <Heart size={20} color={ICON_COLOR} strokeWidth={3} />}
-        {item.icon === "Rocket" && <Rocket size={20} color={ICON_COLOR} strokeWidth={3} />}
-        {item.icon === "Orbit" && <Orbit size={20} color={ICON_COLOR} strokeWidth={3} />}
-        {item.icon === "Lightbulb" && <Lightbulb size={20} color={ICON_COLOR} strokeWidth={3} />}
-        {item.icon === "ThumbsUp" && <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={3} />}
-        <Text className="text-[#E0E0E1] text-lg font-bold ml-3">{item.title}</Text>
-      </View>
-      <Check size={18} color={ICON_COLOR} strokeWidth={3} />
-    </>
-  );
-};
-
 const PRICE = {
   monthly: [9.99, 19.99],
   yearly: [96.0, 191.99],
@@ -81,6 +63,7 @@ export const Paywall = () => {
   const [overlayHeight, setOverlayHeight] = useState(0);
 
   const currentFeatures = selectedCard === "1" ? FEATURES_BLOCK_ONE : FEATURES_BLOCK_TWO;
+
   const currentPrice = PRICE[period][selectedCard === "1" ? 0 : 1];
   const formattedPrice = `${currentPrice.toLocaleString("de-DE", {
     minimumFractionDigits: 2,
@@ -120,24 +103,153 @@ export const Paywall = () => {
           contentContainerClassName="px-5 pt-[80]"
           contentContainerStyle={{ paddingBottom: overlayHeight + insets.bottom + 24 }}
         >
-          <Text className="text-[#E0E0E1] text-3xl font-bold self-center text-center">
+          <Text className="text-[#E0E0E1] w-3/4 text-3xl font-bold self-center text-center">
             Powerful Productivity for IOS and macOS
           </Text>
-          <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
-            New Level Unlocked
-          </Text>
+
           <Animated.View layout={LinearTransition}>
-            {currentFeatures.map((item, idx) => (
-              <Animated.View
-                key={`${period}-${item.id}`}
-                className={"flex-row width-full py-3 items-center justify-between"}
-                entering={FadeIn}
-                exiting={FadeOut}
-                layout={LinearTransition}
-              >
-                {_featureItem(item)}
-              </Animated.View>
-            ))}
+            <Animated.View
+              key="one"
+              className="width-full py-3"
+              entering={FadeIn}
+              exiting={FadeOut}
+              layout={LinearTransition}
+            >
+              <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
+                Unlock the most intelligent models
+              </Text>
+              <View className="flex-1 bg-neutral-700/60 rounded-3xl mt-5 p-4">
+                <View className="flex-row flex-1 items-start">
+                  <View className="rounded-[5px] p-1 bg-red-900">
+                    <Sparkle size={14} color={"red"} strokeWidth={3} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
+                      Access additional 20+ frontier models
+                    </Text>
+                    <Text className="text-[#92888A] font-semibold ml-3">
+                      GPT-4.1, o3, Claude 3.7 Sonnet, Gemini 2.5 Pro, Grok-3 & more
+                    </Text>
+
+                    <Text
+                      className={
+                        "text-[#E0E0E1] font-semibold ml-4 py-2 px-4 mt-5 self-start bg-neutral-700/60 rounded-full"
+                      }
+                    >
+                      Compare
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              key="two"
+              className="width-full py-3"
+              entering={FadeIn}
+              exiting={FadeOut}
+              layout={LinearTransition}
+            >
+              <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
+                New Level Unlocked
+              </Text>
+              <View className="flex-1 bg-neutral-700/60 rounded-3xl mt-5 p-4">
+                <View className="flex-row flex-1 items-start">
+                  <View className="rounded-[5px] p-1 bg-red-900">
+                    <Sparkle size={14} color={"red"} strokeWidth={3} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
+                      Chat with 26+ models in one interface
+                    </Text>
+                    <Text className="text-[#92888A] font-semibold ml-3">
+                      GPT-4.1 mini, Claude 3.5 Haiku, Gemini 2.5 Flash, Grok-3 mini & more
+                    </Text>
+                  </View>
+                </View>
+                <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
+                <View className="flex-row flex-1 items-start">
+                  <View className="rounded-[5px] p-1 bg-violet-500">
+                    <Cloud size={14} color={"white"} strokeWidth={3} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">Stay in sync</Text>
+                    <Text className="text-[#92888A] font-semibold ml-3">
+                      Backup and sync your content to access on all your devices (iOS & macOS)
+                    </Text>
+                  </View>
+                </View>
+                <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
+                <View className="flex-row flex-1 items-center">
+                  <View className="rounded-[5px] p-1 bg-neutral-300">
+                    <Backpack size={14} color={"black"} strokeWidth={3} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
+                      Custom app icons
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              key="three"
+              className="width-full py-3"
+              entering={FadeIn}
+              exiting={FadeOut}
+              layout={LinearTransition}
+            >
+              <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
+                Power-up your Mac
+              </Text>
+              <View className="flex-1 bg-neutral-700/60 rounded-3xl mt-5 p-4">
+                <View className="flex-row flex-1 items-center">
+                  <View className="rounded-[5px] p-1 bg-red-900">
+                    <Sparkle size={14} color={"red"} strokeWidth={3} />
+                  </View>
+                  <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">AI Extensions</Text>
+                </View>
+                <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
+                <View className="flex-row flex-1 items-center">
+                  <View className="rounded-[5px] p-1 bg-red-400">
+                    <CaseUpper size={14} color={"white"} strokeWidth={3} />
+                  </View>
+                  <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
+                    Unlimited Raycast Notes
+                  </Text>
+                </View>
+                <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
+                <View className="flex-row flex-1 items-center">
+                  <View className="rounded-[5px] p-1 bg-red-400">
+                    <FileTerminal size={14} color={"white"} strokeWidth={3} />
+                  </View>
+                  <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
+                    Unlimited Clipboard History
+                  </Text>
+                </View>
+                <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
+                <View className="flex-row flex-1 items-center">
+                  <View className="rounded-[5px] p-1 bg-blue-300">
+                    <AlignHorizontalDistributeCenter size={14} color={"white"} strokeWidth={3} />
+                  </View>
+                  <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
+                    Custom Window Management
+                  </Text>
+                </View>
+                <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
+                <View className="flex-row flex-1 items-center">
+                  <View className="rounded-[5px] p-1 bg-[transparent]">
+                    <AlignHorizontalDistributeCenter
+                      size={14}
+                      color={"transparent"}
+                      strokeWidth={3}
+                    />
+                  </View>
+                  <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">& More</Text>
+                </View>
+              </View>
+            </Animated.View>
           </Animated.View>
         </Animated.ScrollView>
 
