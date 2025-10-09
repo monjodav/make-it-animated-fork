@@ -255,10 +255,10 @@ export const Paywall = () => {
             {`2 weeks free, then ${formattedPrice} per ${period.slice(0, -2)}. Auto-renews ${period} until cancelled.`}
           </Text>
           <View className="w-full flex-row mb-8 items-center justify-center gap-5">
-            <Text onPress={simulatePress} className="text-[#616161] text-sm font-medium">
+            <Text onPress={simulatePress} className="text-[#92888A] text-sm font-medium">
               Terms of Service
             </Text>
-            <Text onPress={simulatePress} className="text-[#616161] text-sm font-medium">
+            <Text onPress={simulatePress} className="text-[#92888A] text-sm font-medium">
               Privacy Policy
             </Text>
           </View>

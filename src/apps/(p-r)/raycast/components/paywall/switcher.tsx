@@ -24,7 +24,7 @@ const Switcher = ({ value, setValue }: SwitcherProps) => {
             className={cn(
               isActive
                 ? "text-[#E0E0E1] text-lg font-semibold"
-                : "text-[#616161] text-lg font-semibold"
+                : "text-[#92888A] text-lg font-semibold"
             )}
           >
             Monthly
@@ -38,7 +38,7 @@ const Switcher = ({ value, setValue }: SwitcherProps) => {
               className={cn(
                 isActive
                   ? "text-[#E0E0E1] text-lg font-semibold"
-                  : "text-[#616161] text-lg font-semibold"
+                  : "text-[#92888A] text-lg font-semibold"
               )}
             >
               Yearly

@@ -31,12 +31,12 @@ const TabsSwitcher = ({ selectedCard, setSelectedCard, price, period }: TabsSwit
         <BlurView tint="dark" style={StyleSheet.absoluteFill} />
         {selectedCard === "1" && (
           <View className="absolute rounded-full right-3 top-3 p-1 bg-white">
-            <Check size={10} color={"#616161"} strokeWidth={5} />
+            <Check size={10} color={"#92888A"} strokeWidth={5} />
           </View>
         )}
         <Text className="text-[#E0E0E1] text-xl font-bold">Pro</Text>
         <Text className="text-[#E0E0E1] text-xl font-bold">{formatUSD(proPrice)}</Text>
-        <Text className="text-[#616161]">First 2 weeks free</Text>
+        <Text className="text-[#92888A]">First 2 weeks free</Text>
       </Pressable>
       <Pressable
         onPress={() => setSelectedCard("2")}
@@ -48,12 +48,12 @@ const TabsSwitcher = ({ selectedCard, setSelectedCard, price, period }: TabsSwit
         <BlurView tint="dark" style={StyleSheet.absoluteFill} />
         {selectedCard === "2" && (
           <View className="absolute rounded-full right-3 top-3 p-1 bg-white">
-            <Check size={10} color={"#616161"} strokeWidth={5} />
+            <Check size={10} color={"#92888A"} strokeWidth={5} />
           </View>
         )}
         <Text className="text-[#E0E0E1] text-xl font-bold">Advanced AI</Text>
         <Text className="text-[#E0E0E1] text-xl font-bold">{formatUSD(advPrice)}</Text>
-        <Text className="text-[#616161]">First 2 weeks free</Text>
+        <Text className="text-[#92888A]">First 2 weeks free</Text>
       </Pressable>
     </View>
   );
