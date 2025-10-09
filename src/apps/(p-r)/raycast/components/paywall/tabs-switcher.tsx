@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, Platform } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { Check } from "lucide-react-native";
@@ -19,14 +19,14 @@ const TabsSwitcher = ({ selectedCard, setSelectedCard, price, period }: TabsSwit
   const formatUSD = (n: number) =>
     `${n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
 
+  const bgClass = Platform.OS === "android" ? "bg-neutral-700" : "bg-neutral-700/50";
+  const baseCard = cn("flex-1 p-3 rounded-2xl overflow-hidden border-[2px]", bgClass);
+
   return (
     <View className="self-stretch flex-row mb-4 items-center justify-between gap-2">
       <Pressable
         onPress={() => setSelectedCard("1")}
-        className={cn(
-          "flex-1 p-3 rounded-2xl overflow-hidden bg-neutral-700/50 border-[2px]",
-          selectedCard === "1" ? "border-white" : "border-transparent"
-        )}
+        className={cn(baseCard, selectedCard === "1" ? "border-white" : "border-transparent")}
       >
         <BlurView tint="dark" style={StyleSheet.absoluteFill} />
         {selectedCard === "1" && (
@@ -40,10 +40,7 @@ const TabsSwitcher = ({ selectedCard, setSelectedCard, price, period }: TabsSwit
       </Pressable>
       <Pressable
         onPress={() => setSelectedCard("2")}
-        className={cn(
-          "flex-1 p-3 rounded-2xl overflow-hidden bg-neutral-700/50 border-[2px]",
-          selectedCard === "2" ? "border-white" : "border-transparent"
-        )}
+        className={cn(baseCard, selectedCard === "2" ? "border-white" : "border-transparent")}
       >
         <BlurView tint="dark" style={StyleSheet.absoluteFill} />
         {selectedCard === "2" && (

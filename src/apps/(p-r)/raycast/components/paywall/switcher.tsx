@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Platform } from "react-native";
 import SegmentedControl from "@/src/shared/components/segment-control/segment-control";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { BlurView } from "expo-blur";
@@ -13,7 +13,10 @@ const Switcher = ({ value, setValue }: SwitcherProps) => {
     <SegmentedControl
       value={value}
       onValueChange={(v) => setValue(v as "monthly" | "yearly")}
-      className="overflow-hidden bg-neutral-700/50 mb-5 px-1 py-1 justify-between rounded-full"
+      className={cn(
+        "overflow-hidden mb-5 px-1 py-1 justify-between rounded-full",
+        Platform.OS === "android" ? "bg-neutral-700" : "bg-neutral-700/50"
+      )}
     >
       <BlurView tint="dark" style={StyleSheet.absoluteFill} />
       <SegmentedControl.Indicator className="bg-[#7B7B7B] my-1 rounded-full" />
