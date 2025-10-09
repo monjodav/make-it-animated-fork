@@ -21,6 +21,10 @@ import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 
 // grok-paywall-screen-animation 🔽
 
+// Animation notes:
+// - LinearTransition: used below to animate vertical spacing changes when plan toggles
+// - Easing.out(Easing.ease) + 150ms: quick, soft layout updates that avoid feeling sluggish
+
 const ICON_COLOR = "#fafafa";
 const STROKE_WIDTH = 3;
 
@@ -32,6 +36,8 @@ export const Paywall = () => {
 
   const { openDrawer } = useDrawerControl();
 
+  // Image height: 25% of screen for a lightweight parallax-style header area
+  // Used to compute content top padding so the list starts under the image
   const _imageHeight = height * 0.25;
 
   return (
@@ -54,6 +60,7 @@ export const Paywall = () => {
       <View className="flex-1">
         <ScrollView
           contentContainerClassName="px-5 pb-10"
+          // Top padding ties list start to header image height; 0.7 keeps title partially over image
           contentContainerStyle={{ paddingTop: _imageHeight * 0.7 }}
           showsVerticalScrollIndicator={false}
         >
@@ -62,7 +69,10 @@ export const Paywall = () => {
             Introducing Grok 4 Fast: the most intelligent fast model
           </Text>
           <Animated.View
+            // Slight gap change per plan creates a subtle density shift on toggle
             className={cn("gap-[28px]", value === "2" && "gap-[26px]")}
+            // Layout transition: animates vertical gap and item reflow
+            // 150ms + ease-out for crisp responsiveness during plan switching
             layout={LinearTransition.duration(150).easing(Easing.out(Easing.ease))}
           >
             <FeatureItem
