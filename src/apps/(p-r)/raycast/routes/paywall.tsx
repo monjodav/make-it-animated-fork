@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View, Platform } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -12,7 +12,7 @@ import {
 } from "lucide-react-native";
 import React, { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import Animated, { BounceIn, FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
+import Animated, { BounceIn, FadeOut, LinearTransition } from "react-native-reanimated";
 import Switcher from "../components/paywall/switcher";
 import TabsSwitcher from "../components/paywall/tabs-switcher";
 import { BlurView } from "expo-blur";
@@ -28,7 +28,6 @@ export const Paywall = () => {
   const insets = useSafeAreaInsets();
   const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
   const [selectedCard, setSelectedCard] = useState<"1" | "2">("1");
-  const [overlayHeight, setOverlayHeight] = useState(0);
 
   const currentPrice = PRICE[period][selectedCard === "1" ? 0 : 1];
   const formattedPrice = `${currentPrice.toLocaleString("de-DE", {
@@ -186,9 +185,9 @@ export const Paywall = () => {
   });
 
   return (
-    <View style={{ paddingTop: insets.top }} className="flex-1 items-center bg-black">
+    <View className="flex-1 items-center bg-black">
       <View
-        style={{ marginTop: insets.top }}
+        style={{ paddingTop: insets.top }}
         className="absolute flex-row items-center justify-between w-full px-6 py-5 z-10 "
       >
         <TopBlur />
@@ -206,7 +205,7 @@ export const Paywall = () => {
       </View>
 
       <Image
-        style={{ width: "100%", height: "100%", position: "absolute", top: insets.top }}
+        style={{ width: "100%", height: "100%", position: "absolute" }}
         placeholder={{
           blurhash:
             "_98_5KFH$6$6WoWpwx|dFHo1sUsUjto1JROCN[N]wysUSMsVwya|N]a|sUa|wywxo1jtSLWpo1N[jtWpo1a|Wpo1Wpa|jtWpjtjtfQwya|sUWpWpa|Wpo1a|jtjta|WpWp",
@@ -215,8 +214,7 @@ export const Paywall = () => {
       <View className="flex-1 w-full relative">
         <Animated.ScrollView
           style={StyleSheet.absoluteFill}
-          contentContainerClassName="px-5 pt-[80]"
-          contentContainerStyle={{ paddingBottom: overlayHeight + insets.bottom + 24 }}
+          contentContainerClassName="px-5 pt-[120px] pb-[350px]"
         >
           <Text className="text-[#E0E0E1] w-3/4 text-3xl font-bold self-center text-center">
             Powerful Productivity for IOS and macOS
@@ -228,7 +226,6 @@ export const Paywall = () => {
         <View
           className="w-full px-6 items-center"
           style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
-          onLayout={(e) => setOverlayHeight(e.nativeEvent.layout.height)}
         >
           <BottomBlur />
 

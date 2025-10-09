@@ -13,7 +13,7 @@ const Switcher = ({ value, setValue }: SwitcherProps) => {
     <SegmentedControl
       value={value}
       onValueChange={(v) => setValue(v as "monthly" | "yearly")}
-      className="overflow-hidden bg-neutral-700/50 mb-7 px-1 py-1 justify-between rounded-full"
+      className="overflow-hidden bg-neutral-700/50 mb-5 px-1 py-1 justify-between rounded-full"
     >
       <BlurView tint="dark" style={StyleSheet.absoluteFill} />
       <SegmentedControl.Indicator className="bg-[#7B7B7B] my-1 rounded-full" />

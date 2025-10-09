@@ -10,7 +10,7 @@ const BottomBlur = () => {
         pointerEvents="none"
         tint="dark"
         intensity={8}
-        style={[StyleSheet.absoluteFill, { marginTop: 50 }]}
+        style={[StyleSheet.absoluteFill, { marginTop: 30 }]}
       />
       <MaskedView
         pointerEvents="none"
