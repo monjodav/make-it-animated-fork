@@ -10,11 +10,7 @@ import { View, StyleSheet, Pressable } from "react-native";
 export default function Layout() {
   return (
     <AttachFileMenuProvider>
-      <Stack
-        screenOptions={{
-          headerBackground: () => <View style={StyleSheet.absoluteFill} className="bg-black " />,
-        }}
-      >
+      <Stack>
         <Stack.Screen
           name="chat"
           options={{
@@ -31,6 +27,7 @@ export default function Layout() {
                 <Ghost size={18} color="white" />
               </Pressable>
             ),
+            headerBackground: () => <View style={StyleSheet.absoluteFill} className="bg-black " />,
           }}
         />
         <Stack.Screen name="paywall" options={{ headerShown: false }} />

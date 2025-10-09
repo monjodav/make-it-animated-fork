@@ -14,10 +14,12 @@ import {
 import { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Animated, { Easing, LinearTransition } from "react-native-reanimated";
-import Switcher from "../components/switcher/switcher";
-import { router } from "expo-router";
-import { FeatureItem } from "../components/feature-item";
+import Switcher from "../components/paywall/switcher";
+import { FeatureItem } from "../components/paywall/feature-item";
 import { cn } from "@/src/shared/lib/utils/cn";
+import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
+
+// grok-paywall-screen-animation 🔽
 
 const ICON_COLOR = "#fafafa";
 const STROKE_WIDTH = 3;
@@ -28,94 +30,100 @@ export const Paywall = () => {
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
+  const { openDrawer } = useDrawerControl();
+
   const _imageHeight = height * 0.25;
 
   return (
     <View style={{ paddingBottom: insets.bottom + 8 }} className="flex-1 bg-black">
       <Image
-        style={{ position: "absolute", width, height: _imageHeight }}
+        style={{ position: "absolute", top: 0, width, height: _imageHeight }}
         placeholder={{
           blurhash:
             "i02rmu?b004.-A-UtmNHD$-=fRI9ogx]WURkf5j[009E~q^+OsELMc$*-=8^oL?wRiD$s:tQkXof~q?c9[4.MI-V.9I:IA",
         }}
       />
       <Pressable
-        onPress={router.back}
+        onPress={openDrawer}
         style={{ marginTop: insets.top + 8 }}
         className="absolute rounded-full left-4 z-10 p-2.5 bg-neutral-900"
       >
         <X size={16} color="#737373" strokeWidth={3} />
       </Pressable>
 
-      <ScrollView
-        contentContainerClassName="px-5"
-        contentContainerStyle={{ paddingTop: _imageHeight * 0.7 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text className="text-neutral-50 text-5xl font-semibold self-center mb-3">SuperGrok</Text>
-        <Text className="text-neutral-50 text-2xl font-semibold self-center text-center mb-12">
-          Introducing Grok 4 Fast: the most intelligent fast model
-        </Text>
-        <Animated.View
-          className={cn("gap-[28px]", value === "2" && "gap-[26px]")}
-          layout={LinearTransition.duration(150).easing(Easing.out(Easing.ease))}
+      <View className="flex-1">
+        <ScrollView
+          contentContainerClassName="px-5 pb-10"
+          contentContainerStyle={{ paddingTop: _imageHeight * 0.7 }}
+          showsVerticalScrollIndicator={false}
         >
-          <FeatureItem
-            icon={
-              value === "1" ? (
-                <Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              ) : (
-                <Orbit size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              )
-            }
-            text={value === "1" ? "Higher usage on Fast & Expert" : "Everything in SuperGrok"}
-          />
-          <FeatureItem
-            icon={
-              value === "1" ? (
-                <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              ) : (
-                <Lightbulb size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              )
-            }
-            text={
-              value === "1" ? "Higher usage on Fast & Expert" : "Highest usage on Fast & Expert"
-            }
-          />
-          <FeatureItem
-            icon={
-              value === "1" ? (
-                <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              ) : (
-                <Rocket size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              )
-            }
-            text={value === "1" ? "Higher usage on Voice Mode and Companions" : "Access to Heavy"}
-          />
-          <FeatureItem
-            icon={
-              value === "1" ? (
-                <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              ) : (
-                <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
-              )
-            }
-            text={value === "1" ? "Early access to new features" : "Highest usage on Grok Imagine"}
-          />
-          {value === "2" && (
-            <>
-              <FeatureItem
-                icon={<Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />}
-                text="Early access to new features"
-              />
-              <FeatureItem
-                icon={<Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />}
-                text="Dedicated support"
-              />
-            </>
-          )}
-        </Animated.View>
-      </ScrollView>
+          <Text className="text-neutral-50 text-5xl font-semibold self-center mb-3">SuperGrok</Text>
+          <Text className="text-neutral-50 text-2xl font-semibold self-center text-center mb-12">
+            Introducing Grok 4 Fast: the most intelligent fast model
+          </Text>
+          <Animated.View
+            className={cn("gap-[28px]", value === "2" && "gap-[26px]")}
+            layout={LinearTransition.duration(150).easing(Easing.out(Easing.ease))}
+          >
+            <FeatureItem
+              icon={
+                value === "1" ? (
+                  <Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                ) : (
+                  <Orbit size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                )
+              }
+              text={value === "1" ? "Higher usage on Fast & Expert" : "Everything in SuperGrok"}
+            />
+            <FeatureItem
+              icon={
+                value === "1" ? (
+                  <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                ) : (
+                  <Lightbulb size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                )
+              }
+              text={
+                value === "1" ? "Higher usage on Fast & Expert" : "Highest usage on Fast & Expert"
+              }
+            />
+            <FeatureItem
+              icon={
+                value === "1" ? (
+                  <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                ) : (
+                  <Rocket size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                )
+              }
+              text={value === "1" ? "Higher usage on Voice Mode and Companions" : "Access to Heavy"}
+            />
+            <FeatureItem
+              icon={
+                value === "1" ? (
+                  <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                ) : (
+                  <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
+                )
+              }
+              text={
+                value === "1" ? "Early access to new features" : "Highest usage on Grok Imagine"
+              }
+            />
+            {value === "2" && (
+              <>
+                <FeatureItem
+                  icon={<Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />}
+                  text="Early access to new features"
+                />
+                <FeatureItem
+                  icon={<Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />}
+                  text="Dedicated support"
+                />
+              </>
+            )}
+          </Animated.View>
+        </ScrollView>
+      </View>
 
       <Switcher value={value} setValue={setValue} />
 
@@ -142,3 +150,5 @@ export const Paywall = () => {
     </View>
   );
 };
+
+// grok-paywall-screen-animation 🔼

@@ -2,6 +2,8 @@ import { Text, View, StyleSheet } from "react-native";
 import SegmentedControl from "@/src/shared/components/segment-control/segment-control";
 import { cn } from "@/src/shared/lib/utils/cn";
 
+// grok-paywall-screen-animation 🔽
+
 type PricingItemProps = {
   isActive: boolean;
   title: string;
@@ -77,3 +79,5 @@ const styles = StyleSheet.create({
 });
 
 export default Switcher;
+
+// grok-paywall-screen-animation 🔼

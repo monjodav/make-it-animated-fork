@@ -3,6 +3,8 @@ import React, { FC } from "react";
 import Animated, { Easing, FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
 import { Text } from "react-native";
 
+// grok-paywall-screen-animation 🔽
+
 type Props = {
   icon: React.ReactNode;
   text: string;
@@ -27,3 +29,5 @@ export const FeatureItem: FC<Props> = ({ icon, text }) => {
     </Animated.View>
   );
 };
+
+// grok-paywall-screen-animation 🔼
