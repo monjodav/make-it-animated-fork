@@ -4,7 +4,6 @@ import React, { FC, memo, useRef } from "react";
 import { View } from "react-native";
 import Animated, {
   FadeInDown,
-  runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
@@ -12,6 +11,7 @@ import { WithPullToRefresh } from "./with-pull-to-refresh";
 import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
 import { Board } from "../lib/types";
 import { useScrollToTop } from "@react-navigation/native";
+import { scheduleOnRN } from "react-native-worklets";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
 
@@ -59,7 +59,7 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
       listOffsetY.value = y;
 
       if (listOffsetY.value < -sharedConfigs.refreshingTriggerOffset && !isHapticTriggered.value) {
-        runOnJS(handleHaptics)();
+        scheduleOnRN(handleHaptics);
       } else if (
         isHapticTriggered.value &&
         Math.abs(listOffsetY.value) < sharedConfigs.refreshingTriggerOffset
@@ -73,7 +73,7 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
       listOffsetYOnEndDrag.value = -y;
 
       if (listOffsetY.value < -sharedConfigs.refreshingTriggerOffset && !refreshing.value) {
-        runOnJS(refresh)();
+        scheduleOnRN(refresh);
       }
     },
   });

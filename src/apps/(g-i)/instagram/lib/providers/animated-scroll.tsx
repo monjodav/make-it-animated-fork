@@ -2,7 +2,6 @@ import { ScrollDirection, useScrollDirection } from "@/src/shared/lib/hooks/use-
 import { createContext, FC, PropsWithChildren, RefObject, useContext, useRef } from "react";
 import {
   DerivedValue,
-  runOnJS,
   ScrollHandlerProcessed,
   SharedValue,
   useAnimatedScrollHandler,
@@ -12,6 +11,7 @@ import {
 import { useHomeHeaderHeight } from "../hooks/use-home-header-height";
 import { FlashList } from "@shopify/flash-list";
 import { Post } from "../types";
+import { scheduleOnRN } from "react-native-worklets";
 
 // instagram-header-on-scroll-animation 🔽
 
@@ -96,14 +96,14 @@ export const AnimatedScrollProvider: FC<PropsWithChildren> = ({ children }) => {
         const targetScrollOffset =
           event.contentOffset.y + (netHeaderHeight - Math.abs(headerTop.get()) + 2);
         listPointerEvents.set(false); // Block user touch during snap
-        runOnJS(handleListScrollEndDrag)(targetScrollOffset);
+        scheduleOnRN(handleListScrollEndDrag, targetScrollOffset);
       }
 
       // Upward scroll + partial show: Complete the reveal animation
       if (scrollDirection.get() === "to-top" && headerTopTriggerDistance) {
         const targetScrollOffset = event.contentOffset.y - netHeaderHeight - 2;
         listPointerEvents.set(false); // Block user touch during snap
-        runOnJS(handleListScrollEndDrag)(targetScrollOffset);
+        scheduleOnRN(handleListScrollEndDrag, targetScrollOffset);
       }
     },
   });

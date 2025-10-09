@@ -9,11 +9,12 @@ import ImageSix from "@/assets/images/apple-invites/6.png";
 import ImageSeven from "@/assets/images/apple-invites/7.png";
 import ImageEight from "@/assets/images/apple-invites/8.png";
 import { useState } from "react";
-import { runOnJS, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { Marquee } from "../components/marquee";
 import { _itemWidth } from "../components/marquee-item";
 import ImageBg from "../components/image-bg";
 import useDebounce from "@/src/shared/lib/hooks/use-debounce";
+import { scheduleOnRN } from "react-native-worklets";
 
 // apple-invites-welcome-screen-animation 🔽
 
@@ -80,7 +81,7 @@ export default function Welcome() {
 
       // Handle edge case when scrolling reaches the end
       if (activeItemIndex === events.length) {
-        runOnJS(setActiveIndex)(0);
+        scheduleOnRN(setActiveIndex, 0);
       }
 
       // Update active index only when it actually changes to avoid unnecessary re-renders
@@ -89,7 +90,7 @@ export default function Welcome() {
         activeItemIndex < events.length &&
         activeItemIndex !== activeIndex
       ) {
-        runOnJS(setActiveIndex)(activeItemIndex);
+        scheduleOnRN(setActiveIndex, activeItemIndex);
       }
     }
   );
