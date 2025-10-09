@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, useWindowDimensions, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useLinearHeader } from "../lib/use-linear-header";
 
@@ -7,6 +7,8 @@ import { useLinearHeader } from "../lib/use-linear-header";
 const TITLE = "Inbox";
 
 export const Inbox = () => {
+  const { height } = useWindowDimensions();
+
   // Shared scroll offset drives header flip progress via useLinearHeader.
   const scrollY = useSharedValue(0);
 
@@ -22,10 +24,11 @@ export const Inbox = () => {
 
   return (
     <Animated.FlatList
-      data={Array.from({ length: 10 }).map((_, i) => i)}
+      data={Array.from({ length: 5 }).map((_, i) => i)}
       keyExtractor={(item, index) => `${item}-${index}`}
       className="bg-linear-back"
       contentContainerClassName="pt-2 px-4 pb-4 gap-6"
+      contentContainerStyle={{ paddingBottom: height }}
       renderItem={({ item }) => (
         <View key={item} className="flex-row items-center gap-2">
           <View className="size-14 rounded-full bg-linear-front" />

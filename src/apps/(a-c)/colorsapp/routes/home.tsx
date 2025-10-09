@@ -10,12 +10,18 @@ import { View } from "react-native";
 import { HomeHeader, Scroll_Distance } from "../components/home-header";
 import { Carousel } from "../components/carousel";
 import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 import { THEME } from "../lib/constants/theme";
 
 // colorsapp-home-header-animation 🔽
 // colorsapp-theme-toggle-animation 🔽
 
 const Home: FC = () => {
+  useAndroidNote(
+    "On some low-end Android devices, the circular theme toggle animation may impact performance. " +
+      "While we investigate, a 'fade' theme toggle animation is applied."
+  );
+
   // Single source of truth for scroll offset; shared across header and local styles.
   // The hook exposes a UI-thread scroll handler to keep animations at 60fps.
   const { scrollOffsetY, scrollHandler } = useScrollViewOffset();
