@@ -1,4 +1,3 @@
-import React from "react";
 import { View, StyleSheet, Platform } from "react-native";
 import { BlurView } from "expo-blur";
 import { cn } from "@/src/shared/lib/utils/cn";
@@ -19,10 +18,11 @@ const BlurListItem = ({
       {Array.from({ length: count }).map((_, index) => (
         <View
           key={index}
+          style={{ borderCurve: "continuous" }}
           className={cn(
-            "h-14 overflow-hidden mb-4 rounded-[10]",
+            "h-14 overflow-hidden mb-4 rounded-[10px]",
             borderClass,
-            Platform.OS === "android" ? "bg-neutral-500" : "bg-neutral-500/30"
+            Platform.OS === "android" ? "bg-neutral-500/70" : "bg-neutral-500/30"
           )}
         >
           <BlurView intensity={intensity} tint="dark" style={StyleSheet.absoluteFill} />

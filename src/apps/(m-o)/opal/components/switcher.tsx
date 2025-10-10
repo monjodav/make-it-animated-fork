@@ -16,7 +16,7 @@ const Switcher = ({ value, setValue }: SwitcherProps) => {
       onValueChange={(v) => setValue(v as "schedule" | "timer")}
       className={cn(
         "overflow-hidden mx-5 px-1 py-1 rounded-full",
-        Platform.OS === "android" ? "bg-neutral-500" : "bg-neutral-500/30"
+        Platform.OS === "android" ? "bg-neutral-500/70" : "bg-neutral-500/30"
       )}
     >
       <BlurView intensity={8} tint="dark" style={StyleSheet.absoluteFill} />
