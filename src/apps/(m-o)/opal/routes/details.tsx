@@ -1,34 +1,73 @@
-import { View, Pressable, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, Pressable, Text, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronDown } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Switcher from "../components/switcher";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BlurListItem from "../components/blur-list-item";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  interpolate,
+  useAnimatedRef,
+  useDerivedValue,
+  withTiming,
+  Easing,
+  scrollTo,
+} from "react-native-reanimated";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const HORIZONTAL_PADDING = 8;
+
+const PAGE_WIDTH = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
+const GAP = 2 * HORIZONTAL_PADDING;
+const PAGE_STRIDE = PAGE_WIDTH + GAP;
+
+const BOTTOM_SWITCHER_POSITION = 20;
 
 export const Details = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  const [value, setValue] = useState<"schedule" | "timer">("schedule");
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
-  const pageWidth = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
-  const gap = 2 * HORIZONTAL_PADDING;
-  const getOffsetForIndex = (i: number) => i * (pageWidth + gap);
-  const goToIndex = (i: number, animated = true) => {
-    scrollRef.current?.scrollTo({ x: getOffsetForIndex(i), y: 0, animated });
+  const [value, setValue] = useState<"schedule" | "timer">("schedule");
+
+  const page = useSharedValue(0);
+
+  const firstTopY = useSharedValue(0);
+  const secondTopY = useSharedValue(0);
+  const containerH = useSharedValue(0);
+
+  useDerivedValue(() => {
+    console.log("firstTopY", firstTopY.value);
+    console.log("secondTopY", secondTopY.value);
+    console.log("containerH", containerH.value);
+  });
+
+  const goToIndex = (i: number) => {
+    page.value = withTiming(i, { duration: 350, easing: Easing.out(Easing.cubic) });
   };
 
   useEffect(() => {
     const initialIndex = value === "schedule" ? 0 : 1;
-    requestAnimationFrame(() => goToIndex(initialIndex, false));
+    page.value = initialIndex;
   }, []);
+
+  useDerivedValue(() => {
+    scrollTo(scrollRef, page.value * PAGE_STRIDE, 0, false);
+  });
+
+  const rSwitcherStyle = useAnimatedStyle(() => {
+    const interpolatedTop = interpolate(page.value, [0, 1], [firstTopY.value, secondTopY.value]);
+
+    const desiredTop = interpolatedTop - BOTTOM_SWITCHER_POSITION;
+
+    const bottom = Math.max(0, containerH.value - desiredTop);
+    return { bottom };
+  });
 
   return (
     <View className="flex-1">
@@ -48,42 +87,69 @@ export const Details = () => {
         style={StyleSheet.absoluteFill}
       />
 
-      <ScrollView
-        ref={scrollRef}
-        contentContainerStyle={{
-          position: "absolute",
-          bottom: insets.bottom,
-          paddingHorizontal: HORIZONTAL_PADDING,
-          gap: 2 * HORIZONTAL_PADDING,
+      <View
+        style={{ position: "absolute", left: 0, right: 0, bottom: insets.bottom }}
+        onLayout={(e) => {
+          containerH.value = e.nativeEvent.layout.height;
         }}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        bounces={false}
-        scrollEnabled={false}
       >
-        <View
-          key="one"
-          style={[{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }]}
+        <Animated.ScrollView
+          ref={scrollRef}
+          style={{ maxHeight: "100%" }}
+          contentContainerStyle={{
+            paddingHorizontal: HORIZONTAL_PADDING,
+            gap: 2 * HORIZONTAL_PADDING,
+          }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          scrollEnabled={false}
         >
-          <BlurListItem count={7} borderClass="border border-neutral-300/30" intensity={8} />
+          <View
+            key="one"
+            style={[
+              {
+                width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
+                padding: HORIZONTAL_PADDING,
+              },
+            ]}
+            onLayout={(e: LayoutChangeEvent) => (firstTopY.value = e.nativeEvent.layout.y)}
+          >
+            <BlurListItem count={7} borderClass="border border-neutral-300/30" intensity={8} />
 
-          <View className="bg-white rounded-full py-3 mt-4 items-center">
-            <Text className="text-black text-lg font-bold">Save</Text>
+            <View className="bg-white rounded-full py-3 mt-4 items-center">
+              <Text className="text-black text-lg font-bold">Save</Text>
+            </View>
           </View>
-        </View>
 
-        <View
-          className="mt-auto"
-          key="two"
-          style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
-        >
-          <BlurListItem count={4} borderClass="border border-neutral-400/30" intensity={8} />
+          <View
+            className="mt-auto"
+            key="two"
+            style={{
+              width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
+              padding: HORIZONTAL_PADDING,
+            }}
+            onLayout={(e: LayoutChangeEvent) => (secondTopY.value = e.nativeEvent.layout.y)}
+          >
+            <BlurListItem count={4} borderClass="border border-neutral-400/30" intensity={8} />
 
-          <View className="bg-white rounded-full py-3 mt-4 items-center">
-            <Text className="text-black text-lg font-bold">Start Timer</Text>
+            <View className="bg-white rounded-full py-3 mt-4 items-center">
+              <Text className="text-black text-lg font-bold">Start Timer</Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </Animated.ScrollView>
+
+        <Animated.View style={[rSwitcherStyle, { position: "absolute", left: 0, right: 0 }]}>
+          <Switcher
+            value={value}
+            setValue={(v) => {
+              setValue(v);
+              const i = v === "schedule" ? 0 : 1;
+              goToIndex(i);
+            }}
+          />
+        </Animated.View>
+      </View>
 
       <Pressable
         onPress={() => router.back()}
@@ -91,17 +157,6 @@ export const Details = () => {
       >
         <ChevronDown size={20} color="white" strokeWidth={3} />
       </Pressable>
-
-      <View className="absolute bottom-[600] left-0 right-0">
-        <Switcher
-          value={value}
-          setValue={(v) => {
-            setValue(v);
-            const i = v === "schedule" ? 0 : 1;
-            goToIndex(i);
-          }}
-        />
-      </View>
     </View>
   );
 };
