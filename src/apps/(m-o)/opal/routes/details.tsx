@@ -1,4 +1,12 @@
-import { View, Pressable, Text, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native";
+import {
+  View,
+  Pressable,
+  Text,
+  StyleSheet,
+  Dimensions,
+  LayoutChangeEvent,
+  Platform,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronDown } from "lucide-react-native";
@@ -17,6 +25,9 @@ import Animated, {
   Easing,
   scrollTo,
 } from "react-native-reanimated";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { BlurView } from "expo-blur";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const HORIZONTAL_PADDING = 8;
@@ -25,7 +36,7 @@ const PAGE_WIDTH = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
 const GAP = 2 * HORIZONTAL_PADDING;
 const PAGE_STRIDE = PAGE_WIDTH + GAP;
 
-const BOTTOM_SWITCHER_POSITION = 20;
+const BOTTOM_SWITCHER_POSITION = 10;
 
 export const Details = () => {
   const router = useRouter();
@@ -41,31 +52,25 @@ export const Details = () => {
   const secondTopY = useSharedValue(0);
   const containerH = useSharedValue(0);
 
-  useDerivedValue(() => {
-    console.log("firstTopY", firstTopY.value);
-    console.log("secondTopY", secondTopY.value);
-    console.log("containerH", containerH.value);
-  });
-
-  const goToIndex = (i: number) => {
-    page.value = withTiming(i, { duration: 350, easing: Easing.out(Easing.cubic) });
+  const goToIndex = (index: number) => {
+    page.set(withTiming(index, { duration: 350, easing: Easing.out(Easing.cubic) }));
   };
 
   useEffect(() => {
     const initialIndex = value === "schedule" ? 0 : 1;
-    page.value = initialIndex;
+    page.set(initialIndex);
   }, []);
 
   useDerivedValue(() => {
-    scrollTo(scrollRef, page.value * PAGE_STRIDE, 0, false);
+    scrollTo(scrollRef, page.get() * PAGE_STRIDE, 0, false);
   });
 
   const rSwitcherStyle = useAnimatedStyle(() => {
-    const interpolatedTop = interpolate(page.value, [0, 1], [firstTopY.value, secondTopY.value]);
+    const interpolatedTop = interpolate(page.get(), [0, 1], [firstTopY.get(), secondTopY.get()]);
 
     const desiredTop = interpolatedTop - BOTTOM_SWITCHER_POSITION;
 
-    const bottom = Math.max(0, containerH.value - desiredTop);
+    const bottom = Math.max(0, containerH.get() - desiredTop);
     return { bottom };
   });
 
@@ -75,27 +80,27 @@ export const Details = () => {
         style={StyleSheet.absoluteFill}
         placeholder={{
           blurhash:
-            "i8A9$u$K0L~V%g57s.?HR+S5s:-T$$V@WCxbNHNH0zxv?GIosm-pNGNGxGNHxat7NIozofaxs.R+aeoLs:s:a|ofoLaxs.",
+            "h14-@F9a%fM{R.Ipt7e:9aD*?GIVs:xZR+ay_2R*t7xtM|xZRkofaK%1NGxuE2X8RkoL9a%LIVxuRjxtR*R*",
         }}
       />
 
       <LinearGradient
         colors={["transparent", "rgba(48,43,35,0.95)", "black"]}
-        locations={[0, 0.5, 1]}
+        locations={[0.2, 0.55, 0.9]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={StyleSheet.absoluteFill}
       />
 
       <View
-        style={{ position: "absolute", left: 0, right: 0, bottom: insets.bottom }}
+        className="absolute left-0 right-0"
+        style={{ bottom: insets.bottom }}
         onLayout={(e) => {
-          containerH.value = e.nativeEvent.layout.height;
+          containerH.set(e.nativeEvent.layout.height);
         }}
       >
         <Animated.ScrollView
           ref={scrollRef}
-          style={{ maxHeight: "100%" }}
           contentContainerStyle={{
             paddingHorizontal: HORIZONTAL_PADDING,
             gap: 2 * HORIZONTAL_PADDING,
@@ -107,19 +112,23 @@ export const Details = () => {
         >
           <View
             key="one"
+            className="mt-auto"
             style={[
               {
                 width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
                 padding: HORIZONTAL_PADDING,
               },
             ]}
-            onLayout={(e: LayoutChangeEvent) => (firstTopY.value = e.nativeEvent.layout.y)}
+            onLayout={(e: LayoutChangeEvent) => firstTopY.set(e.nativeEvent.layout.y)}
           >
             <BlurListItem count={7} borderClass="border border-neutral-300/30" intensity={8} />
 
-            <View className="bg-white rounded-full py-3 mt-4 items-center">
+            <Pressable
+              onPress={simulatePress}
+              className="bg-white rounded-full py-3 mt-4 items-center"
+            >
               <Text className="text-black text-lg font-bold">Save</Text>
-            </View>
+            </Pressable>
           </View>
 
           <View
@@ -129,23 +138,26 @@ export const Details = () => {
               width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
               padding: HORIZONTAL_PADDING,
             }}
-            onLayout={(e: LayoutChangeEvent) => (secondTopY.value = e.nativeEvent.layout.y)}
+            onLayout={(e: LayoutChangeEvent) => secondTopY.set(e.nativeEvent.layout.y)}
           >
             <BlurListItem count={4} borderClass="border border-neutral-400/30" intensity={8} />
 
-            <View className="bg-white rounded-full py-3 mt-4 items-center">
+            <Pressable
+              onPress={simulatePress}
+              className="bg-white rounded-full py-3 mt-4 items-center"
+            >
               <Text className="text-black text-lg font-bold">Start Timer</Text>
-            </View>
+            </Pressable>
           </View>
         </Animated.ScrollView>
 
-        <Animated.View style={[rSwitcherStyle, { position: "absolute", left: 0, right: 0 }]}>
+        <Animated.View className="absolute left-0 right-0" style={rSwitcherStyle}>
           <Switcher
             value={value}
             setValue={(v) => {
               setValue(v);
-              const i = v === "schedule" ? 0 : 1;
-              goToIndex(i);
+              const index = v === "schedule" ? 0 : 1;
+              goToIndex(index);
             }}
           />
         </Animated.View>
@@ -153,8 +165,12 @@ export const Details = () => {
 
       <Pressable
         onPress={() => router.back()}
-        className="absolute top-[80px] left-4 rounded-full p-2 overflow-hidden bg-neutral-700/50"
+        className={cn(
+          "absolute top-[70px] left-4 overflow-hidden border border-neutral-300/30 rounded-full p-1.5 bg-neutral-700/30",
+          Platform.OS === "android" ? "bg-neutral-500" : "bg-neutral-500/30"
+        )}
       >
+        <BlurView intensity={8} tint="dark" style={StyleSheet.absoluteFill} />
         <ChevronDown size={20} color="white" strokeWidth={3} />
       </Pressable>
     </View>
