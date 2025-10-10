@@ -22,7 +22,7 @@ export const FeatureItem: FC<Props> = ({ icon, text }) => {
       className="flex-row items-center justify-between gap-3"
       // Layout animation: keeps sibling spacing stable while list reflows on content change
       // Useful when the plan switch causes items to mount/unmount
-      layout={LinearTransition}
+      layout={LinearTransition.duration(200).easing(Easing.out(Easing.ease))}
     >
       <Animated.View
         key={text}

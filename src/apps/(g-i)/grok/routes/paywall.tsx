@@ -71,9 +71,6 @@ export const Paywall = () => {
           <Animated.View
             // Slight gap change per plan creates a subtle density shift on toggle
             className={cn("gap-[28px]", value === "2" && "gap-[26px]")}
-            // Layout transition: animates vertical gap and item reflow
-            // 150ms + ease-out for crisp responsiveness during plan switching
-            layout={LinearTransition.duration(150).easing(Easing.out(Easing.ease))}
           >
             <FeatureItem
               icon={
