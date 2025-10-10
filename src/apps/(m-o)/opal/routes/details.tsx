@@ -21,9 +21,8 @@ import Animated, {
   interpolate,
   useAnimatedRef,
   useDerivedValue,
-  withTiming,
-  Easing,
   scrollTo,
+  withSpring,
 } from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { BlurView } from "expo-blur";
@@ -36,16 +35,16 @@ const PAGE_WIDTH = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
 const GAP = 2 * HORIZONTAL_PADDING;
 const PAGE_STRIDE = PAGE_WIDTH + GAP;
 
-const BOTTOM_SWITCHER_POSITION = 10;
+const BOTTOM_SWITCHER_POSITION = 5;
 
-type PageBlockProps = {
+type TabsBlockProps = {
   onLayout: (e: LayoutChangeEvent) => void;
   count: number;
   borderClass: string;
   buttonLabel: string;
 };
 
-const PageBlock = ({ onLayout, count, borderClass, buttonLabel }: PageBlockProps) => (
+const TabsBlock = ({ onLayout, count, borderClass, buttonLabel }: TabsBlockProps) => (
   <View
     className="mt-auto"
     style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
@@ -67,30 +66,32 @@ export const Details = () => {
 
   const [value, setValue] = useState<"schedule" | "timer">("schedule");
 
-  const page = useSharedValue(0);
+  const tabsProgress = useSharedValue(0);
 
-  const firstTopY = useSharedValue(0);
-  const secondTopY = useSharedValue(0);
+  const firstTabTopY = useSharedValue(0);
+  const secondTabTopY = useSharedValue(0);
   const containerHeight = useSharedValue(0);
 
   const goToIndex = (index: number) => {
-    page.set(withTiming(index, { duration: 350, easing: Easing.out(Easing.cubic) }));
+    tabsProgress.set(withSpring(index, { duration: 350, dampingRatio: 2 }));
   };
 
   useEffect(() => {
     const initialIndex = value === "schedule" ? 0 : 1;
-    page.set(initialIndex);
+    tabsProgress.set(initialIndex);
   }, []);
 
   useDerivedValue(() => {
-    scrollTo(scrollRef, page.get() * PAGE_STRIDE, 0, false);
+    scrollTo(scrollRef, tabsProgress.get() * PAGE_STRIDE, 0, false);
   });
 
   const rSwitcherStyle = useAnimatedStyle(() => {
-    const interpolatedTop = interpolate(page.get(), [0, 1], [firstTopY.get(), secondTopY.get()]);
-
+    const interpolatedTop = interpolate(
+      tabsProgress.get(),
+      [0, 1],
+      [firstTabTopY.get(), secondTabTopY.get()]
+    );
     const desiredTop = interpolatedTop - BOTTOM_SWITCHER_POSITION;
-
     const bottom = Math.max(0, containerHeight.get() - desiredTop);
     return { bottom };
   });
@@ -131,17 +132,17 @@ export const Details = () => {
           bounces={false}
           scrollEnabled={false}
         >
-          <PageBlock
+          <TabsBlock
             key="one"
-            onLayout={(e: LayoutChangeEvent) => firstTopY.set(e.nativeEvent.layout.y)}
+            onLayout={(e: LayoutChangeEvent) => firstTabTopY.set(e.nativeEvent.layout.y)}
             count={7}
             borderClass="border border-neutral-300/30"
             buttonLabel="Save"
           />
 
-          <PageBlock
+          <TabsBlock
             key="two"
-            onLayout={(e: LayoutChangeEvent) => secondTopY.set(e.nativeEvent.layout.y)}
+            onLayout={(e: LayoutChangeEvent) => secondTabTopY.set(e.nativeEvent.layout.y)}
             count={4}
             borderClass="border border-neutral-400/30"
             buttonLabel="Start Timer"
