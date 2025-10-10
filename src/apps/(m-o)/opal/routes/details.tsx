@@ -38,6 +38,27 @@ const PAGE_STRIDE = PAGE_WIDTH + GAP;
 
 const BOTTOM_SWITCHER_POSITION = 10;
 
+type PageBlockProps = {
+  onLayout: (e: LayoutChangeEvent) => void;
+  count: number;
+  borderClass: string;
+  buttonLabel: string;
+};
+
+const PageBlock = ({ onLayout, count, borderClass, buttonLabel }: PageBlockProps) => (
+  <View
+    className="mt-auto"
+    style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
+    onLayout={onLayout}
+  >
+    <BlurListItem count={count} borderClass={borderClass} intensity={8} />
+
+    <Pressable onPress={simulatePress} className="bg-white rounded-full py-3 mt-4 items-center">
+      <Text className="text-black text-lg font-bold">{buttonLabel}</Text>
+    </Pressable>
+  </View>
+);
+
 export const Details = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -50,7 +71,7 @@ export const Details = () => {
 
   const firstTopY = useSharedValue(0);
   const secondTopY = useSharedValue(0);
-  const containerH = useSharedValue(0);
+  const containerHeight = useSharedValue(0);
 
   const goToIndex = (index: number) => {
     page.set(withTiming(index, { duration: 350, easing: Easing.out(Easing.cubic) }));
@@ -70,7 +91,7 @@ export const Details = () => {
 
     const desiredTop = interpolatedTop - BOTTOM_SWITCHER_POSITION;
 
-    const bottom = Math.max(0, containerH.get() - desiredTop);
+    const bottom = Math.max(0, containerHeight.get() - desiredTop);
     return { bottom };
   });
 
@@ -96,7 +117,7 @@ export const Details = () => {
         className="absolute left-0 right-0"
         style={{ bottom: insets.bottom }}
         onLayout={(e) => {
-          containerH.set(e.nativeEvent.layout.height);
+          containerHeight.set(e.nativeEvent.layout.height);
         }}
       >
         <Animated.ScrollView
@@ -110,45 +131,21 @@ export const Details = () => {
           bounces={false}
           scrollEnabled={false}
         >
-          <View
+          <PageBlock
             key="one"
-            className="mt-auto"
-            style={[
-              {
-                width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
-                padding: HORIZONTAL_PADDING,
-              },
-            ]}
             onLayout={(e: LayoutChangeEvent) => firstTopY.set(e.nativeEvent.layout.y)}
-          >
-            <BlurListItem count={7} borderClass="border border-neutral-300/30" intensity={8} />
+            count={7}
+            borderClass="border border-neutral-300/30"
+            buttonLabel="Save"
+          />
 
-            <Pressable
-              onPress={simulatePress}
-              className="bg-white rounded-full py-3 mt-4 items-center"
-            >
-              <Text className="text-black text-lg font-bold">Save</Text>
-            </Pressable>
-          </View>
-
-          <View
-            className="mt-auto"
+          <PageBlock
             key="two"
-            style={{
-              width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2,
-              padding: HORIZONTAL_PADDING,
-            }}
             onLayout={(e: LayoutChangeEvent) => secondTopY.set(e.nativeEvent.layout.y)}
-          >
-            <BlurListItem count={4} borderClass="border border-neutral-400/30" intensity={8} />
-
-            <Pressable
-              onPress={simulatePress}
-              className="bg-white rounded-full py-3 mt-4 items-center"
-            >
-              <Text className="text-black text-lg font-bold">Start Timer</Text>
-            </Pressable>
-          </View>
+            count={4}
+            borderClass="border border-neutral-400/30"
+            buttonLabel="Start Timer"
+          />
         </Animated.ScrollView>
 
         <Animated.View className="absolute left-0 right-0" style={rSwitcherStyle}>
