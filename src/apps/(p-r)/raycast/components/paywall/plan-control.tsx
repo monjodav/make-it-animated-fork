@@ -4,6 +4,7 @@ import { BlurView } from "expo-blur";
 import { Check } from "lucide-react-native";
 import { cn } from "@/src/shared/lib/utils/cn";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 
 type PlanCardProps = {
   title: string;
@@ -56,7 +57,7 @@ type PlanControlProps = {
   setPlan: (value: "pro" | "advanced") => void;
   price: { monthly: number[]; yearly: number[] };
   period: "monthly" | "yearly";
-  listRef: React.RefObject<ScrollView>;
+  listRef: React.RefObject<ScrollView | null>;
 };
 
 const PlanControl = ({ plan, setPlan, price, period, listRef }: PlanControlProps) => {
@@ -72,6 +73,7 @@ const PlanControl = ({ plan, setPlan, price, period, listRef }: PlanControlProps
         subtitle="First 2 weeks free"
         isSelected={plan === "pro"}
         onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           listRef.current?.scrollTo({ y: 0, animated: true });
           setPlan("pro");
         }}
@@ -82,6 +84,7 @@ const PlanControl = ({ plan, setPlan, price, period, listRef }: PlanControlProps
         subtitle="First 2 weeks free"
         isSelected={plan === "advanced"}
         onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           listRef.current?.scrollTo({ y: 0, animated: true });
           setPlan("advanced");
         }}

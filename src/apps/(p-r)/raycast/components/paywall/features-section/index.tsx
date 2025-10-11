@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { BlurView } from "expo-blur";
 import React, { ReactNode } from "react";
 import Animated, { EntryOrExitLayoutType, LinearTransition } from "react-native-reanimated";
+import { GradientText } from "@/src/shared/components/gradient-text";
 
 interface FeaturesSectionProps {
   title: string;
@@ -18,7 +19,11 @@ export const FeaturesSection = ({ title, children, entering, exiting }: Features
       layout={LinearTransition.springify().damping(85).stiffness(1000)}
       style={{ transformOrigin: "bottom" }}
     >
-      <Text className="text-neutral-50 text-2xl font-semibold text-center">{title}</Text>
+      <GradientText
+        text={title}
+        className="text-2xl font-semibold text-center"
+        gradientProps={{ colors: ["#a3a3a390", "#fafafa", "#a3a3a390"] }}
+      />
       <View
         className="flex-1 bg-neutral-700/40 border border-neutral-700/10 rounded-3xl mt-5 p-4 overflow-hidden"
         style={styles.container}

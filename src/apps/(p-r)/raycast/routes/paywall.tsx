@@ -21,6 +21,7 @@ import { BlurView } from "expo-blur";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import { FeaturesSection, FeatureItem, Divider } from "../components/paywall/features-section";
 import { IconContainer } from "../components/paywall/features-section/icon-container";
+import { GradientText } from "@/src/shared/components/gradient-text";
 
 const PRICE = {
   monthly: [9.99, 19.99],
@@ -75,9 +76,11 @@ export const Paywall = () => {
           paddingBottom: bottomContentHeight - 24,
         }}
       >
-        <Text className="text-neutral-50 w-3/4 text-3xl font-bold self-center text-center">
-          Powerful Productivity for IOS and macOS
-        </Text>
+        <GradientText
+          text="Powerful Productivity for IOS and macOS"
+          className="text-neutral-50 w-3/4 text-3xl font-bold self-center text-center"
+          gradientProps={{ colors: ["#a3a3a390", "#fafafa", "#a3a3a390"] }}
+        />
 
         {plan === "advanced" && (
           <FeaturesSection
@@ -183,10 +186,7 @@ export const Paywall = () => {
         </FeaturesSection>
       </ScrollView>
 
-      <ProgressiveBlurView
-        height={insets.top + (Platform.OS === "ios" ? 12 : 60)}
-        blurViewProps={{ tint: "dark" }}
-      />
+      <ProgressiveBlurView height={insets.top + 60} blurViewProps={{ tint: "dark" }} />
 
       <ProgressiveBlurView
         key={bottomContentHeight}
