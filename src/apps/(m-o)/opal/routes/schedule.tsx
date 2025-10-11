@@ -1,20 +1,11 @@
-import {
-  View,
-  Pressable,
-  Text,
-  StyleSheet,
-  Dimensions,
-  LayoutChangeEvent,
-  Platform,
-} from "react-native";
+import { View, Pressable, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronDown } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Switcher from "../components/switcher";
+import ScheduleTimerControl from "../components/schedule/schedule-timer-control";
 import { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import BlurListItem from "../components/blur-list-item";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,9 +15,9 @@ import Animated, {
   scrollTo,
   withSpring,
 } from "react-native-reanimated";
-import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { BlurView } from "expo-blur";
-import { cn } from "@/src/shared/lib/utils/cn";
+import { ScheduleContent } from "../components/schedule/schedule-content";
+import { TimerContent } from "../components/schedule/timer-content";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const HORIZONTAL_PADDING = 8;
@@ -37,28 +28,7 @@ const PAGE_STRIDE = PAGE_WIDTH + GAP;
 
 const BOTTOM_SWITCHER_POSITION = 5;
 
-type TabsBlockProps = {
-  onLayout: (e: LayoutChangeEvent) => void;
-  count: number;
-  borderClass: string;
-  buttonLabel: string;
-};
-
-const TabsBlock = ({ onLayout, count, borderClass, buttonLabel }: TabsBlockProps) => (
-  <View
-    className="mt-auto"
-    style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
-    onLayout={onLayout}
-  >
-    <BlurListItem count={count} borderClass={borderClass} intensity={8} />
-
-    <Pressable onPress={simulatePress} className="bg-white rounded-full py-3 mt-4 items-center">
-      <Text className="text-black text-lg font-bold">{buttonLabel}</Text>
-    </Pressable>
-  </View>
-);
-
-export const Details = () => {
+export const Schedule = () => {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -125,6 +95,7 @@ export const Details = () => {
           ref={scrollRef}
           contentContainerStyle={{
             paddingHorizontal: HORIZONTAL_PADDING,
+            paddingBottom: insets.bottom + 4,
             gap: 2 * HORIZONTAL_PADDING,
           }}
           horizontal
@@ -132,25 +103,25 @@ export const Details = () => {
           bounces={false}
           scrollEnabled={false}
         >
-          <TabsBlock
-            key="one"
+          <View
+            className="mt-auto"
+            style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
             onLayout={(e: LayoutChangeEvent) => firstTabTopY.set(e.nativeEvent.layout.y)}
-            count={7}
-            borderClass="border border-neutral-300/30"
-            buttonLabel="Save"
-          />
+          >
+            <ScheduleContent />
+          </View>
 
-          <TabsBlock
-            key="two"
+          <View
+            className="mt-auto"
+            style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
             onLayout={(e: LayoutChangeEvent) => secondTabTopY.set(e.nativeEvent.layout.y)}
-            count={4}
-            borderClass="border border-neutral-400/30"
-            buttonLabel="Start Timer"
-          />
+          >
+            <TimerContent />
+          </View>
         </Animated.ScrollView>
 
         <Animated.View className="absolute left-0 right-0" style={rSwitcherStyle}>
-          <Switcher
+          <ScheduleTimerControl
             value={value}
             setValue={(v) => {
               setValue(v);
@@ -162,14 +133,12 @@ export const Details = () => {
       </View>
 
       <Pressable
-        onPress={() => router.back()}
-        className={cn(
-          "absolute top-[70px] left-4 overflow-hidden border border-neutral-300/30 rounded-full p-1.5 bg-neutral-700/30",
-          Platform.OS === "android" ? "bg-neutral-500" : "bg-neutral-500/30"
-        )}
+        onPress={router.back}
+        className="absolute left-4 overflow-hidden border border-neutral-700/50 rounded-full p-1.5 bg-neutral-700/30"
+        style={{ top: insets.top + 12 }}
       >
-        <BlurView intensity={8} tint="dark" style={StyleSheet.absoluteFill} />
-        <ChevronDown size={20} color="white" strokeWidth={3} />
+        <BlurView intensity={8} tint="systemThinMaterialLight" style={StyleSheet.absoluteFill} />
+        <ChevronDown size={20} color="white" />
       </Pressable>
     </View>
   );
