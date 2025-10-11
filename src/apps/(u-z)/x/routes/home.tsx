@@ -62,7 +62,7 @@ export default function Home() {
     onMomentumEnd: (event) => {
       isHorizontalListScrollingX.value = false;
       activeTabIndex.value = Math.round(event.contentOffset.x / _homePostsListWidth);
-      // You can add the fetching logic here using react-native-reanimated runOnJS;
+      // You can add the fetching logic here using react-native-reanimated scheduleOnRN;
     },
   });
   // x-top-tabs-indicator-animation 🔼

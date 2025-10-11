@@ -9,6 +9,12 @@ import type {
   ItemMeasurements,
 } from "./types";
 import { cn } from "../../lib/utils/cn";
+import { Easing } from "react-native-reanimated";
+
+const TIMING_CONFIG = {
+  duration: 250,
+  easing: Easing.out(Easing.ease),
+};
 
 const SegmentedControlContext = createContext<SegmentedControlContextValue>({
   value: "",
@@ -79,13 +85,13 @@ const SegmentedControlItem = ({
 
   const handlePressIn = useCallback(() => {
     if (pressScale && pressScale > 0 && pressScale <= 1) {
-      scale.value = withTiming(pressScale, { duration: 120 });
+      scale.value = withTiming(pressScale, { duration: 100 });
     }
   }, [pressScale]);
 
   const handlePressOut = useCallback(() => {
     if (pressScale && pressScale > 0 && pressScale <= 1) {
-      scale.value = withTiming(1, { duration: 140 });
+      scale.value = withTiming(1, { duration: 100 });
     }
   }, [pressScale]);
 
@@ -139,10 +145,10 @@ const SegmentedControlIndicator = ({
     }
 
     return {
-      width: withTiming(activeMeasurements.width),
-      height: withTiming(activeMeasurements.height),
-      left: withTiming(activeMeasurements.x),
-      opacity: withTiming(1),
+      width: withTiming(activeMeasurements.width, TIMING_CONFIG),
+      height: withTiming(activeMeasurements.height, TIMING_CONFIG),
+      left: withTiming(activeMeasurements.x, TIMING_CONFIG),
+      opacity: withTiming(1, TIMING_CONFIG),
     };
   }, [activeMeasurements]);
 

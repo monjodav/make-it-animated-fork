@@ -1,10 +1,11 @@
-import { runOnJS, useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import {
   GestureUpdateEvent,
   PanGestureChangeEventPayload,
   PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
+import { scheduleOnRN } from "react-native-worklets";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -17,7 +18,7 @@ export const useSingleHapticOnPanGesture = ({ triggerOffset, axis }: Params) => 
   // Gate haptics so we only fire once per threshold crossing
   const isHapticTriggered = useSharedValue(false);
 
-  // Haptics must run on the JS thread; we call via runOnJS from the UI worklet
+  // Haptics must run on the JS thread; we call via scheduleOnRN from the UI worklet
   const handleHaptics = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     isHapticTriggered.set(true);
@@ -34,7 +35,7 @@ export const useSingleHapticOnPanGesture = ({ triggerOffset, axis }: Params) => 
 
     // Fire when crossing forward over threshold (once)
     if (Math.abs(offset) > triggerOffset && !isHapticTriggered.value) {
-      runOnJS(handleHaptics)();
+      scheduleOnRN(handleHaptics);
     }
 
     // Reset when moving back under threshold so a new crossing can haptic again

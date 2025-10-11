@@ -1,6 +1,7 @@
-import { runOnJS, useAnimatedReaction, withSpring, withTiming } from "react-native-reanimated";
+import { useAnimatedReaction, withSpring, withTiming } from "react-native-reanimated";
 import { useChannelAnimation } from "../provider/channel-animation";
 import { useCatchUpAnimation } from "../provider/catch-up-animation";
+import { scheduleOnRN } from "react-native-worklets";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -8,8 +9,8 @@ import { useCatchUpAnimation } from "../provider/catch-up-animation";
 const DURATION = 300;
 
 const ANIM_CONFIG = {
-  stiffness: 320,
-  damping: 28,
+  damping: 90,
+  stiffness: 1000,
 };
 
 export const useHeaderControlsAnimation = (index: number) => {
@@ -58,7 +59,7 @@ export const useHeaderControlsAnimation = (index: number) => {
         panX.set(withSpring(0, ANIM_CONFIG));
         panY.set(withSpring(0, ANIM_CONFIG));
 
-        runOnJS(resetUndoPressed)();
+        scheduleOnRN(resetUndoPressed);
       }
     }
   );

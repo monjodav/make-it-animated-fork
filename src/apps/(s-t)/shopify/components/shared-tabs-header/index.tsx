@@ -8,6 +8,7 @@ import { SEARCH_BAR_HEIGHT, SEARCH_FILTERS_HEIGHT } from "../../lib/constants/st
 import { Home } from "./home";
 import { OrdersProducts } from "./orders-products";
 import { ProfileTab } from "./profile-tab";
+import { MENU_TRANSITION_SPRING_CONFIG } from "../../lib/constants/animation-configs";
 
 // shopify-tabs-shared-header-animation 🔽
 
@@ -35,10 +36,7 @@ export const SharedTabsHeader = () => {
        */
       height: withSpring(
         pathname.endsWith(Tab.Search) ? searchScreenHeaderHeight : restScreenHeaderHeight,
-        {
-          damping: 32,
-          stiffness: 320,
-        }
+        MENU_TRANSITION_SPRING_CONFIG
       ),
     };
   });
@@ -48,7 +46,7 @@ export const SharedTabsHeader = () => {
       /* Animated wrapper is required so the height spring runs on the UI thread
        * (createAnimatedComponent). Padding uses safe-area top to align content
        * with OS status bar on both iOS/Android. */
-      className="px-5"
+      className="px-5 bg-black"
       style={[{ paddingTop: insets.top + 12 }, rContainerStyle]}
     >
       {/* Route-driven rendering triggers consistent entrance animations per tab.
