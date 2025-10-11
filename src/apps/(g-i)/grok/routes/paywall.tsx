@@ -13,7 +13,7 @@ import {
 } from "lucide-react-native";
 import { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import Animated, { Easing, LinearTransition } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 import Switcher from "../components/paywall/switcher";
 import { FeatureItem } from "../components/paywall/feature-item";
 import { cn } from "@/src/shared/lib/utils/cn";
