@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -12,12 +12,13 @@ import {
 } from "lucide-react-native";
 import React, { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import Animated, { Keyframe, LinearTransition } from "react-native-reanimated";
-import Switcher from "../components/paywall/switcher";
-import TabsSwitcher from "../components/paywall/tabs-switcher";
+import Animated, { FadeIn, FadeOut, Keyframe, LinearTransition } from "react-native-reanimated";
+import PeriodControl from "../components/paywall/period-control";
+import PlanControl from "../components/paywall/plan-control";
+import { ProgressiveBlurView } from "@/src/shared/components/progressive-blur-view";
+import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import TopBlur from "../components/paywall/top-blur";
-import BottomBlur from "../components/paywall/bottom-blur";
+import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 
 const PRICE = {
   monthly: [9.99, 19.99],
@@ -51,15 +52,19 @@ const KEYFRAME_OUT = new Keyframe({
 });
 
 export const Paywall = () => {
-  const insets = useSafeAreaInsets();
   const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
   const [selectedCard, setSelectedCard] = useState<"1" | "2">("1");
+  const [bottomContentHeight, setBottomContentHeight] = useState(0);
+
+  const insets = useSafeAreaInsets();
 
   const currentPrice = PRICE[period][selectedCard === "1" ? 0 : 1];
   const formattedPrice = `${currentPrice.toLocaleString("de-DE", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })} USD`;
+
+  const { closeDrawer } = useDrawerControl();
 
   const _cardOne = (
     <Animated.View key="one" className="width-full py-3">
@@ -201,82 +206,106 @@ export const Paywall = () => {
   });
 
   return (
-    <View className="flex-1 items-center bg-black">
-      <View
-        style={{ paddingTop: insets.top }}
-        className="absolute flex-row items-center justify-between w-full px-6 py-5 z-10 "
-      >
-        <TopBlur />
-
-        <Pressable
-          onPress={simulatePress}
-          className="rounded-full p-2 overflow-hidden bg-neutral-700/50"
-        >
-          <BlurView tint="dark" style={StyleSheet.absoluteFill} />
-          <X size={20} color="#E0E0E1" strokeWidth={3} />
-        </Pressable>
-        <Text onPress={simulatePress} className="text-[#E0E0E1] text-lg font-medium">
-          Restore
-        </Text>
-      </View>
-
+    <View className="flex-1 bg-black">
       <Image
-        style={{ width: "100%", height: "100%", position: "absolute" }}
+        style={StyleSheet.absoluteFill}
         placeholder={{
           blurhash:
             "_98_5KFH$6$6WoWpwx|dFHo1sUsUjto1JROCN[N]wysUSMsVwya|N]a|sUa|wywxo1jtSLWpo1N[jtWpo1a|Wpo1Wpa|jtWpjtjtfQwya|sUWpWpa|Wpo1a|jtjta|WpWp",
         }}
       />
-      <View className="flex-1 w-full relative">
-        <Animated.ScrollView
-          style={StyleSheet.absoluteFill}
-          contentContainerClassName="px-5 pt-[120px] pb-[350px]"
+
+      <View
+        className="absolute flex-row items-center justify-between w-full px-6"
+        style={{ top: insets.top + 8 }}
+      >
+        <Pressable
+          onPress={closeDrawer}
+          className="rounded-full p-2 overflow-hidden bg-neutral-700/30"
         >
-          <Text className="text-[#E0E0E1] w-3/4 text-3xl font-bold self-center text-center">
-            Powerful Productivity for IOS and macOS
-          </Text>
+          <BlurView tint="systemThickMaterialDark" style={StyleSheet.absoluteFill} />
+          <X size={20} color="#d4d4d4" />
+        </Pressable>
+        <Text onPress={simulatePress} className="text-neutral-400 text-lg">
+          Restore
+        </Text>
+      </View>
 
-          <Animated.View layout={layoutBuilder}>{visibleCards}</Animated.View>
-        </Animated.ScrollView>
+      <ScrollView
+        contentContainerClassName="px-5"
+        contentContainerStyle={{
+          paddingTop: insets.top + 70,
+          paddingBottom: bottomContentHeight - 30,
+        }}
+      >
+        <Text className="text-neutral-50 w-3/4 text-3xl font-bold self-center text-center">
+          Powerful Productivity for IOS and macOS
+        </Text>
 
-        <View
-          className="w-full px-6 items-center"
-          style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
+        <Animated.View layout={layoutBuilder}>{visibleCards}</Animated.View>
+      </ScrollView>
+
+      <ProgressiveBlurView height={insets.top + 12} blurViewProps={{ tint: "dark" }} />
+
+      <ProgressiveBlurView
+        key={bottomContentHeight}
+        height={bottomContentHeight + 100}
+        position="bottom"
+        blurViewProps={{ intensity: 100, tint: "dark" }}
+      />
+
+      <LinearGradient colors={["#00000000", "#000000"]} style={styles.bottomGradient} />
+
+      <View
+        className="absolute bottom-0 px-5"
+        style={{ paddingBottom: insets.bottom + 4 }}
+        onLayout={(e) => setBottomContentHeight(e.nativeEvent.layout.height)}
+      >
+        <View className="items-center">
+          <PeriodControl value={period} setValue={setPeriod} />
+        </View>
+
+        <PlanControl
+          selectedCard={selectedCard}
+          setSelectedCard={setSelectedCard}
+          price={PRICE}
+          period={period}
+        />
+
+        <Pressable
+          onPress={simulatePress}
+          className="mb-4 p-4 items-center rounded-[15px] bg-white"
         >
-          <BottomBlur />
+          <Text className="text-black text-xl font-semibold">Try free for 2 weeks</Text>
+        </Pressable>
 
-          <Switcher value={period} setValue={setPeriod} />
-
-          <TabsSwitcher
-            selectedCard={selectedCard}
-            setSelectedCard={setSelectedCard}
-            price={PRICE}
-            period={period}
-          />
-
-          <Pressable
-            onPress={simulatePress}
-            className="self-stretch mb-4 p-4 items-center rounded-[15px] bg-white"
-          >
-            <Text className="text-black text-xl font-semibold">Try free for 2 weeks</Text>
+        <Animated.Text
+          key={formattedPrice + period}
+          entering={FadeIn.duration(200)}
+          exiting={FadeOut.duration(200)}
+          className="text-neutral-50 text-sm font-medium mb-2 text-center"
+        >
+          {`2 weeks free, then ${formattedPrice} per ${period.slice(0, -2)}. Auto-renews ${period} until cancelled.`}
+        </Animated.Text>
+        <View className="w-full flex-row mb-8 items-center justify-center gap-5">
+          <Pressable onPress={simulatePress}>
+            <Text className="text-neutral-400 text-sm font-medium">Terms of Service</Text>
           </Pressable>
-
-          <Text
-            onPress={simulatePress}
-            className="text-[#ffffff] text-sm font-medium mb-1 text-center"
-          >
-            {`2 weeks free, then ${formattedPrice} per ${period.slice(0, -2)}. Auto-renews ${period} until cancelled.`}
-          </Text>
-          <View className="w-full flex-row mb-8 items-center justify-center gap-5">
-            <Text onPress={simulatePress} className="text-[#92888A] text-sm font-medium">
-              Terms of Service
-            </Text>
-            <Text onPress={simulatePress} className="text-[#92888A] text-sm font-medium">
-              Privacy Policy
-            </Text>
-          </View>
+          <Pressable onPress={simulatePress}>
+            <Text className="text-neutral-400 text-sm font-medium">Privacy Policy</Text>
+          </Pressable>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  bottomGradient: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 80,
+  },
+});
