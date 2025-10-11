@@ -23,6 +23,8 @@ import { FeaturesSection, FeatureItem, Divider } from "../components/paywall/fea
 import { IconContainer } from "../components/paywall/features-section/icon-container";
 import { GradientText } from "@/src/shared/components/gradient-text";
 
+// raycast-paywall-screen-animation 🔽
+
 const PRICE = {
   monthly: [9.99, 19.99],
   yearly: [96.0, 191.99],
@@ -255,3 +257,5 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
+
+// raycast-paywall-screen-animation 🔼
