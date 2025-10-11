@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -10,200 +10,36 @@ import {
   Sparkle,
   X,
 } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import Animated, { FadeIn, FadeOut, Keyframe, LinearTransition } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated";
 import PeriodControl from "../components/paywall/period-control";
 import PlanControl from "../components/paywall/plan-control";
 import { ProgressiveBlurView } from "@/src/shared/components/progressive-blur-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
+import { FeaturesSection, FeatureItem, Divider } from "../components/paywall/features-section";
+import { IconContainer } from "../components/paywall/features-section/icon-container";
 
 const PRICE = {
   monthly: [9.99, 19.99],
   yearly: [96.0, 191.99],
 };
 
-const KEYFRAME_IN = new Keyframe({
-  0: {
-    opacity: 0.4,
-    transform: [{ scale: 0.4 }],
-  },
-  60: {
-    opacity: 1,
-    transform: [{ scale: 1.15 }],
-  },
-  100: {
-    opacity: 1,
-    transform: [{ scale: 1 }],
-  },
-});
-
-const KEYFRAME_OUT = new Keyframe({
-  0: {
-    opacity: 1,
-    transform: [{ scale: 1 }],
-  },
-  100: {
-    opacity: 0,
-    transform: [{ scale: 0 }],
-  },
-});
-
 export const Paywall = () => {
   const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
-  const [selectedCard, setSelectedCard] = useState<"1" | "2">("1");
+  const [plan, setPlan] = useState<"pro" | "advanced">("pro");
   const [bottomContentHeight, setBottomContentHeight] = useState(0);
 
   const insets = useSafeAreaInsets();
 
-  const currentPrice = PRICE[period][selectedCard === "1" ? 0 : 1];
-  const formattedPrice = `${currentPrice.toLocaleString("de-DE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })} USD`;
+  const currentPrice = PRICE[period][plan === "pro" ? 0 : 1];
+  const formattedPrice = `${currentPrice} USD`;
 
-  const { closeDrawer } = useDrawerControl();
+  const { openDrawer } = useDrawerControl();
 
-  const _cardOne = (
-    <Animated.View key="one" className="width-full py-3">
-      <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
-        Unlock the most intelligent models
-      </Text>
-      <View className="flex-1 bg-neutral-700/60 rounded-3xl mt-5 p-4">
-        <View className="flex-row flex-1 items-start">
-          <View className="rounded-[5px] p-1 bg-red-900">
-            <Sparkle size={14} color={"red"} strokeWidth={3} />
-          </View>
-          <View className="flex-1">
-            <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
-              Access additional 20+ frontier models
-            </Text>
-            <Text className="text-[#92888A] font-semibold ml-3">
-              GPT-4.1, o3, Claude 3.7 Sonnet, Gemini 2.5 Pro, Grok-3 & more
-            </Text>
-
-            <Text
-              className={
-                "text-[#E0E0E1] font-semibold ml-4 py-2 px-4 mt-5 self-start bg-neutral-700/60 rounded-full"
-              }
-            >
-              Compare
-            </Text>
-          </View>
-        </View>
-      </View>
-    </Animated.View>
-  );
-
-  const _cardTwo = (
-    <Animated.View key="two" className="width-full py-3">
-      <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
-        New Level Unlocked
-      </Text>
-      <View className="flex-1 bg-neutral-700/60 rounded-3xl mt-5 p-4">
-        <View className="flex-row flex-1 items-start">
-          <View className="rounded-[5px] p-1 bg-red-900">
-            <Sparkle size={14} color={"red"} strokeWidth={3} />
-          </View>
-          <View className="flex-1">
-            <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
-              Chat with 26+ models in one interface
-            </Text>
-            <Text className="text-[#92888A] font-semibold ml-3">
-              GPT-4.1 mini, Claude 3.5 Haiku, Gemini 2.5 Flash, Grok-3 mini & more
-            </Text>
-          </View>
-        </View>
-        <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
-        <View className="flex-row flex-1 items-start">
-          <View className="rounded-[5px] p-1 bg-violet-500">
-            <Cloud size={14} color={"white"} strokeWidth={3} />
-          </View>
-          <View className="flex-1">
-            <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">Stay in sync</Text>
-            <Text className="text-[#92888A] font-semibold ml-3">
-              Backup and sync your content to access on all your devices (iOS & macOS)
-            </Text>
-          </View>
-        </View>
-        <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
-        <View className="flex-row flex-1 items-center">
-          <View className="rounded-[5px] p-1 bg-neutral-300">
-            <Backpack size={14} color={"black"} strokeWidth={3} />
-          </View>
-          <View className="flex-1">
-            <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">Custom app icons</Text>
-          </View>
-        </View>
-      </View>
-    </Animated.View>
-  );
-
-  const _cardThree = (
-    <Animated.View key="three" className="width-full py-3">
-      <Text className="text-[#E0E0E1] text-2xl font-semibold self-center text-center mt-8">
-        Power-up your Mac
-      </Text>
-      <View className="flex-1 bg-neutral-700/60 rounded-3xl mt-5 p-4">
-        <View className="flex-row flex-1 items-center">
-          <View className="rounded-[5px] p-1 bg-red-900">
-            <Sparkle size={14} color={"red"} strokeWidth={3} />
-          </View>
-          <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">AI Extensions</Text>
-        </View>
-        <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
-        <View className="flex-row flex-1 items-center">
-          <View className="rounded-[5px] p-1 bg-red-400">
-            <CaseUpper size={14} color={"white"} strokeWidth={3} />
-          </View>
-          <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">Unlimited Raycast Notes</Text>
-        </View>
-        <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
-        <View className="flex-row flex-1 items-center">
-          <View className="rounded-[5px] p-1 bg-red-400">
-            <FileTerminal size={14} color={"white"} strokeWidth={3} />
-          </View>
-          <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
-            Unlimited Clipboard History
-          </Text>
-        </View>
-        <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
-        <View className="flex-row flex-1 items-center">
-          <View className="rounded-[5px] p-1 bg-blue-300">
-            <AlignHorizontalDistributeCenter size={14} color={"white"} strokeWidth={3} />
-          </View>
-          <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">
-            Custom Window Management
-          </Text>
-        </View>
-        <View className="h-[0.5px] bg-[#92888A] ml-11 -mr-4 my-4" />
-        <View className="flex-row flex-1 items-center">
-          <View className="rounded-[5px] p-1 bg-[transparent]">
-            <AlignHorizontalDistributeCenter size={14} color={"transparent"} strokeWidth={3} />
-          </View>
-          <Text className="text-[#E0E0E1] text-lg font-semibold ml-3">& More</Text>
-        </View>
-      </View>
-    </Animated.View>
-  );
-
-  const baseCards =
-    selectedCard === "1" ? [_cardTwo, _cardThree] : [_cardOne, _cardTwo, _cardThree];
-
-  const enteringBuilder = KEYFRAME_IN.duration(430);
-  const exitingBuilder = KEYFRAME_OUT.duration(200);
-  const layoutBuilder = LinearTransition.springify().damping(18).stiffness(160);
-
-  const visibleCards = baseCards.map((card, index) => {
-    const animationProps: any = {
-      entering: enteringBuilder,
-      exiting: exitingBuilder,
-      layout: layoutBuilder,
-    };
-    return React.cloneElement(card as any, animationProps);
-  });
+  const listRef = useRef<ScrollView>(null);
 
   return (
     <View className="flex-1 bg-black">
@@ -216,11 +52,11 @@ export const Paywall = () => {
       />
 
       <View
-        className="absolute flex-row items-center justify-between w-full px-6"
+        className="absolute flex-row items-center justify-between w-full px-6 z-50"
         style={{ top: insets.top + 8 }}
       >
         <Pressable
-          onPress={closeDrawer}
+          onPress={openDrawer}
           className="rounded-full p-2 overflow-hidden bg-neutral-700/30"
         >
           <BlurView tint="systemThickMaterialDark" style={StyleSheet.absoluteFill} />
@@ -232,20 +68,125 @@ export const Paywall = () => {
       </View>
 
       <ScrollView
-        contentContainerClassName="px-5"
+        ref={listRef}
+        contentContainerClassName="px-5 gap-10"
         contentContainerStyle={{
           paddingTop: insets.top + 70,
-          paddingBottom: bottomContentHeight - 30,
+          paddingBottom: bottomContentHeight - 24,
         }}
       >
         <Text className="text-neutral-50 w-3/4 text-3xl font-bold self-center text-center">
           Powerful Productivity for IOS and macOS
         </Text>
 
-        <Animated.View layout={layoutBuilder}>{visibleCards}</Animated.View>
+        {plan === "advanced" && (
+          <FeaturesSection
+            key="one"
+            entering={ZoomIn.springify().damping(85).stiffness(800)}
+            exiting={ZoomOut.springify().damping(85).stiffness(800)}
+            title="Unlock the most intelligent models"
+          >
+            <FeatureItem
+              icon={
+                <IconContainer className="bg-red-900">
+                  <Sparkle size={14} color={"red"} strokeWidth={3} />
+                </IconContainer>
+              }
+              title="Access additional 20+ frontier models"
+              description="GPT-4.1, o3, Claude 3.7 Sonnet, Gemini 2.5 Pro, Grok-3 & more"
+            />
+            <Pressable
+              onPress={simulatePress}
+              className="self-start py-1.5 px-4 bg-neutral-700/40 border border-neutral-600/30 rounded-full mt-7 ml-9"
+            >
+              <Text className="text-lg text-neutral-50 font-medium">Compare</Text>
+            </Pressable>
+          </FeaturesSection>
+        )}
+
+        <FeaturesSection key="two" title="New Level Unlocked">
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-red-900">
+                <Sparkle size={14} color={"red"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="Chat with 26+ models in one interface"
+            description="GPT-4.1 mini, Claude 3.5 Haiku, Gemini 2.5 Flash, Grok-3 mini & more"
+          />
+          <Divider />
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-violet-500">
+                <Cloud size={14} color={"white"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="Stay in sync"
+            description="Backup and sync your content to access on all your devices (iOS & macOS)"
+          />
+          <Divider />
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-neutral-300">
+                <Backpack size={14} color={"black"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="Custom app icons"
+          />
+        </FeaturesSection>
+
+        <FeaturesSection key="three" title="Power-up your Mac">
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-red-900">
+                <Sparkle size={14} color={"red"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="AI Extensions"
+          />
+          <Divider />
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-red-400">
+                <CaseUpper size={14} color={"white"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="Unlimited Raycast Notes"
+          />
+          <Divider />
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-red-400">
+                <FileTerminal size={14} color={"white"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="Unlimited Clipboard History"
+          />
+          <Divider />
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-blue-300">
+                <AlignHorizontalDistributeCenter size={14} color={"white"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="Custom Window Management"
+          />
+          <Divider />
+          <FeatureItem
+            icon={
+              <IconContainer className="bg-[transparent]">
+                <AlignHorizontalDistributeCenter size={14} color={"transparent"} strokeWidth={3} />
+              </IconContainer>
+            }
+            title="& More"
+          />
+        </FeaturesSection>
       </ScrollView>
 
-      <ProgressiveBlurView height={insets.top + 12} blurViewProps={{ tint: "dark" }} />
+      <ProgressiveBlurView
+        height={insets.top + (Platform.OS === "ios" ? 12 : 60)}
+        blurViewProps={{ tint: "dark" }}
+      />
 
       <ProgressiveBlurView
         key={bottomContentHeight}
@@ -254,7 +195,12 @@ export const Paywall = () => {
         blurViewProps={{ intensity: 100, tint: "dark" }}
       />
 
-      <LinearGradient colors={["#00000000", "#000000"]} style={styles.bottomGradient} />
+      {Platform.OS === "ios" && (
+        <LinearGradient
+          colors={["#00000000", "#00000080"]}
+          style={[styles.bottomGradient, { height: insets.bottom + 100 }]}
+        />
+      )}
 
       <View
         className="absolute bottom-0 px-5"
@@ -266,10 +212,11 @@ export const Paywall = () => {
         </View>
 
         <PlanControl
-          selectedCard={selectedCard}
-          setSelectedCard={setSelectedCard}
+          plan={plan}
+          setPlan={setPlan}
           price={PRICE}
           period={period}
+          listRef={listRef}
         />
 
         <Pressable
@@ -306,6 +253,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 80,
   },
 });

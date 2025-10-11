@@ -15,7 +15,7 @@ const PeriodControl = ({ value, setValue }: SwitcherProps) => {
       onValueChange={(v) => setValue(v as "monthly" | "yearly")}
       className={cn(
         "overflow-hidden mb-5 px-1 py-1 justify-between rounded-full border border-neutral-700/30",
-        Platform.OS === "android" ? "bg-neutral-700" : "bg-neutral-700/50"
+        Platform.OS === "android" ? "bg-neutral-800" : "bg-neutral-700/50"
       )}
       style={styles.borderCurve}
     >

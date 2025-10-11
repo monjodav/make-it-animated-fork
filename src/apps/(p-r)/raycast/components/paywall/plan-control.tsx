@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Platform, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Platform, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
 import { Check } from "lucide-react-native";
@@ -25,7 +25,7 @@ const PlanCard = ({ title, price, subtitle, isSelected, onPress }: PlanCardProps
         activeOpacity={0.8}
         className={cn(
           "p-3 rounded-[18px] overflow-hidden border-[0.5px] border-neutral-700/40",
-          Platform.OS === "android" ? "bg-neutral-700" : "bg-neutral-700/30"
+          Platform.OS === "android" ? "bg-neutral-800" : "bg-neutral-700/30"
         )}
         style={styles.borderCurve}
         onPress={onPress}
@@ -52,13 +52,14 @@ const PlanCard = ({ title, price, subtitle, isSelected, onPress }: PlanCardProps
 };
 
 type PlanControlProps = {
-  selectedCard: "1" | "2";
-  setSelectedCard: (value: "1" | "2") => void;
+  plan: "pro" | "advanced";
+  setPlan: (value: "pro" | "advanced") => void;
   price: { monthly: number[]; yearly: number[] };
   period: "monthly" | "yearly";
+  listRef: React.RefObject<ScrollView>;
 };
 
-const PlanControl = ({ selectedCard, setSelectedCard, price, period }: PlanControlProps) => {
+const PlanControl = ({ plan, setPlan, price, period, listRef }: PlanControlProps) => {
   const currentPrices = price[period] ?? [];
   const proPrice = currentPrices[0] ?? 0;
   const advPrice = currentPrices[1] ?? 0;
@@ -69,15 +70,21 @@ const PlanControl = ({ selectedCard, setSelectedCard, price, period }: PlanContr
         title="Pro"
         price={`${proPrice} USD`}
         subtitle="First 2 weeks free"
-        isSelected={selectedCard === "1"}
-        onPress={() => setSelectedCard("1")}
+        isSelected={plan === "pro"}
+        onPress={() => {
+          listRef.current?.scrollTo({ y: 0, animated: true });
+          setPlan("pro");
+        }}
       />
       <PlanCard
         title="Advanced AI"
         price={`${advPrice} USD`}
         subtitle="First 2 weeks free"
-        isSelected={selectedCard === "2"}
-        onPress={() => setSelectedCard("2")}
+        isSelected={plan === "advanced"}
+        onPress={() => {
+          listRef.current?.scrollTo({ y: 0, animated: true });
+          setPlan("advanced");
+        }}
       />
     </View>
   );

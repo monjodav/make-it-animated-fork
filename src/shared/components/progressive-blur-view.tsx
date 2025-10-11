@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { BlurView, BlurViewProps } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -30,26 +30,37 @@ export const ProgressiveBlurView: FC<Props> = ({
         },
       ]}
     >
-      <MaskedView
-        maskElement={
-          <LinearGradient
-            locations={position === "top" ? [0.5, 0.75, 1] : [0, 0.25, 0.5]}
-            colors={
-              position === "top"
-                ? ["black", colorKit.setAlpha("black", 0.5).hex(), "transparent"]
-                : ["transparent", colorKit.setAlpha("black", 0.5).hex(), "black"]
-            }
-            style={StyleSheet.absoluteFill}
+      {Platform.OS === "ios" ? (
+        <MaskedView
+          maskElement={
+            <LinearGradient
+              locations={position === "top" ? [0.5, 0.75, 1] : [0, 0.25, 0.5]}
+              colors={
+                position === "top"
+                  ? ["black", colorKit.setAlpha("black", 0.5).hex(), "transparent"]
+                  : ["transparent", colorKit.setAlpha("black", 0.5).hex(), "black"]
+              }
+              style={StyleSheet.absoluteFill}
+            />
+          }
+          style={[StyleSheet.absoluteFill]}
+        >
+          <BlurView
+            style={[StyleSheet.absoluteFill, blurViewProps?.style]}
+            intensity={blurViewProps?.intensity ?? 20}
+            {...blurViewProps}
           />
-        }
-        style={[StyleSheet.absoluteFill]}
-      >
-        <BlurView
-          style={[StyleSheet.absoluteFill, blurViewProps?.style]}
-          intensity={blurViewProps?.intensity ?? 20}
-          {...blurViewProps}
+        </MaskedView>
+      ) : (
+        <LinearGradient
+          style={StyleSheet.absoluteFillObject}
+          colors={
+            position === "top"
+              ? [colorKit.setAlpha("#000", 0.9).hex(), colorKit.setAlpha("#000", 0).hex()]
+              : [colorKit.setAlpha("#000", 0).hex(), colorKit.setAlpha("#000", 0.9).hex()]
+          }
         />
-      </MaskedView>
+      )}
     </View>
   );
 };
