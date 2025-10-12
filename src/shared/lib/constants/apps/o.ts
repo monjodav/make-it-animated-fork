@@ -13,9 +13,9 @@ export const opal: App = {
       name: "Horizontal carousel animation",
       href: "/opal/blocks",
     },
-    {
-      name: "Schedule timer tabs transition animation",
-      href: "/opal/schedule",
-    },
+    // {
+    //   name: "Schedule timer tabs transition animation",
+    //   href: "/opal/schedule",
+    // },
   ],
 };
