@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import Animated, { EntryOrExitLayoutType, LinearTransition } from "react-native-reanimated";
 import { GradientText } from "@/src/shared/components/gradient-text";
 
-// raycast-features-section-animation 🔽
+// raycast-paywall-screen-animation 🔽
 
 // Animation notes:
 // - This section animates in/out via Reanimated's entering/exiting presets supplied by parent.
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
 export { FeatureItem } from "./feature-item";
 export { Divider } from "./divider";
 
-// raycast-features-section-animation 🔼
+// raycast-paywall-screen-animation 🔼

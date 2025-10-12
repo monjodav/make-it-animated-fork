@@ -6,7 +6,7 @@ import { cn } from "@/src/shared/lib/utils/cn";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 
-// raycast-plan-control-animation 🔽
+// raycast-paywall-screen-animation 🔽
 
 type PlanCardProps = {
   title: string;
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
 
 export default PlanControl;
 
-// raycast-plan-control-animation 🔼
+// raycast-paywall-screen-animation 🔼

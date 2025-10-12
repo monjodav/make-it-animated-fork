@@ -3,7 +3,7 @@ import { cn } from "@/src/shared/lib/utils/cn";
 import { BlurView } from "expo-blur";
 import SegmentedControl from "@/src/shared/components/segmented-control";
 
-// raycast-period-control-animation 🔽
+// raycast-paywall-screen-animation 🔽
 
 type SwitcherProps = {
   value: "monthly" | "yearly";
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
 
 export default PeriodControl;
 
-// raycast-period-control-animation 🔼
+// raycast-paywall-screen-animation 🔼
