@@ -4,7 +4,7 @@ import { cn } from "@/src/shared/lib/utils/cn";
 import { BlurView } from "expo-blur";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-// opal-schedule-timer-transition-animation 🔽
+// opal-schedule-timer-tabs-transition-animation 🔽
 
 // Acts as the visual switch driving page index in parent; indicator animates via SegmentedControl internals.
 // Keep paddings small (3px) to create tight pill look and predictable indicator math across platforms.
@@ -71,4 +71,4 @@ const styles = StyleSheet.create({
 
 export default ScheduleTimerControl;
 
-// opal-schedule-timer-transition-animation 🔼
+// opal-schedule-timer-tabs-transition-animation 🔼

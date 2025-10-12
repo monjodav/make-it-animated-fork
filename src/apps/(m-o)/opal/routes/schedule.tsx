@@ -19,7 +19,7 @@ import { BlurView } from "expo-blur";
 import { ScheduleContent } from "../components/schedule/schedule-content";
 import { TimerContent } from "../components/schedule/timer-content";
 
-// opal-schedule-timer-transition-animation 🔽
+// opal-schedule-timer-tabs-transition-animation 🔽
 
 // Animation intent: programmatically slide between two bottom-aligned panels (Schedule/Timer)
 // while keeping the segmented control visually anchored above each panel's top edge.
@@ -150,4 +150,4 @@ export const Schedule = () => {
   );
 };
 
-// opal-schedule-timer-transition-animation 🔼
+// opal-schedule-timer-tabs-transition-animation 🔼

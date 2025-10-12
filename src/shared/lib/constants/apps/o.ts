@@ -14,7 +14,7 @@ export const opal: App = {
       href: "/opal/blocks",
     },
     {
-      name: "Schedule timer transition animation",
+      name: "Schedule timer tabs transition animation",
       href: "/opal/schedule",
     },
   ],
