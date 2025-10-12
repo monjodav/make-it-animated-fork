@@ -4,6 +4,8 @@ import { cn } from "@/src/shared/lib/utils/cn";
 import { BlurView } from "expo-blur";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+// opal-schedule-timer-transition-animation 🔽
+
 type SwitcherProps = {
   value: "schedule" | "timer";
   setValue: (value: "schedule" | "timer") => void;
@@ -65,3 +67,5 @@ const styles = StyleSheet.create({
 });
 
 export default ScheduleTimerControl;
+
+// opal-schedule-timer-transition-animation 🔼
