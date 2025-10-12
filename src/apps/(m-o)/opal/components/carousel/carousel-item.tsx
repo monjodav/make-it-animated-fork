@@ -12,6 +12,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { memo } from "react";
+import { useRouter } from "expo-router";
 
 // opal-horizontal-carousel-animation 🔽
 
@@ -39,6 +40,7 @@ const CarouselItem = ({
   horizontalPadding,
   innerPadding,
 }: CarouselItemProps) => {
+  const router = useRouter();
   // Card scale based on distance from screen center (center = 1.0, edges = 0.88)
   const rItemStyle = useAnimatedStyle(() => {
     // Compute visual center within padded content (not raw screen center)
@@ -108,7 +110,7 @@ const CarouselItem = ({
     <AnimatedPressable
       style={[{ width: itemWidth, padding: _innerPadding }, rItemStyle]}
       className="aspect-[2/3] self-start overflow-hidden"
-      onPress={simulatePress}
+      onPress={() => router.push({ pathname: "/opal/schedule" })}
     >
       <Animated.View
         className="flex-1 p-3 rounded-[30px] overflow-hidden border border-white/10"
