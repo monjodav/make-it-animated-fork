@@ -1,4 +1,4 @@
-import { View, Pressable, StyleSheet, Dimensions, LayoutChangeEvent } from "react-native";
+import { View, Pressable, StyleSheet, LayoutChangeEvent, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { ChevronDown } from "lucide-react-native";
@@ -21,46 +21,52 @@ import { TimerContent } from "../components/schedule/timer-content";
 
 // opal-schedule-timer-transition-animation 🔽
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const HORIZONTAL_PADDING = 8;
-
-const PAGE_WIDTH = SCREEN_WIDTH - HORIZONTAL_PADDING * 2;
-const GAP = 2 * HORIZONTAL_PADDING;
-const PAGE_STRIDE = PAGE_WIDTH + GAP;
-
-const BOTTOM_SWITCHER_POSITION = 5;
+// Animation intent: programmatically slide between two bottom-aligned panels (Schedule/Timer)
+// while keeping the segmented control visually anchored above each panel's top edge.
 
 export const Schedule = () => {
   const [visibleContent, setVisibleContent] = useState<"schedule" | "timer">("schedule");
+
+  const { width: screenWidth } = useWindowDimensions();
 
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
+  // Shared measurements drive precise positioning instead of hardcoded offsets.
+  // containerHeight: bottom area container height used to compute control's bottom inset
+  // scheduleContentTopY/timerContentTopY: measured Y of each page's inner content (aligns control to panel top)
   const containerHeight = useSharedValue(0);
   const scheduleContentTopY = useSharedValue(0);
   const timerContentTopY = useSharedValue(0);
 
+  // progress: page index in [0,1]; drives horizontal scroll and control alignment
   const progress = useSharedValue(0);
 
+  // Spring to 0/1 for snappy yet controlled switching; UI-thread animation avoids JS jank.
+  // The config prioritizes quick settle without noticeable overshoot for a utility control.
   const setProgress = (index: number) => {
     progress.set(withSpring(index, { duration: 350, dampingRatio: 2 }));
   };
 
+  // Keep the ScrollView in sync with progress entirely on the UI thread.
+  // Using useDerivedValue ensures scrollTo runs as a worklet for 60fps programmatic paging.
   useDerivedValue(() => {
-    scrollTo(scrollRef, progress.get() * PAGE_STRIDE, 0, false);
+    scrollTo(scrollRef, progress.get() * screenWidth, 0, false);
   });
 
+  // Align segmented control with the currently visible panel's top edge.
+  // Interpolates the measured top Y between schedule/timer based on progress, then converts
+  // to a bottom offset by subtracting from containerHeight and adding a small spacing (12px).
   const rSegmentedControlStyle = useAnimatedStyle(() => {
-    const interpolatedTop = interpolate(
-      progress.get(),
-      [0, 1],
-      [scheduleContentTopY.get(), timerContentTopY.get()]
-    );
-    const desiredTop = interpolatedTop - BOTTOM_SWITCHER_POSITION;
-    const bottom = Math.max(0, containerHeight.get() - desiredTop);
-    return { bottom };
+    return {
+      bottom:
+        containerHeight.get() -
+        // Interpolation: progress 0 -> scheduleTopY, 1 -> timerTopY; linear mapping, clamped by input bounds.
+        interpolate(progress.get(), [0, 1], [scheduleContentTopY.get(), timerContentTopY.get()]) +
+        12,
+    };
   });
 
   return (
@@ -85,15 +91,15 @@ export const Schedule = () => {
         className="absolute left-0 right-0"
         style={{ bottom: insets.bottom }}
         onLayout={(e) => {
+          // Measure container height once mounted; avoids magic numbers and adapts to safe-area devices.
           containerHeight.set(e.nativeEvent.layout.height);
         }}
       >
+        {/* Reanimated ScrollView allows UI-thread scrollTo and disables user swipes to prevent gesture conflicts. */}
         <Animated.ScrollView
           ref={scrollRef}
           contentContainerStyle={{
-            paddingHorizontal: HORIZONTAL_PADDING,
             paddingBottom: insets.bottom + 4,
-            gap: 2 * HORIZONTAL_PADDING,
           }}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -101,22 +107,25 @@ export const Schedule = () => {
           scrollEnabled={false}
         >
           <View
-            className="mt-auto"
-            style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
+            className="mt-auto px-4"
+            style={{ width: screenWidth }}
+            // Capture the schedule panel's top Y so the control can align to it during transitions.
             onLayout={(e: LayoutChangeEvent) => scheduleContentTopY.set(e.nativeEvent.layout.y)}
           >
             <ScheduleContent />
           </View>
 
           <View
-            className="mt-auto"
-            style={{ width: SCREEN_WIDTH - HORIZONTAL_PADDING * 2, padding: HORIZONTAL_PADDING }}
+            className="mt-auto px-4"
+            style={{ width: screenWidth }}
+            // Capture the timer panel's top Y for interpolation when progress → 1.
             onLayout={(e: LayoutChangeEvent) => timerContentTopY.set(e.nativeEvent.layout.y)}
           >
             <TimerContent />
           </View>
         </Animated.ScrollView>
 
+        {/* Absolute layer so the control rides on top; animated bottom keeps it visually glued to content. */}
         <Animated.View className="absolute left-0 right-0" style={rSegmentedControlStyle}>
           <ScheduleTimerControl
             value={visibleContent}

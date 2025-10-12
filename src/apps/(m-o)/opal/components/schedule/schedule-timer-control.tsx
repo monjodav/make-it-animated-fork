@@ -6,6 +6,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 // opal-schedule-timer-transition-animation 🔽
 
+// Acts as the visual switch driving page index in parent; indicator animates via SegmentedControl internals.
+// Keep paddings small (3px) to create tight pill look and predictable indicator math across platforms.
+
 type SwitcherProps = {
   value: "schedule" | "timer";
   setValue: (value: "schedule" | "timer") => void;
@@ -16,7 +19,7 @@ const ScheduleTimerControl = ({ value, setValue }: SwitcherProps) => {
     <SegmentedControl
       value={value}
       onValueChange={(v) => setValue(v as "schedule" | "timer")}
-      className="overflow-hidden mx-5 px-[3px] py-[3px] rounded-full"
+      className="overflow-hidden mx-4 px-[3px] py-[3px] rounded-full"
       style={styles.borderCurve}
     >
       <BlurView intensity={8} tint="systemThickMaterialLight" style={StyleSheet.absoluteFill} />
