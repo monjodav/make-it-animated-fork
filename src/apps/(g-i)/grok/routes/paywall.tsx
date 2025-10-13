@@ -14,11 +14,11 @@ import {
 import { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Animated from "react-native-reanimated";
-import Switcher from "../components/paywall/switcher";
 import { FeatureItem } from "../components/paywall/feature-item";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import UpgradeButton from "../components/paywall/upgrade-button";
+import PlanControl from "../components/paywall/plan-control";
 
 // grok-paywall-screen-animation 🔽
 
@@ -133,9 +133,11 @@ export const Paywall = () => {
         </ScrollView>
       </View>
 
-      <Switcher value={value} setValue={setValue} />
+      <PlanControl value={value} setValue={setValue} />
 
+      {/* grok-paywall-upgrade-button-animation 🔽 */}
       <UpgradeButton />
+      {/* grok-paywall-upgrade-button-animation 🔼 */}
 
       <View className="w-full flex-row px-6 mb-8 items-center justify-between self-center">
         <Pressable onPress={simulatePress}>

@@ -53,7 +53,7 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
         label={getItemProps(raycast, 1).label}
         onPress={getItemProps(raycast, 1).onPress}
       />
-      <AnimationItem label={getItemProps(grok, 1).label} onPress={getItemProps(grok, 1).onPress} />
+      <AnimationItem label={getItemProps(grok, 2).label} onPress={getItemProps(grok, 2).onPress} />
       <AnimationItem
         label={getItemProps(linear, 1).label}
         onPress={getItemProps(linear, 1).onPress}

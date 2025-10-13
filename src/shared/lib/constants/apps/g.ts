@@ -69,5 +69,9 @@ export const grok: App = {
       name: "Paywall screen animation",
       href: "/grok/paywall",
     },
+    {
+      name: "Paywall upgrade button animation",
+      href: "/grok/paywall",
+    },
   ],
 };
