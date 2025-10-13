@@ -1,56 +1,50 @@
-import { ActivityIndicator, LayoutChangeEvent, Pressable, Text, View } from "react-native";
-import { useState } from "react";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+import { ActivityIndicator, Pressable, View } from "react-native";
+import { useEffect, useState } from "react";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const BUTTON_HEIGHT = 56;
+const MIN_BUTTON_WIDTH = 65;
 const MOCK_LOADING_DURATION = 3000;
 
 const UpgradeButton = () => {
   const [loading, setLoading] = useState(false);
 
-  const wrapperWidth = useSharedValue(0);
-  const progressWidth = useSharedValue(0);
-
-  const onWrapperLayout = (e: LayoutChangeEvent) => {
-    wrapperWidth.set(e.nativeEvent.layout.width);
-  };
-
-  const rButtonStyle = useAnimatedStyle(() => {
-    const width = interpolate(progressWidth.get(), [0, 1], [wrapperWidth.get(), BUTTON_HEIGHT]);
-    return { width };
-  });
-
-  const handlePress = () => {
-    if (loading) return;
-    setLoading(true);
-    progressWidth.set(withSpring(1));
-    setTimeout(() => {
-      progressWidth.set(withSpring(0));
-      setTimeout(() => setLoading(false), 300);
-    }, MOCK_LOADING_DURATION);
-  };
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => setLoading(false), MOCK_LOADING_DURATION);
+    }
+  }, [loading]);
 
   return (
-    <View onLayout={onWrapperLayout} className="mx-5 mb-5">
+    <View className="mx-5 mb-5 justify-center items-center">
       <AnimatedPressable
-        onPress={handlePress}
+        onPress={() => setLoading(true)}
+        className="h-[54px] rounded-full bg-white justify-center items-center"
+        style={{
+          transitionProperty: "width",
+          transitionDuration: 400,
+          transitionTimingFunction: "ease-out",
+          width: loading ? MIN_BUTTON_WIDTH : "100%",
+          borderCurve: "continuous",
+        }}
         disabled={loading}
-        className="rounded-full bg-white justify-center items-center self-center"
-        style={[{ height: BUTTON_HEIGHT }, rButtonStyle]}
-      >
+      />
+      <View className="absolute pointer-events-none">
         {loading ? (
-          <ActivityIndicator color="black" />
+          <Animated.View key="loader" entering={FadeIn}>
+            <ActivityIndicator color="black" />
+          </Animated.View>
         ) : (
-          <Text className="text-black text-xl font-medium">Upgrade to SuperGrok</Text>
+          <Animated.Text
+            key="text"
+            entering={FadeIn}
+            className="text-black text-xl text-nowrap font-medium"
+          >
+            Upgrade to SuperGrok
+          </Animated.Text>
         )}
-      </AnimatedPressable>
+      </View>
     </View>
   );
 };
