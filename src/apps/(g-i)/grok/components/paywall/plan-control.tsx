@@ -47,12 +47,12 @@ const PricingItem = ({ isActive, title, price, period = "/mo" }: PricingItemProp
   );
 };
 
-type SwitcherProps = {
+type PlanControlProps = {
   value: string;
   setValue: (value: string) => void;
 };
 
-const Switcher = ({ value, setValue }: SwitcherProps) => {
+const PlanControl = ({ value, setValue }: PlanControlProps) => {
   return (
     <SegmentedControl
       value={value}
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Switcher;
+export default PlanControl;
 
 // grok-paywall-screen-animation 🔼
