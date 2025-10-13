@@ -18,6 +18,7 @@ import Switcher from "../components/paywall/switcher";
 import { FeatureItem } from "../components/paywall/feature-item";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
+import UpgradeButton from "../components/paywall/upgrade-button";
 
 // grok-paywall-screen-animation 🔽
 
@@ -134,12 +135,7 @@ export const Paywall = () => {
 
       <Switcher value={value} setValue={setValue} />
 
-      <Pressable
-        onPress={simulatePress}
-        className="mx-5 mb-5 p-4 items-center rounded-full bg-white"
-      >
-        <Text className="text-black text-xl font-medium">Upgrade to SuperGrok</Text>
-      </Pressable>
+      <UpgradeButton />
 
       <View className="w-full flex-row px-6 mb-8 items-center justify-between self-center">
         <Pressable onPress={simulatePress}>
