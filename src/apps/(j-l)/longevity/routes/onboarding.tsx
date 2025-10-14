@@ -76,7 +76,13 @@ const Onboarding = () => {
         scrollEventThrottle={16}
       >
         {PAGES.map((page, index) => (
-          <OnboardingPage key={index} width={width} title={page.title} body={page.body} />
+          <OnboardingPage
+            key={index}
+            width={width}
+            title={page.title}
+            body={page.body}
+            topOffset={410}
+          />
         ))}
       </Animated.ScrollView>
 
