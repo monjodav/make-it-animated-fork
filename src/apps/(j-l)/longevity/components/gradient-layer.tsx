@@ -1,54 +1,33 @@
-import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { interpolateColor, useAnimatedReaction, type SharedValue } from "react-native-reanimated";
-import { Canvas, RoundedRect } from "@shopify/react-native-skia";
-import { scheduleOnRN } from "react-native-worklets";
-import { BlurView } from "expo-blur";
+import { interpolateColor, useDerivedValue, type SharedValue } from "react-native-reanimated";
+import { Blur, Canvas, RoundedRect } from "@shopify/react-native-skia";
 
 type GradientLayerProps = {
   palette: string[];
   width: number;
   height: number;
-  scrollOffsetX: SharedValue<number>;
+  activeIndex: SharedValue<number>;
 };
 
 export const GradientLayer: React.FC<GradientLayerProps> = ({
   palette,
   width,
   height,
-  scrollOffsetX,
+  activeIndex,
 }) => {
-  const [fillColor, setFillColor] = useState(palette[0] ?? "#000000");
-
-  useAnimatedReaction(
-    () => scrollOffsetX.get(),
-    (coordX) => {
-      const inputs = palette.map((_, index) => index * width);
-      const color = interpolateColor(coordX, inputs, palette, "HSV");
-      scheduleOnRN(setFillColor, color);
-    }
-  );
-
   const ovalWidth = width * 1.2;
   const ovalHeight = Math.max(160, height * 0.3);
   const ovalX = (width - ovalWidth) / 2;
   const ovalY = height * 0.84;
 
+  const fillColor = useDerivedValue(() => {
+    const inputs = palette.map((_, index) => index);
+    const color = interpolateColor(activeIndex.get(), inputs, palette, "HSV");
+    return color;
+  });
+
   return (
-    <View style={[StyleSheet.absoluteFill]} pointerEvents="none">
-      <BlurView
-        tint="systemUltraThinMaterialDark"
-        pointerEvents="none"
-        intensity={80}
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            width: width,
-            height: "100%",
-            zIndex: 1,
-          },
-        ]}
-      />
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
       <Canvas style={StyleSheet.absoluteFill}>
         <RoundedRect
           x={ovalX}
@@ -57,7 +36,9 @@ export const GradientLayer: React.FC<GradientLayerProps> = ({
           height={ovalHeight}
           r={ovalHeight / 2}
           color={fillColor}
-        />
+        >
+          <Blur blur={60} />
+        </RoundedRect>
       </Canvas>
     </View>
   );

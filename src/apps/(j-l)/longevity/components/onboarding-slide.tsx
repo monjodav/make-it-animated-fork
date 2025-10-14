@@ -7,7 +7,7 @@ type Props = {
   topOffset: number;
 };
 
-export const OnboardingPage: React.FC<Props> = ({ width, title, body, topOffset }) => {
+export const OnboardingSlide: React.FC<Props> = ({ width, title, body, topOffset }) => {
   return (
     <View style={[{ width }]} className="h-full">
       <View style={[StyleSheet.absoluteFill, { top: topOffset }]} className="items-center px-8">
