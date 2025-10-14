@@ -28,35 +28,31 @@ const PeriodControl = ({ value, setValue }: SwitcherProps) => {
       />
 
       <SegmentedControl.Item value="monthly" className="px-4 py-1.5 rounded-full">
-        {({ isActive }) => (
+        <Text
+          className={cn(
+            value === "monthly"
+              ? "text-neutral-50 text-lg font-semibold"
+              : "text-neutral-400 text-lg font-semibold"
+          )}
+        >
+          Monthly
+        </Text>
+      </SegmentedControl.Item>
+      <SegmentedControl.Item value="yearly" className="pl-4 pr-1 py-1.5 rounded-full">
+        <View className="flex-row gap-3">
           <Text
             className={cn(
-              isActive
+              value === "yearly"
                 ? "text-neutral-50 text-lg font-semibold"
                 : "text-neutral-400 text-lg font-semibold"
             )}
           >
-            Monthly
+            Yearly
           </Text>
-        )}
-      </SegmentedControl.Item>
-      <SegmentedControl.Item value="yearly" className="pl-4 pr-1 py-1.5 rounded-full">
-        {({ isActive }) => (
-          <View className="flex-row gap-3">
-            <Text
-              className={cn(
-                isActive
-                  ? "text-neutral-50 text-lg font-semibold"
-                  : "text-neutral-400 text-lg font-semibold"
-              )}
-            >
-              Yearly
-            </Text>
-            <View className="pt-0.5 px-2 bg-neutral-50 rounded-full" style={styles.borderCurve}>
-              <Text className="text-neutral-900 text-base ">-20%</Text>
-            </View>
+          <View className="pt-0.5 px-2 bg-neutral-50 rounded-full" style={styles.borderCurve}>
+            <Text className="text-neutral-900 text-base ">-20%</Text>
           </View>
-        )}
+        </View>
       </SegmentedControl.Item>
     </SegmentedControl>
   );

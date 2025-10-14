@@ -1,8 +1,8 @@
 import { Text, View, StyleSheet } from "react-native";
-import SegmentedControl from "@/src/shared/components/segment-control/segment-control";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { BlurView } from "expo-blur";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import SegmentedControl from "@/src/shared/components/segmented-control";
 
 // opal-schedule-timer-tabs-transition-animation 🔽
 
@@ -30,34 +30,34 @@ const ScheduleTimerControl = ({ value, setValue }: SwitcherProps) => {
       />
 
       <SegmentedControl.Item value="schedule" className="flex-1 py-2 px-4 rounded-full">
-        {({ isActive }) => (
-          <View className="flex-row gap-2 items-center justify-center">
-            <Ionicons name="calendar-outline" size={14} color={isActive ? "white" : "grey"} />
-            <Text
-              className={cn(
-                isActive ? "text-white font-semibold" : "text-neutral-400 font-semibold",
-                "text-center"
-              )}
-            >
-              Schedule
-            </Text>
-          </View>
-        )}
+        <View className="flex-row gap-2 items-center justify-center">
+          <Ionicons
+            name="calendar-outline"
+            size={14}
+            color={value === "schedule" ? "white" : "grey"}
+          />
+          <Text
+            className={cn(
+              value === "schedule" ? "text-white font-semibold" : "text-neutral-400 font-semibold",
+              "text-center"
+            )}
+          >
+            Schedule
+          </Text>
+        </View>
       </SegmentedControl.Item>
       <SegmentedControl.Item value="timer" className="flex-1 py-2 px-4 rounded-full">
-        {({ isActive }) => (
-          <View className="flex-row gap-2 items-center justify-center">
-            <Ionicons name="play" size={15} color={isActive ? "white" : "grey"} />
-            <Text
-              className={cn(
-                isActive ? "text-white font-semibold" : "text-neutral-400 font-semibold",
-                "text-center"
-              )}
-            >
-              Timer
-            </Text>
-          </View>
-        )}
+        <View className="flex-row gap-2 items-center justify-center">
+          <Ionicons name="play" size={15} color={value === "timer" ? "white" : "grey"} />
+          <Text
+            className={cn(
+              value === "timer" ? "text-white font-semibold" : "text-neutral-400 font-semibold",
+              "text-center"
+            )}
+          >
+            Timer
+          </Text>
+        </View>
       </SegmentedControl.Item>
     </SegmentedControl>
   );

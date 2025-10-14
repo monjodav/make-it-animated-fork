@@ -1,5 +1,9 @@
 import type { PressableProps, ViewProps } from "react-native";
-import type { ReactNode } from "react";
+import { AnimatedProps, WithTimingConfig } from "react-native-reanimated";
+import {
+  SpringConfig,
+  WithSpringConfig,
+} from "react-native-reanimated/lib/typescript/animation/spring";
 
 export interface ItemMeasurements {
   width: number;
@@ -20,13 +24,20 @@ export interface SegmentedControlProps extends ViewProps {
   className?: string;
 }
 
-export interface SegmentedControlItemProps extends Omit<PressableProps, "children"> {
+export interface SegmentedControlItemProps extends AnimatedProps<PressableProps> {
   value: string;
   className?: string;
-  children?: ReactNode | ((params: { isActive: boolean }) => ReactNode);
-  pressScale?: number;
 }
 
-export interface SegmentedControlIndicatorProps extends ViewProps {
+export interface SegmentedControlIndicatorProps extends AnimatedProps<ViewProps> {
   className?: string;
+  animationConfig?:
+    | {
+        type: "timing";
+        config?: WithTimingConfig;
+      }
+    | {
+        type: "spring";
+        config?: WithSpringConfig;
+      };
 }

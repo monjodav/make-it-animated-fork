@@ -1,6 +1,11 @@
 import React, { createContext, useState, useCallback, use } from "react";
 import { View, Pressable, type LayoutChangeEvent, GestureResponderEvent } from "react-native";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import type {
   SegmentedControlContextValue,
   SegmentedControlProps,
@@ -9,12 +14,8 @@ import type {
   ItemMeasurements,
 } from "./types";
 import { cn } from "../../lib/utils/cn";
-import { Easing } from "react-native-reanimated";
 
-const TIMING_CONFIG = {
-  duration: 250,
-  easing: Easing.out(Easing.ease),
-};
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const SegmentedControlContext = createContext<SegmentedControlContextValue>({
   value: "",
@@ -22,6 +23,8 @@ const SegmentedControlContext = createContext<SegmentedControlContextValue>({
   measurements: {},
   setMeasurements: () => {},
 });
+
+// ------------------------------------------
 
 const SegmentedControlRoot = ({
   value,
@@ -55,17 +58,17 @@ const SegmentedControlRoot = ({
   );
 };
 
+// ------------------------------------------
+
 const SegmentedControlItem = ({
   value,
-  children,
   className,
   onPress,
-  pressScale,
   ...props
 }: SegmentedControlItemProps) => {
   const { onValueChange, setMeasurements, value: activeValue } = use(SegmentedControlContext);
+
   const isActive = activeValue === value;
-  const scale = useSharedValue(1);
 
   const handleLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -78,51 +81,37 @@ const SegmentedControlItem = ({
   const handlePress = useCallback(
     (event: GestureResponderEvent) => {
       onValueChange(value);
+      // @ts-ignore
       onPress?.(event);
     },
     [value, onValueChange, onPress]
   );
 
-  const handlePressIn = useCallback(() => {
-    if (pressScale && pressScale > 0 && pressScale <= 1) {
-      scale.value = withTiming(pressScale, { duration: 100 });
-    }
-  }, [pressScale]);
-
-  const handlePressOut = useCallback(() => {
-    if (pressScale && pressScale > 0 && pressScale <= 1) {
-      scale.value = withTiming(1, { duration: 100 });
-    }
-  }, [pressScale]);
-
-  const rScaleStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-
-  const content = typeof children === "function" ? children({ isActive }) : children;
-
   return (
-    <Pressable
+    <AnimatedPressable
       className={className}
       onLayout={handleLayout}
       onPress={handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
       accessibilityState={{ selected: isActive }}
       {...props}
-    >
-      {pressScale ? <Animated.View style={rScaleStyle}>{content}</Animated.View> : content}
-    </Pressable>
+    />
   );
 };
+
+// ------------------------------------------
 
 const SegmentedControlIndicator = ({
   className,
   style,
+  animationConfig = { type: "spring" },
   ...props
 }: SegmentedControlIndicatorProps) => {
   const { value, measurements } = use(SegmentedControlContext);
 
   const activeMeasurements = measurements[value];
   const hasMeasured = useSharedValue(false);
+
+  const reanimatedConfig = animationConfig?.config;
 
   const animatedStyle = useAnimatedStyle(() => {
     if (!activeMeasurements) {
@@ -135,7 +124,8 @@ const SegmentedControlIndicator = ({
     }
 
     if (!hasMeasured.value) {
-      hasMeasured.value = true;
+      // We do it to avoid initial animation
+      hasMeasured.set(true);
       return {
         width: activeMeasurements.width,
         height: activeMeasurements.height,
@@ -145,10 +135,19 @@ const SegmentedControlIndicator = ({
     }
 
     return {
-      width: withTiming(activeMeasurements.width, TIMING_CONFIG),
-      height: withTiming(activeMeasurements.height, TIMING_CONFIG),
-      left: withTiming(activeMeasurements.x, TIMING_CONFIG),
-      opacity: withTiming(1, TIMING_CONFIG),
+      width:
+        animationConfig?.type === "timing"
+          ? withTiming(activeMeasurements.width, reanimatedConfig)
+          : withSpring(activeMeasurements.width, reanimatedConfig),
+      height:
+        animationConfig?.type === "timing"
+          ? withTiming(activeMeasurements.height, reanimatedConfig)
+          : withSpring(activeMeasurements.height, reanimatedConfig),
+      left:
+        animationConfig?.type === "timing"
+          ? withTiming(activeMeasurements.x, reanimatedConfig)
+          : withSpring(activeMeasurements.x, reanimatedConfig),
+      opacity: 1,
     };
   }, [activeMeasurements]);
 
@@ -160,6 +159,8 @@ const SegmentedControlIndicator = ({
     />
   );
 };
+
+// ------------------------------------------
 
 SegmentedControlRoot.displayName = "SegmentedControl";
 SegmentedControlItem.displayName = "SegmentedControl.Item";
