@@ -1,10 +1,6 @@
 import { useState } from "react";
-import { StyleSheet } from "react-native";
-import Animated, {
-  interpolateColor,
-  useAnimatedReaction,
-  type SharedValue,
-} from "react-native-reanimated";
+import { StyleSheet, View } from "react-native";
+import { interpolateColor, useAnimatedReaction, type SharedValue } from "react-native-reanimated";
 import { Canvas, RoundedRect } from "@shopify/react-native-skia";
 import { scheduleOnRN } from "react-native-worklets";
 import { BlurView } from "expo-blur";
@@ -26,10 +22,10 @@ export const GradientLayer: React.FC<GradientLayerProps> = ({
 
   useAnimatedReaction(
     () => scrollOffsetX.get(),
-    (x) => {
-      const inputs = palette.map((_, i) => i * width);
-      const c = interpolateColor(x, inputs, palette, "HSV");
-      scheduleOnRN(setFillColor, c);
+    (coordX) => {
+      const inputs = palette.map((_, index) => index * width);
+      const color = interpolateColor(coordX, inputs, palette, "HSV");
+      scheduleOnRN(setFillColor, color);
     }
   );
 
@@ -39,7 +35,7 @@ export const GradientLayer: React.FC<GradientLayerProps> = ({
   const ovalY = height * 0.84;
 
   return (
-    <Animated.View style={[StyleSheet.absoluteFill]} pointerEvents="none">
+    <View style={[StyleSheet.absoluteFill]} pointerEvents="none">
       <BlurView
         tint="systemUltraThinMaterialDark"
         pointerEvents="none"
@@ -63,6 +59,6 @@ export const GradientLayer: React.FC<GradientLayerProps> = ({
           color={fillColor}
         />
       </Canvas>
-    </Animated.View>
+    </View>
   );
 };
