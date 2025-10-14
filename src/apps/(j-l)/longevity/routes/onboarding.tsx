@@ -1,11 +1,10 @@
-import { View, Text, useWindowDimensions } from "react-native";
+import { View, Text, useWindowDimensions, StyleSheet } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
   useAnimatedStyle,
   interpolate,
   Extrapolation,
-  useDerivedValue,
 } from "react-native-reanimated";
 import { Dots } from "../components/dots";
 import { GradientLayer } from "../components/gradient-layer";
@@ -38,8 +37,6 @@ const PALETTE = ["#321A48", "#192444", "#1C3F2D", "#44382A", "#391C1D"];
 const Onboarding = () => {
   const { width, height } = useWindowDimensions();
 
-  const heightDotsBlock = useSharedValue(0);
-
   const scrollOffsetX = useSharedValue(0);
   const activeIndex = useSharedValue(0);
 
@@ -64,6 +61,13 @@ const Onboarding = () => {
 
   return (
     <View className="flex-1 bg-[#161522]">
+      <GradientLayer
+        palette={PALETTE}
+        width={width}
+        height={height}
+        scrollOffsetX={scrollOffsetX}
+      />
+
       <Animated.ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -72,34 +76,15 @@ const Onboarding = () => {
         scrollEventThrottle={16}
       >
         {PAGES.map((page, index) => (
-          <OnboardingPage
-            key={index}
-            width={width}
-            heightDotsBlock={heightDotsBlock}
-            title={page.title}
-            body={page.body}
-          />
+          <OnboardingPage key={index} width={width} title={page.title} body={page.body} />
         ))}
       </Animated.ScrollView>
 
       <View
-        onLayout={(e) => {
-          heightDotsBlock.set(e.nativeEvent.layout.y);
-        }}
         pointerEvents="none"
-        className="absolute bottom-0 w-full justify-center"
+        className="absolute w-full justify-center"
+        style={StyleSheet.absoluteFill}
       >
-        {PALETTE.map((color, i) => (
-          <GradientLayer
-            key={i}
-            color={color}
-            index={i}
-            width={width}
-            height={height}
-            scrollOffsetX={scrollOffsetX}
-          />
-        ))}
-
         <View className="absolute bottom-0 w-full px-5 self-center mb-12">
           <Dots numberOfDots={PAGES.length} activeIndex={activeIndex} />
           <Animated.View
