@@ -29,7 +29,7 @@ const PAGES = [
   },
   {
     title: "This app is not medical advice",
-    body: "Educationl use only. Not a diagnosis/treatment tool. Protocols may not suit you and could interact with meds or conditions. Do you research and consult a licensed clinician before starting or changing anything. Seek immediate care for symptoms or emergencies. Tap 'I understand' to acknowledge.",
+    body: "Educational use only. Not a diagnosis/treatment tool. Protocols may not suit you and could interact with meds or conditions. Do you research and consult a licensed clinician before starting or changing anything. Seek immediate care for symptoms or emergencies. Tap 'I understand' to acknowledge.",
   },
 ];
 const PALETTE = ["#321A48", "#192444", "#1C3F2D", "#44382A", "#391C1D"];
