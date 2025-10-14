@@ -14,10 +14,11 @@ import {
 import { useState } from "react";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Animated from "react-native-reanimated";
-import Switcher from "../components/paywall/switcher";
 import { FeatureItem } from "../components/paywall/feature-item";
 import { cn } from "@/src/shared/lib/utils/cn";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
+import UpgradeButton from "../components/paywall/upgrade-button";
+import PlanControl from "../components/paywall/plan-control";
 
 // grok-paywall-screen-animation 🔽
 
@@ -29,7 +30,7 @@ const ICON_COLOR = "#fafafa";
 const STROKE_WIDTH = 3;
 
 export const Paywall = () => {
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useState<"standard" | "heavy">("standard");
 
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
@@ -70,53 +71,63 @@ export const Paywall = () => {
           </Text>
           <Animated.View
             // Slight gap change per plan creates a subtle density shift on toggle
-            className={cn("gap-[28px]", value === "2" && "gap-[26px]")}
+            className={cn("gap-[28px]", value === "heavy" && "gap-[26px]")}
           >
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <Orbit size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
-              text={value === "1" ? "Higher usage on Fast & Expert" : "Everything in SuperGrok"}
+              text={
+                value === "standard" ? "Higher usage on Fast & Expert" : "Everything in SuperGrok"
+              }
             />
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <Lightbulb size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
               text={
-                value === "1" ? "Higher usage on Fast & Expert" : "Highest usage on Fast & Expert"
+                value === "standard"
+                  ? "Higher usage on Fast & Expert"
+                  : "Highest usage on Fast & Expert"
               }
             />
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <Rocket size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
-              text={value === "1" ? "Higher usage on Voice Mode and Companions" : "Access to Heavy"}
+              text={
+                value === "standard"
+                  ? "Higher usage on Voice Mode and Companions"
+                  : "Access to Heavy"
+              }
             />
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
               text={
-                value === "1" ? "Early access to new features" : "Highest usage on Grok Imagine"
+                value === "standard"
+                  ? "Early access to new features"
+                  : "Highest usage on Grok Imagine"
               }
             />
-            {value === "2" && (
+            {value === "heavy" && (
               <>
                 <FeatureItem
                   icon={<Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />}
@@ -132,14 +143,11 @@ export const Paywall = () => {
         </ScrollView>
       </View>
 
-      <Switcher value={value} setValue={setValue} />
+      <PlanControl value={value} setValue={setValue} />
 
-      <Pressable
-        onPress={simulatePress}
-        className="mx-5 mb-5 p-4 items-center rounded-full bg-white"
-      >
-        <Text className="text-black text-xl font-medium">Upgrade to SuperGrok</Text>
-      </Pressable>
+      {/* grok-paywall-upgrade-button-animation 🔽 */}
+      <UpgradeButton />
+      {/* grok-paywall-upgrade-button-animation 🔼 */}
 
       <View className="w-full flex-row px-6 mb-8 items-center justify-between self-center">
         <Pressable onPress={simulatePress}>
