@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import BottomSheet, { BottomSheetBackdropProps, BottomSheetView } from "@gorhom/bottom-sheet";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { Backdrop } from "./backdrop";
-import { Globe2, GraduationCap, Landmark, Users2, X } from "lucide-react-native";
+import { Globe2, GraduationCap, Receipt, Users2, X } from "lucide-react-native";
 import { HorizontalTabs } from "./horizontal-tabs";
 import { SourceToggleRow } from "./source-toggle-row";
 
@@ -77,7 +77,7 @@ export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
               onValueChange={setAcademicEnabled}
             />
             <SourceToggleRow
-              icon={<Landmark size={18} color="white" />}
+              icon={<Receipt size={18} color="white" />}
               title="Finance"
               description="Search SEC filings"
               value={financeEnabled}

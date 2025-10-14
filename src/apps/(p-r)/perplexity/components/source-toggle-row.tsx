@@ -27,7 +27,8 @@ export const SourceToggleRow: React.FC<SourceToggleRowProps> = ({
       <Switch
         value={value}
         onValueChange={onValueChange}
-        trackColor={{ false: "#9ea2a6", true: "#35b5b0" }}
+        trackColor={{ false: "#6b6f72", true: "#35b5b0" }}
+        ios_backgroundColor={"#6b6f72"}
         thumbColor={"white"}
       />
     </View>
