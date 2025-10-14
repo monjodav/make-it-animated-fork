@@ -15,6 +15,10 @@ import type {
 } from "./types";
 import { cn } from "../../lib/utils/cn";
 
+// Animated.createAnimatedComponent is required to allow Pressable's style/props
+// to participate in Reanimated-driven updates. This enables 60fps interactions
+// without re-rendering on JS thread. See docs:
+// https://docs.swmansion.com/react-native-reanimated/docs/core/createAnimatedComponent
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const SegmentedControlContext = createContext<SegmentedControlContextValue>({
@@ -33,6 +37,9 @@ const SegmentedControlRoot = ({
   children,
   ...props
 }: SegmentedControlProps) => {
+  // Architecture: Root owns item measurements and selected value, exposes both
+  // via context so indicator can animate to measured width/x. This avoids
+  // prop-drilling and keeps animation inputs close to where they are needed.
   const [measurements, setMeasurementsState] = useState<Record<string, ItemMeasurements>>({});
 
   const setMeasurements = useCallback((key: string, newMeasurements: ItemMeasurements) => {
@@ -70,6 +77,8 @@ const SegmentedControlItem = ({
 
   const isActive = activeValue === value;
 
+  // Measure each item once it lays out so the indicator can animate to
+  // exact width and x. Using RN layout avoids guessing text widths.
   const handleLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const { width, height, x } = event.nativeEvent.layout;
@@ -80,6 +89,7 @@ const SegmentedControlItem = ({
 
   const handlePress = useCallback(
     (event: GestureResponderEvent) => {
+      // Press updates selected value which drives indicator animation.
       onValueChange(value);
       // @ts-ignore
       onPress?.(event);
@@ -109,12 +119,21 @@ const SegmentedControlIndicator = ({
   const { value, measurements } = use(SegmentedControlContext);
 
   const activeMeasurements = measurements[value];
+  // Shared flag to skip the first animation: prevents the indicator from
+  // animating in from 0 on initial mount which can look janky.
   const hasMeasured = useSharedValue(false);
 
+  // animationConfig lets consumers switch feel: spring for bouncy switching,
+  // timing for linear/snappier transitions. Reanimated config is passed
+  // through untouched to keep this component flexible.
   const reanimatedConfig = animationConfig?.config;
 
+  // Animated style is the single source of truth for indicator geometry.
+  // It animates width/height/left to follow currently active item's
+  // measurements at 60fps on the UI thread.
   const animatedStyle = useAnimatedStyle(() => {
     if (!activeMeasurements) {
+      // No target yet → hide indicator entirely to avoid flicker.
       return {
         width: 0,
         height: 0,
@@ -124,7 +143,7 @@ const SegmentedControlIndicator = ({
     }
 
     if (!hasMeasured.value) {
-      // We do it to avoid initial animation
+      // Avoid initial animate-in: snap to measured geometry once.
       hasMeasured.set(true);
       return {
         width: activeMeasurements.width,
@@ -135,18 +154,22 @@ const SegmentedControlIndicator = ({
     }
 
     return {
+      // Width/height animate to match the active tab's measured size.
+      // Spring yields playful pill growth; timing yields crisp snaps.
       width:
         animationConfig?.type === "timing"
-          ? withTiming(activeMeasurements.width, reanimatedConfig)
-          : withSpring(activeMeasurements.width, reanimatedConfig),
+          ? withTiming(activeMeasurements.width, reanimatedConfig) // size tween
+          : withSpring(activeMeasurements.width, reanimatedConfig), // size spring
       height:
         animationConfig?.type === "timing"
           ? withTiming(activeMeasurements.height, reanimatedConfig)
           : withSpring(activeMeasurements.height, reanimatedConfig),
+      // Horizontal travel maps directly to measured x, producing a sliding
+      // selection pill that tracks item positions precisely.
       left:
         animationConfig?.type === "timing"
-          ? withTiming(activeMeasurements.x, reanimatedConfig)
-          : withSpring(activeMeasurements.x, reanimatedConfig),
+          ? withTiming(activeMeasurements.x, reanimatedConfig) // slide tween
+          : withSpring(activeMeasurements.x, reanimatedConfig), // slide spring
       opacity: 1,
     };
   }, [activeMeasurements]);
@@ -154,6 +177,8 @@ const SegmentedControlIndicator = ({
   return (
     <Animated.View
       className={cn("absolute", className)}
+      // Absolute positioning keeps layout static while the indicator animates
+      // on top, avoiding reflow of siblings during transitions.
       style={[animatedStyle, style]}
       {...props}
     />
