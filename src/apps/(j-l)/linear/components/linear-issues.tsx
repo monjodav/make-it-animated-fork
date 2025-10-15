@@ -31,7 +31,7 @@ export const LinearIssues = () => (
     keyExtractor={(_, index) => index.toString()}
     renderItem={_renderItem}
     renderSectionHeader={_renderSectionHeader}
-    contentContainerClassName="gap-3 px-5"
+    contentContainerClassName="px-5"
     stickySectionHeadersEnabled={false}
     showsVerticalScrollIndicator={false}
   />

@@ -9,5 +9,9 @@ export const raycast: App = {
       name: "Home search transition animation",
       href: "/raycast/home",
     },
+    {
+      name: "Paywall screen animation",
+      href: "/raycast/paywall",
+    },
   ],
 };

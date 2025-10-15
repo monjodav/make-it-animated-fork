@@ -30,8 +30,8 @@ export const Searchbar: FC = () => {
       width: withSpring(
         screenView.value === "favorites" ? SEARCHBAR_FAVORITES_WIDTH : SEARCHBAR_COMMANDS_WIDTH,
         {
-          mass: 0.2,
-          damping: 15,
+          damping: 100,
+          stiffness: 1400,
         }
       ),
       transform: [{ scale: withTiming(1) }],

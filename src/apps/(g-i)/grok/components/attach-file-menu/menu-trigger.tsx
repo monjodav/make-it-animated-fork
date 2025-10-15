@@ -23,9 +23,7 @@ export const MenuTrigger: FC = () => {
     }),
     transform: [
       {
-        scale: isMenuOpen.get()
-          ? withTiming(4)
-          : withSpring(1, { damping: 40, stiffness: 600, mass: 2 }),
+        scale: isMenuOpen.get() ? withTiming(4) : withSpring(1, { damping: 70, stiffness: 1600 }),
       },
     ],
   }));

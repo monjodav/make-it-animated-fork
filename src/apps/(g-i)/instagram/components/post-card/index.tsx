@@ -17,7 +17,7 @@ export const PostCard: FC<Props> = ({ index, width, post }: Props) => {
   return (
     <Animated.View
       // This is crucial for the Description truncation animation to work properly
-      layout={LinearTransition.springify().damping(28).stiffness(260)}
+      layout={LinearTransition.springify()}
       className="mb-20"
     >
       <Carousel key={index} images={post.images}>

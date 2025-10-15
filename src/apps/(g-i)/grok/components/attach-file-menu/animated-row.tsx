@@ -6,7 +6,7 @@ import Animated, { SharedValue, useAnimatedStyle, withSpring } from "react-nativ
 
 // Spring configuration for natural, bouncy menu item entrance
 // damping: 40 prevents excessive oscillation, stiffness: 300 provides snappy response
-const SPRING_CONFIG = { damping: 40, stiffness: 300 };
+const SPRING_CONFIG = { damping: 120, stiffness: 1000 };
 
 type Props = {
   isMenuOpen: SharedValue<boolean>;

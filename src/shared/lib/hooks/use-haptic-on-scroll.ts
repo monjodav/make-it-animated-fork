@@ -1,7 +1,8 @@
-import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { ReanimatedScrollEvent } from "react-native-reanimated/lib/typescript/hook/commonTypes";
 import { ScrollDirectionValue } from "./use-scroll-direction";
+import { scheduleOnRN } from "react-native-worklets";
 
 type Params = {
   isListDragging: SharedValue<boolean>;
@@ -46,11 +47,11 @@ export const useHapticOnScroll = ({ isListDragging, scrollDirection, triggerOffs
 
     if (scrollDirection.value === "to-bottom") {
       if (offsetY > triggerOffset && !isHapticTriggered.value) {
-        runOnJS(handleHaptics)();
+        scheduleOnRN(handleHaptics);
       }
     } else if (scrollDirection.value === "to-top") {
       if (offsetY < triggerOffset && !isHapticTriggered.value) {
-        runOnJS(handleHaptics)();
+        scheduleOnRN(handleHaptics);
       }
     }
   };

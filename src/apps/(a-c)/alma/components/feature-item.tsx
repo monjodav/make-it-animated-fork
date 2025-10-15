@@ -28,13 +28,13 @@ const ACTIVE_BLUR_INTENSITY = 0; // No blur for active item clarity
 
 // Spring animation configurations for natural motion feel
 const SPRING_CONFIG_ON_ENTER = {
-  damping: 24, // Moderate damping for smooth entrance
-  stiffness: 160, // Lower stiffness for gentle, welcoming animation
+  damping: 110, // Moderate damping for smooth entrance
+  stiffness: 800, // Lower stiffness for gentle, welcoming animation
 };
 
 const SPRING_CONFIG_ON_EXIT = {
-  damping: 24, // Same damping for consistent motion
-  stiffness: 220, // Higher stiffness for quicker, more decisive exit
+  damping: 110, // Same damping for consistent motion
+  stiffness: 800, // Higher stiffness for quicker, more decisive exit
 };
 
 type Props = {
