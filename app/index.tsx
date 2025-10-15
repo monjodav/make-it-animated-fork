@@ -37,6 +37,7 @@ export default function Index() {
         <OtaUpdate />
         <PressToScanBtn />
         <ExploreAnimationsBtn />
+        {/* <Redirect href="/(apps)/(p-r)/perplexity/home" /> */}
       </View>
     </IndexAnimationProvider>
   );
