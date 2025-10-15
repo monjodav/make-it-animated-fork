@@ -8,11 +8,11 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export const Backdrop: FC<BottomSheetBackdropProps> = ({ animatedIndex, style, ...props }) => {
   const animatedIntensity = useAnimatedProps(() => {
-    const maxIntensity = 25;
+    const maxIntensity = 45;
     const intensity = interpolate(
       animatedIndex.value,
       [-1, -0.5, 0, 1, 2],
-      [0, 0, maxIntensity / 2, maxIntensity, 0],
+      [0, 0, maxIntensity / 1.5, maxIntensity, 0],
       Extrapolation.CLAMP
     );
 

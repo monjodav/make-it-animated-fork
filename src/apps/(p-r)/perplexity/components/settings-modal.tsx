@@ -36,7 +36,6 @@ export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
     <BottomSheet
       ref={ref}
       index={-1}
-      snapPoints={[350]}
       enablePanDownToClose
       backdropComponent={renderBackdrop}
       handleStyle={styles.handleStyle}
@@ -45,7 +44,7 @@ export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
       detached
       bottomInset={40}
     >
-      <BottomSheetView style={styles.container}>
+      <BottomSheetView>
         <View className="w-[45] h-[6px] mt-2 rounded-full bg-white/30 self-center" />
         <View className="px-9 pb-5">
           <View className="flex-row items-center mt-1">
@@ -108,8 +107,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(64, 64, 64, 0.5)",
     borderCurve: "continuous",
-  },
-  container: {
-    // backgroundColor:'red'
   },
 });
