@@ -1,9 +1,10 @@
 import { View, Text, Pressable } from "react-native";
-import { AudioLines, CircleUser, LayoutGrid, Mic, Plus, Search } from "lucide-react-native";
+import { AudioLines, LayoutGrid, Mic, Plus, Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useState } from "react";
 import { SettingsModal } from "../components/settings-modal";
+import BreathingIcon from "../components/breathing-icon";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
@@ -13,10 +14,10 @@ export default function Home() {
     <View className="flex-1 bg-neutral-900">
       <View
         style={{ paddingTop: insets.top + 20 }}
-        className="flex-row px-4 items-center justify-between"
+        className="flex-row px-5 items-center justify-between"
       >
         <Pressable onPress={simulatePress}>
-          <CircleUser size={30} color="white" />
+          <BreathingIcon />
         </Pressable>
         <LayoutGrid size={30} color="white" />
       </View>
