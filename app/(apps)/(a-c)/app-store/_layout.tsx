@@ -14,6 +14,10 @@ import {
   useScrollContext,
 } from "@/src/apps/(a-c)/app-store/lib/providers/scroll-provider";
 import { APP_STORE_CONSTANTS } from "@/src/apps/(a-c)/app-store/lib/constants/animation-config";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
+import { Image } from "expo-image";
+import AppImage from "@/assets/images/icon-ios.png";
 
 const BLUR_START_OFFSET = APP_STORE_CONSTANTS.BLUR_START_OFFSET;
 const BLUR_END_OFFSET = APP_STORE_CONSTANTS.BLUR_END_OFFSET;
@@ -21,6 +25,9 @@ const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
 const AppStoreStackScreen = () => {
   const router = useRouter();
+
+  const { openDrawer } = useDrawerControl();
+
   const { scrollY } = useScrollContext();
 
   const headerBlurStyle = useAnimatedStyle(() => {
@@ -39,13 +46,8 @@ const AppStoreStackScreen = () => {
   });
 
   const headerButtonsStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(shouldShowHeaderButtons.get() ? 1 : 0, {
-      duration: 300,
-    });
-
-    const translateY = withTiming(shouldShowHeaderButtons.get() ? 0 : 6, {
-      duration: 300,
-    });
+    const opacity = withTiming(shouldShowHeaderButtons.get() ? 1 : 0);
+    const translateY = withTiming(shouldShowHeaderButtons.get() ? 0 : 6);
 
     return {
       opacity,
@@ -67,20 +69,14 @@ const AppStoreStackScreen = () => {
 
   const headerRight = () => (
     <Animated.View
-      style={[
-        {
-          right: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 90,
-        },
-        headerButtonsStyle,
-      ]}
+      className="right-2.5 flex-row items-center gap-[90px]"
+      style={headerButtonsStyle}
     >
-      <View className="h-[30] w-[30] bg-white rounded-[5]" />
-      <View className="bg-blue-600 rounded-full px-4 py-1">
+      <Image source={AppImage} style={styles.image} />
+
+      <Pressable className="bg-blue-600 rounded-full px-4 py-1" onPress={simulatePress}>
         <Text className="text-white text-base font-bold">Open</Text>
-      </View>
+      </Pressable>
     </Animated.View>
   );
 
@@ -96,9 +92,9 @@ const AppStoreStackScreen = () => {
           headerTransparent: true,
           headerBackground: headerBackground,
           headerLeft: () => (
-            <Pressable className="flex-row items-center g-2" onPress={router.back}>
+            <Pressable className="flex-row items-center g-2" onPress={openDrawer}>
               <ChevronLeft size={28} color="#007AFF" />
-              <Text className="text-[#007AFF] text-xl font-bold">Search</Text>
+              <Text className="text-[#007AFF] text-xl font-medium">Search</Text>
             </Pressable>
           ),
           headerRight: headerRight,
@@ -115,3 +111,12 @@ export default function AppStoreLayout() {
     </ScrollProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  image: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    borderCurve: "continuous",
+  },
+});

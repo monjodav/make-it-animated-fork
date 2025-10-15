@@ -1,5 +1,5 @@
-import { HardDriveUpload } from "lucide-react-native";
-import { View, Text } from "react-native";
+import { Upload } from "lucide-react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -9,6 +9,9 @@ import Animated, {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useScrollContext } from "@/src/apps/(a-c)/app-store/lib/providers/scroll-provider";
 import { APP_STORE_CONSTANTS } from "@/src/apps/(a-c)/app-store/lib/constants/animation-config";
+import AppImage from "@/assets/images/icon-ios.png";
+import { Image } from "expo-image";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
@@ -40,22 +43,20 @@ export const App = () => {
     <View className="flex-1 bg-black">
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingTop: headerHeight }}
+        contentContainerStyle={{ paddingTop: headerHeight + 12 }}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
       >
-        <Animated.View
-          style={[{ paddingHorizontal: 24, flexDirection: "row", gap: 10 }, appContentStyle]}
-        >
-          <View className="h-[120] w-[120] bg-white rounded-[20]" />
+        <Animated.View className="px-6 flex-row gap-[10px]" style={appContentStyle}>
+          <Image source={AppImage} style={styles.image} />
           <View className="flex-1">
-            <Text className="text-white text-2xl font-bold">App Title</Text>
-            <Text className="text-[#868487] text-lg font-bold">Description</Text>
+            <Text className="text-white text-2xl font-bold">Make It Animated</Text>
+            <Text className="text-neutral-500 text-lg">Developer Tools</Text>
             <View className="flex-row justify-between mt-auto">
-              <View className="bg-blue-600 rounded-full px-4 py-1">
-                <Text className="text-white text-base font-bold">Open</Text>
-              </View>
-              <HardDriveUpload size={24} color="#007AFF" />
+              <Pressable className="bg-blue-600 rounded-full px-4 py-1" onPress={simulatePress}>
+                <Text className="text-white text-lg font-bold">Open</Text>
+              </Pressable>
+              <Upload size={24} color="#007AFF" />
             </View>
           </View>
         </Animated.View>
@@ -73,3 +74,12 @@ export const App = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    width: 110,
+    height: 110,
+    borderRadius: 28,
+    borderCurve: "continuous",
+  },
+});
