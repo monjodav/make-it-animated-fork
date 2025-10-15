@@ -1,6 +1,6 @@
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { Pressable, Text, StyleSheet, Platform } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -18,18 +18,24 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import { Image } from "expo-image";
 import AppImage from "@/assets/images/icon-ios.png";
+import { cn } from "@/src/shared/lib/utils/cn";
 
+// app-store-header-animation 🔽
+
+// Animation constants pulled from a central config so math stays consistent across screen and header.
+// BLUR_* define the scroll range where header background goes from transparent → fully blurred.
+// CONTENT_DISAPPEAR_OFFSET marks when large content fades and header buttons fade in.
 const BLUR_START_OFFSET = APP_STORE_CONSTANTS.BLUR_START_OFFSET;
 const BLUR_END_OFFSET = APP_STORE_CONSTANTS.BLUR_END_OFFSET;
 const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
 const AppStoreStackScreen = () => {
-  const router = useRouter();
-
   const { openDrawer } = useDrawerControl();
 
   const { scrollY } = useScrollContext();
 
+  // Drives header background opacity based on scroll position.
+  // Interpolates [BLUR_START_OFFSET..BLUR_END_OFFSET] → [0..1] with CLAMP to avoid overshoot flicker.
   const headerBlurStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       scrollY.get(),
@@ -41,10 +47,14 @@ const AppStoreStackScreen = () => {
     return { opacity };
   });
 
+  // Boolean gate to reveal header buttons slightly before content fully disappears.
+  // 30px early trigger reduces perceptual lag and avoids a dead zone during fast flings.
   const shouldShowHeaderButtons = useDerivedValue(() => {
     return scrollY.get() >= CONTENT_DISAPPEAR_OFFSET - 30;
   });
 
+  // Smoothly fades in header buttons and slides them up a few pixels for tactile entrance.
+  // withTiming defaults are sufficient here; tiny translateY (6) avoids layout jumps.
   const headerButtonsStyle = useAnimatedStyle(() => {
     const opacity = withTiming(shouldShowHeaderButtons.get() ? 1 : 0);
     const translateY = withTiming(shouldShowHeaderButtons.get() ? 0 : 6);
@@ -56,14 +66,13 @@ const AppStoreStackScreen = () => {
   });
 
   const headerBackground = () => (
-    <Animated.View style={[StyleSheet.absoluteFill, headerBlurStyle]}>
-      <BlurView
-        intensity={75}
-        style={{
-          flex: 1,
-          backgroundColor: "transparent",
-        }}
-      />
+    <Animated.View
+      className={cn("absolute inset-0", Platform.OS === "android" && "bg-black")}
+      // Android: solid color avoids expensive real-time blur; opacity is still animated.
+      style={headerBlurStyle}
+    >
+      {/* iOS: hardware-accelerated blur for native look; gated by animated opacity above. */}
+      {Platform.OS === "ios" && <BlurView intensity={75} style={StyleSheet.absoluteFill} />}
     </Animated.View>
   );
 
@@ -86,10 +95,13 @@ const AppStoreStackScreen = () => {
         name="app"
         options={{
           title: "",
+          // Transparent base lets content scroll under the header so we can draw our own animated BG.
           headerStyle: {
             backgroundColor: "transparent",
           },
+          // Critical: keeps React Navigation from painting an opaque header behind our blur.
           headerTransparent: true,
+          // Our animated background handles the blur/opacity based on scroll.
           headerBackground: headerBackground,
           headerLeft: () => (
             <Pressable className="flex-row items-center g-2" onPress={openDrawer}>
@@ -120,3 +132,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// app-store-header-animation 🔼
