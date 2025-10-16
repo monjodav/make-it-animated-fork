@@ -6,6 +6,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   useDerivedValue,
+  useAnimatedReaction,
+  withTiming,
+  withSpring,
+  withSequence,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardEvents, useKeyboardHandler } from "react-native-keyboard-controller";
@@ -72,6 +76,8 @@ const AnimatedInput = () => {
     );
   });
 
+  const yBounce = useSharedValue(0);
+
   const rInputBarAnimatedStyle = useAnimatedStyle(() => {
     const keyboardHeight = rKeyboardHeight.get();
     const translateEnd = -(keyboardHeight - bottomInset + 10);
@@ -109,8 +115,23 @@ const AnimatedInput = () => {
     const extra = (hiddenRowHeight.get() || 0) + spacing;
     const height = Math.max(0, base + reveal * extra);
 
-    return { height };
+    return { height, transform: [{ translateY: yBounce.get() }] };
   }, []);
+
+  useAnimatedReaction(
+    () => rReveal.get(),
+    (current, prev) => {
+      if (prev != null && prev > 0.01 && current <= 0.01) {
+        yBounce.set(0);
+        yBounce.set(
+          withSequence(
+            withTiming(5, { duration: 60 }),
+            withSpring(0, { stiffness: 900, damping: 120 })
+          )
+        );
+      }
+    }
+  );
 
   const rMicFloatingStyle = useAnimatedStyle(() => {
     const reveal = rReveal.get();
