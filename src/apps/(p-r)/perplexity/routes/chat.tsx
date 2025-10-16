@@ -60,9 +60,10 @@ const useGradualKeyboardAnimation = () => {
 
 export default function Chat() {
   const insets = useSafeAreaInsets();
-
   const bottomInset = insets.bottom;
+
   const { openDrawer } = useDrawerControl();
+
   const { keyboardHeightProgress, keyboardFinalHeight, keyboardIsShowing } =
     useGradualKeyboardAnimation();
 
@@ -81,6 +82,8 @@ export default function Chat() {
   }, [bottomInset]);
 
   const penInitialWidth = useSharedValue(0);
+  const baseRowHeight = useSharedValue(0);
+  const hiddenRowHeight = useSharedValue(0);
 
   const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
     const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
@@ -101,6 +104,20 @@ export default function Chat() {
     const width = Math.max(0, baseWidth * widthFactor);
     const marginLeft = 8 * widthFactor;
     return { width, marginLeft, transform: [{ translateX }] };
+  }, []);
+
+  const rInputContainerStyle = useAnimatedStyle(() => {
+    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
+    const kh = Math.max(0, keyboardHeightProgress.get());
+    const threshold = keyboardHeight / 3;
+    const reveal = interpolate(kh, [0, threshold, keyboardHeight], [0, 0, 1], Extrapolation.CLAMP);
+
+    const spacing = 24;
+    const base = baseRowHeight.get() || 62;
+    const extra = (hiddenRowHeight.get() || 0) + spacing;
+    const height = Math.max(0, base + reveal * extra);
+
+    return { height, overflow: "hidden" };
   }, []);
 
   return (
@@ -180,24 +197,50 @@ export default function Chat() {
           className="px-3 pt-2 mt-auto"
         >
           <View className="flex-row items-center">
-            <View
-              style={{ borderCurve: "continuous" }}
-              className="flex-1 flex-row items-center justify-between bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-4"
+            <Animated.View
+              style={[{ borderCurve: "continuous" }, rInputContainerStyle]}
+              className="flex-1 bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-4"
+              onLayout={(e) => {
+                const h = e.nativeEvent.layout.height;
+                if (h > 0 && baseRowHeight.get() === 0) baseRowHeight.set(h);
+              }}
             >
-              <TextInput
-                placeholder="Ask a follow up..."
-                placeholderTextColor="grey"
-                className="text-neutral-500 text-lg font-medium ml-3"
-                selectionColor="#ffffff"
-              />
+              <View className="flex-row items-center justify-between ">
+                <TextInput
+                  placeholder="Ask a follow up..."
+                  placeholderTextColor="grey"
+                  className="text-neutral-500 text-lg font-medium ml-3"
+                  selectionColor="#ffffff"
+                />
 
-              <Pressable
-                onPress={simulatePress}
-                className="p-2 rounded-full items-center justify-center bg-neutral-700/90"
+                <Pressable
+                  onPress={simulatePress}
+                  className="p-2 rounded-full items-center justify-center bg-neutral-700/90"
+                >
+                  <Mic size={18} color="white" />
+                </Pressable>
+              </View>
+              <View
+                className="flex-row items-center gap-3 mt-6"
+                onLayout={(e) => {
+                  const h = e.nativeEvent.layout.height;
+                  if (h > hiddenRowHeight.get()) hiddenRowHeight.set(h);
+                }}
               >
-                <Mic size={18} color="white" />
-              </Pressable>
-            </View>
+                <Pressable
+                  onPress={simulatePress}
+                  className="p-2 rounded-full bg-neutral-700/90 items-center justify-center"
+                >
+                  <Upload size={18} color="white" />
+                </Pressable>
+                <Pressable
+                  onPress={simulatePress}
+                  className="p-2 rounded-full bg-neutral-700/90 items-center justify-center"
+                >
+                  <Bookmark size={18} color="white" />
+                </Pressable>
+              </View>
+            </Animated.View>
 
             <Animated.View
               style={rPenBtnAnimatedStyle}
