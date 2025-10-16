@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 import React, { useEffect } from "react";
 import Animated, {
   Extrapolation,
@@ -105,6 +105,19 @@ const AnimatedInput = () => {
 
     return { height, overflow: "hidden" };
   }, []);
+
+  const rMicFloatingStyle = useAnimatedStyle(() => {
+    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
+    const kh = Math.max(0, keyboardHeightProgress.get());
+    const threshold = keyboardHeight / 3;
+    const reveal = interpolate(kh, [0, threshold, keyboardHeight], [0, 0, 1], Extrapolation.CLAMP);
+    const spacing = 24;
+    const dy = reveal * ((hiddenRowHeight.get() || 0) + spacing);
+    return {
+      transform: [{ translateY: dy }],
+    };
+  }, []);
+
   return (
     <Animated.View
       style={[{ paddingBottom: bottomInset }, rInputBarAnimatedStyle]}
@@ -115,8 +128,8 @@ const AnimatedInput = () => {
           style={[{ borderCurve: "continuous" }, rInputContainerStyle]}
           className="flex-1 bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-4"
           onLayout={(e) => {
-            const h = e.nativeEvent.layout.height;
-            if (h > 0 && baseRowHeight.get() === 0) baseRowHeight.set(h);
+            const height = e.nativeEvent.layout.height;
+            if (height > 0 && baseRowHeight.get() === 0) baseRowHeight.set(height);
           }}
         >
           <View className="flex-row items-center justify-between ">
@@ -128,17 +141,33 @@ const AnimatedInput = () => {
             />
 
             <Pressable
-              onPress={simulatePress}
+              pointerEvents="none"
+              style={{ opacity: 0 }}
               className="p-2 rounded-full items-center justify-center bg-neutral-700/90"
             >
               <Mic size={18} color="white" />
             </Pressable>
           </View>
+
+          <Animated.View
+            style={[{ position: "absolute", right: 16, top: 16, zIndex: 1 }, rMicFloatingStyle]}
+            onLayout={(e) => {
+              const width = e.nativeEvent.layout.width;
+              if (width > penInitialWidth.get()) penInitialWidth.set(width);
+            }}
+          >
+            <Pressable
+              onPress={simulatePress}
+              className="p-2 rounded-full items-center justify-center bg-neutral-700/90"
+            >
+              <Mic size={18} color="white" />
+            </Pressable>
+          </Animated.View>
           <View
             className="flex-row items-center gap-3 mt-6"
             onLayout={(e) => {
-              const h = e.nativeEvent.layout.height;
-              if (h > hiddenRowHeight.get()) hiddenRowHeight.set(h);
+              const height = e.nativeEvent.layout.height;
+              if (height > hiddenRowHeight.get()) hiddenRowHeight.set(height);
             }}
           >
             <Pressable
@@ -159,8 +188,8 @@ const AnimatedInput = () => {
         <Animated.View
           style={rPenBtnAnimatedStyle}
           onLayout={(e) => {
-            const w = e.nativeEvent.layout.width;
-            if (w > penInitialWidth.get()) penInitialWidth.set(w);
+            const width = e.nativeEvent.layout.width;
+            if (width > penInitialWidth.get()) penInitialWidth.set(width);
           }}
         >
           <Pressable
@@ -176,5 +205,3 @@ const AnimatedInput = () => {
 };
 
 export default AnimatedInput;
-
-const styles = StyleSheet.create({});
