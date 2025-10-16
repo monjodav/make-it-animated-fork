@@ -160,7 +160,7 @@ const AnimatedInput = () => {
             <TextInput
               placeholder="Ask a follow up..."
               placeholderTextColor="grey"
-              className="text-neutral-500 text-lg font-medium"
+              className=" flex-1 text-neutral-500 text-lg font-medium"
               selectionColor="#ffffff"
             />
 

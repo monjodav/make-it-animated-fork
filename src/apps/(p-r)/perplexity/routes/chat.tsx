@@ -1,4 +1,4 @@
-import { View, Pressable, Text } from "react-native";
+import { View, Pressable, Text, Keyboard } from "react-native";
 import {
   Share2,
   Bookmark,
@@ -90,6 +90,7 @@ export default function Chat() {
         </View>
       </View>
 
+      <Pressable className="flex-1" onPress={() => Keyboard.dismiss()} />
       <View className="flex-1">
         <AnimatedInput />
       </View>
