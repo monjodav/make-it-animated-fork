@@ -68,12 +68,24 @@ const AnimatedInput = () => {
     const finalKeyboardHeight = rKeyboardHeight.get();
     const threshold = finalKeyboardHeight / 3;
     const currentKeyboardHeight = rKeyboardCurrent.get();
-    return interpolate(
-      currentKeyboardHeight,
-      [0, threshold, finalKeyboardHeight],
-      [0, 0, 1],
-      Extrapolation.CLAMP
-    );
+    const isShowing = keyboardIsShowing.get() === 1;
+
+    if (isShowing) {
+      return interpolate(
+        currentKeyboardHeight,
+        [0, threshold, finalKeyboardHeight],
+        [0, 0, 1],
+        Extrapolation.CLAMP
+      );
+    } else {
+      const start = Math.max(0, finalKeyboardHeight - threshold);
+      return interpolate(
+        currentKeyboardHeight,
+        [0, start, finalKeyboardHeight],
+        [0, 1, 1],
+        Extrapolation.CLAMP
+      );
+    }
   });
 
   const yBounce = useSharedValue(0);
@@ -92,14 +104,12 @@ const AnimatedInput = () => {
   const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
     const s = rKeyboardRatio.get();
     const isShowing = keyboardIsShowing.get() === 1;
-    const restoreAt = 0.2;
     const targetX = 220;
 
-    const slide = isShowing ? s : interpolate(s, [0, restoreAt, 1], [0, 1, 1], Extrapolation.CLAMP);
+    const reveal = rReveal.get();
+    const slide = isShowing ? s : reveal;
 
-    const widthFactor = isShowing
-      ? 1 - s
-      : interpolate(s, [0, restoreAt, 1], [1, 1, 0], Extrapolation.CLAMP);
+    const widthFactor = isShowing ? 1 - s : 1 - reveal;
 
     const translateX = slide * targetX;
     const baseWidth = penInitialWidth.get() || 56;
@@ -125,7 +135,7 @@ const AnimatedInput = () => {
         yBounce.set(0);
         yBounce.set(
           withSequence(
-            withTiming(5, { duration: 60 }),
+            withTiming(5, { duration: 50 }),
             withSpring(0, { stiffness: 900, damping: 120 })
           )
         );
