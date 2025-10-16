@@ -26,30 +26,36 @@ import { useEffect } from "react";
 const useGradualKeyboardAnimation = () => {
   const keyboardHeightProgress = useSharedValue(0);
   const keyboardFinalHeight = useSharedValue(0);
+  const keyboardIsShowing = useSharedValue(0);
 
   useEffect(() => {
     const show = KeyboardEvents.addListener("keyboardWillShow", (e) => {
-      keyboardFinalHeight.value = Math.abs(e.height);
+      keyboardFinalHeight.set(Math.abs(e.height));
+      keyboardIsShowing.set(1);
+    });
+    const hide = KeyboardEvents.addListener("keyboardWillHide", () => {
+      keyboardIsShowing.set(0);
     });
 
     return () => {
       show.remove();
+      hide.remove();
     };
   }, []);
   useKeyboardHandler(
     {
       onMove: (e) => {
         "worklet";
-        keyboardHeightProgress.value = e.height;
+        keyboardHeightProgress.set(e.height);
       },
       onEnd: (e) => {
         "worklet";
-        keyboardHeightProgress.value = e.height;
+        keyboardHeightProgress.set(e.height);
       },
     },
     []
   );
-  return { keyboardHeightProgress, keyboardFinalHeight };
+  return { keyboardHeightProgress, keyboardFinalHeight, keyboardIsShowing };
 };
 
 export default function Chat() {
@@ -57,7 +63,8 @@ export default function Chat() {
 
   const bottomInset = insets.bottom;
   const { openDrawer } = useDrawerControl();
-  const { keyboardHeightProgress, keyboardFinalHeight } = useGradualKeyboardAnimation();
+  const { keyboardHeightProgress, keyboardFinalHeight, keyboardIsShowing } =
+    useGradualKeyboardAnimation();
 
   const rInputBarAnimatedStyle = useAnimatedStyle(() => {
     const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
@@ -73,13 +80,27 @@ export default function Chat() {
     return { transform: [{ translateY }] };
   }, [bottomInset]);
 
+  const penInitialWidth = useSharedValue(0);
+
   const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
     const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
     const keyboardHeightCurrent = Math.max(0, keyboardHeightProgress.get());
-    const keyboardRiseProgress = Math.min(1, keyboardHeightCurrent / keyboardHeight);
+    const s = Math.min(1, keyboardHeightCurrent / keyboardHeight);
+    const isShowing = keyboardIsShowing.get() === 1;
+    const restoreAt = 0.2;
     const targetX = 220;
-    const translateX = keyboardRiseProgress * targetX;
-    return { transform: [{ translateX }] };
+
+    const slide = isShowing ? s : interpolate(s, [0, restoreAt, 1], [0, 1, 1], Extrapolation.CLAMP);
+
+    const widthFactor = isShowing
+      ? 1 - s
+      : interpolate(s, [0, restoreAt, 1], [1, 1, 0], Extrapolation.CLAMP);
+
+    const translateX = slide * targetX;
+    const baseWidth = penInitialWidth.get() || 56;
+    const width = Math.max(0, baseWidth * widthFactor);
+    const marginLeft = 8 * widthFactor;
+    return { width, marginLeft, transform: [{ translateX }] };
   }, []);
 
   return (
@@ -93,7 +114,7 @@ export default function Chat() {
             <ArrowLeft size={18} color="white" />
           </Pressable>
 
-          <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center">
             <Pressable
               style={{ borderCurve: "continuous" }}
               onPress={simulatePress}
@@ -158,10 +179,10 @@ export default function Chat() {
           style={[{ paddingBottom: bottomInset }, rInputBarAnimatedStyle]}
           className="px-3 pt-2 mt-auto"
         >
-          <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center">
             <View
               style={{ borderCurve: "continuous" }}
-              className="flex-1 flex-row items-center justify-between bg-neutral-800 rounded-full border border-neutral-700/50 p-4"
+              className="flex-1 flex-row items-center justify-between bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-4"
             >
               <TextInput
                 placeholder="Ask a follow up..."
@@ -178,7 +199,13 @@ export default function Chat() {
               </Pressable>
             </View>
 
-            <Animated.View style={rPenBtnAnimatedStyle}>
+            <Animated.View
+              style={rPenBtnAnimatedStyle}
+              onLayout={(e) => {
+                const w = e.nativeEvent.layout.width;
+                if (w > penInitialWidth.get()) penInitialWidth.set(w);
+              }}
+            >
               <Pressable
                 onPress={simulatePress}
                 className="p-5 rounded-full items-center justify-center bg-neutral-800 border border-neutral-700/50"
