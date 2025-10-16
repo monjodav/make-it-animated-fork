@@ -129,7 +129,7 @@ const AnimatedInput = () => {
       <View className="flex-row items-center">
         <Animated.View
           style={[{ borderCurve: "continuous", overflow: "hidden" }, rInputContainerStyle]}
-          className="flex-1 bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-4"
+          className="flex-1 bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-[16px]"
           onLayout={(e) => {
             const height = e.nativeEvent.layout.height;
             if (height > 0 && baseRowHeight.get() === 0) baseRowHeight.set(height);
@@ -153,11 +153,7 @@ const AnimatedInput = () => {
           </View>
 
           <Animated.View
-            style={[{ position: "absolute", right: 16, top: 16, zIndex: 1 }, rMicFloatingStyle]}
-            onLayout={(e) => {
-              const width = e.nativeEvent.layout.width;
-              if (width > penInitialWidth.get()) penInitialWidth.set(width);
-            }}
+            style={[{ position: "absolute", right: 14, top: 14, zIndex: 1 }, rMicFloatingStyle]}
           >
             <Pressable
               onPress={simulatePress}
