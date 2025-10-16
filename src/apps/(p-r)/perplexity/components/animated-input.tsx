@@ -5,13 +5,14 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
+  useDerivedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardEvents, useKeyboardHandler } from "react-native-keyboard-controller";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Mic, PenLine, Plus, Search } from "lucide-react-native";
 
-const useGradualKeyboardAnimation = () => {
+const useKeyboardAnimationMetrics = () => {
   const keyboardHeightProgress = useSharedValue(0);
   const keyboardFinalHeight = useSharedValue(0);
   const keyboardIsShowing = useSharedValue(0);
@@ -51,19 +52,30 @@ const AnimatedInput = () => {
   const bottomInset = insets.bottom;
 
   const { keyboardHeightProgress, keyboardFinalHeight, keyboardIsShowing } =
-    useGradualKeyboardAnimation();
+    useKeyboardAnimationMetrics();
 
-  const rInputBarAnimatedStyle = useAnimatedStyle(() => {
-    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
-    const threshold = keyboardHeight / 3;
+  const rKeyboardHeight = useDerivedValue(() => Math.max(1, keyboardFinalHeight.get()));
+  const rKeyboardCurrent = useDerivedValue(() => Math.max(0, keyboardHeightProgress.get()));
+  const rKeyboardRatio = useDerivedValue(() =>
+    Math.min(1, rKeyboardCurrent.get() / rKeyboardHeight.get())
+  );
 
-    const translateEnd = -(keyboardHeight - bottomInset + 10);
-    const translateY = interpolate(
-      keyboardHeightProgress.get(),
-      [0, threshold, keyboardHeight],
-      [0, 0, translateEnd],
+  const rReveal = useDerivedValue(() => {
+    const finalKeyboardHeight = rKeyboardHeight.get();
+    const threshold = finalKeyboardHeight / 3;
+    const currentKeyboardHeight = rKeyboardCurrent.get();
+    return interpolate(
+      currentKeyboardHeight,
+      [0, threshold, finalKeyboardHeight],
+      [0, 0, 1],
       Extrapolation.CLAMP
     );
+  });
+
+  const rInputBarAnimatedStyle = useAnimatedStyle(() => {
+    const keyboardHeight = rKeyboardHeight.get();
+    const translateEnd = -(keyboardHeight - bottomInset + 10);
+    const translateY = rReveal.get() * translateEnd;
     return { transform: [{ translateY }] };
   }, [bottomInset]);
 
@@ -72,9 +84,7 @@ const AnimatedInput = () => {
   const hiddenRowHeight = useSharedValue(0);
 
   const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
-    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
-    const keyboardHeightCurrent = Math.max(0, keyboardHeightProgress.get());
-    const s = Math.min(1, keyboardHeightCurrent / keyboardHeight);
+    const s = rKeyboardRatio.get();
     const isShowing = keyboardIsShowing.get() === 1;
     const restoreAt = 0.2;
     const targetX = 220;
@@ -93,28 +103,21 @@ const AnimatedInput = () => {
   }, []);
 
   const rInputContainerStyle = useAnimatedStyle(() => {
-    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
-    const kh = Math.max(0, keyboardHeightProgress.get());
-    const threshold = keyboardHeight / 3;
-    const reveal = interpolate(kh, [0, threshold, keyboardHeight], [0, 0, 1], Extrapolation.CLAMP);
-
+    const reveal = rReveal.get();
     const spacing = 24;
     const base = baseRowHeight.get() || 62;
     const extra = (hiddenRowHeight.get() || 0) + spacing;
     const height = Math.max(0, base + reveal * extra);
 
-    return { height, overflow: "hidden" };
+    return { height };
   }, []);
 
   const rMicFloatingStyle = useAnimatedStyle(() => {
-    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
-    const kh = Math.max(0, keyboardHeightProgress.get());
-    const threshold = keyboardHeight / 3;
-    const reveal = interpolate(kh, [0, threshold, keyboardHeight], [0, 0, 1], Extrapolation.CLAMP);
+    const reveal = rReveal.get();
     const spacing = 24;
-    const dy = reveal * ((hiddenRowHeight.get() || 0) + spacing);
+    const translateY = reveal * ((hiddenRowHeight.get() || 0) + spacing);
     return {
-      transform: [{ translateY: dy }],
+      transform: [{ translateY }],
     };
   }, []);
 
@@ -125,7 +128,7 @@ const AnimatedInput = () => {
     >
       <View className="flex-row items-center">
         <Animated.View
-          style={[{ borderCurve: "continuous" }, rInputContainerStyle]}
+          style={[{ borderCurve: "continuous", overflow: "hidden" }, rInputContainerStyle]}
           className="flex-1 bg-neutral-800 rounded-[30px] border border-neutral-700/50 p-4"
           onLayout={(e) => {
             const height = e.nativeEvent.layout.height;
