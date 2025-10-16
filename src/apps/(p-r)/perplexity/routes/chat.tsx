@@ -60,7 +60,7 @@ export default function Chat() {
   const { keyboardHeightProgress, keyboardFinalHeight } = useGradualKeyboardAnimation();
 
   const rInputBarAnimatedStyle = useAnimatedStyle(() => {
-    const keyboardHeight = keyboardFinalHeight.get();
+    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
     const threshold = keyboardHeight / 3;
 
     const translateEnd = -(keyboardHeight - bottomInset + 10);
@@ -72,6 +72,15 @@ export default function Chat() {
     );
     return { transform: [{ translateY }] };
   }, [bottomInset]);
+
+  const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
+    const keyboardHeight = Math.max(1, keyboardFinalHeight.get());
+    const keyboardHeightCurrent = Math.max(0, keyboardHeightProgress.get());
+    const keyboardRiseProgress = Math.min(1, keyboardHeightCurrent / keyboardHeight);
+    const targetX = 220;
+    const translateX = keyboardRiseProgress * targetX;
+    return { transform: [{ translateX }] };
+  }, []);
 
   return (
     <View className="flex-1 bg-neutral-900">
@@ -169,12 +178,14 @@ export default function Chat() {
               </Pressable>
             </View>
 
-            <Pressable
-              onPress={simulatePress}
-              className="p-5 rounded-full items-center justify-center bg-neutral-800 border border-neutral-700/50"
-            >
-              <PenLine size={20} color="white" />
-            </Pressable>
+            <Animated.View style={rPenBtnAnimatedStyle}>
+              <Pressable
+                onPress={simulatePress}
+                className="p-5 rounded-full items-center justify-center bg-neutral-800 border border-neutral-700/50"
+              >
+                <PenLine size={20} color="white" />
+              </Pressable>
+            </Animated.View>
           </View>
         </Animated.View>
       </View>
