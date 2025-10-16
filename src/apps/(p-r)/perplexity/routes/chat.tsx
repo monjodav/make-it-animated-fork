@@ -1,4 +1,10 @@
-import { View, Pressable, Text, StyleSheet, TextInput } from "react-native";
+import { View, Pressable, Text, TextInput } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import {
   Share2,
   Bookmark,
@@ -8,18 +14,64 @@ import {
   Snowflake,
   Mic,
   PenLine,
-  Plus,
   ArrowLeft,
   Upload,
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { KeyboardEvents, useKeyboardHandler } from "react-native-keyboard-controller";
+import { useEffect } from "react";
+
+const useGradualKeyboardAnimation = () => {
+  const keyboardHeightProgress = useSharedValue(0);
+  const keyboardFinalHeight = useSharedValue(0);
+
+  useEffect(() => {
+    const show = KeyboardEvents.addListener("keyboardWillShow", (e) => {
+      keyboardFinalHeight.value = Math.abs(e.height);
+    });
+
+    return () => {
+      show.remove();
+    };
+  }, []);
+  useKeyboardHandler(
+    {
+      onMove: (e) => {
+        "worklet";
+        keyboardHeightProgress.value = e.height;
+      },
+      onEnd: (e) => {
+        "worklet";
+        keyboardHeightProgress.value = e.height;
+      },
+    },
+    []
+  );
+  return { keyboardHeightProgress, keyboardFinalHeight };
+};
 
 export default function Chat() {
   const insets = useSafeAreaInsets();
+
+  const bottomInset = insets.bottom;
   const { openDrawer } = useDrawerControl();
+  const { keyboardHeightProgress, keyboardFinalHeight } = useGradualKeyboardAnimation();
+
+  const rInputBarAnimatedStyle = useAnimatedStyle(() => {
+    const keyboardHeight = keyboardFinalHeight.get();
+    const threshold = keyboardHeight / 3;
+
+    const translateEnd = -(keyboardHeight - bottomInset + 10);
+    const translateY = interpolate(
+      keyboardHeightProgress.get(),
+      [0, threshold, keyboardHeight],
+      [0, 0, translateEnd],
+      Extrapolation.CLAMP
+    );
+    return { transform: [{ translateY }] };
+  }, [bottomInset]);
 
   return (
     <View className="flex-1 bg-neutral-900">
@@ -92,8 +144,11 @@ export default function Chat() {
         </View>
       </View>
 
-      <KeyboardAvoidingView behavior="padding" className="flex-1">
-        <View style={{ paddingBottom: Math.max(insets.bottom, 10) }} className="px-3 pt-2 mt-auto">
+      <View className="flex-1">
+        <Animated.View
+          style={[{ paddingBottom: bottomInset }, rInputBarAnimatedStyle]}
+          className="px-3 pt-2 mt-auto"
+        >
           <View className="flex-row items-center gap-2">
             <View
               style={{ borderCurve: "continuous" }}
@@ -121,8 +176,8 @@ export default function Chat() {
               <PenLine size={20} color="white" />
             </Pressable>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+        </Animated.View>
+      </View>
     </View>
   );
 }
