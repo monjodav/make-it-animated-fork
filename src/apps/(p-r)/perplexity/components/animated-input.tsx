@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
   withSpring,
   withSequence,
+  Easing,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { KeyboardEvents, useKeyboardHandler } from "react-native-keyboard-controller";
@@ -135,8 +136,8 @@ const AnimatedInput = () => {
         yBounce.set(0);
         yBounce.set(
           withSequence(
-            withTiming(5, { duration: 50 }),
-            withSpring(0, { stiffness: 900, damping: 120 })
+            withTiming(2, { duration: 180, easing: Easing.out(Easing.cubic) }),
+            withSpring(0, { stiffness: 220, damping: 24, mass: 1 })
           )
         );
       }
