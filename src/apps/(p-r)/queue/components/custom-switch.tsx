@@ -46,12 +46,7 @@ export const CustomSwitch: FC<Props> = ({ value = false, onValueChange }) => {
     isOn.set(newValue);
 
     // Spring animation with moderate bounce for natural feel
-    offset.set(
-      withSpring(newValue ? SWITCH_MAX_OFFSET : 0, {
-        damping: 20, // Controls bounce - higher = less bouncy
-        stiffness: 180, // Controls speed - higher = faster animation
-      })
-    );
+    offset.set(withSpring(newValue ? SWITCH_MAX_OFFSET : 0));
     onValueChange?.(newValue);
   };
 

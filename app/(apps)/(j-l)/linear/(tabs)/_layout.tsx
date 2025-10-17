@@ -1,6 +1,7 @@
 import { SearchProvider, useSearch } from "@/src/apps/(j-l)/linear/lib/providers/search-provider";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Foundation from "@expo/vector-icons/Foundation";
-import { router, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { Inbox, Scan, Search, Settings, SquarePen } from "lucide-react-native";
 import { Pressable, View } from "react-native";
 import { SearchOverlay } from "@/src/apps/(j-l)/linear/components/search-overlay";
@@ -51,8 +52,8 @@ const TabsLayout = () => {
           );
         },
         headerRight: () => (
-          <Pressable className="flex-row items-center mr-4" onPress={router.back}>
-            <Settings size={28} color="#777777" />
+          <Pressable className="flex-row items-center right-4" onPress={simulatePress}>
+            <Settings size={20} color="#777777" />
           </Pressable>
         ),
       })}

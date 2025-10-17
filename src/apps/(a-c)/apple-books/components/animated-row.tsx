@@ -49,8 +49,7 @@ export const AnimatedRow: FC<PropsWithChildren<Props>> = ({
               : (containerHeight.value - index * (containerHeight.value / numberOfRows)) / 1.5, // Exit: staggered downward movement
             {
               duration: 1500, // Smooth spring animation for natural feel
-              dampingRatio: 0.8, // Slight bounce without excessive oscillation
-              stiffness: 200, // Balanced responsiveness
+              dampingRatio: 0.75, // Slight bounce without excessive oscillation
             }
           )
         ),

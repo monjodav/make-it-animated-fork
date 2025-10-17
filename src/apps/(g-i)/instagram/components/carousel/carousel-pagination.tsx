@@ -4,7 +4,6 @@ import React from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -13,6 +12,7 @@ import Animated, {
 import { CarouselDot, DOT_CONTAINER_WIDTH } from "./carousel-dot";
 import { useCarousel } from "./carousel-context";
 import { colorKit } from "reanimated-color-picker";
+import { scheduleOnRN } from "react-native-worklets";
 
 // instagram-pagination-dots-animation 🔽
 
@@ -102,17 +102,17 @@ export const CarouselPagination: FC<CarouselPaginationProps> = ({
 
       // Step-based navigation prevents rapid firing, includes haptic feedback
       if (translateX - prevTranslateX.value > translateXStep) {
-        runOnJS(handleImageIndexChange)("increase");
+        scheduleOnRN(handleImageIndexChange, "increase");
         prevTranslateX.value = translateX; // Update threshold for next step
       }
 
       if (translateX - prevTranslateX.value < -translateXStep) {
-        runOnJS(handleImageIndexChange)("decrease");
+        scheduleOnRN(handleImageIndexChange, "decrease");
         prevTranslateX.value = translateX; // Update threshold for next step
       }
     })
     .onFinalize(() => {
-      runOnJS(handleFinalize)(); // Exit interaction mode with haptic feedback
+      scheduleOnRN(handleFinalize); // Exit interaction mode with haptic feedback
     });
 
   // Smooth background transitions with 150ms timing for responsive feel

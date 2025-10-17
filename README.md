@@ -28,7 +28,7 @@ npm run dev
 
 ## System Requirements
 
-- **Expo SDK 53** - For more details, check the [Expo 53 Documentation](https://docs.expo.dev/versions/latest/)
+- **Expo SDK 54** - For more details, check the [Expo 54 Changelog Blog Post ](https://expo.dev/changelog/sdk-54)
 
 ### iOS Development
 
