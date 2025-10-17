@@ -31,7 +31,7 @@ const AnimatedInput = () => {
     Math.min(1, rKeyboardCurrent.get() / rKeyboardHeight.get())
   );
 
-  const rReveal = useDerivedValue(() => {
+  const rKeyboardThresholdedRevealProgress = useDerivedValue(() => {
     const finalKeyboardHeight = rKeyboardHeight.get();
     const threshold = finalKeyboardHeight / 3;
     const currentKeyboardHeight = rKeyboardCurrent.get();
@@ -60,7 +60,7 @@ const AnimatedInput = () => {
   const rInputBarAnimatedStyle = useAnimatedStyle(() => {
     const keyboardHeight = rKeyboardHeight.get();
     const translateEnd = -(keyboardHeight - bottomInset + 10);
-    const translateY = rReveal.get() * translateEnd;
+    const translateY = rKeyboardThresholdedRevealProgress.get() * translateEnd;
     return { transform: [{ translateY }] };
   }, [bottomInset]);
 
@@ -73,10 +73,10 @@ const AnimatedInput = () => {
     const isShowing = keyboardIsShowing.get() === 1;
     const targetX = 220;
 
-    const reveal = rReveal.get();
-    const slide = isShowing ? keyboardProgressRatio : reveal;
+    const revealProgress = rKeyboardThresholdedRevealProgress.get();
+    const slide = isShowing ? keyboardProgressRatio : revealProgress;
 
-    const widthFactor = isShowing ? 1 - keyboardProgressRatio : 1 - reveal;
+    const widthFactor = isShowing ? 1 - keyboardProgressRatio : 1 - revealProgress;
 
     const translateX = slide * targetX;
     const baseWidth = penInitialWidth.get() || 56;
@@ -88,21 +88,22 @@ const AnimatedInput = () => {
   const rInputContainerStyle = useAnimatedStyle(() => {
     const baseHeight = baseRowHeight.get() || 62;
     const extra = (hiddenRowHeight.get() || 0) + INPUT_REVEAL_VERTICAL_SPACING;
-    const height = Math.max(0, baseHeight + rReveal.get() * extra);
+    const height = Math.max(0, baseHeight + rKeyboardThresholdedRevealProgress.get() * extra);
 
     return { height, transform: [{ translateY: yBounce.get() }] };
   }, []);
 
   const rMicFloatingStyle = useAnimatedStyle(() => {
     const translateY =
-      rReveal.get() * ((hiddenRowHeight.get() || 0) + INPUT_REVEAL_VERTICAL_SPACING);
+      rKeyboardThresholdedRevealProgress.get() *
+      ((hiddenRowHeight.get() || 0) + INPUT_REVEAL_VERTICAL_SPACING);
     return {
       transform: [{ translateY }],
     };
   }, []);
 
   useAnimatedReaction(
-    () => rReveal.get(),
+    () => rKeyboardThresholdedRevealProgress.get(),
     (current, prev) => {
       if (prev != null && prev > 0.01 && current <= 0.01) {
         yBounce.set(0);
