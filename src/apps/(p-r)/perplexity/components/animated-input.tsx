@@ -17,6 +17,8 @@ import { KeyboardEvents, useKeyboardHandler } from "react-native-keyboard-contro
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Mic, PenLine, Plus, Search } from "lucide-react-native";
 
+const INPUT_REVEAL_VERTICAL_SPACING = 24;
+
 const useKeyboardAnimationMetrics = () => {
   const keyboardHeightProgress = useSharedValue(0);
   const keyboardFinalHeight = useSharedValue(0);
@@ -120,12 +122,19 @@ const AnimatedInput = () => {
   }, []);
 
   const rInputContainerStyle = useAnimatedStyle(() => {
-    const spacing = 24;
-    const base = baseRowHeight.get() || 62;
-    const extra = (hiddenRowHeight.get() || 0) + spacing;
-    const height = Math.max(0, base + rReveal.get() * extra);
+    const baseHeight = baseRowHeight.get() || 62;
+    const extra = (hiddenRowHeight.get() || 0) + INPUT_REVEAL_VERTICAL_SPACING;
+    const height = Math.max(0, baseHeight + rReveal.get() * extra);
 
     return { height, transform: [{ translateY: yBounce.get() }] };
+  }, []);
+
+  const rMicFloatingStyle = useAnimatedStyle(() => {
+    const translateY =
+      rReveal.get() * ((hiddenRowHeight.get() || 0) + INPUT_REVEAL_VERTICAL_SPACING);
+    return {
+      transform: [{ translateY }],
+    };
   }, []);
 
   useAnimatedReaction(
@@ -142,14 +151,6 @@ const AnimatedInput = () => {
       }
     }
   );
-
-  const rMicFloatingStyle = useAnimatedStyle(() => {
-    const spacing = 24;
-    const translateY = rReveal.get() * ((hiddenRowHeight.get() || 0) + spacing);
-    return {
-      transform: [{ translateY }],
-    };
-  }, []);
 
   return (
     <Animated.View
