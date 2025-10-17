@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { FC } from "react";
 import { View, TextInput, Pressable, StyleSheet } from "react-native";
 import { Search, X } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -8,7 +8,7 @@ interface SearchInputProps {
   onClose: () => void;
 }
 
-export const SearchInput = forwardRef<TextInput, SearchInputProps>(({ onClose }, ref) => {
+export const SearchInput: FC<SearchInputProps> = ({ onClose }) => {
   return (
     <KeyboardStickyView>
       <View className="absolute left-0 right-0 bottom-0 flex-row items-center p-3 gap-2">
@@ -24,13 +24,13 @@ export const SearchInput = forwardRef<TextInput, SearchInputProps>(({ onClose },
         >
           <Search size={22} color="#c3c3c3" strokeWidth={2.5} />
           <TextInput
-            ref={ref}
             placeholder="Quick find"
             placeholderTextColor="#888"
             returnKeyType="search"
             className="flex-1 text-white text-lg/6fdg text-semibold"
             selectionColor="#c3c3c3"
             onSubmitEditing={onClose}
+            autoFocus
           />
         </View>
 
@@ -44,12 +44,10 @@ export const SearchInput = forwardRef<TextInput, SearchInputProps>(({ onClose },
       </View>
     </KeyboardStickyView>
   );
-});
+};
 
 const styles = StyleSheet.create({
   borderCurve: {
     borderCurve: "continuous",
   },
 });
-
-SearchInput.displayName = "LinearSearchInput";

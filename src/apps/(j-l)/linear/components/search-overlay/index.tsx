@@ -17,25 +17,16 @@ export const SearchOverlay = () => {
   const { height } = useWindowDimensions();
   const { closeSearch } = useSearch();
 
-  const {
-    inputRef,
-    blur,
-    scrollY,
-    overscrollExceeded,
-    appearProgress,
-    rChevronContainerStyle,
-    rContainerStyle,
-  } = useSearchAnimations();
+  const { scrollY, overscrollExceeded, appearProgress, rChevronContainerStyle, rContainerStyle } =
+    useSearchAnimations();
 
   const { scrollHandler, morphProgress } = useScrollHandlers(
     scrollY,
     overscrollExceeded,
-    appearProgress,
-    blur
+    appearProgress
   );
 
   const handleClose = () => {
-    inputRef.current?.blur();
     closeSearch();
   };
 
@@ -63,7 +54,7 @@ export const SearchOverlay = () => {
             paddingBottom: height * 0.5,
           }}
         />
-        <SearchInput ref={inputRef} onClose={handleClose} />
+        <SearchInput onClose={handleClose} />
       </Animated.View>
     </View>
   );

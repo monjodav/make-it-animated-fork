@@ -14,8 +14,7 @@ import { scheduleOnRN } from "react-native-worklets";
 export const useScrollHandlers = (
   scrollY: SharedValue<number>,
   overscrollExceeded: SharedValue<boolean>,
-  appearProgress: DerivedValue<number>,
-  blur: () => void
+  appearProgress: DerivedValue<number>
 ) => {
   const { closeSearch } = useSearch();
 
@@ -47,7 +46,6 @@ export const useScrollHandlers = (
       isListDragging.set(false);
       if (overscrollExceeded.get()) {
         overscrollExceeded.set(false);
-        scheduleOnRN(blur);
         scheduleOnRN(closeSearch);
       }
     },

@@ -1,11 +1,5 @@
-import { useRef } from "react";
-import { TextInput, useWindowDimensions } from "react-native";
-import {
-  useAnimatedStyle,
-  useDerivedValue,
-  runOnJS,
-  useSharedValue,
-} from "react-native-reanimated";
+import { useWindowDimensions } from "react-native";
+import { useAnimatedStyle, useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import { useSearch } from "../../lib/providers/search-provider";
 import { SECTION_HEADER_HEIGHT, SECTION_HEADER_MARGIN_TOP, ITEM_HEIGHT } from "./constants";
@@ -15,8 +9,6 @@ export const useSearchAnimations = () => {
   const translateYDistance = height * 0.07;
   const { transitionProgress } = useSearch();
 
-  const inputRef = useRef<TextInput>(null);
-
   const { height: kbHeight, progress: kbProgress } = useReanimatedKeyboardAnimation();
   const kbTargetHeight = useSharedValue(0);
   const prevKbH = useSharedValue(0);
@@ -24,10 +16,6 @@ export const useSearchAnimations = () => {
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
   const overscrollExceeded = useSharedValue(false);
-
-  const focus = () => inputRef.current?.focus();
-  const blur = () => inputRef.current?.blur();
-  const clearInput = () => inputRef.current?.clear();
 
   useDerivedValue(() => {
     const rawKbProgress = kbProgress.get();
@@ -38,10 +26,6 @@ export const useSearchAnimations = () => {
       kbTargetHeight.set(rawKbHeight);
     }
 
-    const wasVisible = wasKeyboardVisible.get();
-    if (wasVisible && rawKbHeight === 0) {
-      runOnJS(clearInput)();
-    }
     wasKeyboardVisible.set(rawKbHeight > 0);
     prevKbH.set(rawKbHeight);
   });
@@ -52,12 +36,7 @@ export const useSearchAnimations = () => {
   });
 
   useDerivedValue(() => {
-    const prev = prevProgress.get();
     const curr = transitionProgress.get();
-
-    if (prev < 0.5 && curr >= 0.5) runOnJS(focus)();
-
-    if (prev > 0.05 && curr <= 0.05) runOnJS(blur)();
 
     if (curr === 0 && overscrollExceeded.get()) {
       overscrollExceeded.set(false);
@@ -91,8 +70,6 @@ export const useSearchAnimations = () => {
   });
 
   return {
-    inputRef,
-    blur,
     scrollY,
     overscrollExceeded,
     appearProgress,
