@@ -1,9 +1,9 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, use } from "react";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { useSearch } from "../lib/providers/search-provider";
+import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 
 export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
-  const { transitionProgress } = useSearch();
+  const { transitionProgress } = use(SearchTransitionContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
     const translateY = interpolate(transitionProgress.get(), [0, 1], [0, 20]);

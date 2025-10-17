@@ -7,16 +7,17 @@ import {
 } from "react-native-reanimated";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
-import { useSearch } from "../../lib/providers/search-provider";
 import { TRIGGER_THRESHOLD, MORPH_DISTANCE } from "./constants";
 import { scheduleOnRN } from "react-native-worklets";
+import { use } from "react";
+import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 
 export const useScrollHandlers = (
   scrollY: SharedValue<number>,
   overscrollExceeded: SharedValue<boolean>,
   appearProgress: DerivedValue<number>
 ) => {
-  const { closeSearch } = useSearch();
+  const { onCloseSearchModal } = use(SearchTransitionContext);
 
   const { onScroll: scrollDirectionOnScroll, scrollDirection } =
     useScrollDirection("include-negative");
@@ -46,7 +47,7 @@ export const useScrollHandlers = (
       isListDragging.set(false);
       if (overscrollExceeded.get()) {
         overscrollExceeded.set(false);
-        scheduleOnRN(closeSearch);
+        scheduleOnRN(onCloseSearchModal);
       }
     },
   });

@@ -1,14 +1,13 @@
-import { FC } from "react";
 import { View, TextInput, Pressable, StyleSheet } from "react-native";
 import { Search, X } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
+import { use } from "react";
+import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 
-interface SearchInputProps {
-  onClose: () => void;
-}
+export const SearchInput = () => {
+  const { onCloseSearchModal } = use(SearchTransitionContext);
 
-export const SearchInput: FC<SearchInputProps> = ({ onClose }) => {
   return (
     <KeyboardStickyView>
       <View className="absolute left-0 right-0 bottom-0 flex-row items-center p-3 gap-2">
@@ -29,7 +28,7 @@ export const SearchInput: FC<SearchInputProps> = ({ onClose }) => {
             returnKeyType="search"
             className="flex-1 text-white text-lg/6fdg text-semibold"
             selectionColor="#c3c3c3"
-            onSubmitEditing={onClose}
+            onSubmitEditing={onCloseSearchModal}
             autoFocus
           />
         </View>
@@ -37,7 +36,7 @@ export const SearchInput: FC<SearchInputProps> = ({ onClose }) => {
         <Pressable
           className="bg-[#282828] h-[48px] aspect-square rounded-2xl items-center justify-center"
           style={styles.borderCurve}
-          onPress={onClose}
+          onPress={onCloseSearchModal}
         >
           <X size={24} color="#c3c3c3" strokeWidth={2.5} />
         </Pressable>

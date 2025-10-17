@@ -1,11 +1,11 @@
-import { SearchProvider, useSearch } from "@/src/apps/(j-l)/linear/lib/providers/search-provider";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Foundation from "@expo/vector-icons/Foundation";
 import { Tabs } from "expo-router";
 import { Inbox, Scan, Search, Settings, SquarePen } from "lucide-react-native";
 import { Pressable, View } from "react-native";
-import { SearchOverlay } from "@/src/apps/(j-l)/linear/components/search-overlay";
 import { AnimatedTabsContainer } from "@/src/apps/(j-l)/linear/components/animated-tabs-container";
+import { use } from "react";
+import { SearchTransitionContext } from "../_layout";
 
 enum Tab {
   Home = "home",
@@ -16,7 +16,8 @@ enum Tab {
 }
 
 const TabsLayout = () => {
-  const { toggleSearch } = useSearch();
+  const { onOpenSearchModal } = use(SearchTransitionContext);
+
   return (
     <Tabs
       screenOptions={({ route }) => ({
@@ -32,14 +33,7 @@ const TabsLayout = () => {
         tabBarButton: (props) => {
           if (route.name === Tab.Search) {
             return (
-              <Pressable
-                accessibilityRole="button"
-                style={props.style}
-                onPress={(e) => {
-                  e.preventDefault?.();
-                  toggleSearch();
-                }}
-              >
+              <Pressable accessibilityRole="button" style={props.style} onPress={onOpenSearchModal}>
                 {props.children}
               </Pressable>
             );
@@ -93,13 +87,10 @@ const TabsLayout = () => {
 
 export default function LinearLayout() {
   return (
-    <SearchProvider>
-      <View className="flex-1 bg-linear-back">
-        <AnimatedTabsContainer>
-          <TabsLayout />
-        </AnimatedTabsContainer>
-        <SearchOverlay />
-      </View>
-    </SearchProvider>
+    <View className="flex-1 bg-linear-back">
+      <AnimatedTabsContainer>
+        <TabsLayout />
+      </AnimatedTabsContainer>
+    </View>
   );
 }

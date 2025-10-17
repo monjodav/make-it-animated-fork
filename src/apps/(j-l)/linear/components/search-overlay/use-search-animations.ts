@@ -1,13 +1,11 @@
-import { useWindowDimensions } from "react-native";
 import { useAnimatedStyle, useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
-import { useSearch } from "../../lib/providers/search-provider";
 import { SECTION_HEADER_HEIGHT, SECTION_HEADER_MARGIN_TOP, ITEM_HEIGHT } from "./constants";
+import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
+import { use } from "react";
 
 export const useSearchAnimations = () => {
-  const { height } = useWindowDimensions();
-  const translateYDistance = height * 0.07;
-  const { transitionProgress } = useSearch();
+  const { transitionProgress } = use(SearchTransitionContext);
 
   const { height: kbHeight, progress: kbProgress } = useReanimatedKeyboardAnimation();
   const kbTargetHeight = useSharedValue(0);
@@ -55,25 +53,10 @@ export const useSearchAnimations = () => {
     return { transform: [{ translateY }] };
   });
 
-  const rContainerStyle = useAnimatedStyle(() => {
-    const rawSearchProgress = transitionProgress.get();
-    const easedValue = 1 - (1 - rawSearchProgress) * (1 - rawSearchProgress);
-    const translateY = translateYDistance * (1 - easedValue);
-    const scale = 0.96 + 0.04 * easedValue;
-    const opacity = easedValue;
-
-    return {
-      transform: [{ translateY }, { scale }],
-      opacity,
-      pointerEvents: rawSearchProgress === 1 ? "auto" : "none",
-    };
-  });
-
   return {
     scrollY,
     overscrollExceeded,
     appearProgress,
     rChevronContainerStyle,
-    rContainerStyle,
   };
 };

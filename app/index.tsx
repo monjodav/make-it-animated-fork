@@ -32,7 +32,7 @@ export default function Index() {
   }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
 
   // VS --------
-  return <Redirect href="/linear/home" />
+  return <Redirect href="/linear/(tabs)/home" />
 
   return (
     <IndexAnimationProvider>
