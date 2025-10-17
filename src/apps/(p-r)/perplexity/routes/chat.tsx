@@ -30,7 +30,7 @@ export default function Chat() {
             <ArrowLeft size={18} color="white" />
           </Pressable>
 
-          <View className="flex-row items-center">
+          <View className="flex-row items-center gap-3">
             <Pressable
               style={{ borderCurve: "continuous" }}
               onPress={simulatePress}

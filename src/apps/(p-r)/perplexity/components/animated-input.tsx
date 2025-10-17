@@ -103,14 +103,14 @@ const AnimatedInput = () => {
   const hiddenRowHeight = useSharedValue(0);
 
   const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
-    const s = rKeyboardRatio.get();
+    const keyboardProgressRatio = rKeyboardRatio.get();
     const isShowing = keyboardIsShowing.get() === 1;
     const targetX = 220;
 
     const reveal = rReveal.get();
-    const slide = isShowing ? s : reveal;
+    const slide = isShowing ? keyboardProgressRatio : reveal;
 
-    const widthFactor = isShowing ? 1 - s : 1 - reveal;
+    const widthFactor = isShowing ? 1 - keyboardProgressRatio : 1 - reveal;
 
     const translateX = slide * targetX;
     const baseWidth = penInitialWidth.get() || 56;
