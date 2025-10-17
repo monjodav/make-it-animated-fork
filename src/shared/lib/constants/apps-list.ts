@@ -1,5 +1,5 @@
 import { Href } from "expo-router";
-import { adidas, alma, appleBooks, appleInvites } from "./apps/a";
+import { adidas, airbnb, alma, appleBooks, appleInvites } from "./apps/a";
 import { canva, colorsApp, chatgpt } from "./apps/c";
 import { instagram } from "./apps/i";
 import { linear, linkedin, luma } from "./apps/l";
@@ -31,6 +31,7 @@ export type App = {
 export const apps: App[] = [
   // A
   adidas,
+  airbnb,
   alma,
   appleBooks,
   appleInvites,
