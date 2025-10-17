@@ -31,7 +31,6 @@ export type App = {
 export const apps: App[] = [
   // A
   adidas,
-  airbnb,
   alma,
   appleBooks,
   appleInvites,
