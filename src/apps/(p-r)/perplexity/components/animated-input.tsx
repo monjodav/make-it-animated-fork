@@ -120,11 +120,10 @@ const AnimatedInput = () => {
   }, []);
 
   const rInputContainerStyle = useAnimatedStyle(() => {
-    const reveal = rReveal.get();
     const spacing = 24;
     const base = baseRowHeight.get() || 62;
     const extra = (hiddenRowHeight.get() || 0) + spacing;
-    const height = Math.max(0, base + reveal * extra);
+    const height = Math.max(0, base + rReveal.get() * extra);
 
     return { height, transform: [{ translateY: yBounce.get() }] };
   }, []);
@@ -145,9 +144,8 @@ const AnimatedInput = () => {
   );
 
   const rMicFloatingStyle = useAnimatedStyle(() => {
-    const reveal = rReveal.get();
     const spacing = 24;
-    const translateY = reveal * ((hiddenRowHeight.get() || 0) + spacing);
+    const translateY = rReveal.get() * ((hiddenRowHeight.get() || 0) + spacing);
     return {
       transform: [{ translateY }],
     };
