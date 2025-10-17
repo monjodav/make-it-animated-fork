@@ -1,5 +1,4 @@
 import { Pressable, TextInput, View } from "react-native";
-import React, { useEffect } from "react";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -13,46 +12,11 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { KeyboardEvents, useKeyboardHandler } from "react-native-keyboard-controller";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Mic, PenLine, Plus, Search } from "lucide-react-native";
+import { useKeyboardAnimationMetrics } from "../lib/hooks/use-keyboard-animation-metrics";
 
 const INPUT_REVEAL_VERTICAL_SPACING = 24;
-
-const useKeyboardAnimationMetrics = () => {
-  const keyboardHeightProgress = useSharedValue(0);
-  const keyboardFinalHeight = useSharedValue(0);
-  const keyboardIsShowing = useSharedValue(0);
-
-  useEffect(() => {
-    const show = KeyboardEvents.addListener("keyboardWillShow", (e) => {
-      keyboardFinalHeight.set(Math.abs(e.height));
-      keyboardIsShowing.set(1);
-    });
-    const hide = KeyboardEvents.addListener("keyboardWillHide", () => {
-      keyboardIsShowing.set(0);
-    });
-
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, []);
-  useKeyboardHandler(
-    {
-      onMove: (e) => {
-        "worklet";
-        keyboardHeightProgress.set(e.height);
-      },
-      onEnd: (e) => {
-        "worklet";
-        keyboardHeightProgress.set(e.height);
-      },
-    },
-    []
-  );
-  return { keyboardHeightProgress, keyboardFinalHeight, keyboardIsShowing };
-};
 
 const AnimatedInput = () => {
   const insets = useSafeAreaInsets();
