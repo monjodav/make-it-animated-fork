@@ -21,7 +21,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import {
+  KeyboardStickyView,
+  useReanimatedKeyboardAnimation,
+} from "react-native-keyboard-controller";
 
 const createMockData = (length: number): number[] => Array.from({ length });
 const _sections = [
@@ -44,9 +47,12 @@ const _renderSectionHeader = () => (
 );
 
 const _renderListItem = () => (
-  <View className="flex-row px-5 py-3 items-center gap-4">
-    <View className="h-8 w-8 rounded-full bg-linear-front" />
-    <View className="h-4 w-[150] mt-2 rounded-full bg-linear-front" />
+  <View className="flex-row px-5 py-2 items-center gap-4">
+    <View className="size-6 rounded-full bg-linear-front" />
+    <View
+      className="h-3 rounded-full bg-linear-front"
+      style={{ width: `${Math.random() * 35 + 60}%` }}
+    />
   </View>
 );
 
@@ -64,8 +70,6 @@ const CHEVRON_ANGLE_RAD = (CHEVRON_ANGLE_DEG * Math.PI) / 180;
 const CHEVRON_RISE = Math.tan(CHEVRON_ANGLE_RAD) * BAR_WIDTH;
 
 const TRIGGER_THRESHOLD = 100;
-
-const INPUT_BAR_ABOVE_KEYBOARD = 5;
 
 export const SearchOverlay = () => {
   const insets = useSafeAreaInsets();
@@ -91,7 +95,6 @@ export const SearchOverlay = () => {
   const { height: kbHeight, progress: kbProgress } = useReanimatedKeyboardAnimation();
   const kbTargetHeight = useSharedValue(0);
   const prevKbH = useSharedValue(0);
-  const inputBarH = useSharedValue(56);
   const wasKeyboardVisible = useSharedValue(false);
   const prevProgress = useSharedValue(0);
   const scrollY = useSharedValue(0);
@@ -232,42 +235,6 @@ export const SearchOverlay = () => {
     };
   });
 
-  const rInputBarStyle = useAnimatedStyle(() => {
-    const keyboardVisibleHeight = Math.max(-kbHeight.get(), 0);
-    const underOffset = inputBarH.get() + 12;
-    let translateY = underOffset;
-
-    if (keyboardVisibleHeight > 0) {
-      const isHiding = keyboardVisibleHeight < prevKbH.get() - 0.5;
-      if (isHiding) {
-        if (keyboardVisibleHeight > 50) {
-          translateY = -keyboardVisibleHeight - INPUT_BAR_ABOVE_KEYBOARD;
-        } else {
-          const tHide = 1 - keyboardVisibleHeight / 50;
-          const start = -keyboardVisibleHeight - INPUT_BAR_ABOVE_KEYBOARD;
-          const end = underOffset;
-          translateY = start * (1 - tHide) + end * tHide;
-        }
-      } else {
-        const target = Math.max(kbTargetHeight.get(), keyboardVisibleHeight);
-        const remaining = Math.max(target - keyboardVisibleHeight, 0);
-        if (remaining > 50) {
-          translateY = underOffset;
-        } else {
-          const tShow = 1 - remaining / 50;
-          const behindPos = Math.min(-keyboardVisibleHeight + INPUT_BAR_ABOVE_KEYBOARD, 0);
-          const finalPos = -keyboardVisibleHeight - INPUT_BAR_ABOVE_KEYBOARD;
-          translateY = behindPos + (finalPos - behindPos) * tShow;
-        }
-      }
-    }
-    return {
-      transform: [{ translateY }],
-      opacity: 1,
-      pointerEvents: "auto",
-    };
-  });
-
   return (
     <View style={[{ marginTop: insets.top }, StyleSheet.absoluteFill]}>
       <Animated.View style={rContainerStyle}>
@@ -304,41 +271,53 @@ export const SearchOverlay = () => {
           keyboardShouldPersistTaps="always"
           keyboardDismissMode="none"
           stickySectionHeadersEnabled={false}
-        />
-      </Animated.View>
-
-      <Animated.View
-        className="absolute left-0 right-0 bottom-0 z-10 flex-row items-center p-2 pb-5 gap-2"
-        style={[rInputBarStyle]}
-      >
-        <LinearGradient
-          colors={["transparent", "#0A090C"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 0.2 }}
-          style={StyleSheet.absoluteFill}
-        />
-        <View className="flex-row flex-1 items-center bg-[#282828] p-3 rounded-xl gap-2">
-          <Search size={20} color="#c3c3c3" />
-          <TextInput
-            ref={inputRef}
-            placeholder="Quick find"
-            placeholderTextColor="#888"
-            returnKeyType="search"
-            className="flex-1 text-white"
-            onSubmitEditing={closeSearch}
-          />
-        </View>
-
-        <Pressable
-          className="bg-[#282828] p-3 rounded-xl"
-          onPress={() => {
-            inputRef.current?.blur();
-            closeSearch();
+          contentContainerStyle={{
+            paddingBottom: height * 0.5,
           }}
-        >
-          <X size={20} color="#c3c3c3" />
-        </Pressable>
+        />
+        <KeyboardStickyView>
+          <View className="absolute left-0 right-0 bottom-0 flex-row items-center p-3 gap-2">
+            <LinearGradient
+              colors={["transparent", "#0A090C"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 0.2 }}
+              style={StyleSheet.absoluteFill}
+            />
+            <View
+              className="flex-row flex-1 items-center bg-[#282828] px-3 h-[48px] rounded-2xl gap-2"
+              style={styles.borderCurve}
+            >
+              <Search size={22} color="#c3c3c3" strokeWidth={2.5} />
+              <TextInput
+                ref={inputRef}
+                placeholder="Quick find"
+                placeholderTextColor="#888"
+                returnKeyType="search"
+                className="flex-1 text-white text-lg/6fdg text-semibold"
+                selectionColor="#c3c3c3"
+                onSubmitEditing={closeSearch}
+              />
+            </View>
+
+            <Pressable
+              className="bg-[#282828] h-[48px] aspect-square rounded-2xl items-center justify-center"
+              style={styles.borderCurve}
+              onPress={() => {
+                inputRef.current?.blur();
+                closeSearch();
+              }}
+            >
+              <X size={24} color="#c3c3c3" strokeWidth={2.5} />
+            </Pressable>
+          </View>
+        </KeyboardStickyView>
       </Animated.View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  borderCurve: {
+    borderCurve: "continuous",
+  },
+});
