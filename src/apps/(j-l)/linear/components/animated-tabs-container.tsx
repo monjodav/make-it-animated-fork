@@ -3,11 +3,11 @@ import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated
 import { useSearch } from "../lib/providers/search-provider";
 
 export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
-  const { searchProgress } = useSearch();
+  const { transitionProgress } = useSearch();
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(searchProgress.get(), [0, 1], [0, 20]);
-    const opacity = interpolate(searchProgress.get(), [0, 0.5, 1], [1, 0, 0]);
+    const translateY = interpolate(transitionProgress.get(), [0, 1], [0, 20]);
+    const opacity = interpolate(transitionProgress.get(), [0, 0.5, 1], [1, 0, 0]);
     return {
       transform: [
         {

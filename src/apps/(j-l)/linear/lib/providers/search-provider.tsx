@@ -1,9 +1,8 @@
 import { createContext, FC, PropsWithChildren, useContext } from "react";
-import { SharedValue, useSharedValue, withTiming } from "react-native-reanimated";
-import { TIMING_CONFIG } from "../constants/timing-config";
+import { SharedValue, useSharedValue, withSpring } from "react-native-reanimated";
 
 type ContextValue = {
-  searchProgress: SharedValue<number>;
+  transitionProgress: SharedValue<number>;
   openSearch: () => void;
   closeSearch: () => void;
   toggleSearch: () => void;
@@ -12,20 +11,20 @@ type ContextValue = {
 const SearchContext = createContext<ContextValue>({} as ContextValue);
 
 export const SearchProvider: FC<PropsWithChildren> = ({ children }) => {
-  const searchProgress = useSharedValue(0);
+  const transitionProgress = useSharedValue(0);
 
   const openSearch = () => {
-    searchProgress.set(withTiming(1, TIMING_CONFIG));
+    transitionProgress.set(withSpring(1));
   };
   const closeSearch = () => {
-    searchProgress.set(withTiming(0, TIMING_CONFIG));
+    transitionProgress.set(withSpring(0));
   };
   const toggleSearch = () => {
-    if (searchProgress.get() > 0) closeSearch();
+    if (transitionProgress.get() > 0) closeSearch();
     else openSearch();
   };
 
-  const value = { searchProgress, openSearch, closeSearch, toggleSearch };
+  const value = { transitionProgress, openSearch, closeSearch, toggleSearch };
 
   return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
 };

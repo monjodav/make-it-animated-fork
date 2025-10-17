@@ -16,11 +16,10 @@ enum Tab {
 }
 
 const TabsLayout = () => {
-  const { searchProgress, toggleSearch } = useSearch();
+  const { toggleSearch } = useSearch();
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        headerShown: searchProgress.value === 0,
         headerTitle: "",
         headerStyle: { backgroundColor: "#0A090C" },
         tabBarShowLabel: false,
