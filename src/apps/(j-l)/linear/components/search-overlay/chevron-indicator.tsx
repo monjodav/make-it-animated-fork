@@ -1,5 +1,6 @@
 import Animated, {
   interpolate,
+  interpolateColor,
   SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
@@ -28,6 +29,7 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
   });
 
   const animatedPathProps = useAnimatedProps(() => {
+    const progress = Math.min(Math.abs(scrollY.get() / TRIGGER_THRESHOLD), 1);
     const { midDrop, strokeW } = rChevronMetrics.get();
     const vOffset = strokeW / 2;
     const hInset = strokeW / 2;
@@ -35,15 +37,23 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
     const right = 2 * CHEVRON_WIDTH - hInset;
     const midX = CHEVRON_WIDTH;
     const midY = (midDrop + vOffset).toFixed(3);
+
+    const stroke = interpolateColor(progress, [0, 1], ["#525252", "#737373"]);
+
     return {
       d: `M${left} ${vOffset} L ${midX} ${midY} L ${right} ${vOffset}`,
       strokeWidth: strokeW,
+      stroke,
     };
   });
 
   const rChevronContainerStyle = useAnimatedStyle(() => {
-    const progress = Math.abs(scrollY.get());
-    return { height: interpolate(progress, [0, TRIGGER_THRESHOLD], [1, TRIGGER_THRESHOLD]) };
+    const progress = scrollY.get();
+    return {
+      height: interpolate(progress, [0, -TRIGGER_THRESHOLD], [1, TRIGGER_THRESHOLD], {
+        extrapolateLeft: "clamp",
+      }),
+    };
   });
 
   return (
@@ -60,7 +70,6 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
         >
           <AnimatedPath
             animatedProps={animatedPathProps}
-            stroke="#484848"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
