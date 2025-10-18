@@ -21,7 +21,8 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
   const insets = useSafeAreaInsets();
 
   const rChevronMetrics = useDerivedValue(() => {
-    const progress = Math.abs(scrollY.get() / TRIGGER_THRESHOLD);
+    const rawScrollY = scrollY.get();
+    const progress = rawScrollY < 0 ? Math.abs(rawScrollY / TRIGGER_THRESHOLD) : 0;
     const progressAdj = Math.pow(progress, 0.85);
     const midDrop = CHEVRON_RISE * progressAdj;
     const strokeW = LINE_THICKNESS;
@@ -29,7 +30,6 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
   });
 
   const animatedPathProps = useAnimatedProps(() => {
-    const progress = Math.min(Math.abs(scrollY.get() / TRIGGER_THRESHOLD), 1);
     const { midDrop, strokeW } = rChevronMetrics.get();
     const vOffset = strokeW / 2;
     const hInset = strokeW / 2;
@@ -38,7 +38,9 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
     const midX = CHEVRON_WIDTH;
     const midY = (midDrop + vOffset).toFixed(3);
 
-    const stroke = interpolateColor(progress, [0, 1], ["#525252", "#737373"]);
+    const rawScrollY = scrollY.get();
+    const progress = rawScrollY < 0 ? Math.min(Math.abs(rawScrollY / TRIGGER_THRESHOLD), 1) : 0;
+    const stroke = interpolateColor(progress, [0, 1], ["#484848", "#c3c3c3"]);
 
     return {
       d: `M${left} ${vOffset} L ${midX} ${midY} L ${right} ${vOffset}`,
