@@ -27,9 +27,7 @@ export default function LinearLayout() {
 
   const onCloseSearchModal = () => {
     transitionProgress.set(withSpring(0));
-    setTimeout(() => {
-      router.back();
-    }, 0);
+    router.back();
     setTimeout(() => {
       KeyboardController.dismiss();
     }, 100);

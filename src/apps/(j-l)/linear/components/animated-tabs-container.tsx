@@ -6,15 +6,17 @@ export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
   const { transitionProgress } = use(SearchTransitionContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(transitionProgress.get(), [0, 1], [0, 20]);
-    const opacity = interpolate(transitionProgress.get(), [0, 0.5, 1], [1, 0, 0]);
+    const translateY = interpolate(transitionProgress.get(), [0, 1], [0, 100]);
+    const scale = interpolate(transitionProgress.get(), [0, 1], [1, 0.85]);
     return {
       transform: [
         {
           translateY,
         },
+        {
+          scale,
+        },
       ],
-      opacity,
     };
   });
 

@@ -34,6 +34,7 @@ export default function Index() {
   // VS --------
   return <Redirect href="/linear/(tabs)/home" />
 
+
   return (
     <IndexAnimationProvider>
       <View className="flex-1 items-center justify-center">
