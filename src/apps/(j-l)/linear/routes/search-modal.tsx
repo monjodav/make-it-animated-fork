@@ -27,6 +27,7 @@ export const SearchModal = () => {
 
   const scrollY = useSharedValue(0);
   const isListDragging = useSharedValue(false);
+  const isTriggerThresholdReached = useSharedValue(false);
 
   const { onScroll: scrollDirectionOnScroll, scrollDirection } =
     useScrollDirection("include-negative");
@@ -40,6 +41,7 @@ export const SearchModal = () => {
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
       isListDragging.set(true);
+      isTriggerThresholdReached.set(false);
     },
     onScroll: (event) => {
       const offsetY = event.contentOffset.y;
@@ -51,14 +53,15 @@ export const SearchModal = () => {
     onEndDrag: () => {
       isListDragging.set(false);
       if (scrollY.get() <= -TRIGGER_THRESHOLD) {
+        isTriggerThresholdReached.set(true);
         scheduleOnRN(onCloseSearchModal);
       }
     },
   });
 
   return (
-    <View className="bg-linear-back" style={{ paddingTop: insets.top }}>
-      <ChevronIndicator scrollY={scrollY} />
+    <View className="flex-1 bg-linear-back" style={{ paddingTop: insets.top }}>
+      <ChevronIndicator scrollY={scrollY} isTriggerThresholdReached={isTriggerThresholdReached} />
       <AnimatedSectionList
         sections={sections}
         keyExtractor={(item, index) => `${item}-${index}`}
@@ -71,7 +74,7 @@ export const SearchModal = () => {
         keyboardDismissMode="none"
         stickySectionHeadersEnabled={false}
         contentContainerStyle={{
-          paddingTop: 42,
+          paddingTop: 36,
           paddingBottom: height * 0.5,
         }}
       />

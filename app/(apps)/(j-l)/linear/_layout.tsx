@@ -1,5 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import { createContext } from "react";
+import { KeyboardController } from "react-native-keyboard-controller";
 import { SharedValue, useSharedValue, withSpring } from "react-native-reanimated";
 
 interface SearchTransitionContextValue {
@@ -28,7 +29,10 @@ export default function LinearLayout() {
     transitionProgress.set(withSpring(0));
     setTimeout(() => {
       router.back();
-    }, 300);
+    }, 0);
+    setTimeout(() => {
+      KeyboardController.dismiss();
+    }, 100);
   };
 
   return (

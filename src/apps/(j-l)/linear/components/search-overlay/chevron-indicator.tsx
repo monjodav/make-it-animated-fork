@@ -3,8 +3,10 @@ import Animated, {
   interpolateColor,
   SharedValue,
   useAnimatedProps,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
+  useSharedValue,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { CHEVRON_WIDTH, CHEVRON_RISE, LINE_THICKNESS, TRIGGER_THRESHOLD } from "./constants";
@@ -13,16 +15,28 @@ import { View } from "react-native";
 
 interface ChevronIndicatorProps {
   scrollY: SharedValue<number>;
+  isTriggerThresholdReached: SharedValue<boolean>;
 }
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
-export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
+export const ChevronIndicator = ({ scrollY, isTriggerThresholdReached }: ChevronIndicatorProps) => {
   const insets = useSafeAreaInsets();
+  const lockedScrollY = useSharedValue(0);
+
+  useAnimatedReaction(
+    () => isTriggerThresholdReached.get(),
+    (reached) => {
+      if (reached) {
+        lockedScrollY.set(scrollY.get());
+      }
+    }
+  );
 
   const rChevronMetrics = useDerivedValue(() => {
-    const rawScrollY = scrollY.get();
-    const progress = rawScrollY < 0 ? Math.abs(rawScrollY / TRIGGER_THRESHOLD) : 0;
+    const thresholdReached = isTriggerThresholdReached.get();
+    const yValue = thresholdReached ? lockedScrollY.get() : scrollY.get();
+    const progress = yValue < 0 ? Math.abs(yValue / TRIGGER_THRESHOLD) : 0;
     const progressAdj = Math.pow(progress, 0.85);
     const midDrop = CHEVRON_RISE * progressAdj;
     const strokeW = LINE_THICKNESS;
@@ -38,8 +52,9 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
     const midX = CHEVRON_WIDTH;
     const midY = (midDrop + vOffset).toFixed(3);
 
-    const rawScrollY = scrollY.get();
-    const progress = rawScrollY < 0 ? Math.min(Math.abs(rawScrollY / TRIGGER_THRESHOLD), 1) : 0;
+    const thresholdReached = isTriggerThresholdReached.get();
+    const yValue = thresholdReached ? lockedScrollY.get() : scrollY.get();
+    const progress = yValue < 0 ? Math.min(Math.abs(yValue / TRIGGER_THRESHOLD), 1) : 0;
     const stroke = interpolateColor(progress, [0, 1], ["#484848", "#c3c3c3"]);
 
     return {
@@ -50,18 +65,22 @@ export const ChevronIndicator = ({ scrollY }: ChevronIndicatorProps) => {
   });
 
   const rChevronContainerStyle = useAnimatedStyle(() => {
-    const progress = scrollY.get();
+    const thresholdReached = isTriggerThresholdReached.get();
+    const yValue = thresholdReached ? lockedScrollY.get() : scrollY.get();
+
     return {
-      height: interpolate(progress, [0, -TRIGGER_THRESHOLD], [1, TRIGGER_THRESHOLD], {
+      height: interpolate(yValue, [0, -TRIGGER_THRESHOLD], [0, TRIGGER_THRESHOLD], {
         extrapolateLeft: "clamp",
       }),
+      position: thresholdReached ? "relative" : "absolute",
+      top: thresholdReached ? 0 : insets.top + 12,
     };
   });
 
   return (
     <Animated.View
-      style={[rChevronContainerStyle, { top: insets.top + 12 }]}
-      className="absolute left-0 right-0 self-center items-center justify-center"
+      style={rChevronContainerStyle}
+      className="absolute left-0 right-0 w-full self-center items-center justify-center"
     >
       <View style={{ transform: [{ translateY: CHEVRON_RISE }] }}>
         <Svg
