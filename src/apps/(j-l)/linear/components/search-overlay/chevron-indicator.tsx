@@ -7,6 +7,8 @@ import Animated, {
 import Svg, { Path } from "react-native-svg";
 import { View } from "react-native";
 import { usePullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
+import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
+import { use } from "react";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
@@ -19,6 +21,7 @@ export const CHEVRON_ANGLE_RAD = (CHEVRON_ANGLE_DEG * Math.PI) / 180;
 export const CHEVRON_RISE = Math.tan(CHEVRON_ANGLE_RAD) * CHEVRON_WIDTH;
 
 export const ChevronIndicator = () => {
+  const { transitionProgress } = use(SearchTransitionContext);
   const { refreshProgress } = usePullToRefresh();
 
   const rChevronMetrics = useDerivedValue(() => {

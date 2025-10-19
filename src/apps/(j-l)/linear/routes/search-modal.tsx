@@ -1,5 +1,6 @@
 import { SectionList, View, useWindowDimensions } from "react-native";
 import Animated, {
+  Extrapolation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -53,43 +54,49 @@ export const SearchModal = () => {
 
   const rListContainerStyle = useAnimatedStyle(() => {
     return {
+      opacity: interpolate(transitionProgress.get(), [1, 1.5], [1, 0], Extrapolation.CLAMP),
       transform: [
-        { translateY: interpolate(transitionProgress.get(), [0, 1], [-50, 0]) },
-        { scale: interpolate(transitionProgress.get(), [0, 1], [0.9, 1]) },
+        {
+          translateY: interpolate(transitionProgress.get(), [1, 1.5], [0, 20], Extrapolation.CLAMP),
+        },
+        {
+          scale: interpolate(transitionProgress.get(), [1, 1.5], [1, 0.9], Extrapolation.CLAMP),
+        },
       ],
     };
   });
 
   return (
-    <View className="flex-1 bg-linear-back" style={{ paddingTop: insets.top }}>
-      <Animated.View className="flex-1" style={rListContainerStyle}>
-        <WithPullToRefresh
-          refreshThreshold={TRIGGER_THRESHOLD}
-          refreshing={false}
-          onRefresh={onCloseSearchModal}
-          refreshComponent={<ChevronIndicator />}
-          lockRefreshViewOnRelease
-        >
-          <AnimatedSectionList
-            sections={sections}
-            keyExtractor={(item, index) => `${item}-${index}`}
-            renderItem={renderListItem}
-            ListHeaderComponent={() => <View className="h-8" />}
-            renderSectionHeader={renderSectionHeader}
-            SectionSeparatorComponent={() => <View className="h-6" />}
-            onScroll={scrollHandler}
-            scrollEventThrottle={16}
-            keyboardShouldPersistTaps="always"
-            keyboardDismissMode="none"
-            stickySectionHeadersEnabled={false}
-            contentContainerStyle={{
-              paddingTop: 36,
-              paddingBottom: height * 0.5,
-            }}
-          />
-        </WithPullToRefresh>
-        <SearchInput />
-      </Animated.View>
-    </View>
+    <Animated.View
+      className="flex-1 bg-linear-back"
+      style={[{ paddingTop: insets.top }, rListContainerStyle]}
+    >
+      <WithPullToRefresh
+        refreshThreshold={TRIGGER_THRESHOLD}
+        refreshing={false}
+        onRefresh={onCloseSearchModal}
+        refreshComponent={<ChevronIndicator />}
+        lockRefreshViewOnRelease
+      >
+        <AnimatedSectionList
+          sections={sections}
+          keyExtractor={(item, index) => `${item}-${index}`}
+          renderItem={renderListItem}
+          ListHeaderComponent={() => <View className="h-8" />}
+          renderSectionHeader={renderSectionHeader}
+          SectionSeparatorComponent={() => <View className="h-6" />}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          keyboardShouldPersistTaps="always"
+          keyboardDismissMode="none"
+          stickySectionHeadersEnabled={false}
+          contentContainerStyle={{
+            paddingTop: 36,
+            paddingBottom: height * 0.5,
+          }}
+        />
+      </WithPullToRefresh>
+      <SearchInput />
+    </Animated.View>
   );
 };
