@@ -47,7 +47,15 @@ export default function LinearLayout() {
     <SearchTransitionContext value={{ transitionProgress, onOpenSearchModal, onCloseSearchModal }}>
       {/* Presentation (why): transparent modal allows background motion underlay
           + short native animation avoids fighting with custom Reanimated timing */}
-      <Stack screenOptions={{ headerShown: false }} initialRouteName="(tabs)">
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: {
+            backgroundColor: "#0A090C",
+          },
+        }}
+        initialRouteName="(tabs)"
+      >
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
           name="search-modal"
