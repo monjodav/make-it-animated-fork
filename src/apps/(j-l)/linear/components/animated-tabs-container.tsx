@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren, use } from "react";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
+import { Platform } from "react-native";
 
 // linear-search-screen-open-close-animation 🔽
 
@@ -40,7 +41,7 @@ export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
   });
 
   return (
-    <Animated.View className="flex-1" style={rContainerStyle}>
+    <Animated.View className="flex-1" style={Platform.OS === "ios" ? rContainerStyle : undefined}>
       {children}
     </Animated.View>
   );

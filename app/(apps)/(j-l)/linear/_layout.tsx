@@ -50,9 +50,6 @@ export default function LinearLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: {
-            backgroundColor: "#0A090C",
-          },
         }}
         initialRouteName="(tabs)"
       >
