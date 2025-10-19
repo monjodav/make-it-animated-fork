@@ -1,5 +1,5 @@
 import React, { cloneElement, createContext, ReactElement, useContext, useEffect } from "react";
-import { useWindowDimensions, View } from "react-native";
+import { useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   DerivedValue,

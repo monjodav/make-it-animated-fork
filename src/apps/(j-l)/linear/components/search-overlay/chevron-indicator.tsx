@@ -2,7 +2,10 @@ import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedProps,
+  useAnimatedReaction,
   useDerivedValue,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { View } from "react-native";
@@ -24,8 +27,28 @@ export const ChevronIndicator = () => {
   const { transitionProgress } = use(SearchTransitionContext);
   const { refreshProgress } = usePullToRefresh();
 
+  // Entrance animation: starts at 1 (open), animates to 0 (closed)
+  const entranceProgress = useSharedValue(1);
+
+  useAnimatedReaction(
+    () => transitionProgress.get(),
+    (transition) => {
+      if (transition > 0.75 && entranceProgress.get() === 1) {
+        entranceProgress.set(withSpring(0, { duration: 1500, dampingRatio: 0.75 }));
+      }
+    }
+  );
+
+  const combinedProgress = useDerivedValue(() => {
+    const entrance = entranceProgress.get();
+    const refresh = refreshProgress.get();
+
+    // Use entrance animation, then switch to refresh progress
+    return Math.max(entrance, refresh);
+  });
+
   const rChevronMetrics = useDerivedValue(() => {
-    const progressAdj = Math.pow(refreshProgress.get(), 0.85);
+    const progressAdj = Math.pow(combinedProgress.get(), 0.85);
     const midDrop = CHEVRON_RISE * progressAdj;
     const strokeW = LINE_THICKNESS;
     return { midDrop, strokeW };
@@ -35,7 +58,7 @@ export const ChevronIndicator = () => {
     const { midDrop, strokeW } = rChevronMetrics.get();
 
     const chevronWidth = interpolate(
-      refreshProgress.get(),
+      combinedProgress.get(),
       [0, 1],
       [CHEVRON_WIDTH, CHEVRON_WIDTH * 0.85]
     );
@@ -47,7 +70,7 @@ export const ChevronIndicator = () => {
     const midX = chevronWidth;
     const midY = (midDrop + vOffset).toFixed(3);
 
-    const stroke = interpolateColor(refreshProgress.get(), [0, 1], ["#525252", "#737373"]);
+    const stroke = interpolateColor(combinedProgress.get(), [0, 1], ["#525252", "#737373"]);
 
     return {
       d: `M${left} ${vOffset} L ${midX} ${midY} L ${right} ${vOffset}`,
