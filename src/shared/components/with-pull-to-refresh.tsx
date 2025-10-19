@@ -1,3 +1,8 @@
+/**
+ * Special thanks to Matthew (https://x.com/matthew_3701) for sharing a universal pull-to-refresh approach:
+ * https://github.com/MatthewSRC/native-springs/blob/main/PullRefresh/PullRefresh.tsx
+ * This implementation adapts his idea to our needs.
+ */
 import React, { cloneElement, createContext, ReactElement, useContext, useEffect } from "react";
 import { useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -20,14 +25,24 @@ import { cn } from "../lib/utils/cn";
 interface WithPullToRefreshProps {
   children: ReactElement;
   refreshComponent: ReactElement;
+  // Why: Pull distance needed to trigger refresh. Matches header base height by default
+  // to keep visual/behavioral thresholds aligned. Tune per screen density.
   refreshThreshold?: number;
   refreshing: boolean;
   onRefresh: () => void;
+  // Why: Resting height for the refresh view while loading. Keeps indicator visible
+  // after release; large enough for spinners/labels but not obstructive.
   refreshViewBaseHeight?: number;
+  // Why: When true, keeps header locked at the exact release height for snappier feel
+  // (useful when indicator layout needs the extra space).
   lockRefreshViewOnRelease?: boolean;
+  // Why: Duration for the snap-back motion when not refreshing and when refresh ends.
+  // 400ms gives a natural deceleration without feeling sluggish.
   backAnimationDuration?: number;
   refreshComponentContainerClassName?: string;
 }
+
+// -----------------------------------------
 
 const WithPullToRefreshContext = createContext<{
   refreshProgress: DerivedValue<number>;
@@ -45,6 +60,8 @@ export const usePullToRefresh = () => {
   return context;
 };
 
+// -----------------------------------------
+
 export function WithPullToRefresh({
   children,
   refreshComponent,
@@ -58,22 +75,38 @@ export function WithPullToRefresh({
 }: WithPullToRefreshProps) {
   const { height: screenHeight } = useWindowDimensions();
 
+  // Why: Live scroll offset from child list. Drives gesture gating (only when at top)
+  // to avoid fighting with internal list physics.
   const listOffsetY = useSharedValue(0);
+  // Why: Blocks new gestures while we animate header to target positions (prevents
+  // re-entrancy and subtle translationY drift during animations).
   const isAnimating = useSharedValue(false);
+  // Why: Signals that the "expand to loading height" spring is running. Consumers can
+  // use this to pause expensive UI work until the header settles.
   const isAnimatingRefresh = useSharedValue(false);
 
+  // Why: Raw finger-driven offset. We keep this separate from the displayed height so
+  // we can dampen the header movement relative to finger travel.
   const refreshOffsetY = useSharedValue(0);
+  // Why: Snapshot of release position used when locking the header at release height.
   const lockedRefreshOffsetY = useSharedValue(0);
 
+  // Why: Dampen header stretch to 1/3 of finger movement for elastic feel and to
+  // avoid oversized header inflation on long pulls.
   const derivedRefreshOffsetY = useDerivedValue(() => {
     return refreshOffsetY.get() / 3;
   });
 
+  // Why: Normalized progress 0..1 used by refresh indicator animations.
+  // Interpolation: input [0, refreshThreshold] -> output [0, 1] with CLAMP to prevent
+  // overshooting beyond 1 when users over-pull.
   const refreshProgress = useDerivedValue(() => {
     if (refreshOffsetY.get() <= 1) return 0;
     return interpolate(refreshOffsetY.get(), [0, refreshThreshold], [0, 1], Extrapolation.CLAMP);
   });
 
+  // Why: Track list scroll to know when we're at the very top. 16ms throttle (below)
+  // keeps animations in sync at ~60fps without spam.
   const localScrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       listOffsetY.set(event.contentOffset.y);
@@ -85,12 +118,19 @@ export function WithPullToRefresh({
     ? [localScrollHandler, outerScrollHandler]
     : [localScrollHandler];
 
+  // Why: Compose consumer's onScroll with ours so we don't break parent logic while
+  // still capturing scroll for gating the pull-to-refresh.
   const onScroll = useComposedEventHandler(handlers);
 
+  // Why: Bind header height to derived offset so heavy UI (blur/spinner) stays smooth
+  // on the UI thread.
   const rHeaderStyle = useAnimatedStyle(() => {
     return { height: derivedRefreshOffsetY.get() };
   });
 
+  // Why: Inject an animated header before user's header to host the refresh UI and
+  // pass down onScroll + 16ms throttle for 60fps. Disable iOS bounce to prevent the
+  // system overscroll from interfering with our gesture controller.
   const clonedChild = cloneElement(children as any, {
     onScroll,
     scrollEventThrottle: 16,
@@ -102,7 +142,7 @@ export function WithPullToRefresh({
         >
           {refreshComponent}
         </Animated.View>
-        {(children.props as any).ListHeaderComponent()}
+        {(children.props as any).ListHeaderComponent?.()}
       </>
     ),
     bounces: false,
@@ -110,6 +150,8 @@ export function WithPullToRefresh({
 
   const lastDragY = useSharedValue(0);
 
+  // Why: Pan gesture orchestrates the pull. Enabled only when not already animating
+  // or refreshing to avoid input/animation conflicts.
   const panGesture = Gesture.Pan()
     .enabled(!refreshing && !isAnimating.get())
     .onBegin(() => {
@@ -121,19 +163,25 @@ export function WithPullToRefresh({
       refreshOffsetY.set(1);
     })
     .onChange((e) => {
+      // Why: Work with deltas to avoid frame-to-frame accumulation error.
       const deltaY = e.translationY - lastDragY.get();
       lastDragY.set(e.translationY);
 
+      // Why: Only allow pulling when list is scrolled to top (<= 0). Once pulling,
+      // continue responding even if listOffsetY fluctuates around 0. Clamp to screen
+      // height to prevent runaway values on long drags.
       if (listOffsetY.get() <= 0 || refreshOffsetY.get() > 1) {
         const next = Math.max(0, Math.min(refreshOffsetY.get() + deltaY, screenHeight));
         refreshOffsetY.set(next);
       }
     })
     .onEnd(() => {
+      // Why: Snapshot the release height for optional locking behavior.
       lockedRefreshOffsetY.set(refreshOffsetY.get());
       isAnimating.set(true);
 
       if (refreshOffsetY.get() >= refreshThreshold) {
+        // Why: Crossed threshold — settle to loading height with spring for elastic feel.
         isAnimatingRefresh.set(true);
         refreshOffsetY.set(
           withSpring(
@@ -147,8 +195,11 @@ export function WithPullToRefresh({
             }
           )
         );
+        // Why: Run on JS immediately after scheduling from UI thread without blocking
+        // animations. Keeps gesture thread free while starting refresh work.
         scheduleOnRN(onRefresh);
       } else {
+        // Why: Not enough pull — animate header back with a quick timing curve.
         refreshOffsetY.set(
           withTiming(0, { duration: backAnimationDuration }, (finished) => {
             if (finished) {
@@ -161,9 +212,13 @@ export function WithPullToRefresh({
       lastDragY.set(0);
     });
 
+  // Why: Allow native scroll to continue while our pan listens, avoiding gesture
+  // ownership fights (Simultaneous resolves nested scroll + pull gestures cleanly).
   const nativeGesture = Gesture.Native();
   const composedGestures = Gesture.Simultaneous(panGesture, nativeGesture);
 
+  // Why: When external refreshing flag flips to false, collapse the header. Timing
+  // mirrors the non-refresh path for consistent motion language.
   useEffect(() => {
     if (!refreshing) {
       isAnimating.set(true);
@@ -177,10 +232,16 @@ export function WithPullToRefresh({
   }, [refreshing]);
 
   const contextValue = {
+    // Why: Consumers animate indicators using a normalized value (0..1), independent
+    // of actual pixel pull distance.
     refreshProgress,
+    // Why: Raw gesture offset for advanced consumers needing exact pull distance.
     refreshOffsetY,
+    // Why: Damped header height used by this HOC to size the refresh container.
     derivedRefreshOffsetY,
+    // Why: Release snapshot for lock-on-release behavior.
     lockedRefreshOffsetY,
+    // Why: Lets consumers avoid heavy work while the spring-to-height runs.
     isAnimatingRefresh,
   };
 

@@ -13,6 +13,8 @@ import { usePullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
 import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 import { use } from "react";
 
+// linear-search-screen-open-close-animation 🔽
+
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 export const CHEVRON_WIDTH = 24;
@@ -96,3 +98,5 @@ export const ChevronIndicator = () => {
     </View>
   );
 };
+
+// linear-search-screen-open-close-animation 🔼

@@ -3,6 +3,8 @@ import { createContext } from "react";
 import { KeyboardController } from "react-native-keyboard-controller";
 import { SharedValue, useSharedValue, withSpring } from "react-native-reanimated";
 
+// linear-search-screen-open-close-animation 🔽
+
 const DURATION = 700;
 
 interface SearchTransitionContextValue {
@@ -51,3 +53,5 @@ export default function LinearLayout() {
     </SearchTransitionContext>
   );
 }
+
+// linear-bottom-tabs-indicator-animation 🔼

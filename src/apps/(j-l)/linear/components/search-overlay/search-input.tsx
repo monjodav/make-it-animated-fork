@@ -5,6 +5,8 @@ import { KeyboardStickyView } from "react-native-keyboard-controller";
 import { use } from "react";
 import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 
+// linear-search-screen-open-close-animation 🔽
+
 export const SearchInput = () => {
   const { onCloseSearchModal } = use(SearchTransitionContext);
 
@@ -50,3 +52,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// linear-search-screen-open-close-animation 🔼

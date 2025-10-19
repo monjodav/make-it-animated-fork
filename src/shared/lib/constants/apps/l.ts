@@ -15,6 +15,10 @@ export const linear: App = {
       name: "Header on scroll animation",
       href: "/linear/inbox",
     },
+    {
+      name: "Search screen open close animation",
+      href: "/linear/home",
+    },
   ],
 };
 

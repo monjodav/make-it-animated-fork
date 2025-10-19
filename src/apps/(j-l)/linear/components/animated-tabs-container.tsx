@@ -2,6 +2,8 @@ import { FC, PropsWithChildren, use } from "react";
 import Animated, { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 
+// linear-search-screen-open-close-animation 🔽
+
 export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
   const { transitionProgress } = use(SearchTransitionContext);
 
@@ -29,3 +31,5 @@ export const AnimatedTabsContainer: FC<PropsWithChildren> = ({ children }) => {
     </Animated.View>
   );
 };
+
+// linear-search-screen-open-close-animation 🔼

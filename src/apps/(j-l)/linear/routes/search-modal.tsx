@@ -20,6 +20,8 @@ import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
 import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
 import { WithPullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
 
+// linear-search-screen-open-close-animation 🔽
+
 const TRIGGER_THRESHOLD = 200;
 
 const AnimatedSectionList = Animated.createAnimatedComponent(
@@ -77,12 +79,12 @@ export const SearchModal = () => {
         onRefresh={onCloseSearchModal}
         refreshComponent={<ChevronIndicator />}
         lockRefreshViewOnRelease
+        refreshComponentContainerClassName="mb-6"
       >
         <AnimatedSectionList
           sections={sections}
           keyExtractor={(item, index) => `${item}-${index}`}
           renderItem={renderListItem}
-          ListHeaderComponent={() => <View className="h-8" />}
           renderSectionHeader={renderSectionHeader}
           SectionSeparatorComponent={() => <View className="h-6" />}
           onScroll={scrollHandler}
@@ -100,3 +102,5 @@ export const SearchModal = () => {
     </Animated.View>
   );
 };
+
+// linear-search-screen-open-close-animation 🔼

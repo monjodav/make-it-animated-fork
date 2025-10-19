@@ -7,6 +7,8 @@ import { AnimatedTabsContainer } from "@/src/apps/(j-l)/linear/components/animat
 import { use } from "react";
 import { SearchTransitionContext } from "../_layout";
 
+// linear-search-screen-open-close-animation 🔽
+
 enum Tab {
   Home = "home",
   Inbox = "inbox",
@@ -33,8 +35,14 @@ const TabsLayout = () => {
         tabBarButton: (props) => {
           if (route.name === Tab.Search) {
             return (
-              <Pressable accessibilityRole="button" style={props.style} onPress={onOpenSearchModal}>
-                {props.children}
+              <Pressable
+                accessibilityRole="button"
+                style={[props.style, { paddingHorizontal: 8 }]}
+                onPress={onOpenSearchModal}
+              >
+                <View className="absolute -top-1 bg-neutral-700/60 px-3 py-2 rounded-xl">
+                  {props.children}
+                </View>
               </Pressable>
             );
           }
@@ -66,7 +74,7 @@ const TabsLayout = () => {
       <Tabs.Screen
         name={Tab.Search}
         options={{
-          tabBarIcon: ({ color }) => <Search size={24} color={color} />,
+          tabBarIcon: ({ color }) => <Search size={24} color={color} strokeWidth={2.5} />,
         }}
       />
       <Tabs.Screen
@@ -94,3 +102,5 @@ export default function LinearLayout() {
     </View>
   );
 }
+
+// linear-bottom-tabs-indicator-animation 🔼
