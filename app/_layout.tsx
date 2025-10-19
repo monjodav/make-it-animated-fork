@@ -76,9 +76,11 @@ export default function RootLayout() {
     setTimeout(() => {
       SplashScreen.hide();
     }, 500);
-    setTimeout(() => {
-      OneSignal.Notifications.requestPermission(true);
-    }, 1000);
+    if (!__DEV__) {
+      setTimeout(() => {
+        OneSignal.Notifications.requestPermission(true);
+      }, 1000);
+    }
   }, []);
 
   if (!fontsLoaded) {

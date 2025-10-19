@@ -45,11 +45,13 @@ export const useOtaUpdate = () => {
   }, [isUpdateAvailable, setIsOtaUpdateAvailable, isNewVersionAvailable, isVersionChecked]);
 
   useEffect(() => {
+    if (__DEV__) return;
     handleUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUpdateAvailable, isVersionChecked, isNewVersionAvailable]);
 
   useEffect(() => {
+    if (__DEV__) return;
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (appState.current.match(/inactive|background/) && nextAppState === "active") {
         setIsOtaUpdateAvailable(false);

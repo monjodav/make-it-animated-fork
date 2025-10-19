@@ -67,6 +67,7 @@ export const useVersionCheck = () => {
   };
 
   useEffect(() => {
+    if (__DEV__) return;
     checkForUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
