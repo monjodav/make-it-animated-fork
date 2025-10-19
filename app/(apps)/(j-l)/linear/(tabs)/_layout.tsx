@@ -33,6 +33,7 @@ const TabsLayout = () => {
           backgroundColor: "#0A090C",
         },
         tabBarButton: (props) => {
+          // Intercept Search tab press (why): start modal transition instead of switching routes
           if (route.name === Tab.Search) {
             return (
               <Pressable
@@ -40,6 +41,7 @@ const TabsLayout = () => {
                 style={[props.style, { paddingHorizontal: 8 }]}
                 onPress={onOpenSearchModal}
               >
+                {/* Floating frame (why): keeps icon visible while background animates out */}
                 <View className="absolute -top-1 bg-neutral-700/60 px-3 py-2 rounded-xl">
                   {props.children}
                 </View>
@@ -96,6 +98,7 @@ const TabsLayout = () => {
 export default function LinearLayout() {
   return (
     <View className="flex-1 bg-linear-back">
+      {/* Wrap tabs (why): background participates in modal open/close animation */}
       <AnimatedTabsContainer>
         <TabsLayout />
       </AnimatedTabsContainer>

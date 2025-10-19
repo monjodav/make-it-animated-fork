@@ -1,11 +1,5 @@
 import { SectionList, View, useWindowDimensions } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   sections,
@@ -14,16 +8,16 @@ import {
 } from "../components/search-overlay/mock-data";
 import { ChevronIndicator } from "../components/search-overlay/chevron-indicator";
 import { SearchInput } from "../components/search-overlay/search-input";
-import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { use } from "react";
 import { SearchTransitionContext } from "@/app/(apps)/(j-l)/linear/_layout";
-import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
 import { WithPullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
 
 // linear-search-screen-open-close-animation 🔽
 
+// Pull-to-dismiss threshold (why): distance to trigger close/haptic on downward drag
 const TRIGGER_THRESHOLD = 200;
 
+// createAnimatedComponent (why): Animated SectionList needed for Reanimated scroll events
 const AnimatedSectionList = Animated.createAnimatedComponent(
   SectionList as any
 ) as unknown as typeof SectionList;
@@ -34,27 +28,9 @@ export const SearchModal = () => {
 
   const { transitionProgress, onCloseSearchModal } = use(SearchTransitionContext);
 
-  const isListDragging = useSharedValue(false);
-
-  const { onScroll: scrollDirectionOnScroll, scrollDirection } =
-    useScrollDirection("include-negative");
-
-  const { singleHapticOnScroll } = useHapticOnScroll({
-    isListDragging,
-    scrollDirection,
-    triggerOffset: -TRIGGER_THRESHOLD,
-  });
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: () => isListDragging.set(true),
-    onScroll: (event) => {
-      scrollDirectionOnScroll(event);
-      singleHapticOnScroll(event);
-    },
-    onEndDrag: () => isListDragging.set(false),
-  });
-
   const rListContainerStyle = useAnimatedStyle(() => {
+    // Fade/scale the list during close only (1→1.5). Keep visible otherwise.
+    // Opacity: 1 → 0. Transform: translateY 0→20px, scale 1→0.9.
     return {
       opacity: interpolate(transitionProgress.get(), [1, 1.5], [1, 0], Extrapolation.CLAMP),
       transform: [
@@ -78,6 +54,7 @@ export const SearchModal = () => {
         refreshing={false}
         onRefresh={onCloseSearchModal}
         refreshComponent={<ChevronIndicator />}
+        // Lock (why): keep indicator pinned until release to avoid jitter around threshold
         lockRefreshViewOnRelease
         refreshComponentContainerClassName="mb-6"
       >
@@ -87,8 +64,6 @@ export const SearchModal = () => {
           renderItem={renderListItem}
           renderSectionHeader={renderSectionHeader}
           SectionSeparatorComponent={() => <View className="h-6" />}
-          onScroll={scrollHandler}
-          scrollEventThrottle={16}
           keyboardShouldPersistTaps="always"
           keyboardDismissMode="none"
           stickySectionHeadersEnabled={false}

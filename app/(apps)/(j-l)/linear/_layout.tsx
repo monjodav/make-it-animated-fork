@@ -5,6 +5,8 @@ import { SharedValue, useSharedValue, withSpring } from "react-native-reanimated
 
 // linear-search-screen-open-close-animation 🔽
 
+// Single source of truth (why): transitionProgress orchestrates open/close across components
+// Phases: 0 (idle) → 1 (opening) → 2 (closing) → 0 (reset)
 const DURATION = 700;
 
 interface SearchTransitionContextValue {
@@ -25,13 +27,17 @@ export default function LinearLayout() {
   const router = useRouter();
 
   const onOpenSearchModal = () => {
+    // Kick off opening phase (0→1) to drive background de-emphasis animations
     transitionProgress.set(withSpring(1, { duration: DURATION }));
     router.push("/linear/search-modal");
   };
 
   const onCloseSearchModal = () => {
+    // Closing phase (1→2) with reset to 0 on settle; keeps background anims in sync
     transitionProgress.set(withSpring(2, { duration: DURATION }, () => transitionProgress.set(0)));
+    // Dismiss keyboard immediately to avoid IME overlap during close motion
     KeyboardController.dismiss();
+    // Navigate back slightly before motion end for snappier UX (2/3 of duration)
     setTimeout(() => {
       router.back();
     }, DURATION / 1.5);
@@ -39,6 +45,8 @@ export default function LinearLayout() {
 
   return (
     <SearchTransitionContext value={{ transitionProgress, onOpenSearchModal, onCloseSearchModal }}>
+      {/* Presentation (why): transparent modal allows background motion underlay
+          + short native animation avoids fighting with custom Reanimated timing */}
       <Stack screenOptions={{ headerShown: false }} initialRouteName="(tabs)">
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
