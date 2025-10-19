@@ -15,6 +15,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
+import { cn } from "../lib/utils/cn";
 
 interface WithPullToRefreshProps {
   children: ReactElement;
@@ -25,6 +26,7 @@ interface WithPullToRefreshProps {
   refreshViewBaseHeight?: number;
   lockRefreshViewOnRelease?: boolean;
   backAnimationDuration?: number;
+  refreshComponentContainerClassName?: string;
 }
 
 const WithPullToRefreshContext = createContext<{
@@ -52,6 +54,7 @@ export function WithPullToRefresh({
   refreshViewBaseHeight = 200,
   lockRefreshViewOnRelease = false,
   backAnimationDuration = 400,
+  refreshComponentContainerClassName,
 }: WithPullToRefreshProps) {
   const { height: screenHeight } = useWindowDimensions();
 
@@ -93,7 +96,10 @@ export function WithPullToRefresh({
     scrollEventThrottle: 16,
     ListHeaderComponent: (
       <>
-        <Animated.View className="items-center justify-center" style={rHeaderStyle}>
+        <Animated.View
+          className={cn("items-center justify-center", refreshComponentContainerClassName)}
+          style={rHeaderStyle}
+        >
           {refreshComponent}
         </Animated.View>
         {(children.props as any).ListHeaderComponent()}
@@ -102,22 +108,11 @@ export function WithPullToRefresh({
     bounces: false,
   });
 
-  useEffect(() => {
-    if (!refreshing) {
-      isAnimating.set(true);
-      refreshOffsetY.set(
-        withTiming(0, { duration: backAnimationDuration }, (finished) => {
-          if (finished) isAnimating.set(false);
-        })
-      );
-    }
-  }, [refreshing]);
-
   const lastDragY = useSharedValue(0);
 
   const panGesture = Gesture.Pan()
+    .enabled(!refreshing && !isAnimating.get())
     .onBegin(() => {
-      if (refreshing || isAnimating.get()) return;
       lastDragY.set(0);
       // Why is this needed? Because there's a subtle issue where translationY can continue updating
       // even after the animation has finished. By setting refreshOffsetY to a non-zero value here,
@@ -126,8 +121,6 @@ export function WithPullToRefresh({
       refreshOffsetY.set(1);
     })
     .onChange((e) => {
-      if (refreshing || isAnimating.get() || refreshOffsetY.get() === 0) return;
-
       const deltaY = e.translationY - lastDragY.get();
       lastDragY.set(e.translationY);
 
@@ -137,8 +130,6 @@ export function WithPullToRefresh({
       }
     })
     .onEnd(() => {
-      if (refreshing || isAnimating.get()) return;
-
       lockedRefreshOffsetY.set(refreshOffsetY.get());
       isAnimating.set(true);
 
@@ -172,6 +163,18 @@ export function WithPullToRefresh({
 
   const nativeGesture = Gesture.Native();
   const composedGestures = Gesture.Simultaneous(panGesture, nativeGesture);
+
+  useEffect(() => {
+    if (!refreshing) {
+      isAnimating.set(true);
+      refreshOffsetY.set(
+        withTiming(0, { duration: backAnimationDuration }, (finished) => {
+          if (finished) isAnimating.set(false);
+        })
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshing]);
 
   const contextValue = {
     refreshProgress,
