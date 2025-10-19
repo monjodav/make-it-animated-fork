@@ -75,6 +75,15 @@ const resetProject = async () => {
       console.log("➡️ app.config.ts does not exist, skipping.");
     }
 
+    // Remove eas.json if it exists
+    const easJsonPath = path.join(root, "eas.json");
+    if (fs.existsSync(easJsonPath)) {
+      await fs.promises.rm(easJsonPath);
+      console.log("❌ eas.json deleted.");
+    } else {
+      console.log("➡️ eas.json does not exist, skipping.");
+    }
+
     // Create app.json with specified content
     const appJsonPath = path.join(root, "app.json");
     await fs.promises.writeFile(appJsonPath, JSON.stringify(appJsonContent, null, 2) + "\n");
