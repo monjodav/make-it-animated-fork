@@ -21,6 +21,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 import { cn } from "../lib/utils/cn";
+import { useScrollDirection } from "../lib/hooks/use-scroll-direction";
+import { useHapticOnScroll } from "../lib/hooks/use-haptic-on-scroll";
 
 interface WithPullToRefreshProps {
   children: ReactElement;
@@ -40,16 +42,17 @@ interface WithPullToRefreshProps {
   // 400ms gives a natural deceleration without feeling sluggish.
   backAnimationDuration?: number;
   refreshComponentContainerClassName?: string;
+  hapticFeedbackDirection?: "to-bottom" | "both";
 }
 
 // -----------------------------------------
 
 const WithPullToRefreshContext = createContext<{
+  refreshing: boolean;
   refreshProgress: DerivedValue<number>;
   refreshOffsetY: SharedValue<number>;
   derivedRefreshOffsetY: DerivedValue<number>;
   lockedRefreshOffsetY: SharedValue<number>;
-  isAnimatingRefresh: SharedValue<boolean>;
 } | null>(null);
 
 export const usePullToRefresh = () => {
@@ -72,6 +75,7 @@ export function WithPullToRefresh({
   lockRefreshViewOnRelease = false,
   backAnimationDuration = 400,
   refreshComponentContainerClassName,
+  hapticFeedbackDirection = "both",
 }: WithPullToRefreshProps) {
   const { height: screenHeight } = useWindowDimensions();
 
@@ -81,9 +85,6 @@ export function WithPullToRefresh({
   // Why: Blocks new gestures while we animate header to target positions (prevents
   // re-entrancy and subtle translationY drift during animations).
   const isAnimating = useSharedValue(false);
-  // Why: Signals that the "expand to loading height" spring is running. Consumers can
-  // use this to pause expensive UI work until the header settles.
-  const isAnimatingRefresh = useSharedValue(false);
 
   // Why: Raw finger-driven offset. We keep this separate from the displayed height so
   // we can dampen the header movement relative to finger travel.
@@ -148,13 +149,29 @@ export function WithPullToRefresh({
     bounces: false,
   });
 
+  const isListDragging = useSharedValue(false);
   const lastDragY = useSharedValue(0);
+
+  const {
+    onScroll: scrollDirectionOnScroll,
+    scrollDirection,
+    offsetYAnchorOnChangeDirection,
+  } = useScrollDirection("include-negative");
+
+  const { singleHapticOnScroll } = useHapticOnScroll({
+    isListDragging,
+    scrollDirection,
+    offsetYAnchorOnChangeDirection,
+    triggerOffset: refreshThreshold,
+    hapticDirection: hapticFeedbackDirection,
+  });
 
   // Why: Pan gesture orchestrates the pull. Enabled only when not already animating
   // or refreshing to avoid input/animation conflicts.
   const panGesture = Gesture.Pan()
     .enabled(!refreshing && !isAnimating.get())
     .onBegin(() => {
+      isListDragging.set(true);
       lastDragY.set(0);
       // Why is this needed? Because there's a subtle issue where translationY can continue updating
       // even after the animation has finished. By setting refreshOffsetY to a non-zero value here,
@@ -173,6 +190,8 @@ export function WithPullToRefresh({
       if (listOffsetY.get() <= 0 || refreshOffsetY.get() > 1) {
         const next = Math.max(0, Math.min(refreshOffsetY.get() + deltaY, screenHeight));
         refreshOffsetY.set(next);
+        scrollDirectionOnScroll(next);
+        singleHapticOnScroll(next);
       }
     })
     .onEnd(() => {
@@ -182,7 +201,6 @@ export function WithPullToRefresh({
 
       if (refreshOffsetY.get() >= refreshThreshold) {
         // Why: Crossed threshold — settle to loading height with spring for elastic feel.
-        isAnimatingRefresh.set(true);
         refreshOffsetY.set(
           withSpring(
             lockRefreshViewOnRelease ? lockedRefreshOffsetY.get() : refreshViewBaseHeight,
@@ -190,7 +208,6 @@ export function WithPullToRefresh({
             (finished) => {
               if (finished) {
                 isAnimating.set(false);
-                isAnimatingRefresh.set(false);
               }
             }
           )
@@ -209,6 +226,7 @@ export function WithPullToRefresh({
         );
       }
 
+      isListDragging.set(false);
       lastDragY.set(0);
     });
 
@@ -232,6 +250,7 @@ export function WithPullToRefresh({
   }, [refreshing]);
 
   const contextValue = {
+    refreshing,
     // Why: Consumers animate indicators using a normalized value (0..1), independent
     // of actual pixel pull distance.
     refreshProgress,
@@ -241,8 +260,6 @@ export function WithPullToRefresh({
     derivedRefreshOffsetY,
     // Why: Release snapshot for lock-on-release behavior.
     lockedRefreshOffsetY,
-    // Why: Lets consumers avoid heavy work while the spring-to-height runs.
-    isAnimatingRefresh,
   };
 
   return (
