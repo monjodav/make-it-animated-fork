@@ -1,20 +1,15 @@
 import { FlashList } from "@shopify/flash-list";
-import * as Haptics from "expo-haptics";
-import React, { FC, memo, useRef } from "react";
+import React, { FC, memo, useRef, useState } from "react";
 import { View } from "react-native";
-import Animated, {
-  FadeInDown,
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from "react-native-reanimated";
-import { WithPullToRefresh } from "./with-pull-to-refresh";
-import { sharedConfigs } from "../lib/constants/pull-to-refresh-animation";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { WithPullToRefresh } from "../../../../shared/components/with-pull-to-refresh";
 import { Board } from "../lib/types";
 import { useScrollToTop } from "@react-navigation/native";
-import { scheduleOnRN } from "react-native-worklets";
+import { LoadingIndicator } from "./loading-indicator";
 
 // pinterest-pull-to-refresh-loading-animation 🔽
 
+// Wrap FlashList to allow Reanimated props (e.g., entering, animated styles) to run on UI thread
 const AnimatedList = Animated.createAnimatedComponent(FlashList);
 
 type Props = {
@@ -23,62 +18,18 @@ type Props = {
 };
 
 const MasonryList: FC<Props> = ({ boardName, data }) => {
-  const listOffsetY = useSharedValue(0);
-  const isDragging = useSharedValue(false);
-  const listOffsetYOnEndDrag = useSharedValue(0);
-  const refreshing = useSharedValue(false);
-  const isRefreshed = useSharedValue(false);
-  const isHapticTriggered = useSharedValue(false);
-
+  const [refreshing, setRefreshing] = useState(false);
   const listRef = useRef<FlashList<Board>>(null);
 
   useScrollToTop(listRef);
 
   const refresh = async () => {
-    refreshing.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    refreshing.value = false;
-    isRefreshed.value = true;
+    setRefreshing(true);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    setRefreshing(false);
   };
 
-  const handleHaptics = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    isHapticTriggered.value = true;
-  };
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: (event) => {
-      const y = event.contentOffset.y;
-      isDragging.value = true;
-      if (y === 0 && isRefreshed.value) {
-        isRefreshed.value = false;
-      }
-    },
-    onScroll: (event) => {
-      const y = event.contentOffset.y;
-      listOffsetY.value = y;
-
-      if (listOffsetY.value < -sharedConfigs.refreshingTriggerOffset && !isHapticTriggered.value) {
-        scheduleOnRN(handleHaptics);
-      } else if (
-        isHapticTriggered.value &&
-        Math.abs(listOffsetY.value) < sharedConfigs.refreshingTriggerOffset
-      ) {
-        isHapticTriggered.value = false;
-      }
-    },
-    onEndDrag: (event) => {
-      isDragging.value = false;
-      const y = event.contentOffset.y;
-      listOffsetYOnEndDrag.value = -y;
-
-      if (listOffsetY.value < -sharedConfigs.refreshingTriggerOffset && !refreshing.value) {
-        scheduleOnRN(refresh);
-      }
-    },
-  });
-
-  const _renderListHeader = () => {
+  const _renderListHeader = React.useCallback(() => {
     if (boardName === "All" || data.length === 0) return <></>;
 
     return (
@@ -90,9 +41,9 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
         </View>
       </View>
     );
-  };
+  }, [boardName, data]);
 
-  const _renderItem = () => {
+  const _renderItem = React.useCallback(() => {
     const height = Math.floor(Math.random() * 200) + 100;
 
     return (
@@ -103,7 +54,7 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
         />
       </View>
     );
-  };
+  }, []);
 
   const _renderItemSeparator = () => {
     return <View className="h-3" />;
@@ -111,27 +62,32 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
 
   return (
     <WithPullToRefresh
-      listOffsetY={listOffsetY}
-      listOffsetYOnEndDrag={listOffsetYOnEndDrag}
-      isDragging={isDragging}
+      // Custom spinner; driven by shared refreshProgress from provider for tight coupling
+      refreshComponent={<LoadingIndicator />}
       refreshing={refreshing}
-      isRefreshed={isRefreshed}
+      onRefresh={refresh}
+      refreshViewBaseHeight={400}
+      // Triggers haptic when reaching threshold in given direction to match OS affordance
+      hapticFeedbackDirection="to-bottom"
+      // Time to animate content back after release; slightly longer for Pinterest-like elasticity
+      backAnimationDuration={700}
     >
       <AnimatedList
         ref={listRef}
+        // Initial content appearance; short downward fade grounds the list under the refresh header
         entering={FadeInDown}
         data={data}
         numColumns={2}
-        columnWrapperClassName="px-3"
         masonry
         horizontal={false}
         ListHeaderComponent={_renderListHeader}
         renderItem={_renderItem}
         ItemSeparatorComponent={_renderItemSeparator}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        // Top padding creates space so the refresh indicator can overlap without jumping content
         contentContainerStyle={{ paddingTop: 50 }}
+        // Disable scroll during active refresh to prevent gesture conflicts with spring back animation
+        scrollEnabled={!refreshing}
       />
     </WithPullToRefresh>
   );
