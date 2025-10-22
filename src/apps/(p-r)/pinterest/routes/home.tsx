@@ -6,6 +6,7 @@ import { Tabs } from "react-native-collapsible-tab-view";
 import { useScrollToTop } from "@react-navigation/native";
 import { TabBar } from "../components/tab-bar";
 import { TabContent } from "../components/tab-content";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 // pinterest-navigation-between-boards-animation 🔽
 
@@ -49,13 +50,17 @@ const boards: Board[] = [
 ];
 
 export const Home: FC = () => {
+  useAndroidNote(
+    "There is an issue with pull-to-refresh gesture recognition on Android devices in this nested scroll layout. We're working on it"
+  );
+
   const containerRef = useRef(null);
   useScrollToTop(containerRef);
 
   const insets = useSafeAreaInsets();
 
   return (
-    <View className="flex-1 bg-black" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-black" style={{ paddingTop: insets.top + 12 }}>
       <Tabs.Container
         ref={containerRef}
         headerContainerStyle={{

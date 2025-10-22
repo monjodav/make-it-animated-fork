@@ -1,6 +1,6 @@
 import { FlashList } from "@shopify/flash-list";
 import React, { FC, memo, useRef, useState } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { WithPullToRefresh } from "../../../../shared/components/with-pull-to-refresh";
 import { Board } from "../lib/types";
@@ -59,6 +59,28 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
   const _renderItemSeparator = () => {
     return <View className="h-3" />;
   };
+
+  if (Platform.OS === "android") {
+    return (
+      <AnimatedList
+        ref={listRef}
+        // Initial content appearance; short downward fade grounds the list under the refresh header
+        entering={FadeInDown}
+        data={data}
+        numColumns={2}
+        masonry
+        horizontal={false}
+        ListHeaderComponent={_renderListHeader}
+        renderItem={_renderItem}
+        ItemSeparatorComponent={_renderItemSeparator}
+        showsVerticalScrollIndicator={false}
+        // Top padding creates space so the refresh indicator can overlap without jumping content
+        contentContainerStyle={{ paddingTop: 50 }}
+        // Disable scroll during active refresh to prevent gesture conflicts with spring back animation
+        scrollEnabled={!refreshing}
+      />
+    );
+  }
 
   return (
     <WithPullToRefresh
