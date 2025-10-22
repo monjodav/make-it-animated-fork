@@ -170,6 +170,7 @@ export function WithPullToRefresh({
   // or refreshing to avoid input/animation conflicts.
   const panGesture = Gesture.Pan()
     .enabled(!refreshing && !isAnimating.get())
+    .activeOffsetY([-10, 10])
     .onBegin(() => {
       isListDragging.set(true);
       lastDragY.set(0);
