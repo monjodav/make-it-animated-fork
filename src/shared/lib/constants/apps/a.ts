@@ -2,7 +2,7 @@ import AdidasImage from "@/assets/images/apps/adidas.png";
 import AppleBooksImage from "@/assets/images/apps/apple-books.png";
 import AppleInvitesImage from "@/assets/images/apps/apple-invites.png";
 import AlmaImage from "@/assets/images/apps/alma.png";
-import AirbnbImage from "@/assets/images/apps/airbnb.png";
+import AppStoreImage from "@/assets/images/apps/app-store.png";
 import { App } from "../apps-list";
 
 export const adidas: App = {
@@ -49,13 +49,13 @@ export const appleInvites: App = {
   ],
 };
 
-export const airbnb: App = {
-  name: "Airbnb",
-  imageSource: AirbnbImage,
+export const appStore: App = {
+  name: "App Store",
+  imageSource: AppStoreImage,
   animations: [
     {
-      name: "Where section animation",
-      href: "/airbnb/home",
+      name: "App screen animation",
+      href: "/app-store/app",
     },
   ],
 };
