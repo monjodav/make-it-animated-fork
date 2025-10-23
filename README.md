@@ -13,6 +13,12 @@ I'm thrilled to have you on board. Your support means a lot to me, and I'm confi
 Getting started with Make it Animated is easy. Follow these steps to run the project locally:
 
 ```bash
+# Clone the repository
+git clone https://github.com/make-it-animated/react-native.git
+
+# Run reset-project script
+npm run reset-project
+
 # Install dependencies
 npm install
 
@@ -25,6 +31,8 @@ npm run android
 # Start the development server
 npm run dev
 ```
+
+> **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point.
 
 ## System Requirements
 

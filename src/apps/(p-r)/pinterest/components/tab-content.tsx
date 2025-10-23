@@ -5,7 +5,7 @@ import { useFocusedTab } from "react-native-collapsible-tab-view";
 import { Board } from "../lib/types";
 import MasonryList from "./masonry-list";
 
-// pinterest-pull-to-refresh-loading-animation 🔽
+// pinterest-navigation-between-boards-animation 🔽
 
 type Props = {
   board: Board;
@@ -58,4 +58,4 @@ export const TabContent: FC<Props> = ({ board }) => {
   return <MasonryList boardName={board.name} data={data} />;
 };
 
-// pinterest-pull-to-refresh-loading-animation 🔼
+// pinterest-navigation-between-boards-animation 🔼
