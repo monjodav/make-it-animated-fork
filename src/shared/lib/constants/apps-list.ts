@@ -3,7 +3,7 @@ import { adidas, alma, appleBooks, appleInvites, appStore } from "./apps/a";
 import { canva, colorsApp, chatgpt } from "./apps/c";
 import { instagram } from "./apps/i";
 import { linear, linkedin, luma } from "./apps/l";
-import { pinterest } from "./apps/p";
+import { perplexity, pinterest } from "./apps/p";
 import { x } from "./apps/x";
 import { viber } from "./apps/v";
 import { whatsapp } from "./apps/w";
@@ -69,6 +69,7 @@ export const apps: App[] = [
   opal,
   //------------------------
   // P
+  perplexity,
   pinterest,
   // Q
   queue,
