@@ -1,18 +1,34 @@
 import { FC } from "react";
-import { BottomSheetBackdrop, BottomSheetBackdropProps } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdropProps, useBottomSheet } from "@gorhom/bottom-sheet";
 import { StyleSheet } from "react-native";
-import Animated, { interpolate, Extrapolation, useAnimatedProps } from "react-native-reanimated";
+import Animated, {
+  interpolate,
+  Extrapolation,
+  useAnimatedProps,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import { BlurView } from "expo-blur";
+import { Pressable } from "react-native";
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
-export const Backdrop: FC<BottomSheetBackdropProps> = ({ animatedIndex, style, ...props }) => {
+export const Backdrop: FC<BottomSheetBackdropProps> = ({ animatedIndex }) => {
+  const { close } = useBottomSheet();
+
+  const rPressableStyle = useAnimatedStyle(() => {
+    return {
+      pointerEvents: animatedIndex.get() >= 0 ? "auto" : "none",
+    };
+  });
+
   const animatedIntensity = useAnimatedProps(() => {
-    const maxIntensity = 45;
+    const maxIntensity = 30;
+
     const intensity = interpolate(
-      animatedIndex.value,
-      [-1, -0.5, 0, 1, 2],
-      [0, 0, maxIntensity / 1.5, maxIntensity, 0],
+      animatedIndex.get(),
+      [-1, 0],
+      [0, maxIntensity],
       Extrapolation.CLAMP
     );
 
@@ -22,19 +38,12 @@ export const Backdrop: FC<BottomSheetBackdropProps> = ({ animatedIndex, style, .
   });
 
   return (
-    <BottomSheetBackdrop
-      animatedIndex={animatedIndex}
-      disappearsOnIndex={-1}
-      appearsOnIndex={0}
-      opacity={1}
-      style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      {...props}
-    >
+    <AnimatedPressable className="absolute inset-0" style={rPressableStyle} onPress={() => close()}>
       <AnimatedBlurView
         animatedProps={animatedIntensity}
         tint="dark"
         style={StyleSheet.absoluteFill}
       />
-    </BottomSheetBackdrop>
+    </AnimatedPressable>
   );
 };

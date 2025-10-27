@@ -48,7 +48,7 @@ export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
         <View className="w-[45] h-[6px] mt-2 rounded-full bg-white/30 self-center" />
         <View className="px-9 pb-5">
           <View className="flex-row items-center mt-1">
-            <Text className="text-white text-2xl font-semibold flex-1">Sources</Text>
+            <Text className="text-white text-2xl font-medium flex-1">Sources</Text>
             <Pressable
               hitSlop={8}
               onPress={() => setIsVisible(false)}
@@ -62,28 +62,28 @@ export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
 
           <View className="gap-8 mt-8">
             <SourceToggleRow
-              icon={<Globe2 size={18} color="white" />}
+              icon={<Globe2 size={16} color="white" />}
               title="Web"
               description="Search across the entire internet"
               value={webEnabled}
               onValueChange={setWebEnabled}
             />
             <SourceToggleRow
-              icon={<GraduationCap size={18} color="white" />}
+              icon={<GraduationCap size={16} color="white" />}
               title="Academic"
               description="Search for published academic papers"
               value={academicEnabled}
               onValueChange={setAcademicEnabled}
             />
             <SourceToggleRow
-              icon={<Receipt size={18} color="white" />}
+              icon={<Receipt size={16} color="white" />}
               title="Finance"
               description="Search SEC filings"
               value={financeEnabled}
               onValueChange={setFinanceEnabled}
             />
             <SourceToggleRow
-              icon={<Users2 size={18} color="white" />}
+              icon={<Users2 size={16} color="white" />}
               title="Social"
               description="Search for discussions and opinions"
               value={socialEnabled}

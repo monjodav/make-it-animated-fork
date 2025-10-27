@@ -11,18 +11,15 @@ export default function Home() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
-    <View className="flex-1 bg-neutral-900">
-      <View
-        style={{ paddingTop: insets.top + 20 }}
-        className="flex-row px-5 items-center justify-between"
-      >
+    <View className="flex-1 bg-neutral-900" style={{ paddingTop: insets.top + 20 }}>
+      <View className="flex-row px-5 items-center justify-between">
         <Pressable onPress={simulatePress}>
           <BreathingIcon />
         </Pressable>
-        <LayoutGrid size={30} color="white" />
+        <LayoutGrid size={24} color="white" />
       </View>
 
-      <Text className="text-white text-4xl mt-32 text-center font-semibold">perplexity</Text>
+      <Text className="text-white text-4xl text-center font-medium mt-32">perplexity</Text>
 
       <Pressable
         onPress={simulatePress}
