@@ -33,9 +33,13 @@ export const AddFileModal: FC<Props> = ({ isVisible, setIsVisible }) => {
     }
   }, [isVisible]);
 
+  // Backdrop strategy:
+  // - Android: use library Backdrop with static opacity for performance (no live blur support)
+  // - iOS: custom Backdrop animates BlurView intensity with Reanimated for native-feel depth
   const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => {
     if (Platform.OS === "android") {
       return (
+        // appearsOnIndex/disappearsOnIndex tie visibility to sheet index transitions for smooth fade
         <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.5} />
       );
     }
@@ -45,11 +49,14 @@ export const AddFileModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   return (
     <BottomSheet
       ref={ref}
+      // Start hidden so first open animates from -1 → 0 (drives backdrop interpolation)
       index={-1}
       enablePanDownToClose
+      // Custom render controls platform-specific backdrop animation shape
       backdropComponent={renderBackdrop}
       handleStyle={styles.handleStyle}
       backgroundStyle={styles.backgroundStyle}
+      // Keep source of truth outside to prevent tearing when the sheet closes via gesture
       onClose={() => setIsVisible(false)}
       detached
       bottomInset={40}
