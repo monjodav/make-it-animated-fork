@@ -30,7 +30,7 @@ const ICON_COLOR = "#fafafa";
 const STROKE_WIDTH = 3;
 
 export const Paywall = () => {
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useState<"standard" | "heavy">("standard");
 
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
@@ -71,53 +71,63 @@ export const Paywall = () => {
           </Text>
           <Animated.View
             // Slight gap change per plan creates a subtle density shift on toggle
-            className={cn("gap-[28px]", value === "2" && "gap-[26px]")}
+            className={cn("gap-[28px]", value === "heavy" && "gap-[26px]")}
           >
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <Orbit size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
-              text={value === "1" ? "Higher usage on Fast & Expert" : "Everything in SuperGrok"}
+              text={
+                value === "standard" ? "Higher usage on Fast & Expert" : "Everything in SuperGrok"
+              }
             />
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <ChartNoAxesColumn size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <Lightbulb size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
               text={
-                value === "1" ? "Higher usage on Fast & Expert" : "Highest usage on Fast & Expert"
+                value === "standard"
+                  ? "Higher usage on Fast & Expert"
+                  : "Highest usage on Fast & Expert"
               }
             />
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <Rocket size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
-              text={value === "1" ? "Higher usage on Voice Mode and Companions" : "Access to Heavy"}
+              text={
+                value === "standard"
+                  ? "Higher usage on Voice Mode and Companions"
+                  : "Access to Heavy"
+              }
             />
             <FeatureItem
               icon={
-                value === "1" ? (
+                value === "standard" ? (
                   <ThumbsUp size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 ) : (
                   <ImagePlus size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />
                 )
               }
               text={
-                value === "1" ? "Early access to new features" : "Highest usage on Grok Imagine"
+                value === "standard"
+                  ? "Early access to new features"
+                  : "Highest usage on Grok Imagine"
               }
             />
-            {value === "2" && (
+            {value === "heavy" && (
               <>
                 <FeatureItem
                   icon={<Sparkle size={20} color={ICON_COLOR} strokeWidth={STROKE_WIDTH} />}

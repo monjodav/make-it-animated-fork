@@ -1,6 +1,11 @@
 import { Text, View, StyleSheet } from "react-native";
 import SegmentedControl from "@/src/shared/components/segmented-control";
 import { cn } from "@/src/shared/lib/utils/cn";
+import { useSharedValue, withTiming } from "react-native-reanimated";
+import { FC, PropsWithChildren } from "react";
+
+const MIN_SCALE = 0.98;
+const DURATION = 150;
 
 // grok-paywall-screen-animation 🔽
 
@@ -9,6 +14,29 @@ import { cn } from "@/src/shared/lib/utils/cn";
 // - pressScale=0.98: quick tactile feedback without distracting from content
 // - Continuous border curves: iOS 16+ rounded geometry avoids sharp edges during indicator motion
 // - value/onValueChange: source of truth that triggers indicator transition between segments
+
+type ItemContainerProps = {
+  value: "standard" | "heavy";
+};
+
+const ItemContainer: FC<PropsWithChildren<ItemContainerProps>> = ({ children, value }) => {
+  const itemScale = useSharedValue(1);
+
+  const onPressIn = () => itemScale.set(withTiming(MIN_SCALE, { duration: DURATION }));
+  const onPressOut = () => itemScale.set(withTiming(1, { duration: DURATION }));
+
+  return (
+    <SegmentedControl.Item
+      value={value}
+      className="flex-1 px-5 py-4 rounded-full"
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={{ transform: [{ scale: itemScale }] }}
+    >
+      {children}
+    </SegmentedControl.Item>
+  );
+};
 
 type PricingItemProps = {
   isActive: boolean;
@@ -48,15 +76,15 @@ const PricingItem = ({ isActive, title, price, period = "/mo" }: PricingItemProp
 };
 
 type PlanControlProps = {
-  value: string;
-  setValue: (value: string) => void;
+  value: "standard" | "heavy";
+  setValue: (value: "standard" | "heavy") => void;
 };
 
 const PlanControl = ({ value, setValue }: PlanControlProps) => {
   return (
     <SegmentedControl
       value={value}
-      onValueChange={setValue}
+      onValueChange={setValue as (value: string) => void}
       className="bg-neutral-900 mx-5 mb-7 self-center justify-between rounded-[20px]"
       style={styles.borderCurve}
     >
@@ -67,15 +95,13 @@ const PlanControl = ({ value, setValue }: PlanControlProps) => {
       />
 
       {/* Item: small pressScale for subtle depth on tap; rounded-full to match indicator path */}
-      <SegmentedControl.Item value="1" pressScale={0.98} className="flex-1 px-5 py-4 rounded-full">
-        {({ isActive }) => <PricingItem isActive={isActive} title="SuperGrok" price="40,00 USD" />}
-      </SegmentedControl.Item>
+      <ItemContainer value="standard">
+        <PricingItem isActive={value === "standard"} title="SuperGrok" price="40,00 USD" />
+      </ItemContainer>
 
-      <SegmentedControl.Item value="2" pressScale={0.98} className="flex-1 px-5 py-4 rounded-full">
-        {({ isActive }) => (
-          <PricingItem isActive={isActive} title="SuperGrok Heavy" price="400,00 U..." />
-        )}
-      </SegmentedControl.Item>
+      <ItemContainer value="heavy">
+        <PricingItem isActive={value === "heavy"} title="SuperGrok Heavy" price="400,00 U..." />
+      </ItemContainer>
     </SegmentedControl>
   );
 };
