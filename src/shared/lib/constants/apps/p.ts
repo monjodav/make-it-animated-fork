@@ -22,7 +22,7 @@ export const perplexity: App = {
   imageSource: PerplexityImage,
   animations: [
     {
-      name: "Bottom sheet blur backdrop animation",
+      name: "Bottom sheet backdrop animation",
       href: "/perplexity/home",
     },
   ],

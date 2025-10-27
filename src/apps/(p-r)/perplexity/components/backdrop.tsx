@@ -10,6 +10,8 @@ import Animated, {
 import { BlurView } from "expo-blur";
 import { Pressable } from "react-native";
 
+// perplexity-bottom-sheet-backdrop-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -47,3 +49,5 @@ export const Backdrop: FC<BottomSheetBackdropProps> = ({ animatedIndex }) => {
     </AnimatedPressable>
   );
 };
+
+// perplexity-bottom-sheet-backdrop-animation 🔼

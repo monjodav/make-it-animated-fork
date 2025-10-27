@@ -2,6 +2,8 @@ import { View, Text, Pressable } from "react-native";
 import { Image as ImageIcon, Camera, FileText } from "lucide-react-native";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
+// perplexity-bottom-sheet-backdrop-animation 🔽
+
 export type SourceTabKey = "image" | "camera" | "file";
 
 const TABS: { key: SourceTabKey; label: string; Icon: any }[] = [
@@ -31,3 +33,5 @@ export const HorizontalTabs: React.FC = () => {
     </View>
   );
 };
+
+// perplexity-bottom-sheet-backdrop-animation 🔼

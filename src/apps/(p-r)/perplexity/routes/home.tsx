@@ -3,12 +3,17 @@ import { AudioLines, LayoutGrid, Mic, Plus, Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useState } from "react";
-import { SettingsModal } from "../components/settings-modal";
+import { AddFileModal } from "../components/add-file-modal";
 import BreathingIcon from "../components/breathing-icon";
+import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  useAndroidNote(
+    "Regarding Bottom Sheet Backdrop. Android doesn't reliably support blur overlays. For consistency and performance, the fallback bottom sheet interpolates background color rather than applying a blur effect."
+  );
 
   return (
     <View className="flex-1 bg-neutral-900" style={{ paddingTop: insets.top + 20 }}>
@@ -37,12 +42,14 @@ export default function Home() {
 
         <View className="flex-row justify-between mt-5">
           <View className="flex-row items-center gap-3">
+            {/* perplexity-bottom-sheet-backdrop-animation 🔽 */}
             <Pressable
               onPress={() => setIsModalVisible(true)}
               className="p-2 rounded-full bg-neutral-700 items-center justify-center"
             >
               <Plus size={18} color="white" />
             </Pressable>
+            {/* perplexity-bottom-sheet-backdrop-animation 🔼 */}
             <Pressable
               onPress={simulatePress}
               className="p-2 rounded-full bg-neutral-700 items-center justify-center"
@@ -67,7 +74,9 @@ export default function Home() {
           </View>
         </View>
       </View>
-      <SettingsModal isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
+      {/* perplexity-bottom-sheet-backdrop-animation 🔽 */}
+      <AddFileModal isVisible={isModalVisible} setIsVisible={setIsModalVisible} />
+      {/* perplexity-bottom-sheet-backdrop-animation 🔼 */}
     </View>
   );
 }

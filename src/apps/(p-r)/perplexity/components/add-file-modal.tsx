@@ -1,17 +1,23 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react";
-import BottomSheet, { BottomSheetBackdropProps, BottomSheetView } from "@gorhom/bottom-sheet";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { StyleSheet, View, Text, Pressable, Platform } from "react-native";
 import { Backdrop } from "./backdrop";
 import { Globe2, GraduationCap, Receipt, Users2, X } from "lucide-react-native";
 import { HorizontalTabs } from "./horizontal-tabs";
 import { SourceToggleRow } from "./source-toggle-row";
+
+// perplexity-bottom-sheet-backdrop-animation 🔽
 
 type Props = {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
 };
 
-export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
+export const AddFileModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   const ref = useRef<BottomSheet>(null);
 
   const [webEnabled, setWebEnabled] = useState(true);
@@ -27,10 +33,14 @@ export const SettingsModal: FC<Props> = ({ isVisible, setIsVisible }) => {
     }
   }, [isVisible]);
 
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => <Backdrop {...props} />,
-    []
-  );
+  const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => {
+    if (Platform.OS === "android") {
+      return (
+        <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.5} />
+      );
+    }
+    return <Backdrop {...props} />;
+  }, []);
 
   return (
     <BottomSheet
@@ -109,3 +119,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// perplexity-bottom-sheet-backdrop-animation 🔼
