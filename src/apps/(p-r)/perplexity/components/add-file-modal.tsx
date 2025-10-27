@@ -9,6 +9,7 @@ import { Backdrop } from "./backdrop";
 import { Globe2, GraduationCap, Receipt, Users2, X } from "lucide-react-native";
 import { HorizontalTabs } from "./horizontal-tabs";
 import { SourceToggleRow } from "./source-toggle-row";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // perplexity-bottom-sheet-backdrop-animation 🔽
 
@@ -24,6 +25,8 @@ export const AddFileModal: FC<Props> = ({ isVisible, setIsVisible }) => {
   const [academicEnabled, setAcademicEnabled] = useState(false);
   const [financeEnabled, setFinanceEnabled] = useState(false);
   const [socialEnabled, setSocialEnabled] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (isVisible) {
@@ -59,7 +62,7 @@ export const AddFileModal: FC<Props> = ({ isVisible, setIsVisible }) => {
       // Keep source of truth outside to prevent tearing when the sheet closes via gesture
       onClose={() => setIsVisible(false)}
       detached
-      bottomInset={40}
+      bottomInset={insets.bottom + 12}
     >
       <BottomSheetView>
         <View className="w-[45] h-[6px] mt-2 rounded-full bg-white/30 self-center" />
