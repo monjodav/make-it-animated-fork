@@ -16,7 +16,10 @@ export default function Home() {
   );
 
   return (
-    <View className="flex-1 bg-neutral-900" style={{ paddingTop: insets.top + 20 }}>
+    <View
+      className="flex-1 bg-neutral-900"
+      style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
+    >
       <View className="flex-row px-5 items-center justify-between">
         <Pressable onPress={simulatePress}>
           <BreathingIcon />
