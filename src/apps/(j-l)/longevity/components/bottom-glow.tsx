@@ -9,7 +9,7 @@ type GradientLayerProps = {
   activeIndex: SharedValue<number>;
 };
 
-export const GradientLayer: React.FC<GradientLayerProps> = ({
+export const BottomGlow: React.FC<GradientLayerProps> = ({
   palette,
   width,
   height,

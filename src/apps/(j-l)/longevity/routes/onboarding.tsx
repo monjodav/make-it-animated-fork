@@ -5,38 +5,26 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
   Extrapolation,
+  SharedValue,
 } from "react-native-reanimated";
 import { PaginationDots } from "../components/pagination-dots";
-import { GradientLayer } from "../components/gradient-layer";
-import { OnboardingSlide } from "../components/onboarding-slide";
+import { BottomGlow } from "../components/bottom-glow";
+import { OnboardingSlideContainer } from "../components/onboarding-slide-container";
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { createContext } from "react";
+
+type AnimatedIndexContextType = {
+  activeIndex: SharedValue<number>;
+};
+
+const AnimatedIndexContext = createContext<AnimatedIndexContextType | null>(null);
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const PAGES = [
-  {
-    title: "Welcome to your\nLongevity Deck",
-    body: "Your personal guide to evidence-based health and longevity protocols. Swipe cards into your own deck and track what you do, learn from it, and share with others. Privately.",
-  },
-  {
-    title: "Cut through the noise.\nEssentials only!",
-    body: "Each protocol is a beautiful card. See benefits, risks, and best practices baked in. Keep only what fits your goals. Filter, search, learn and discover new things!",
-  },
-  {
-    title: "Up to date expert\nbacked info",
-    body: "We pull fresh insights from top podcasts and scientific publications. Then update every card with sources, and alert you when anything changes. Never miss a beat!",
-  },
-  {
-    title: "Share with friends\n& compare",
-    body: "Publish your stack as one link, let friends copy it in a tap, and see public adoption and weekly-use stats. You can also share a specific protocol you do on social media!",
-  },
-  {
-    title: "This app is not\nmedical advice",
-    body: "Educational use only. Not a diagnosis/treatment tool. Protocols may not suit you and could interact with meds or conditions. Do you research and consult a licensed clinician before starting or changing anything. Seek immediate care for symptoms or emergencies. Tap 'I understand' to acknowledge.",
-  },
-];
 const PALETTE = ["#321A48", "#192444", "#1C3F2D", "#44382A", "#391C1D"];
+
+const TOTAL_SLIDES = 5;
 
 const Onboarding = () => {
   const { width, height } = useWindowDimensions();
@@ -52,8 +40,8 @@ const Onboarding = () => {
   });
 
   const rButtonStyle = useAnimatedStyle(() => {
-    const beforeLastIndex = PAGES.length - 2;
-    const lastIndex = PAGES.length - 1;
+    const beforeLastIndex = TOTAL_SLIDES - 2;
+    const lastIndex = TOTAL_SLIDES - 1;
 
     return {
       opacity: interpolate(
@@ -67,37 +55,53 @@ const Onboarding = () => {
   }, [width]);
 
   return (
-    <View className="flex-1 bg-[#161522]">
-      <GradientLayer palette={PALETTE} width={width} height={height} activeIndex={activeIndex} />
-
-      <Animated.ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
+    <AnimatedIndexContext value={{ activeIndex }}>
+      <View
+        className="flex-1 bg-[#161522]"
+        style={{ paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }}
       >
-        {PAGES.map((page, index) => (
-          <OnboardingSlide
-            key={index}
-            width={width}
-            title={page.title}
-            body={page.body}
-            topOffset={410}
-          />
-        ))}
-      </Animated.ScrollView>
+        <BottomGlow palette={PALETTE} width={width} height={height} activeIndex={activeIndex} />
 
-      <View className="absolute left-6 right-6 gap-5" style={{ bottom: insets.bottom + 12 }}>
-        <PaginationDots numberOfDots={PAGES.length} activeIndex={activeIndex} />
-        <AnimatedPressable
-          className="h-[50px] rounded-full bg-white justify-center items-center"
-          style={[rButtonStyle, styles.borderCurve]}
+        <Animated.ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
         >
-          <Text className="text-black text-xl font-medium">I understand</Text>
-        </AnimatedPressable>
+          <OnboardingSlideContainer
+            title={"Welcome to your\nLongevity Deck"}
+            description="Your personal guide to evidence-based health and longevity protocols. Swipe cards into your own deck and track what you do, learn from it, and share with others. Privately."
+          />
+          <OnboardingSlideContainer
+            title={"Cut through the noise.\nEssentials only!"}
+            description="Each protocol is a beautiful card. See benefits, risks, and best practices baked in. Keep only what fits your goals. Filter, search, learn and discover new things!"
+          />
+          <OnboardingSlideContainer
+            title={"Up to date expert\nbacked info"}
+            description="We pull fresh insights from top podcasts and scientific publications. Then update every card with sources, and alert you when anything changes. Never miss a beat!"
+          />
+          <OnboardingSlideContainer
+            title={"Share with friends\n& compare"}
+            description="Publish your stack as one link, let friends copy it in a tap, and see public adoption and weekly-use stats. You can also share a specific protocol you do on social media!"
+          />
+          <OnboardingSlideContainer
+            title={"This app is not\nmedical advice"}
+            description="Educational use only. Not a diagnosis/treatment tool. Protocols may not suit you and could interact with meds or conditions. Do you research and consult a licensed clinician before starting or changing anything. Seek immediate care for symptoms or emergencies. Tap 'I understand' to acknowledge."
+          />
+        </Animated.ScrollView>
+
+        <View className="gap-5 px-5 pt-5">
+          <PaginationDots numberOfDots={TOTAL_SLIDES} activeIndex={activeIndex} />
+          <AnimatedPressable
+            className="h-[50px] rounded-full bg-white justify-center items-center"
+            style={[rButtonStyle, styles.borderCurve]}
+          >
+            <Text className="text-black text-xl font-medium">I understand</Text>
+          </AnimatedPressable>
+        </View>
       </View>
-    </View>
+    </AnimatedIndexContext>
   );
 };
 
