@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import React, { useEffect } from "react";
 import { CircleUser } from "lucide-react-native";
 import Animated, {
@@ -11,10 +11,11 @@ import Animated, {
   Extrapolation,
   withDelay,
 } from "react-native-reanimated";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 const OUTER_DIAMETER = 60;
 const INNER_DIAMETER = 40;
-const ICON_SIZE = 30;
+const ICON_SIZE = 24;
 
 const BreathingIcon = () => {
   const progress = useSharedValue(0);
@@ -55,16 +56,16 @@ const BreathingIcon = () => {
   });
 
   return (
-    <View>
-      <View style={styles.container}>
+    <>
+      {/* <View style={styles.container}>
         <Animated.View
           pointerEvents="none"
           className="absolute border-[#22d3ee]"
           style={rRingStyle}
         />
-      </View>
+      </View> */}
       <CircleUser size={ICON_SIZE} color="white" />
-    </View>
+    </>
   );
 };
 
@@ -74,10 +75,10 @@ const styles = StyleSheet.create({
   container: {
     width: OUTER_DIAMETER,
     height: OUTER_DIAMETER,
-    alignItems: "center",
-    justifyContent: "center",
     position: "absolute",
     left: -(OUTER_DIAMETER - ICON_SIZE) / 2,
     top: -(OUTER_DIAMETER - ICON_SIZE) / 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

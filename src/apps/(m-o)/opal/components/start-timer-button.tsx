@@ -239,9 +239,14 @@ const StartTimerButton = () => {
       >
         {/* Breathing shapes */}
         {Platform.OS === "ios" && (
-          <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+          <BlurView
+            pointerEvents="none"
+            intensity={50}
+            tint="dark"
+            style={StyleSheet.absoluteFillObject}
+          />
         )}
-        <Canvas style={styles.canvas}>
+        <Canvas pointerEvents="none" style={styles.canvas}>
           <Path path={leftOvalPath} color={leftOvalColor}>
             <Blur blur={35} />
           </Path>
@@ -249,12 +254,16 @@ const StartTimerButton = () => {
             <Blur blur={35} />
           </Path>
         </Canvas>
-        <View className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center">
+        <View
+          pointerEvents="none"
+          className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center"
+        >
           <Ionicons name="play" size={18} color="white" />
           <Text className="text-white text-xl font-medium">Start Timer</Text>
         </View>
         {/* Shimmer */}
         <Animated.View
+          pointerEvents="none"
           className="absolute left-0 top-0 bottom-0 w-1/2 flex-row"
           style={rShimmerStyle}
           // Capture measured width to compute initial offscreen start

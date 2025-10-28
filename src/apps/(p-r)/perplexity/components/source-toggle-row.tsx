@@ -1,5 +1,7 @@
 import { View, Text, Switch } from "react-native";
 
+// perplexity-bottom-sheet-backdrop-animation 🔽
+
 export interface SourceToggleRowProps {
   icon: React.ReactNode;
   title: string;
@@ -34,3 +36,5 @@ export const SourceToggleRow: React.FC<SourceToggleRowProps> = ({
     </View>
   );
 };
+
+// perplexity-bottom-sheet-backdrop-animation 🔼

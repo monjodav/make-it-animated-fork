@@ -2,6 +2,7 @@ import AdidasImage from "@/assets/images/apps/adidas.png";
 import AppleBooksImage from "@/assets/images/apps/apple-books.png";
 import AppleInvitesImage from "@/assets/images/apps/apple-invites.png";
 import AlmaImage from "@/assets/images/apps/alma.png";
+import AppStoreImage from "@/assets/images/apps/app-store.png";
 import { App } from "../apps-list";
 
 export const adidas: App = {
@@ -44,6 +45,17 @@ export const appleInvites: App = {
     {
       name: "Welcome screen animation",
       href: "/apple-invites/welcome",
+    },
+  ],
+};
+
+export const appStore: App = {
+  name: "App Store",
+  imageSource: AppStoreImage,
+  animations: [
+    {
+      name: "App screen animation",
+      href: "/app-store/app",
     },
   ],
 };
