@@ -10,10 +10,10 @@ import {
   Upload,
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
-import AnimatedInput from "../components/animated-input";
+import AnimatedInput from "../components/chat/animated-input";
+import { KeyboardStickyView } from "react-native-keyboard-controller";
 
 export default function Chat() {
   const insets = useSafeAreaInsets();
@@ -21,8 +21,12 @@ export default function Chat() {
   const { openDrawer } = useDrawerControl();
 
   return (
-    <View className="flex-1 bg-neutral-900" style={{ paddingTop: insets.top }}>
-      <KeyboardAvoidingView behavior="padding" className="flex-1">
+    <Pressable
+      className="flex-1 bg-neutral-900"
+      style={{ paddingTop: insets.top + 12 }}
+      onPress={Keyboard.dismiss}
+    >
+      <View className="flex-1">
         <View className="px-4 pb-2">
           <View className="flex-row items-center justify-between">
             <Pressable
@@ -91,12 +95,13 @@ export default function Chat() {
             </Pressable>
           </View>
         </View>
+      </View>
 
-        <Pressable className="flex-1" onPress={() => Keyboard.dismiss()} />
-        <View className="flex-1">
-          <AnimatedInput />
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+      {/* perplexity-chat-input-on-focus-animation 🔽 */}
+      <KeyboardStickyView>
+        <AnimatedInput />
+      </KeyboardStickyView>
+      {/* perplexity-chat-input-on-focus-animation 🔼 */}
+    </Pressable>
   );
 }
