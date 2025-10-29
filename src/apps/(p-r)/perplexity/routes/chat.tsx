@@ -24,6 +24,8 @@ export default function Chat() {
     <Pressable
       className="flex-1 bg-neutral-900"
       style={{ paddingTop: insets.top + 12 }}
+      // Tapping outside input collapses the composer (onBlur) by dismissing the keyboard,
+      // which in turn drives focusProgress -> 0 in AnimatedInput for a symmetric spring back.
       onPress={Keyboard.dismiss}
     >
       <View className="flex-1">
@@ -98,7 +100,10 @@ export default function Chat() {
       </View>
 
       {/* perplexity-chat-input-on-focus-animation 🔽 */}
+      {/* KeyboardStickyView pins the composer above the keyboard and exposes safe-area changes, */}
+      {/* letting AnimatedInput interpolate paddingBottom (insets.bottom+12 -> 12) for a smooth settle. */}
       <KeyboardStickyView>
+        {/* AnimatedInput owns focusProgress shared value coordinating width/height/mic/controls. */}
         <AnimatedInput />
       </KeyboardStickyView>
       {/* perplexity-chat-input-on-focus-animation 🔼 */}
