@@ -4,6 +4,8 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  withSequence,
+  useAnimatedReaction,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
@@ -12,48 +14,66 @@ import { Mic, PenLine, Plus, Search } from "lucide-react-native";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const ANIMATION_DURATION = 350;
-const PEN_SIZE = 62;
+const PEN_ICON_SIZE = 62;
 const GAP = 10;
 const BASIC_INPUT_CONTAINER_HEIGHT = 62;
 const FULL_INPUT_CONTAINER_HEIGHT = 110;
-
 const PADDING = 14;
 
 const AnimatedInput = () => {
   const insets = useSafeAreaInsets();
-  const bottomInset = insets.bottom;
 
-  const focusedProgress = useSharedValue(0);
+  const focusProgress = useSharedValue(0);
 
   const allowedWidth = useSharedValue(0);
+  const bounceY = useSharedValue(0);
+
+  useAnimatedReaction(
+    () => focusProgress.get(),
+    (current, prev) => {
+      if (prev != null && prev > 0.01 && current <= 0.01) {
+        bounceY.set(0);
+        bounceY.set(withSequence(withTiming(3, { duration: 100 }), withTiming(0)));
+      }
+    }
+  );
+  const rMainContainerStyle = useAnimatedStyle(() => {
+    const paddingBottom = interpolate(focusProgress.get(), [0, 1], [insets.bottom, 12]);
+
+    return {
+      paddingBottom,
+    };
+  });
 
   const rInputContainerStyle = useAnimatedStyle(() => {
     const width = interpolate(
-      focusedProgress.get(),
+      focusProgress.get(),
       [0, 1],
-      [allowedWidth.get() - PEN_SIZE - GAP, allowedWidth.get()]
+      [allowedWidth.get() - PEN_ICON_SIZE - GAP, allowedWidth.get()]
     );
     const height = interpolate(
-      focusedProgress.get(),
+      focusProgress.get(),
       [0, 1],
       [BASIC_INPUT_CONTAINER_HEIGHT, FULL_INPUT_CONTAINER_HEIGHT]
     );
-    const borderRadius = interpolate(focusedProgress.get(), [0, 1], [40, 26]);
+    const borderRadius = interpolate(focusProgress.get(), [0, 1], [40, 26]);
     return {
       width,
       height,
       borderRadius,
+      transform: [{ translateY: bounceY.get() }],
     };
   });
 
-  const rPenBtnAnimatedStyle = useAnimatedStyle(() => {
+  const rPenBtnStyle = useAnimatedStyle(() => {
+    const translateX = interpolate(focusProgress.get(), [0, 1], [0, 100]);
     return {
-      transform: [{ translateX: interpolate(focusedProgress.get(), [0, 1], [0, 100]) }],
+      transform: [{ translateX }],
     };
   });
 
   return (
-    <Animated.View style={[{ paddingBottom: bottomInset }]} className="px-3 pt-2 mt-auto">
+    <Animated.View style={rMainContainerStyle} className="px-3 pt-2 mt-auto">
       <View
         className="flex-row items-center"
         style={{ gap: GAP }}
@@ -63,11 +83,8 @@ const AnimatedInput = () => {
         }}
       >
         <Animated.View
-          style={[
-            { borderCurve: "continuous", padding: PADDING, overflow: "hidden" },
-            rInputContainerStyle,
-          ]}
-          className="bg-neutral-800 border border-neutral-700/50"
+          style={[{ borderCurve: "continuous", padding: PADDING }, rInputContainerStyle]}
+          className="overflow-hidden bg-neutral-800 border border-neutral-700/50"
         >
           <View className="flex-row items-center justify-between">
             <TextInput
@@ -76,18 +93,18 @@ const AnimatedInput = () => {
               className="flex-1 text-neutral-500 text-lg font-medium"
               selectionColor="#ffffff"
               onFocus={() => {
-                focusedProgress.set(withTiming(1, { duration: ANIMATION_DURATION }));
+                focusProgress.set(withTiming(1, { duration: ANIMATION_DURATION }));
               }}
               onBlur={() => {
-                focusedProgress.set(withTiming(0, { duration: ANIMATION_DURATION }));
+                focusProgress.set(withTiming(0, { duration: ANIMATION_DURATION }));
               }}
             />
           </View>
 
           <AnimatedPressable
             onPress={simulatePress}
-            style={[{ position: "absolute", right: PADDING, bottom: PADDING, zIndex: 1 }]}
-            className="p-2 rounded-full items-center justify-center bg-neutral-700/90"
+            style={[{ right: PADDING, bottom: PADDING }]}
+            className="p-2 absolute rounded-full items-center justify-center bg-neutral-700/90"
           >
             <Mic size={18} color="white" />
           </AnimatedPressable>
@@ -109,7 +126,7 @@ const AnimatedInput = () => {
         </Animated.View>
 
         <AnimatedPressable
-          style={[{ width: PEN_SIZE, height: PEN_SIZE }, rPenBtnAnimatedStyle]}
+          style={[{ width: PEN_ICON_SIZE, height: PEN_ICON_SIZE }, rPenBtnStyle]}
           onPress={simulatePress}
           className="rounded-full items-center justify-center bg-neutral-800 border border-neutral-700/50"
         >
