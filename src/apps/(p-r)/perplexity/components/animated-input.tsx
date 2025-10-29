@@ -86,20 +86,18 @@ const AnimatedInput = () => {
           style={[{ borderCurve: "continuous", padding: PADDING }, rInputContainerStyle]}
           className="overflow-hidden bg-neutral-800 border border-neutral-700/50"
         >
-          <View className="flex-row items-center justify-between">
-            <TextInput
-              placeholder="Ask a follow up..."
-              placeholderTextColor="grey"
-              className="flex-1 text-neutral-500 text-lg font-medium"
-              selectionColor="#ffffff"
-              onFocus={() => {
-                focusProgress.set(withTiming(1, { duration: ANIMATION_DURATION }));
-              }}
-              onBlur={() => {
-                focusProgress.set(withTiming(0, { duration: ANIMATION_DURATION }));
-              }}
-            />
-          </View>
+          <TextInput
+            placeholder="Ask a follow up..."
+            placeholderTextColor="grey"
+            className="text-neutral-500 py-0 text-lg font-medium"
+            selectionColor="#ffffff"
+            onFocus={() => {
+              focusProgress.set(withTiming(1, { duration: ANIMATION_DURATION }));
+            }}
+            onBlur={() => {
+              focusProgress.set(withTiming(0, { duration: ANIMATION_DURATION }));
+            }}
+          />
 
           <AnimatedPressable
             onPress={simulatePress}
