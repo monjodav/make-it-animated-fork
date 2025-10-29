@@ -13,12 +13,13 @@ import { OnboardingSlideContainer } from "../components/onboarding-slide-contain
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createContext } from "react";
+import { Welcome } from "../components/slides/welcome";
 
 type AnimatedIndexContextType = {
   activeIndex: SharedValue<number>;
 };
 
-const AnimatedIndexContext = createContext<AnimatedIndexContextType | null>(null);
+export const AnimatedIndexContext = createContext<AnimatedIndexContextType | null>(null);
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -56,13 +57,11 @@ const Onboarding = () => {
 
   return (
     <AnimatedIndexContext value={{ activeIndex }}>
-      <View
-        className="flex-1 bg-[#161522]"
-        style={{ paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }}
-      >
+      <View className="flex-1 bg-[#161522]" style={{ paddingBottom: insets.bottom + 8 }}>
         <BottomGlow palette={PALETTE} width={width} height={height} activeIndex={activeIndex} />
 
         <Animated.ScrollView
+          contentContainerStyle={{ paddingTop: insets.top + 40 }}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -72,7 +71,9 @@ const Onboarding = () => {
           <OnboardingSlideContainer
             title={"Welcome to your\nLongevity Deck"}
             description="Your personal guide to evidence-based health and longevity protocols. Swipe cards into your own deck and track what you do, learn from it, and share with others. Privately."
-          />
+          >
+            <Welcome />
+          </OnboardingSlideContainer>
           <OnboardingSlideContainer
             title={"Cut through the noise.\nEssentials only!"}
             description="Each protocol is a beautiful card. See benefits, risks, and best practices baked in. Keep only what fits your goals. Filter, search, learn and discover new things!"
