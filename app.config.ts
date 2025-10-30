@@ -56,6 +56,9 @@ export default ({ config }: { config: ExpoConfig }) => ({
       config: {
         usesNonExemptEncryption: false,
       },
+      infoPlist: {
+        UIDesignRequiresCompatibility: true,
+      },
     },
     android: {
       ...config.android,
