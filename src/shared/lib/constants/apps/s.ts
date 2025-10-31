@@ -1,6 +1,7 @@
 import ShopifyImage from "@/assets/images/apps/shopify.png";
 import SlackImage from "@/assets/images/apps/slack.png";
 import ShowcaseImage from "@/assets/images/apps/showcase.png";
+import SuperlistImage from "@/assets/images/apps/superlist.png";
 import { App } from "../apps-list";
 
 export const shopify: App = {
@@ -48,6 +49,17 @@ export const showcase: App = {
     {
       name: "Upcoming list scroll animation",
       href: "/showcase/upcoming",
+    },
+  ],
+};
+
+export const superlist: App = {
+  name: "Superlist",
+  imageSource: SuperlistImage,
+  animations: [
+    {
+      name: "Onboarding animation",
+      href: "/superlist/onboarding",
     },
   ],
 };

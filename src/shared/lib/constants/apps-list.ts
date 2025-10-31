@@ -12,7 +12,7 @@ import { queue } from "./apps/q";
 import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
 import { raycast } from "./apps/r";
-import { shopify, showcase, slack } from "./apps/s";
+import { shopify, showcase, slack, superlist } from "./apps/s";
 import { discord } from "./apps/d";
 import { opal } from "./apps/o";
 
@@ -80,6 +80,7 @@ export const apps: App[] = [
   shopify,
   slack,
   showcase,
+  superlist,
   // T
   threads,
   //------------------------
