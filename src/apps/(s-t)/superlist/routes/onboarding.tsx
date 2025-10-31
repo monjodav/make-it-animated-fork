@@ -1,18 +1,11 @@
 import { UserRound } from "lucide-react-native";
-import { useMemo, useRef, useState } from "react";
-import {
-  FlatList,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { useMemo, useRef } from "react";
+import { FlatList, Platform, Text, useWindowDimensions, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SlideItem } from "../components/slide-item";
 
-const SLIDES = [
+export const SLIDES = [
   {
     bgColor: "#7872E0",
   },
@@ -34,16 +27,17 @@ export const Onboarding = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const horizontalListRef = useRef<FlatList>(null);
+
   const data = useMemo(() => [SLIDES.at(-1)!, ...SLIDES, SLIDES.at(0)!], []);
 
-  const [currentIndex, setCurrentIndex] = useState(1);
+  const activeIndex = useSharedValue(1);
 
-  const scrollX = useSharedValue(0);
+  const scrollOffsetX = useSharedValue(0);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollX.set(event.contentOffset.x);
-    },
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    const offsetX = event.contentOffset.x;
+    scrollOffsetX.set(offsetX);
+    activeIndex.set(offsetX / width);
   });
 
   return (
@@ -55,14 +49,7 @@ export const Onboarding = () => {
         ref={horizontalListRef}
         data={data}
         renderItem={({ item, index }) => (
-          <View className="p-4" style={[styles.borderCurve, { width }]}>
-            <View
-              className="flex-1 items-center justify-center rounded-[20px]"
-              style={{ backgroundColor: item.bgColor }}
-            >
-              <Text className="text-white text-24 font-bold">Slide {index}</Text>
-            </View>
-          </View>
+          <SlideItem item={item} index={index} width={width} scrollOffsetX={scrollOffsetX} />
         )}
         horizontal
         pagingEnabled
@@ -78,29 +65,23 @@ export const Onboarding = () => {
           if (Platform.OS === "android") {
             // Android needs delay to prevent scroll conflict during momentum
             setTimeout(() => {
-              horizontalListRef.current?.scrollToIndex({ index: data.length - 2, animated: false });
+              horizontalListRef?.current?.scrollToIndex({
+                index: data.length - 2,
+                animated: false,
+              });
             }, 100);
           } else {
-            horizontalListRef.current?.scrollToIndex({ index: data.length - 2, animated: false });
+            horizontalListRef?.current?.scrollToIndex({ index: data.length - 2, animated: false });
           }
         }}
         onEndReached={() => {
           if (Platform.OS === "android") {
             // Android needs delay to prevent scroll conflict during momentum
             setTimeout(() => {
-              horizontalListRef.current?.scrollToIndex({ index: 1, animated: false });
+              horizontalListRef?.current?.scrollToIndex({ index: 1, animated: false });
             }, 100);
           } else {
-            horizontalListRef.current?.scrollToIndex({ index: 1, animated: false });
-          }
-        }}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 99, // Only trigger when item is almost fully visible
-        }}
-        onViewableItemsChanged={(info) => {
-          // Update pagination dots based on currently visible achievement
-          if (typeof info.viewableItems[0]?.index === "number") {
-            setCurrentIndex(info.viewableItems[0].index);
+            horizontalListRef?.current?.scrollToIndex({ index: 1, animated: false });
           }
         }}
         showsHorizontalScrollIndicator={false}
@@ -108,18 +89,12 @@ export const Onboarding = () => {
       />
 
       <View
-        style={styles.borderCurve}
+        style={{ borderCurve: "continuous" }}
         className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-10 bg-slate-700"
       >
         <UserRound size={16} color="white" />
-        <Text className="text-white">Sign UP / Sign In</Text>
+        <Text className="text-white">Sign Up / Sign In</Text>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  borderCurve: {
-    borderCurve: "continuous",
-  },
-});
