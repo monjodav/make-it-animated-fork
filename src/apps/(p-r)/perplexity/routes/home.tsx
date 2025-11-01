@@ -39,7 +39,7 @@ export default function Home() {
 
       <View
         style={{ borderCurve: "continuous" }}
-        className="mx-4 mb-12 p-3 bg-neutral-800 rounded-3xl border border-neutral-700/50"
+        className="mx-4 p-3 bg-neutral-800 rounded-3xl border border-neutral-700/50"
       >
         <Text className="text-neutral-500 text-lg ml-1 mt-1">Ask anything...</Text>
 

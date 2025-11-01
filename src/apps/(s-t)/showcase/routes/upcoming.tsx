@@ -3,6 +3,7 @@ import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native
 import CustomCellRendererComponent from "../components/custom-cell-renderer-component";
 import { UpcomingItem } from "../components/upcoming-item";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 // showcase-upcoming-list-scroll-animation 🔽
 
@@ -12,6 +13,10 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const data = Array.from({ length: 20 });
 
 export function Upcoming() {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   const insets = useSafeAreaInsets();
 
   // Shared scroll position value - drives all item animations

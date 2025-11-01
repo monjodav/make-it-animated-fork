@@ -1,8 +1,13 @@
 import React, { FC, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { CustomSwitch } from "../components/custom-switch";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 export const Clips: FC = () => {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   const [value, setValue] = useState(false);
 
   return (

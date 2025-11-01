@@ -2,8 +2,13 @@ import React, { FC, useEffect } from "react";
 import { View } from "react-native";
 import { ShimmerText } from "../components/shimmer-text";
 import { useNavigation } from "expo-router";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 export const Chat: FC = () => {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   const navigation = useNavigation();
 
   useEffect(() => {
