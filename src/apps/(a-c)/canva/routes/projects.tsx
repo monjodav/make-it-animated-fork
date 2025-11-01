@@ -17,10 +17,15 @@ import { Ellipsis, Menu, Search } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 // canva-header-transition-animation 🔽
 
 export default function Projects() {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   // Native header height from navigation stack - used for layout calculations
   const headerHeight = useHeaderHeight();
 

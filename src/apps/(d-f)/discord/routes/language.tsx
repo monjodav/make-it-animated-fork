@@ -2,6 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import { ScrollView, View, StyleSheet } from "react-native";
 import LanguageItem from "../components/language-item";
 import { LanguageType } from "../lib/types";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 // Mock data generation for demo - simulates language selection list
 const languages: LanguageType[] = Array.from({ length: 20 }).map((_, index) => ({
@@ -10,6 +11,10 @@ const languages: LanguageType[] = Array.from({ length: 20 }).map((_, index) => (
 }));
 
 export const Language: FC = () => {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   const [currentLanguage, setCurrentLanguage] = useState<LanguageType>(languages[2]);
 
   // Memoized handler prevents unnecessary re-renders of list items

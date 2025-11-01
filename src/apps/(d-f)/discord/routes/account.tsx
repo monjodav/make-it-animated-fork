@@ -3,10 +3,15 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Tabs } from "react-native-collapsible-tab-view";
 import { CustomTabBar } from "../components/custom-tab-bar.tsx";
 import { TAB_BAR_HEIGHT } from "../lib/constants/account";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 // discord-top-tabs-indicator-animation 🔽
 
 export const Account: FC = () => {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   return (
     <View className="flex-1 bg-[#1C1D24] pt-4">
       <Tabs.Container

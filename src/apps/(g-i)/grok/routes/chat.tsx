@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AudioLines, File, Fullscreen, ImagePlus, Settings2 } from "lucide-react-native";
 import { MenuTrigger } from "../components/attach-file-menu/menu-trigger";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 const classNames = {
   quickActionContainer:
@@ -12,6 +13,10 @@ const classNames = {
 };
 
 export const Chat: FC = () => {
+  useIOSNote(
+    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
+  );
+
   const insets = useSafeAreaInsets();
 
   return (
