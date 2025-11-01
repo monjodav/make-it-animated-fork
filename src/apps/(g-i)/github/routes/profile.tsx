@@ -6,15 +6,10 @@ import { useHeaderTitle } from "../lib/use-header-title";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AchievementsButton } from "../components/achievements-button";
 import { useScrollViewOffset } from "@/src/shared/lib/hooks/use-scroll-view-offset";
-import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 // github-profile-header-title-animation 🔽
 
 export default function Profile() {
-  useIOSNote(
-    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
-  );
-
   const insets = useSafeAreaInsets();
   // Header height includes status bar + navigation header for content offset
   const headerHeight = useHeaderHeight();
