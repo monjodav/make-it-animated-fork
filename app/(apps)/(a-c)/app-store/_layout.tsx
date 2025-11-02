@@ -78,10 +78,10 @@ const AppStoreStackScreen = () => {
 
   const headerRight = () => (
     <Animated.View
-      className="right-2.5 flex-row items-center gap-[90px]"
+      className="flex-row items-center"
       style={headerButtonsStyle}
     >
-      <Image source={AppImage} style={styles.image} />
+      {/* <Image source={AppImage} style={styles.image} /> */}
 
       <Pressable className="bg-blue-600 rounded-full px-4 py-1" onPress={simulatePress}>
         <Text className="text-white text-base font-bold">Open</Text>
@@ -103,8 +103,13 @@ const AppStoreStackScreen = () => {
           headerTransparent: true,
           // Our animated background handles the blur/opacity based on scroll.
           headerBackground: headerBackground,
+          headerTitle: () => (
+            <Animated.View className=" flex-row items-center" style={headerButtonsStyle}>
+              <Image source={AppImage} style={styles.image} />
+            </Animated.View>
+          ),
           headerLeft: () => (
-            <Pressable className="flex-row items-center g-2" onPress={openDrawer}>
+            <Pressable className="flex-row items-center pr-3" onPress={openDrawer}>
               <ChevronLeft size={28} color="#007AFF" />
               <Text className="text-[#007AFF] text-xl font-medium">Search</Text>
             </Pressable>

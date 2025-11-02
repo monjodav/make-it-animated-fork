@@ -13,17 +13,12 @@ import AppImage from "@/assets/images/icon-ios.png";
 import { Image } from "expo-image";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useIOSNote } from "@/src/shared/lib/hooks/use-ios-note";
 
 // app-store-header-animation 🔽
 
 const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
 export const App = () => {
-  useIOSNote(
-    "On iOS 26 there is a known issue with the header layout. The fix is ready and the app is awaiting review to release a new version. Sorry for the inconvenience."
-  );
-
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
 

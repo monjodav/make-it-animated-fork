@@ -36,7 +36,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
   expo: {
     name: getEnvironmentValues().name,
     slug: "make-it-animated",
-    version: "1.2.0",
+    version: "1.2.1",
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",
@@ -55,6 +55,9 @@ export default ({ config }: { config: ExpoConfig }) => ({
       icon: "./assets/images/icon-ios.png",
       config: {
         usesNonExemptEncryption: false,
+      },
+      infoPlist: {
+        UIDesignRequiresCompatibility: true,
       },
     },
     android: {
