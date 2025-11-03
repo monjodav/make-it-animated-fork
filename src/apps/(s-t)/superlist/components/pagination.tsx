@@ -22,7 +22,7 @@ const PaginationDash: FC<{
   autoScrollProgress?: SharedValue<number>;
 }> = ({ index, activeIndex, inactiveWidth, activeWidth, totalSlides, autoScrollProgress }) => {
   const rDashStyle = useAnimatedStyle(() => {
-    const adjustedIndex = activeIndex.value - 1;
+    const adjustedIndex = activeIndex.get() - 1;
     // Normal interpolation for the current dash
     let width = interpolate(
       adjustedIndex,
@@ -84,17 +84,15 @@ const PaginationDash: FC<{
     };
   }, [activeIndex, index, totalSlides]);
 
-  // Progress fill animation for auto-scroll
   const rProgressStyle = useAnimatedStyle(() => {
     if (!autoScrollProgress) return { width: 0 };
 
-    const adjustedIndex = activeIndex.value - 1;
+    const adjustedIndex = activeIndex.get() - 1;
     const currentSlide = Math.floor(adjustedIndex);
 
-    // Only show progress for the current active slide
     if (currentSlide !== index) return { width: 0 };
 
-    const progress = autoScrollProgress.value;
+    const progress = autoScrollProgress.get();
     const progressWidth = interpolate(progress, [0, 1], [0, activeWidth], Extrapolation.CLAMP);
 
     return {

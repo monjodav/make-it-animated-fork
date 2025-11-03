@@ -61,24 +61,26 @@ export const Onboarding = () => {
   };
 
   const startAutoScroll = () => {
-    const currentSlideIndex = Math.floor(activeIndex.value);
+    const currentSlideIndex = Math.floor(activeIndex.get());
 
     // Reset progress and animate to 1 over specified duration
-    autoScrollProgress.value = 0;
-    autoScrollProgress.value = withTiming(1, { duration: AUTO_SCROLL_DURATION }, (finished) => {
-      if (finished && isAutoScrolling.current) {
-        autoScrollProgress.value = 0;
+    autoScrollProgress.set(0);
+    autoScrollProgress.set(
+      withTiming(1, { duration: AUTO_SCROLL_DURATION }, (finished) => {
+        if (finished && isAutoScrolling.current) {
+          autoScrollProgress.set(0);
 
-        scheduleOnRN(scrollToNextSlide, currentSlideIndex);
+          scheduleOnRN(scrollToNextSlide, currentSlideIndex);
 
-        // Wait for scroll animation to complete, then start next auto-scroll
-        setTimeout(() => {
-          if (isAutoScrolling.current) {
-            scheduleOnRN(startAutoScroll);
-          }
-        }, 500);
-      }
-    });
+          // Wait for scroll animation to complete, then start next auto-scroll
+          setTimeout(() => {
+            if (isAutoScrolling.current) {
+              scheduleOnRN(startAutoScroll);
+            }
+          }, 500);
+        }
+      })
+    );
   };
 
   useEffect(() => {
