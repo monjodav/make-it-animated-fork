@@ -4,6 +4,7 @@ import { FlatList, Platform, Text, useWindowDimensions, View } from "react-nativ
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SlideItem } from "../components/slide-item";
+import Pagination from "../components/pagination";
 
 export const SLIDES = [
   {
@@ -87,7 +88,7 @@ export const Onboarding = () => {
         showsHorizontalScrollIndicator={false}
         scrollEnabled={data.length > 3}
       />
-
+      <Pagination activeIndex={activeIndex} slides={SLIDES} />
       <View
         style={{ borderCurve: "continuous" }}
         className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-10 bg-slate-700"
