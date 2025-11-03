@@ -1,10 +1,16 @@
 import { UserRound } from "lucide-react-native";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { FlatList, Platform, Text, useWindowDimensions, View } from "react-native";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  cancelAnimation,
+  useAnimatedScrollHandler,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SlideItem } from "../components/slide-item";
 import Pagination from "../components/pagination";
+import { scheduleOnRN } from "react-native-worklets";
 
 export const SLIDES = [
   {
@@ -24,6 +30,8 @@ export const SLIDES = [
   },
 ];
 
+const AUTO_SCROLL_DURATION = 2000;
+
 export const Onboarding = () => {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
@@ -32,14 +40,61 @@ export const Onboarding = () => {
   const data = useMemo(() => [SLIDES.at(-1)!, ...SLIDES, SLIDES.at(0)!], []);
 
   const activeIndex = useSharedValue(1);
-
   const scrollOffsetX = useSharedValue(0);
+  const autoScrollProgress = useSharedValue(0);
+  const isAutoScrolling = useRef(true);
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     const offsetX = event.contentOffset.x;
     scrollOffsetX.set(offsetX);
     activeIndex.set(offsetX / width);
   });
+
+  const scrollToNextSlide = (currentIndex: number) => {
+    const nextIndex = currentIndex + 1;
+    if (nextIndex >= data.length - 1) {
+      // Loop back to first real slide
+      // horizontalListRef.current?.scrollToIndex({ index: 1, animated: true });
+    } else {
+      horizontalListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+    }
+  };
+
+  const startAutoScroll = () => {
+    const currentSlideIndex = Math.floor(activeIndex.value);
+
+    // Reset progress and animate to 1 over specified duration
+    autoScrollProgress.value = 0;
+    autoScrollProgress.value = withTiming(1, { duration: AUTO_SCROLL_DURATION }, (finished) => {
+      if (finished && isAutoScrolling.current) {
+        autoScrollProgress.value = 0;
+
+        scheduleOnRN(scrollToNextSlide, currentSlideIndex);
+
+        // Wait for scroll animation to complete, then start next auto-scroll
+        setTimeout(() => {
+          if (isAutoScrolling.current) {
+            scheduleOnRN(startAutoScroll);
+          }
+        }, 500);
+      }
+    });
+  };
+
+  useEffect(() => {
+    // Start auto-scroll after component mounts
+    const timer = setTimeout(() => {
+      if (isAutoScrolling.current) {
+        startAutoScroll();
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+      isAutoScrolling.current = false;
+      cancelAnimation(autoScrollProgress);
+    };
+  }, []);
 
   return (
     <View
@@ -88,7 +143,11 @@ export const Onboarding = () => {
         showsHorizontalScrollIndicator={false}
         scrollEnabled={data.length > 3}
       />
-      <Pagination activeIndex={activeIndex} slides={SLIDES} />
+      <Pagination
+        activeIndex={activeIndex}
+        slides={SLIDES}
+        autoScrollProgress={autoScrollProgress}
+      />
       <View
         style={{ borderCurve: "continuous" }}
         className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-10 bg-slate-700"

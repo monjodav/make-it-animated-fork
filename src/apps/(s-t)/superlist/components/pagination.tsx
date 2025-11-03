@@ -10,6 +10,7 @@ import Animated, {
 type PaginationProps = {
   activeIndex: SharedValue<number>;
   slides: Array<{ bgColor: string }>;
+  autoScrollProgress?: SharedValue<number>;
 };
 
 const PaginationDash: FC<{
@@ -18,7 +19,8 @@ const PaginationDash: FC<{
   inactiveWidth: number;
   activeWidth: number;
   totalSlides: number;
-}> = ({ index, activeIndex, inactiveWidth, activeWidth, totalSlides }) => {
+  autoScrollProgress?: SharedValue<number>;
+}> = ({ index, activeIndex, inactiveWidth, activeWidth, totalSlides, autoScrollProgress }) => {
   const rDashStyle = useAnimatedStyle(() => {
     const adjustedIndex = activeIndex.value - 1;
     // Normal interpolation for the current dash
@@ -26,13 +28,6 @@ const PaginationDash: FC<{
       adjustedIndex,
       [index - 1, index, index + 1],
       [inactiveWidth, activeWidth, inactiveWidth],
-      Extrapolation.CLAMP
-    );
-
-    let opacity = interpolate(
-      adjustedIndex,
-      [index - 1, index, index + 1],
-      [0.3, 1, 0.3],
       Extrapolation.CLAMP
     );
 
@@ -44,14 +39,8 @@ const PaginationDash: FC<{
         [inactiveWidth, activeWidth],
         Extrapolation.CLAMP
       );
-      const loopFromLastOpacity = interpolate(
-        adjustedIndex,
-        [totalSlides - 1, totalSlides],
-        [0.3, 1],
-        Extrapolation.CLAMP
-      );
+
       width = Math.max(width, loopFromLastWidth);
-      opacity = Math.max(opacity, loopFromLastOpacity);
     }
 
     if (index === totalSlides - 1) {
@@ -61,14 +50,8 @@ const PaginationDash: FC<{
         [activeWidth, inactiveWidth],
         Extrapolation.CLAMP
       );
-      const loopToFirstOpacity = interpolate(
-        adjustedIndex,
-        [totalSlides - 1, totalSlides],
-        [1, 0.3],
-        Extrapolation.CLAMP
-      );
+
       width = adjustedIndex >= totalSlides - 1 ? loopToFirstWidth : width;
-      opacity = adjustedIndex >= totalSlides - 1 ? loopToFirstOpacity : opacity;
     }
 
     // Handle looping from first to last (scrolling left on first slide)
@@ -79,10 +62,9 @@ const PaginationDash: FC<{
         [inactiveWidth, activeWidth],
         Extrapolation.CLAMP
       );
-      const loopToLastOpacity = interpolate(adjustedIndex, [-1, 0], [0.3, 1], Extrapolation.CLAMP);
+
       if (adjustedIndex < 0) {
         width = loopToLastWidth;
-        opacity = loopToLastOpacity;
       }
     }
 
@@ -93,26 +75,47 @@ const PaginationDash: FC<{
         [activeWidth, inactiveWidth],
         Extrapolation.CLAMP
       );
-      const loopFromFirstOpacity = interpolate(
-        adjustedIndex,
-        [-1, 0],
-        [1, 0.3],
-        Extrapolation.CLAMP
-      );
+
       width = adjustedIndex < 0 ? loopFromFirstWidth : width;
-      opacity = adjustedIndex < 0 ? loopFromFirstOpacity : opacity;
     }
 
     return {
       width,
-      opacity,
     };
   }, [activeIndex, index, totalSlides]);
 
-  return <Animated.View className="h-[3px] rounded-sm bg-white" style={rDashStyle} />;
+  // Progress fill animation for auto-scroll
+  const rProgressStyle = useAnimatedStyle(() => {
+    if (!autoScrollProgress) return { width: 0 };
+
+    const adjustedIndex = activeIndex.value - 1;
+    const currentSlide = Math.floor(adjustedIndex);
+
+    // Only show progress for the current active slide
+    if (currentSlide !== index) return { width: 0 };
+
+    const progress = autoScrollProgress.value;
+    const progressWidth = interpolate(progress, [0, 1], [0, activeWidth], Extrapolation.CLAMP);
+
+    return {
+      width: progressWidth,
+    };
+  }, [activeIndex, autoScrollProgress, index, activeWidth]);
+
+  return (
+    <View style={{ position: "relative" }}>
+      <Animated.View className="h-[3px] rounded-sm bg-slate-600" style={rDashStyle} />
+      {autoScrollProgress && (
+        <Animated.View
+          className="h-[3px] rounded-sm bg-white absolute top-0 left-0"
+          style={rProgressStyle}
+        />
+      )}
+    </View>
+  );
 };
 
-const Pagination: FC<PaginationProps> = ({ activeIndex, slides }) => {
+const Pagination: FC<PaginationProps> = ({ activeIndex, slides, autoScrollProgress }) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const CONTAINER_PADDING = 140;
@@ -136,6 +139,7 @@ const Pagination: FC<PaginationProps> = ({ activeIndex, slides }) => {
           inactiveWidth={inactiveWidth}
           activeWidth={activeWidth}
           totalSlides={slides.length}
+          autoScrollProgress={autoScrollProgress}
         />
       ))}
     </View>
