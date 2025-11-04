@@ -15,22 +15,25 @@ import { scheduleOnRN } from "react-native-worklets";
 export const SLIDES = [
   {
     bgColor: "#7872E0",
+    duration: 1000,
   },
   {
     bgColor: "#FB5A44",
+    duration: 2000,
   },
   {
     bgColor: "#7872E0",
+    duration: 2000,
   },
   {
     bgColor: "#2188DA",
+    duration: 1000,
   },
   {
     bgColor: "#7872E0",
+    duration: 2000,
   },
 ];
-
-const AUTO_SCROLL_DURATION = 2000;
 
 export const Onboarding = () => {
   const insets = useSafeAreaInsets();
@@ -62,11 +65,14 @@ export const Onboarding = () => {
 
   const startAutoScroll = () => {
     const currentSlideIndex = Math.floor(activeIndex.get());
+    const realIndex = currentSlideIndex - 1; // Adjust for cloned first slide
+    const currentSlide = SLIDES[realIndex];
+    const duration = currentSlide?.duration || 2000;
 
     // Reset progress and animate to 1 over specified duration
     autoScrollProgress.set(0);
     autoScrollProgress.set(
-      withTiming(1, { duration: AUTO_SCROLL_DURATION }, (finished) => {
+      withTiming(1, { duration }, (finished) => {
         if (finished && isAutoScrolling.current) {
           autoScrollProgress.set(0);
 
