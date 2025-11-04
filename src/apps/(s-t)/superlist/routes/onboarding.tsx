@@ -72,25 +72,22 @@ export const Onboarding = () => {
     const duration = currentSlide?.duration || DEFAULT_SLIDE_DURATION;
 
     progressSlideIndex.set(realIndex);
-    autoScrollProgress.set(0);
     progressBeforeDrag.set(0);
+    autoScrollProgress.value = 0; // Reset to 0 first
+    autoScrollProgress.value = withTiming(1, { duration }, (finished) => {
+      if (finished && isAutoScrolling.current) {
+        autoScrollProgress.value = 0;
 
-    autoScrollProgress.set(
-      withTiming(1, { duration }, (finished) => {
-        if (finished && isAutoScrolling.current) {
-          autoScrollProgress.set(0);
+        scheduleOnRN(scrollToNextSlide, currentSlideIndex);
 
-          scheduleOnRN(scrollToNextSlide, currentSlideIndex);
-
-          setTimeout(() => {
-            if (isAutoScrolling.current) {
-              scheduleOnRN(startAutoScroll);
-            }
-          }, 500);
-        }
-      })
-    );
-  }, [autoScrollProgress, progressSlideIndex, progressBeforeDrag, activeIndex]);
+        setTimeout(() => {
+          if (isAutoScrolling.current) {
+            scheduleOnRN(startAutoScroll);
+          }
+        }, 500);
+      }
+    });
+  }, [autoScrollProgress, progressSlideIndex, progressBeforeDrag, activeIndex, scrollToNextSlide]);
 
   const startAutoScroll = useCallback(() => {
     const currentSlideIndex = Math.floor(activeIndex.get());
@@ -100,23 +97,20 @@ export const Onboarding = () => {
 
     // Reset progress and animate to 1 over specified duration
     progressSlideIndex.set(realIndex);
-    autoScrollProgress.set(0);
-    autoScrollProgress.set(
-      withTiming(1, { duration }, (finished) => {
-        if (finished && isAutoScrolling.current) {
-          autoScrollProgress.set(0);
+    autoScrollProgress.value = withTiming(1, { duration }, (finished) => {
+      if (finished && isAutoScrolling.current) {
+        autoScrollProgress.value = 0;
 
-          scheduleOnRN(scrollToNextSlide, currentSlideIndex);
+        scheduleOnRN(scrollToNextSlide, currentSlideIndex);
 
-          // Wait for scroll animation to complete, then start next auto-scroll
-          setTimeout(() => {
-            if (isAutoScrolling.current) {
-              scheduleOnRN(startAutoScroll);
-            }
-          }, 500);
-        }
-      })
-    );
+        // Wait for scroll animation to complete, then start next auto-scroll
+        setTimeout(() => {
+          if (isAutoScrolling.current) {
+            scheduleOnRN(startAutoScroll);
+          }
+        }, 500);
+      }
+    });
   }, [autoScrollProgress, activeIndex, progressSlideIndex, scrollToNextSlide]);
 
   const scrollHandler = useAnimatedScrollHandler({
