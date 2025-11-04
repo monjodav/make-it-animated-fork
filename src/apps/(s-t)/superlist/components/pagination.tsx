@@ -11,6 +11,7 @@ type PaginationProps = {
   activeIndex: SharedValue<number>;
   slides: Array<{ bgColor: string }>;
   autoScrollProgress?: SharedValue<number>;
+  progressSlideIndex?: SharedValue<number>;
 };
 
 const PaginationDash: FC<{
@@ -20,7 +21,16 @@ const PaginationDash: FC<{
   activeWidth: number;
   totalSlides: number;
   autoScrollProgress?: SharedValue<number>;
-}> = ({ index, activeIndex, inactiveWidth, activeWidth, totalSlides, autoScrollProgress }) => {
+  progressSlideIndex?: SharedValue<number>;
+}> = ({
+  index,
+  activeIndex,
+  inactiveWidth,
+  activeWidth,
+  totalSlides,
+  autoScrollProgress,
+  progressSlideIndex,
+}) => {
   const rDashStyle = useAnimatedStyle(() => {
     const adjustedIndex = activeIndex.get() - 1;
     // Normal interpolation for the current dash
@@ -87,8 +97,10 @@ const PaginationDash: FC<{
   const rProgressStyle = useAnimatedStyle(() => {
     if (!autoScrollProgress) return { width: 0 };
 
-    const adjustedIndex = activeIndex.get() - 1;
-    const currentSlide = Math.floor(adjustedIndex);
+    // Use progressSlideIndex if available, otherwise fall back to calculating from activeIndex
+    const currentSlide = progressSlideIndex
+      ? progressSlideIndex.get()
+      : Math.floor(activeIndex.get() - 1);
 
     if (currentSlide !== index) return { width: 0 };
 
@@ -98,7 +110,7 @@ const PaginationDash: FC<{
     return {
       width: progressWidth,
     };
-  }, [activeIndex, autoScrollProgress, index, activeWidth]);
+  }, [activeIndex, autoScrollProgress, progressSlideIndex, index, activeWidth]);
 
   return (
     <View style={{ position: "relative" }}>
@@ -113,7 +125,12 @@ const PaginationDash: FC<{
   );
 };
 
-const Pagination: FC<PaginationProps> = ({ activeIndex, slides, autoScrollProgress }) => {
+const Pagination: FC<PaginationProps> = ({
+  activeIndex,
+  slides,
+  autoScrollProgress,
+  progressSlideIndex,
+}) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const CONTAINER_PADDING = 140;
@@ -138,6 +155,7 @@ const Pagination: FC<PaginationProps> = ({ activeIndex, slides, autoScrollProgre
           activeWidth={activeWidth}
           totalSlides={slides.length}
           autoScrollProgress={autoScrollProgress}
+          progressSlideIndex={progressSlideIndex}
         />
       ))}
     </View>
