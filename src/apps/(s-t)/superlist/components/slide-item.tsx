@@ -5,11 +5,11 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { SLIDES } from "../routes/onboarding";
 import { FC, useState } from "react";
+import { OnboardingSlide } from "./lib/types";
 
 type SlideItemProps = {
-  item: (typeof SLIDES)[number];
+  item: OnboardingSlide;
   index: number;
   width: number;
   scrollOffsetX: SharedValue<number>;
@@ -20,7 +20,7 @@ export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffset
 
   const rStyle = useAnimatedStyle(() => {
     const inputRange = [width * index, width * (index + 1)];
-    const rotate = interpolate(scrollOffsetX.value, inputRange, [0, -4], Extrapolation.CLAMP);
+    const rotate = interpolate(scrollOffsetX.get(), inputRange, [0, -3], Extrapolation.CLAMP);
 
     return {
       transform: [

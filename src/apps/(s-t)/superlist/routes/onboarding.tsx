@@ -1,180 +1,89 @@
 import { UserRound } from "lucide-react-native";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { FlatList, Platform, Text, useWindowDimensions, View } from "react-native";
-import Animated, {
-  cancelAnimation,
-  useAnimatedScrollHandler,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { FlatList, Platform, Text, useWindowDimensions, View, ViewToken } from "react-native";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SlideItem } from "../components/slide-item";
+import { OnboardingSlide } from "../components/lib/types";
 import Pagination from "../components/pagination";
-import { scheduleOnRN } from "react-native-worklets";
 
-export const SLIDES = [
+export const SLIDES: OnboardingSlide[] = [
   {
     bgColor: "#7872E0",
-    duration: 2000,
+    duration: 3000,
   },
   {
     bgColor: "#FB5A44",
-    duration: 2000,
+    duration: 3000,
   },
   {
     bgColor: "#7872E0",
-    duration: 2000,
+    duration: 3000,
   },
   {
     bgColor: "#2188DA",
-    duration: 1000,
+    duration: 2000,
   },
   {
     bgColor: "#7872E0",
-    duration: 2000,
+    duration: 3000,
   },
 ];
 
-const DEFAULT_SLIDE_DURATION = 2000;
-
 export const Onboarding = () => {
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
   const horizontalListRef = useRef<FlatList>(null);
 
   const data = useMemo(() => [SLIDES.at(-1)!, ...SLIDES, SLIDES.at(0)!], []);
 
-  const activeIndex = useSharedValue(1);
+  // Current slide index in the carousel (1-based due to cloned slides)
+  const animatedSlideIndex = useSharedValue(1);
+  // Horizontal scroll offset for slide animations
   const scrollOffsetX = useSharedValue(0);
-  const autoScrollProgress = useSharedValue(0);
-  const progressSlideIndex = useSharedValue(0); // Track which slide shows progress
-  const isAutoScrolling = useRef(true);
+  // Whether user is currently dragging the carousel
   const isDragging = useSharedValue(false);
-  const progressBeforeDrag = useSharedValue(0);
 
-  const scrollToNextSlide = useCallback(
-    (currentIndex: number) => {
-      const nextIndex = currentIndex + 1;
-      if (nextIndex >= data.length - 1) {
-        // Loop back to first real slide
-        // horizontalListRef.current?.scrollToIndex({ index: 1, animated: true });
-      } else {
-        horizontalListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
-      }
-    },
-    [data.length]
-  );
-
-  const restartAutoScroll = useCallback(() => {
-    const currentSlideIndex = Math.round(activeIndex.get());
-    const realIndex = currentSlideIndex - 1;
-    const currentSlide = SLIDES[realIndex];
-    const duration = currentSlide?.duration || DEFAULT_SLIDE_DURATION;
-
-    progressSlideIndex.set(realIndex);
-    progressBeforeDrag.set(0);
-    autoScrollProgress.value = 0; // Reset to 0 first
-    autoScrollProgress.value = withTiming(1, { duration }, (finished) => {
-      if (finished && isAutoScrolling.current) {
-        autoScrollProgress.value = 0;
-
-        scheduleOnRN(scrollToNextSlide, currentSlideIndex);
-
-        // setTimeout(() => {
-        //   if (isAutoScrolling.current) {
-        //     scheduleOnRN(startAutoScroll);
-        //   }
-        // }, 500);
-      }
-    });
-  }, [autoScrollProgress, progressSlideIndex, progressBeforeDrag, activeIndex, scrollToNextSlide]);
-
-  // const startAutoScroll = useCallback(() => {
-  //   const currentSlideIndex = Math.floor(activeIndex.get());
-  //   const realIndex = currentSlideIndex - 1; // Adjust for cloned first slide
-  //   const currentSlide = SLIDES[realIndex];
-  //   const duration = currentSlide?.duration || 2000;
-
-  //   // Reset progress and animate to 1 over specified duration
-  //   progressSlideIndex.set(realIndex);
-  //   autoScrollProgress.value = withTiming(1, { duration }, (finished) => {
-  //     if (finished && isAutoScrolling.current) {
-  //       autoScrollProgress.value = 0;
-
-  //       scheduleOnRN(scrollToNextSlide, currentSlideIndex);
-
-  //       // Wait for scroll animation to complete, then start next auto-scroll
-  //       setTimeout(() => {
-  //         if (isAutoScrolling.current) {
-  //           scheduleOnRN(startAutoScroll);
-  //         }
-  //       }, 500);
-  //     }
-  //   });
-  // }, [autoScrollProgress, activeIndex, progressSlideIndex, scrollToNextSlide]);
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onBeginDrag: () => {
-      "worklet";
-      // Stop auto-scroll and save current progress
-      if (isAutoScrolling.current) {
-        isDragging.set(true);
-        cancelAnimation(autoScrollProgress);
-        progressBeforeDrag.set(autoScrollProgress.get());
-        // Lock progress to current slide
-        progressSlideIndex.set(Math.round(activeIndex.get() - 1));
-        isAutoScrolling.current = false;
-      }
-    },
-    onScroll: (event) => {
-      "worklet";
-      const offsetX = event.contentOffset.x;
-      scrollOffsetX.set(offsetX);
-      activeIndex.set(offsetX / width);
-
-      // Update progress proportionally during drag
-      if (isDragging.get()) {
-        const currentIndex = activeIndex.get();
-        const startSlideIndex = progressSlideIndex.get() + 1; // Convert back to activeIndex space
-        const distanceFromStart = Math.abs(currentIndex - startSlideIndex);
-
-        // Reduce progress proportionally based on distance from starting slide
-        if (distanceFromStart > 0 && distanceFromStart < 1) {
-          const newProgress = progressBeforeDrag.get() * (1 - distanceFromStart);
-          autoScrollProgress.set(Math.max(0, newProgress));
-        } else if (distanceFromStart === 0) {
-          // Exactly on the starting slide
-          autoScrollProgress.set(progressBeforeDrag.get());
-        } else {
-          // Moved to a different slide completely
-          autoScrollProgress.set(0);
+  const onViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      if (viewableItems.length > 0) {
+        // Get the first viewable item (should be only one with pagingEnabled)
+        const viewableItem = viewableItems[0];
+        if (viewableItem && viewableItem.index !== null) {
+          setCurrentSlideIndex(viewableItem.index);
         }
       }
     },
-    onMomentumEnd: () => {
-      "worklet";
-      isDragging.set(false);
-      isAutoScrolling.current = true;
+    [setCurrentSlideIndex]
+  );
 
-      // Restart auto-scroll from beginning on the current slide (on JS thread)
-      scheduleOnRN(restartAutoScroll);
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 100,
+    minimumViewTime: 0,
+  }).current;
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onBeginDrag: () => {
+      isDragging.set(true);
+    },
+    onScroll: (event) => {
+      const offsetX = event.contentOffset.x;
+      scrollOffsetX.set(offsetX);
+      animatedSlideIndex.set(offsetX / screenWidth);
+    },
+    onEndDrag: () => {
+      isDragging.set(false);
     },
   });
 
-  // useEffect(() => {
-  //   // Start auto-scroll after component mounts
-  //   const timer = setTimeout(() => {
-  //     if (isAutoScrolling.current) {
-  //       startAutoScroll();
-  //     }
-  //   }, 500);
-
-  //   return () => {
-  //     clearTimeout(timer);
-  //     isAutoScrolling.current = false;
-  //     cancelAnimation(autoScrollProgress);
-  //   };
-  // }, [startAutoScroll]);
+  const handleScrollToIndex = useCallback((index: number) => {
+    horizontalListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+    });
+  }, []);
 
   return (
     <View
@@ -185,18 +94,20 @@ export const Onboarding = () => {
         ref={horizontalListRef}
         data={data}
         renderItem={({ item, index }) => (
-          <SlideItem item={item} index={index} width={width} scrollOffsetX={scrollOffsetX} />
+          <SlideItem item={item} index={index} width={screenWidth} scrollOffsetX={scrollOffsetX} />
         )}
         horizontal
         pagingEnabled
         initialScrollIndex={1}
         getItemLayout={(_, index) => ({
-          length: width,
-          offset: width * index,
+          length: screenWidth,
+          offset: screenWidth * index,
           index,
         })}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         onStartReached={() => {
           if (Platform.OS === "android") {
             // Android needs delay to prevent scroll conflict during momentum
@@ -224,10 +135,11 @@ export const Onboarding = () => {
         scrollEnabled={data.length > 3}
       />
       <Pagination
-        activeIndex={activeIndex}
         slides={SLIDES}
-        autoScrollProgress={autoScrollProgress}
-        progressSlideIndex={progressSlideIndex}
+        currentSlideIndex={currentSlideIndex}
+        animatedSlideIndex={animatedSlideIndex}
+        isDragging={isDragging}
+        handleScrollToIndex={handleScrollToIndex}
       />
       <View
         style={{ borderCurve: "continuous" }}
