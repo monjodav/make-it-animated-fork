@@ -7,7 +7,7 @@ import { ProtocolsText } from "./protocols-text";
 
 export const Welcome: FC = () => {
   return (
-    <View className="flex-1 items-center justify-center">
+    <View className="flex-1">
       <BlueCard />
       <StoneCard />
       <RedCard />

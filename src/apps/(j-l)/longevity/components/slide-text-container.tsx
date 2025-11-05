@@ -22,7 +22,7 @@ export const SlideTextContainer: FC<PropsWithChildren<Props>> = ({
       className={cn("p-4 rounded-full overflow-hidden", className)}
       {...props}
     >
-      <BlurView style={StyleSheet.absoluteFill} />
+      <BlurView tint="dark" style={StyleSheet.absoluteFill} />
       <Text className={cn("text-xl font-medium text-white", textClassName)}>{children}</Text>
     </Animated.View>
   );

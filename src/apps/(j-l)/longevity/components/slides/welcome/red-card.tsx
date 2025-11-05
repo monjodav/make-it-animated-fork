@@ -36,7 +36,7 @@ export const RedCard: FC = () => {
   return (
     <Animated.View
       style={[rContainerStyle, styles.borderCurve]}
-      className="absolute w-[45%] aspect-[1/1.4] rounded-3xl items-center justify-center gap-10 bg-red-500"
+      className="absolute w-[45%] aspect-[1/1.4] top-0 left-[28%] rounded-3xl items-center justify-center gap-10 bg-red-500"
     >
       <View className="size-20 rounded-3xl bg-amber-500" />
       <View className="h-5 w-20 rounded-full bg-neutral-200/25" />

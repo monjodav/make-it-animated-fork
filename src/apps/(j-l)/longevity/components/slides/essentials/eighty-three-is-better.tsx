@@ -5,7 +5,7 @@ import { AnimatedIndexContext } from "../../../routes/onboarding";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../lib/constants";
 
-export const ProtocolsText: FC = () => {
+export const EightyThreeIsBetterText: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -13,7 +13,7 @@ export const ProtocolsText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [0, 1],
+      [1, 2],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
@@ -24,8 +24,8 @@ export const ProtocolsText: FC = () => {
   });
 
   return (
-    <SlideTextContainer style={rContainerStyle} className="absolute top-[75%] left-[33%]">
-      88 Protocols inside
+    <SlideTextContainer style={rContainerStyle} className="absolute top-[78%] left-[46%]">
+      83° is better
     </SlideTextContainer>
   );
 };

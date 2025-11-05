@@ -17,17 +17,15 @@ export const StoneCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [0, 1],
+      [1, 2],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [0, 0.5], [8, 0], Extrapolation.CLAMP);
-    const scale = interpolate(activeIndex.get(), [0, 0.5], [1, 0.97], Extrapolation.CLAMP);
+    const scale = interpolate(activeIndex.get(), [1, 0.5], [1, 0.98], Extrapolation.CLAMP);
 
     return {
       transform: [
         { translateX: withSpring(translateX, BASE_SPRING_CONFIG) },
-        { rotate: withSpring(`${rotate}deg`, BASE_SPRING_CONFIG) },
         { scale: withSpring(scale, BASE_SPRING_CONFIG) },
       ],
     };
@@ -36,11 +34,8 @@ export const StoneCard: FC = () => {
   return (
     <Animated.View
       style={[rContainerStyle, styles.borderCurve]}
-      className="absolute top-[22%] left-[63%] w-[38%] aspect-[1/1.2] rounded-3xl items-center justify-center gap-10 bg-stone-300"
-    >
-      <View className="size-20 rounded-full bg-stone-400" />
-      <View className="h-5 w-20 rounded-full bg-neutral-200" />
-    </Animated.View>
+      className="absolute top-[37%] left-[63%] w-[30%] aspect-[1/1.2] rounded-3xl items-center justify-center gap-10 bg-orange-300"
+    />
   );
 };
 

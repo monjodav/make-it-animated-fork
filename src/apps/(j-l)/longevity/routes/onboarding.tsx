@@ -14,6 +14,7 @@ import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createContext } from "react";
 import { Welcome } from "../components/slides/welcome";
+import { Essentials } from "../components/slides/essentials";
 
 type AnimatedIndexContextType = {
   activeIndex: SharedValue<number>;
@@ -79,7 +80,9 @@ const Onboarding = () => {
           <OnboardingSlideContainer
             title={"Cut through the noise.\nEssentials only!"}
             description="Each protocol is a beautiful card. See benefits, risks, and best practices baked in. Keep only what fits your goals. Filter, search, learn and discover new things!"
-          />
+          >
+            <Essentials />
+          </OnboardingSlideContainer>
           <OnboardingSlideContainer
             title={"Up to date expert\nbacked info"}
             description="We pull fresh insights from top podcasts and scientific publications. Then update every card with sources, and alert you when anything changes. Never miss a beat!"

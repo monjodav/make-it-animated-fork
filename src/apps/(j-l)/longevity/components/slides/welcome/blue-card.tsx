@@ -36,7 +36,7 @@ export const BlueCard: FC = () => {
   return (
     <Animated.View
       style={[rContainerStyle, styles.borderCurve]}
-      className="absolute left-0 bottom-0 w-[42%] aspect-[1/1.2] rounded-3xl items-center justify-center gap-10 bg-blue-500"
+      className="absolute top-[25%] left-0 w-[42%] aspect-[1/1.2] rounded-3xl items-center justify-center gap-10 bg-blue-500"
     >
       <View className="size-20 rounded-full bg-stone-200" />
       <View className="h-5 w-20 rounded-full bg-neutral-200/25" />
