@@ -5,6 +5,8 @@ import { BlueCard } from "./blue-card";
 import { StoneCard } from "./stone-card";
 import { ProtocolsText } from "./protocols-text";
 
+// longevity-onboarding-animation 🔽
+
 const SLIDE_INDEX = 0;
 
 export const Welcome: FC = () => {
@@ -17,3 +19,5 @@ export const Welcome: FC = () => {
     </View>
   );
 };
+
+// longevity-onboarding-animation 🔼

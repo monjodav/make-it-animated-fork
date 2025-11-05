@@ -1,6 +1,8 @@
 import { PropsWithChildren } from "react";
 import { View, Text, useWindowDimensions } from "react-native";
 
+// longevity-onboarding-animation 🔽
+
 type Props = {
   title: string;
   description: string;
@@ -23,3 +25,5 @@ export const OnboardingSlideContainer: React.FC<PropsWithChildren<Props>> = ({
     </View>
   );
 };
+
+// longevity-onboarding-animation 🔼

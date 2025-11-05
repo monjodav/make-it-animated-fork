@@ -19,6 +19,8 @@ import { Share } from "../components/slides/share";
 import { NotMedicalAdvice } from "../components/slides/not-medical-advice";
 import { AnimatedIndexContext } from "../lib/animated-index-context";
 
+// longevity-onboarding-animation 🔽
+
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const PALETTE = ["#321A48", "#192444", "#1C3F2D", "#44382A", "#391C1D"];
@@ -119,3 +121,5 @@ const styles = StyleSheet.create({
 });
 
 export default Onboarding;
+
+// longevity-onboarding-animation 🔼

@@ -2,6 +2,8 @@ import { StyleSheet, View } from "react-native";
 import { interpolateColor, useDerivedValue, type SharedValue } from "react-native-reanimated";
 import { Blur, Canvas, RoundedRect } from "@shopify/react-native-skia";
 
+// longevity-onboarding-animation 🔽
+
 type GradientLayerProps = {
   palette: string[];
   width: number;
@@ -43,3 +45,5 @@ export const BottomGlow: React.FC<GradientLayerProps> = ({
     </View>
   );
 };
+
+// longevity-onboarding-animation 🔼

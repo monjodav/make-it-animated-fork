@@ -6,6 +6,8 @@ import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 import { AnimatedIndexContext } from "../../../lib/animated-index-context";
 import { SlideItemProps } from "../../../lib/types";
 
+// longevity-onboarding-animation 🔽
+
 export const PodcastsText: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
 
@@ -34,3 +36,5 @@ export const PodcastsText: FC<SlideItemProps> = ({ index }) => {
     </SlideTextContainer>
   );
 };
+
+// longevity-onboarding-animation 🔼

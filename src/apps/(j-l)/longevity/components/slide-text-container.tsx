@@ -4,6 +4,8 @@ import React, { FC, PropsWithChildren } from "react";
 import { Text, ViewProps, StyleSheet, Platform } from "react-native";
 import Animated, { AnimatedProps } from "react-native-reanimated";
 
+// longevity-onboarding-animation 🔽
+
 interface Props extends AnimatedProps<ViewProps> {
   className?: string;
   textClassName?: string;
@@ -37,3 +39,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// longevity-onboarding-animation 🔼

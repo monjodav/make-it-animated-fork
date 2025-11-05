@@ -2,6 +2,8 @@ import { FC } from "react";
 import { View } from "react-native";
 import Animated, { interpolateColor, SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
+// longevity-onboarding-animation 🔽
+
 interface DotProps {
   index: number;
   activeIndex: SharedValue<number>;
@@ -35,3 +37,5 @@ export const PaginationDots: FC<PaginationDotsProps> = ({ numberOfDots, activeIn
     </View>
   );
 };
+
+// longevity-onboarding-animation 🔼

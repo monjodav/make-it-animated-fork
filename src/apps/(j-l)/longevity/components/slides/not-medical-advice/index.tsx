@@ -4,6 +4,8 @@ import { BlueCard } from "./blue-card";
 import { StoneCard } from "./stone-card";
 import { SlideContainer } from "../../slide-container";
 
+// longevity-onboarding-animation 🔽
+
 const SLIDE_INDEX = 4;
 
 export const NotMedicalAdvice: FC = () => {
@@ -15,3 +17,5 @@ export const NotMedicalAdvice: FC = () => {
     </SlideContainer>
   );
 };
+
+// longevity-onboarding-animation 🔼
