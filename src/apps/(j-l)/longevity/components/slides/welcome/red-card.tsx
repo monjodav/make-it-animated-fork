@@ -1,6 +1,6 @@
 import React, { FC, use } from "react";
 import { useWindowDimensions, View, StyleSheet } from "react-native";
-import { AnimatedIndexContext } from "../../../routes/onboarding";
+import { AnimatedIndexContext } from "../../../lib/animated-index-context";
 import Animated, {
   useAnimatedStyle,
   interpolate,
@@ -8,8 +8,8 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
-
-export const RedCard: FC = () => {
+import { SlideItemProps } from "../../../lib/types";
+export const RedCard: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -17,12 +17,22 @@ export const RedCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [0, 1, 2],
+      [index, index + 1, index + 2],
       [0, screenWidth, screenWidth * 2],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [0, 1, 2], [-2, -4, 3], Extrapolation.CLAMP);
-    const scale = interpolate(activeIndex.get(), [0, 1, 2], [1, 0.98, 1.2], Extrapolation.CLAMP);
+    const rotate = interpolate(
+      activeIndex.get(),
+      [index, index + 1, index + 2],
+      [-2, -4, 3],
+      Extrapolation.CLAMP
+    );
+    const scale = interpolate(
+      activeIndex.get(),
+      [index, index + 1, index + 2],
+      [1, 0.98, 1.2],
+      Extrapolation.CLAMP
+    );
 
     return {
       transform: [

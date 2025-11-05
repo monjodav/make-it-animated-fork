@@ -1,6 +1,6 @@
 import React, { FC, use } from "react";
 import { useWindowDimensions, View, StyleSheet } from "react-native";
-import { AnimatedIndexContext } from "../../../routes/onboarding";
+import { AnimatedIndexContext } from "../../../lib/animated-index-context";
 import Animated, {
   useAnimatedStyle,
   interpolate,
@@ -8,8 +8,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
+import { SlideItemProps } from "../../../lib/types";
 
-export const BlueCard: FC = () => {
+export const BlueCard: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -17,12 +18,22 @@ export const BlueCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [2.5, 3, 4],
+      [index - 0.5, index, index + 1],
       [screenWidth / 3, 0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [2, 3, 3.5], [0, -4, 0], Extrapolation.CLAMP);
-    const scale = interpolate(activeIndex.get(), [2, 3, 3.5], [1.5, 1, 0.98], Extrapolation.CLAMP);
+    const rotate = interpolate(
+      activeIndex.get(),
+      [index - 1, index, index + 0.5],
+      [0, -4, 0],
+      Extrapolation.CLAMP
+    );
+    const scale = interpolate(
+      activeIndex.get(),
+      [index - 1, index, index + 0.5],
+      [1.5, 1, 0.98],
+      Extrapolation.CLAMP
+    );
 
     return {
       transform: [

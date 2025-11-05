@@ -4,12 +4,14 @@ import { TemperaturesText } from "./temperatures-text";
 import { PodcastsText } from "./podcasts-text";
 import { SlideContainer } from "../../slide-container";
 
+const SLIDE_INDEX = 2;
+
 export const BackedInfo: FC = () => {
   return (
-    <SlideContainer index={2}>
-      <UpdatedTodayText />
-      <TemperaturesText />
-      <PodcastsText />
+    <SlideContainer index={SLIDE_INDEX}>
+      <UpdatedTodayText index={SLIDE_INDEX} />
+      <TemperaturesText index={SLIDE_INDEX} />
+      <PodcastsText index={SLIDE_INDEX} />
     </SlideContainer>
   );
 };

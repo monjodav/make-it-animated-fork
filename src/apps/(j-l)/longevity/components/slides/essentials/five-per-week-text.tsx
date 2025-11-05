@@ -1,11 +1,12 @@
 import React, { FC, use } from "react";
 import { useWindowDimensions } from "react-native";
 import { SlideTextContainer } from "../../slide-text-container";
-import { AnimatedIndexContext } from "../../../routes/onboarding";
+import { AnimatedIndexContext } from "../../../lib/animated-index-context";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
+import { SlideItemProps } from "../../../lib/types";
 
-export const FivePerWeekText: FC = () => {
+export const FivePerWeekText: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -13,7 +14,7 @@ export const FivePerWeekText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [1, 2],
+      [index, index + 1],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );

@@ -5,27 +5,19 @@ import Animated, {
   useAnimatedStyle,
   interpolate,
   Extrapolation,
-  SharedValue,
 } from "react-native-reanimated";
 import { PaginationDots } from "../components/pagination-dots";
 import { BottomGlow } from "../components/bottom-glow";
 import { OnboardingSlideContainer } from "../components/onboarding-slide-container";
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import React, { createContext } from "react";
+import React from "react";
 import { Welcome } from "../components/slides/welcome";
 import { Essentials } from "../components/slides/essentials";
 import { BackedInfo } from "../components/slides/backed-info";
 import { Share } from "../components/slides/share";
 import { NotMedicalAdvice } from "../components/slides/not-medical-advice";
-
-type AnimatedIndexContextType = {
-  activeIndex: SharedValue<number>;
-};
-
-export const AnimatedIndexContext = createContext<AnimatedIndexContextType>(
-  {} as AnimatedIndexContextType
-);
+import { AnimatedIndexContext } from "../lib/animated-index-context";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

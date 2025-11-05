@@ -1,7 +1,7 @@
 import React, { FC, PropsWithChildren, use } from "react";
 import Animated, { Extrapolation } from "react-native-reanimated";
-import { AnimatedIndexContext } from "../routes/onboarding";
 import { interpolate, useAnimatedStyle } from "react-native-reanimated";
+import { AnimatedIndexContext } from "../lib/animated-index-context";
 
 type Props = {
   index: number;

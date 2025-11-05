@@ -1,11 +1,12 @@
 import React, { FC, use } from "react";
 import { useWindowDimensions } from "react-native";
 import { SlideTextContainer } from "../../slide-text-container";
-import { AnimatedIndexContext } from "../../../routes/onboarding";
+import { AnimatedIndexContext } from "../../../lib/animated-index-context";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
+import { SlideItemProps } from "../../../lib/types";
 
-export const HbotText: FC = () => {
+export const HbotText: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -13,7 +14,7 @@ export const HbotText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [2, 3, 4],
+      [index - 1, index, index + 1],
       [screenWidth * 1.5, 0, -screenWidth],
       Extrapolation.CLAMP
     );

@@ -1,7 +1,7 @@
 import { cn } from "@/src/shared/lib/utils/cn";
 import { BlurView } from "expo-blur";
 import React, { FC, PropsWithChildren } from "react";
-import { View, Text, ViewProps, StyleSheet } from "react-native";
+import { Text, ViewProps, StyleSheet, Platform } from "react-native";
 import Animated, { AnimatedProps } from "react-native-reanimated";
 
 interface Props extends AnimatedProps<ViewProps> {
@@ -19,10 +19,14 @@ export const SlideTextContainer: FC<PropsWithChildren<Props>> = ({
   return (
     <Animated.View
       style={[styles.borderCurve, style]}
-      className={cn("p-4 rounded-full overflow-hidden", className)}
+      className={cn(
+        "p-4 rounded-full overflow-hidden",
+        Platform.OS === "android" && "bg-[#161522]/80 border border-neutral-600/30",
+        className
+      )}
       {...props}
     >
-      <BlurView tint="dark" style={StyleSheet.absoluteFill} />
+      {Platform.OS === "ios" && <BlurView tint="dark" style={StyleSheet.absoluteFill} />}
       <Text className={cn("text-xl font-medium text-white", textClassName)}>{children}</Text>
     </Animated.View>
   );

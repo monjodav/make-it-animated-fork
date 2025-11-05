@@ -1,16 +1,17 @@
 import React, { FC } from "react";
-import { View } from "react-native";
 import { AttentionText } from "./attention-text";
 import { BlueCard } from "./blue-card";
 import { StoneCard } from "./stone-card";
 import { SlideContainer } from "../../slide-container";
 
+const SLIDE_INDEX = 4;
+
 export const NotMedicalAdvice: FC = () => {
   return (
-    <SlideContainer index={4}>
-      <StoneCard />
-      <BlueCard />
-      <AttentionText />
+    <SlideContainer index={SLIDE_INDEX}>
+      <StoneCard index={SLIDE_INDEX} />
+      <BlueCard index={SLIDE_INDEX} />
+      <AttentionText index={SLIDE_INDEX} />
     </SlideContainer>
   );
 };

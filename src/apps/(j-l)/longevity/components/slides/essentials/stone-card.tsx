@@ -1,6 +1,6 @@
 import React, { FC, use } from "react";
-import { useWindowDimensions, View, StyleSheet } from "react-native";
-import { AnimatedIndexContext } from "../../../routes/onboarding";
+import { useWindowDimensions, StyleSheet } from "react-native";
+import { AnimatedIndexContext } from "../../../lib/animated-index-context";
 import Animated, {
   useAnimatedStyle,
   interpolate,
@@ -8,8 +8,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
+import { SlideItemProps } from "../../../lib/types";
 
-export const StoneCard: FC = () => {
+export const StoneCard: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -17,11 +18,16 @@ export const StoneCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [1, 2],
+      [index, index + 1],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const scale = interpolate(activeIndex.get(), [1, 0.5], [1, 0.98], Extrapolation.CLAMP);
+    const scale = interpolate(
+      activeIndex.get(),
+      [index, index - 0.5],
+      [1, 0.98],
+      Extrapolation.CLAMP
+    );
 
     return {
       transform: [

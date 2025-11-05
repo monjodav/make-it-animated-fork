@@ -7,14 +7,16 @@ import { OnceAWeekText } from "./once-a-week-text";
 import { HundredTenIsBetterText } from "./hundred-ten-is-better-text";
 import { SlideContainer } from "../../slide-container";
 
+const SLIDE_INDEX = 1;
+
 export const Essentials: FC = () => {
   return (
-    <SlideContainer index={1}>
-      <FivePerWeekText />
-      <OnceAWeekText />
-      <HundredTenIsBetterText />
-      <StoneCard />
-      <EightyThreeIsBetterText />
+    <SlideContainer index={SLIDE_INDEX}>
+      <FivePerWeekText index={SLIDE_INDEX} />
+      <OnceAWeekText index={SLIDE_INDEX} />
+      <HundredTenIsBetterText index={SLIDE_INDEX} />
+      <StoneCard index={SLIDE_INDEX} />
+      <EightyThreeIsBetterText index={SLIDE_INDEX} />
     </SlideContainer>
   );
 };
