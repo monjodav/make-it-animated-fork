@@ -13,17 +13,18 @@ export const useScrollDirection = (param?: "include-negative") => {
 
   // Place it inside the list animated scroll handler onBeginDrag
   // Captures initial touch position for progressive animation calculations
-  const onBeginDrag = (e: ReanimatedScrollEvent) => {
+  const onBeginDrag = (e: ReanimatedScrollEvent | number) => {
     "worklet"; // Runs on UI thread for optimal performance
-    offsetYAnchorOnBeginDrag.set(e.contentOffset.y);
+    const offsetY = typeof e === "number" ? e : e.contentOffset.y;
+    offsetYAnchorOnBeginDrag.set(offsetY);
   };
 
   // Place it inside the list animated scroll handler onScroll
   // Direction detection algorithm runs on every scroll frame
-  const onScroll = (e: ReanimatedScrollEvent) => {
+  const onScroll = (e: ReanimatedScrollEvent | number) => {
     "worklet"; // UI thread execution for 60fps performance
 
-    const offsetY = e.contentOffset.y;
+    const offsetY = typeof e === "number" ? e : e.contentOffset.y;
 
     // Handle negative scroll values (bounce effect) based on parameter
     const positiveOffsetY = param === "include-negative" ? offsetY : Math.max(offsetY, 0);

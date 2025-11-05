@@ -1,9 +1,9 @@
 import { Href } from "expo-router";
-import { adidas, alma, appleBooks, appleInvites } from "./apps/a";
+import { adidas, alma, appleBooks, appleInvites, appStore } from "./apps/a";
 import { canva, colorsApp, chatgpt } from "./apps/c";
 import { instagram } from "./apps/i";
 import { linear, linkedin, longevity, luma } from "./apps/l";
-import { pinterest } from "./apps/p";
+import { perplexity, pinterest } from "./apps/p";
 import { x } from "./apps/x";
 import { viber } from "./apps/v";
 import { whatsapp } from "./apps/w";
@@ -34,6 +34,7 @@ export const apps: App[] = [
   alma,
   appleBooks,
   appleInvites,
+  appStore,
   // B
   // C
   canva,
@@ -69,6 +70,7 @@ export const apps: App[] = [
   opal,
   //------------------------
   // P
+  perplexity,
   pinterest,
   // Q
   queue,

@@ -43,13 +43,17 @@ export const Favorites = () => {
   const { screenView, offsetY, isListDragging, blurIntensity, onGoToCommands } = useHomeAnimation();
 
   // Why: Track scroll direction including negative pulls to coordinate haptics and thresholds.
-  const { onScroll: scrollDirectionOnScroll, scrollDirection } =
-    useScrollDirection("include-negative");
+  const {
+    onScroll: scrollDirectionOnScroll,
+    scrollDirection,
+    offsetYAnchorOnChangeDirection,
+  } = useScrollDirection("include-negative");
 
   // Why: Provide a single haptic feedback exactly when crossing trigger offset upward.
   const { singleHapticOnScroll } = useHapticOnScroll({
     isListDragging,
     scrollDirection,
+    offsetYAnchorOnChangeDirection,
     triggerOffset: TRIGGER_DRAG_DISTANCE,
   });
 
