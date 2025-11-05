@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { createContext } from "react";
 import { Welcome } from "../components/slides/welcome";
 import { Essentials } from "../components/slides/essentials";
+import { BackedInfo } from "../components/slides/backed-info";
 
 type AnimatedIndexContextType = {
   activeIndex: SharedValue<number>;
@@ -86,7 +87,9 @@ const Onboarding = () => {
           <OnboardingSlideContainer
             title={"Up to date expert\nbacked info"}
             description="We pull fresh insights from top podcasts and scientific publications. Then update every card with sources, and alert you when anything changes. Never miss a beat!"
-          />
+          >
+            <BackedInfo />
+          </OnboardingSlideContainer>
           <OnboardingSlideContainer
             title={"Share with friends\n& compare"}
             description="Publish your stack as one link, let friends copy it in a tap, and see public adoption and weekly-use stats. You can also share a specific protocol you do on social media!"
