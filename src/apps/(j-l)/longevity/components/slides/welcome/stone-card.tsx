@@ -9,7 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../lib/constants";
 
-export const RedCard: FC = () => {
+export const StoneCard: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -17,12 +17,12 @@ export const RedCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [0, 1, 2],
-      [0, screenWidth, screenWidth * 2],
+      [0, 1],
+      [0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [0, 1, 2], [-2, -4, 3], Extrapolation.CLAMP);
-    const scale = interpolate(activeIndex.get(), [0, 1, 2], [1, 0.98, 1.2], Extrapolation.CLAMP);
+    const rotate = interpolate(activeIndex.get(), [0, 0.5], [8, 0], Extrapolation.CLAMP);
+    const scale = interpolate(activeIndex.get(), [0, 0.5], [1, 0.97], Extrapolation.CLAMP);
 
     return {
       transform: [
@@ -36,10 +36,10 @@ export const RedCard: FC = () => {
   return (
     <Animated.View
       style={[rContainerStyle, styles.borderCurve]}
-      className="absolute w-[45%] aspect-[1/1.4] rounded-3xl items-center justify-center gap-10 bg-red-500"
+      className="absolute right-0 bottom-[13%] w-[42%] aspect-[1/1.2] rounded-3xl items-center justify-center gap-10 bg-stone-300"
     >
-      <View className="size-20 rounded-3xl bg-amber-500" />
-      <View className="h-5 w-20 rounded-full bg-neutral-200/25" />
+      <View className="size-20 rounded-full bg-stone-400" />
+      <View className="h-5 w-20 rounded-full bg-neutral-200" />
     </Animated.View>
   );
 };

@@ -19,7 +19,9 @@ type AnimatedIndexContextType = {
   activeIndex: SharedValue<number>;
 };
 
-export const AnimatedIndexContext = createContext<AnimatedIndexContextType | null>(null);
+export const AnimatedIndexContext = createContext<AnimatedIndexContextType>(
+  {} as AnimatedIndexContextType
+);
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
