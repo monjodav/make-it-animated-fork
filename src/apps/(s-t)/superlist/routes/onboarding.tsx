@@ -80,38 +80,38 @@ export const Onboarding = () => {
 
         scheduleOnRN(scrollToNextSlide, currentSlideIndex);
 
-        setTimeout(() => {
-          if (isAutoScrolling.current) {
-            scheduleOnRN(startAutoScroll);
-          }
-        }, 500);
+        // setTimeout(() => {
+        //   if (isAutoScrolling.current) {
+        //     scheduleOnRN(startAutoScroll);
+        //   }
+        // }, 500);
       }
     });
   }, [autoScrollProgress, progressSlideIndex, progressBeforeDrag, activeIndex, scrollToNextSlide]);
 
-  const startAutoScroll = useCallback(() => {
-    const currentSlideIndex = Math.floor(activeIndex.get());
-    const realIndex = currentSlideIndex - 1; // Adjust for cloned first slide
-    const currentSlide = SLIDES[realIndex];
-    const duration = currentSlide?.duration || 2000;
+  // const startAutoScroll = useCallback(() => {
+  //   const currentSlideIndex = Math.floor(activeIndex.get());
+  //   const realIndex = currentSlideIndex - 1; // Adjust for cloned first slide
+  //   const currentSlide = SLIDES[realIndex];
+  //   const duration = currentSlide?.duration || 2000;
 
-    // Reset progress and animate to 1 over specified duration
-    progressSlideIndex.set(realIndex);
-    autoScrollProgress.value = withTiming(1, { duration }, (finished) => {
-      if (finished && isAutoScrolling.current) {
-        autoScrollProgress.value = 0;
+  //   // Reset progress and animate to 1 over specified duration
+  //   progressSlideIndex.set(realIndex);
+  //   autoScrollProgress.value = withTiming(1, { duration }, (finished) => {
+  //     if (finished && isAutoScrolling.current) {
+  //       autoScrollProgress.value = 0;
 
-        scheduleOnRN(scrollToNextSlide, currentSlideIndex);
+  //       scheduleOnRN(scrollToNextSlide, currentSlideIndex);
 
-        // Wait for scroll animation to complete, then start next auto-scroll
-        setTimeout(() => {
-          if (isAutoScrolling.current) {
-            scheduleOnRN(startAutoScroll);
-          }
-        }, 500);
-      }
-    });
-  }, [autoScrollProgress, activeIndex, progressSlideIndex, scrollToNextSlide]);
+  //       // Wait for scroll animation to complete, then start next auto-scroll
+  //       setTimeout(() => {
+  //         if (isAutoScrolling.current) {
+  //           scheduleOnRN(startAutoScroll);
+  //         }
+  //       }, 500);
+  //     }
+  //   });
+  // }, [autoScrollProgress, activeIndex, progressSlideIndex, scrollToNextSlide]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
@@ -161,20 +161,20 @@ export const Onboarding = () => {
     },
   });
 
-  useEffect(() => {
-    // Start auto-scroll after component mounts
-    const timer = setTimeout(() => {
-      if (isAutoScrolling.current) {
-        startAutoScroll();
-      }
-    }, 500);
+  // useEffect(() => {
+  //   // Start auto-scroll after component mounts
+  //   const timer = setTimeout(() => {
+  //     if (isAutoScrolling.current) {
+  //       startAutoScroll();
+  //     }
+  //   }, 500);
 
-    return () => {
-      clearTimeout(timer);
-      isAutoScrolling.current = false;
-      cancelAnimation(autoScrollProgress);
-    };
-  }, [startAutoScroll]);
+  //   return () => {
+  //     clearTimeout(timer);
+  //     isAutoScrolling.current = false;
+  //     cancelAnimation(autoScrollProgress);
+  //   };
+  // }, [startAutoScroll]);
 
   return (
     <View
