@@ -17,12 +17,12 @@ export const BlueCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [3, 4],
-      [0, -screenWidth],
+      [2.5, 3, 4],
+      [screenWidth / 3, 0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [3, 3.5], [-4, 0], Extrapolation.CLAMP);
-    const scale = interpolate(activeIndex.get(), [3, 3.5], [1, 0.98], Extrapolation.CLAMP);
+    const rotate = interpolate(activeIndex.get(), [2, 3, 3.5], [0, -4, 0], Extrapolation.CLAMP);
+    const scale = interpolate(activeIndex.get(), [2, 3, 3.5], [1.5, 1, 0.98], Extrapolation.CLAMP);
 
     return {
       transform: [

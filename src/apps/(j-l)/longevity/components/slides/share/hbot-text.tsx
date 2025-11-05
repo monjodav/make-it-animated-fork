@@ -13,8 +13,8 @@ export const HbotText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [3, 4],
-      [0, -screenWidth],
+      [2, 3, 4],
+      [screenWidth * 1.5, 0, -screenWidth],
       Extrapolation.CLAMP
     );
 

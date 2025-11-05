@@ -17,8 +17,8 @@ export const StoneCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [3, 4],
-      [0, -screenWidth],
+      [2.75, 3, 4],
+      [screenWidth / 2.5, 0, -screenWidth],
       Extrapolation.CLAMP
     );
     const rotate = interpolate(activeIndex.get(), [3, 3.5], [4, 0], Extrapolation.CLAMP);
