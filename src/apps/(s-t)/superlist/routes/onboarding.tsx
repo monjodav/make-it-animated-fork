@@ -1,5 +1,5 @@
 import { ChevronDown, Mail, UserRound } from "lucide-react-native";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
 import Animated, {
   Extrapolation,
@@ -15,6 +15,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Carousel from "../components/carousel";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { scheduleOnRN } from "react-native-worklets";
 
 export const SLIDES: OnboardingSlide[] = [
   {
@@ -59,6 +60,8 @@ export const Onboarding = () => {
   const isDragging = useSharedValue(false);
   // Vertical translation for swipe up gesture
   const translateY = useSharedValue(0);
+  // Track gesture start position to accumulate deltas correctly
+  const gestureStartY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
@@ -74,44 +77,53 @@ export const Onboarding = () => {
     },
   });
 
+  const handleScrollToIndex = useCallback((index: number) => {
+    horizontalListRef.current?.scrollToIndex({
+      index,
+      animated: true,
+    });
+  }, []);
+
+  const singleTap = Gesture.Tap()
+    .maxDuration(250)
+    .onStart(() => {
+      scheduleOnRN(handleScrollToIndex, currentSlideIndex + 1);
+      isDragging.set(false);
+    });
+
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       isDragging.set(true);
+      // Remember where we started this gesture
+      gestureStartY.set(translateY.get());
     })
     .onUpdate((e) => {
-      // Only allow upward movement (negative translationY)
-      if (e.translationY < 0) {
-        // Calculate max translation (move carousel above the content)
-        const maxTranslation = -(screenHeight - insets.top - insets.bottom - 40);
-        translateY.set(Math.max(e.translationY, maxTranslation) / 4);
+      // Forbid further swipe up when container is already at the top offset
+      if (translateY.get() <= -TOP_CAROUSEL_OFFSET && e.translationY < 0) {
+        return;
       }
+
+      // Calculate new position relative to gesture start, with a damping factor for a nicer feel
+      const proposed = gestureStartY.get() + e.translationY / 4;
+      // Clamp between fully down (0) and fully up (-TOP_CAROUSEL_OFFSET)
+      const clamped = Math.min(0, Math.max(proposed, -TOP_CAROUSEL_OFFSET));
+      translateY.set(clamped);
     })
     .onEnd((e) => {
-      const threshold = -VERTICAL_SWIPE_THRESHOLD;
+      // Decide snap based on where we ended relative to halfway between top and bottom
+      const halfway = -TOP_CAROUSEL_OFFSET / 2;
+      const currentY = translateY.get();
+      const target = currentY < halfway ? -TOP_CAROUSEL_OFFSET : 0;
 
-      if (translateY.get() < threshold) {
-        // Complete the swipe up
-        translateY.set(
-          withTiming(-TOP_CAROUSEL_OFFSET, {
-            duration: 300,
-          })
-        );
-      } else {
-        // Snap back to original position
-        translateY.set(
-          withTiming(
-            0,
-            {
-              duration: 300,
-            },
-            (finished) => {
-              if (finished) {
-                isDragging.set(false);
-              }
-            }
-          )
-        );
-      }
+      translateY.set(
+        withTiming(target, { duration: 300 }, (finished) => {
+          if (finished && target === 0) {
+            // Clear dragging state when animation finishes
+
+            isDragging.set(false);
+          }
+        })
+      );
     });
 
   const rButtonsBlockStyle = useAnimatedStyle(() => {
@@ -165,7 +177,7 @@ export const Onboarding = () => {
   };
 
   return (
-    <GestureDetector gesture={panGesture}>
+    <GestureDetector gesture={Gesture.Race(panGesture, singleTap)}>
       <View className="flex-1 bg-slate-900" style={[{ paddingBottom: insets.bottom + 10 }]}>
         <Animated.View className="mt-auto" style={[rButtonsBlockStyle]}>
           <Pressable className="self-center mb-6" onPress={handler}>
