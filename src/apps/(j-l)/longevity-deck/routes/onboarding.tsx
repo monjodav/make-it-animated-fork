@@ -19,7 +19,7 @@ import { Share } from "../components/slides/share";
 import { NotMedicalAdvice } from "../components/slides/not-medical-advice";
 import { AnimatedIndexContext } from "../lib/animated-index-context";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 /**
  * Creates an animated Pressable component to enable spring animations on button.
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
 
 export default Onboarding;
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

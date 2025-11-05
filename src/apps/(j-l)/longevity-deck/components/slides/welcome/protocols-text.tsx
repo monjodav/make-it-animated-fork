@@ -6,7 +6,7 @@ import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 import { SlideItemProps } from "../../../lib/types";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 export const ProtocolsText: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
@@ -38,4 +38,4 @@ export const ProtocolsText: FC<SlideItemProps> = ({ index }) => {
   );
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

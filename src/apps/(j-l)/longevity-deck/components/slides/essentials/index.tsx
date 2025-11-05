@@ -7,7 +7,7 @@ import { OnceAWeekText } from "./once-a-week-text";
 import { HundredTenIsBetterText } from "./hundred-ten-is-better-text";
 import { SlideContainer } from "../../slide-container";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 const SLIDE_INDEX = 1;
 
@@ -23,4 +23,4 @@ export const Essentials: FC = () => {
   );
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

@@ -4,7 +4,7 @@ import { TemperaturesText } from "./temperatures-text";
 import { PodcastsText } from "./podcasts-text";
 import { SlideContainer } from "../../slide-container";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 const SLIDE_INDEX = 2;
 
@@ -18,4 +18,4 @@ export const BackedInfo: FC = () => {
   );
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

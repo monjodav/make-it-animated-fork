@@ -4,7 +4,7 @@ import { BlueCard } from "./blue-card";
 import { StoneCard } from "./stone-card";
 import { SlideContainer } from "../../slide-container";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 const SLIDE_INDEX = 3;
 
@@ -18,4 +18,4 @@ export const Share: FC = () => {
   );
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

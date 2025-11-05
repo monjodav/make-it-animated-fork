@@ -1,4 +1,4 @@
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 /**
  * Spring animation configuration used across all onboarding animations.
@@ -13,4 +13,4 @@ export const BASE_SPRING_CONFIG = {
   damping: 20,
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

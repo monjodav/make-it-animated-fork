@@ -5,7 +5,7 @@ import { BlueCard } from "./blue-card";
 import { StoneCard } from "./stone-card";
 import { ProtocolsText } from "./protocols-text";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 const SLIDE_INDEX = 0;
 
@@ -20,4 +20,4 @@ export const Welcome: FC = () => {
   );
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

@@ -3,7 +3,7 @@ import Animated, { Extrapolation } from "react-native-reanimated";
 import { interpolate, useAnimatedStyle } from "react-native-reanimated";
 import { AnimatedIndexContext } from "../lib/animated-index-context";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 type Props = {
   index: number;
@@ -38,4 +38,4 @@ export const SlideContainer: FC<PropsWithChildren<Props>> = ({ children, index }
   );
 };
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

@@ -1,4 +1,4 @@
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 import { createContext } from "react";
 import { SharedValue } from "react-native-reanimated";
@@ -16,4 +16,4 @@ export const AnimatedIndexContext = createContext<AnimatedIndexContextType>(
   {} as AnimatedIndexContextType
 );
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

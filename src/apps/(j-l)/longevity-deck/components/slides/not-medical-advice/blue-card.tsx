@@ -10,7 +10,7 @@ import Animated, {
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 import { SlideItemProps } from "../../../lib/types";
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 export const BlueCard: FC<SlideItemProps> = ({ index }) => {
   const { width: screenWidth } = useWindowDimensions();
@@ -90,4 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// longevity-onboarding-animation 🔼
+// longevity-deck-onboarding-animation 🔼

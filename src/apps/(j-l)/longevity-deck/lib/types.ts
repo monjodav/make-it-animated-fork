@@ -1,7 +1,7 @@
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
 
 export type SlideItemProps = {
   index: number;
 };
 
-// longevity-onboarding-animation 🔽
+// longevity-deck-onboarding-animation 🔽
