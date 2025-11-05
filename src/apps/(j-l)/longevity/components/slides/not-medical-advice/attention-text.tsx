@@ -5,7 +5,7 @@ import { AnimatedIndexContext } from "../../../routes/onboarding";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../lib/constants";
 
-export const TemperaturesText: FC = () => {
+export const AttentionText: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -13,7 +13,7 @@ export const TemperaturesText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [2, 3],
+      [4, 5],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
@@ -26,10 +26,10 @@ export const TemperaturesText: FC = () => {
   return (
     <SlideTextContainer
       style={rContainerStyle}
-      className="absolute top-[25%] left-[42%] max-w-[200px] rounded-3xl"
+      className="absolute top-[75%] left-[20%] max-w-[180px]"
       textClassName="text-lg text-center"
     >
-      Temperatures between 88°C and 98°C are most beneficial. 20+ minutes 5-6 x week
+      This is a bad idea with your condition!
     </SlideTextContainer>
   );
 };

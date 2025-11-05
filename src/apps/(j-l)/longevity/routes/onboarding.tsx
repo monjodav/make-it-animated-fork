@@ -12,11 +12,12 @@ import { BottomGlow } from "../components/bottom-glow";
 import { OnboardingSlideContainer } from "../components/onboarding-slide-container";
 import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { createContext } from "react";
+import React, { createContext } from "react";
 import { Welcome } from "../components/slides/welcome";
 import { Essentials } from "../components/slides/essentials";
 import { BackedInfo } from "../components/slides/backed-info";
 import { Share } from "../components/slides/share";
+import { NotMedicalAdvice } from "../components/slides/not-medical-advice";
 
 type AnimatedIndexContextType = {
   activeIndex: SharedValue<number>;
@@ -100,7 +101,9 @@ const Onboarding = () => {
           <OnboardingSlideContainer
             title={"This app is not\nmedical advice"}
             description="Educational use only. Not a diagnosis/treatment tool. Protocols may not suit you and could interact with meds or conditions. Do you research and consult a licensed clinician before starting or changing anything. Seek immediate care for symptoms or emergencies. Tap 'I understand' to acknowledge."
-          />
+          >
+            <NotMedicalAdvice />
+          </OnboardingSlideContainer>
         </Animated.ScrollView>
 
         <View className="gap-5 px-5 pt-5">

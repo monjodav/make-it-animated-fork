@@ -27,7 +27,7 @@ export const HbotText: FC = () => {
     <SlideTextContainer
       style={rContainerStyle}
       className="absolute top-[75%] left-[20%] max-w-[250px]"
-      textClassName="text-lg"
+      textClassName="text-lg text-center"
     >
       I'm doing HBOT therapy with Longevity Deck. Check it out!
     </SlideTextContainer>
