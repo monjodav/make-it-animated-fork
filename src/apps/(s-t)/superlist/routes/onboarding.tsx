@@ -75,6 +75,9 @@ export const Onboarding = () => {
   });
 
   const panGesture = Gesture.Pan()
+    .onBegin(() => {
+      isDragging.set(true);
+    })
     .onUpdate((e) => {
       // Only allow upward movement (negative translationY)
       if (e.translationY < 0) {
@@ -96,9 +99,17 @@ export const Onboarding = () => {
       } else {
         // Snap back to original position
         translateY.set(
-          withTiming(0, {
-            duration: 300,
-          })
+          withTiming(
+            0,
+            {
+              duration: 300,
+            },
+            (finished) => {
+              if (finished) {
+                isDragging.set(false);
+              }
+            }
+          )
         );
       }
     });
@@ -144,20 +155,20 @@ export const Onboarding = () => {
     };
   });
 
+  const handler = () => {
+    isDragging.set(false);
+    translateY.set(
+      withTiming(0, {
+        duration: 300,
+      })
+    );
+  };
+
   return (
     <GestureDetector gesture={panGesture}>
       <View className="flex-1 bg-slate-900" style={[{ paddingBottom: insets.bottom + 10 }]}>
         <Animated.View className="mt-auto" style={[rButtonsBlockStyle]}>
-          <Pressable
-            className="self-center mb-6"
-            onPress={() => {
-              translateY.set(
-                withTiming(0, {
-                  duration: 300,
-                })
-              );
-            }}
-          >
+          <Pressable className="self-center mb-6" onPress={handler}>
             <ChevronDown size={26} color="grey" />
           </Pressable>
           <Text className="text-white text-center text-4xl font-bold">Let's get started</Text>
@@ -210,6 +221,7 @@ export const Onboarding = () => {
           SLIDES={SLIDES}
           isDragging={isDragging}
           animatedSlideIndex={animatedSlideIndex}
+          topCarouselOffset={TOP_CAROUSEL_OFFSET}
         />
       </View>
     </GestureDetector>

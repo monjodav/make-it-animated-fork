@@ -1,5 +1,5 @@
 import { FlatList } from "react-native";
-import Animated, { SharedValue } from "react-native-reanimated";
+import { SharedValue } from "react-native-reanimated";
 
 /**
  * Represents a single slide in the onboarding carousel
@@ -24,4 +24,5 @@ export type CarouselProps = {
   SLIDES: Array<OnboardingSlide>;
   isDragging: SharedValue<boolean>;
   animatedSlideIndex: SharedValue<number>;
+  topCarouselOffset: number;
 };

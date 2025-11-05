@@ -6,8 +6,6 @@ import { SlideItem } from "../components/slide-item";
 import Pagination from "./pagination";
 import { CarouselProps } from "./lib/types";
 
-const TOP_CAROUSEL_OFFSET = 230;
-
 const Carousel: FC<CarouselProps> = ({
   setCurrentSlideIndex,
   horizontalListRef,
@@ -21,6 +19,7 @@ const Carousel: FC<CarouselProps> = ({
   SLIDES,
   isDragging,
   animatedSlideIndex,
+  topCarouselOffset,
 }) => {
   const insets = useSafeAreaInsets();
   const onViewableItemsChanged = useCallback(
@@ -56,12 +55,7 @@ const Carousel: FC<CarouselProps> = ({
 
   const rPaginationStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(
-        translateY.get(),
-        [0, -TOP_CAROUSEL_OFFSET],
-        [1, 0],
-        Extrapolation.CLAMP
-      ),
+      opacity: interpolate(translateY.get(), [0, -topCarouselOffset], [1, 0], Extrapolation.CLAMP),
       pointerEvents: translateY.get() === 0 ? "auto" : "none",
     };
   });
