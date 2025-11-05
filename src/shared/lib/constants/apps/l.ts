@@ -54,7 +54,7 @@ export const longevity: App = {
   imageSource: LongevityImage,
   animations: [
     {
-      name: "Onboarding flow animation",
+      name: "Onboarding animation",
       href: "/longevity/onboarding",
     },
   ],
