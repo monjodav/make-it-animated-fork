@@ -35,7 +35,7 @@ export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffset
 
   return (
     <Animated.View
-      className="p-7"
+      className="p-7 pb-0"
       style={[{ width, borderCurve: "continuous" }, rStyle]}
       onLayout={(e) => {
         setItemHeight(e.nativeEvent.layout.height);

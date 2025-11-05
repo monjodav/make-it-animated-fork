@@ -33,7 +33,7 @@ export const Pagination: FC<PaginationProps> = ({
   const activeWidth = itemWidth * 3;
 
   return (
-    <View className="flex-row items-center justify-center py-4 px-20" style={{ gap: GAP }}>
+    <View className="flex-row items-center justify-center pt-5 pb-4 px-20" style={{ gap: GAP }}>
       {slides.map((slide, index) => (
         <PaginationItem
           key={index}
