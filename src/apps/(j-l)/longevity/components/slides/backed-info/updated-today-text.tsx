@@ -3,7 +3,7 @@ import { useWindowDimensions } from "react-native";
 import { SlideTextContainer } from "../../slide-text-container";
 import { AnimatedIndexContext } from "../../../routes/onboarding";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
-import { BASE_SPRING_CONFIG } from "../../lib/constants";
+import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 
 export const UpdatedTodayText: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -13,8 +13,8 @@ export const UpdatedTodayText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [2, 3],
-      [0, -screenWidth],
+      [1, 2, 3],
+      [screenWidth * 0.25, 0, -screenWidth],
       Extrapolation.CLAMP
     );
 

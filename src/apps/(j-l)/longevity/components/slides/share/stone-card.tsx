@@ -7,7 +7,7 @@ import Animated, {
   Extrapolation,
   withSpring,
 } from "react-native-reanimated";
-import { BASE_SPRING_CONFIG } from "../../lib/constants";
+import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 
 export const StoneCard: FC = () => {
   const { width: screenWidth } = useWindowDimensions();

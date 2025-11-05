@@ -5,7 +5,7 @@ import { AnimatedIndexContext } from "../../../routes/onboarding";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
 import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 
-export const OnceAWeekText: FC = () => {
+export const UpdatedTodayText: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
 
   const { activeIndex } = use(AnimatedIndexContext);
@@ -13,7 +13,7 @@ export const OnceAWeekText: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [1, 2],
+      [2, 3],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
@@ -24,8 +24,8 @@ export const OnceAWeekText: FC = () => {
   });
 
   return (
-    <SlideTextContainer style={rContainerStyle} className="absolute top-[10%] left-[60%]">
-      once a week!
+    <SlideTextContainer style={rContainerStyle} className="absolute -top-[5%] left-[10%]">
+      ⏰ Updated today
     </SlideTextContainer>
   );
 };

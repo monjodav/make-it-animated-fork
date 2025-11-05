@@ -3,7 +3,7 @@ import { useWindowDimensions } from "react-native";
 import { SlideTextContainer } from "../../slide-text-container";
 import { AnimatedIndexContext } from "../../../routes/onboarding";
 import { Extrapolation, interpolate, useAnimatedStyle, withSpring } from "react-native-reanimated";
-import { BASE_SPRING_CONFIG } from "../../lib/constants";
+import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 
 export const EightyThreeIsBetterText: FC = () => {
   const { width: screenWidth } = useWindowDimensions();

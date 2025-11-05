@@ -7,7 +7,7 @@ import Animated, {
   Extrapolation,
   withSpring,
 } from "react-native-reanimated";
-import { BASE_SPRING_CONFIG } from "../../lib/constants";
+import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 
 export const BlueCard: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -15,16 +15,19 @@ export const BlueCard: FC = () => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(activeIndex.get(), [3.5, 4, 5], [0, 1, 0], Extrapolation.CLAMP);
+
     const translateX = interpolate(
       activeIndex.get(),
-      [4, 5],
-      [0, -screenWidth],
+      [3, 4, 5],
+      [-screenWidth * 0.5, 0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [4, 4.5], [-4, 0], Extrapolation.CLAMP);
+    const rotate = interpolate(activeIndex.get(), [3.5, 4, 4.5], [-2, -4, 0], Extrapolation.CLAMP);
     const scale = interpolate(activeIndex.get(), [4, 4.5], [1, 0.98], Extrapolation.CLAMP);
 
     return {
+      opacity: withSpring(opacity, BASE_SPRING_CONFIG),
       transform: [
         { translateX: withSpring(translateX, BASE_SPRING_CONFIG) },
         { rotate: withSpring(`${rotate}deg`, BASE_SPRING_CONFIG) },

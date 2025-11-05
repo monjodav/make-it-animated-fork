@@ -7,7 +7,7 @@ import Animated, {
   Extrapolation,
   withSpring,
 } from "react-native-reanimated";
-import { BASE_SPRING_CONFIG } from "../../lib/constants";
+import { BASE_SPRING_CONFIG } from "../../../lib/constants";
 
 export const StoneCard: FC = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -17,18 +17,16 @@ export const StoneCard: FC = () => {
   const rContainerStyle = useAnimatedStyle(() => {
     const translateX = interpolate(
       activeIndex.get(),
-      [4, 5],
-      [0, -screenWidth],
+      [3, 4, 5],
+      [screenWidth * 0.25, 0, -screenWidth],
       Extrapolation.CLAMP
     );
-    const rotate = interpolate(activeIndex.get(), [4, 4.5], [4, 0], Extrapolation.CLAMP);
-    const scale = interpolate(activeIndex.get(), [4, 4.5], [1, 0.97], Extrapolation.CLAMP);
+    const rotate = interpolate(activeIndex.get(), [3, 4, 4.5], [2, 4, 0], Extrapolation.CLAMP);
 
     return {
       transform: [
         { translateX: withSpring(translateX, BASE_SPRING_CONFIG) },
         { rotate: withSpring(`${rotate}deg`, BASE_SPRING_CONFIG) },
-        { scale: withSpring(scale, BASE_SPRING_CONFIG) },
       ],
     };
   });

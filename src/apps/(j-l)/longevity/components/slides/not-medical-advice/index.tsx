@@ -3,13 +3,14 @@ import { View } from "react-native";
 import { AttentionText } from "./attention-text";
 import { BlueCard } from "./blue-card";
 import { StoneCard } from "./stone-card";
+import { SlideContainer } from "../../slide-container";
 
 export const NotMedicalAdvice: FC = () => {
   return (
-    <View className="flex-1">
+    <SlideContainer index={4}>
       <StoneCard />
       <BlueCard />
       <AttentionText />
-    </View>
+    </SlideContainer>
   );
 };
