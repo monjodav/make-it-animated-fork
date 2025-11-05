@@ -16,6 +16,7 @@ import { createContext } from "react";
 import { Welcome } from "../components/slides/welcome";
 import { Essentials } from "../components/slides/essentials";
 import { BackedInfo } from "../components/slides/backed-info";
+import { Share } from "../components/slides/share";
 
 type AnimatedIndexContextType = {
   activeIndex: SharedValue<number>;
@@ -93,7 +94,9 @@ const Onboarding = () => {
           <OnboardingSlideContainer
             title={"Share with friends\n& compare"}
             description="Publish your stack as one link, let friends copy it in a tap, and see public adoption and weekly-use stats. You can also share a specific protocol you do on social media!"
-          />
+          >
+            <Share />
+          </OnboardingSlideContainer>
           <OnboardingSlideContainer
             title={"This app is not\nmedical advice"}
             description="Educational use only. Not a diagnosis/treatment tool. Protocols may not suit you and could interact with meds or conditions. Do you research and consult a licensed clinician before starting or changing anything. Seek immediate care for symptoms or emergencies. Tap 'I understand' to acknowledge."
