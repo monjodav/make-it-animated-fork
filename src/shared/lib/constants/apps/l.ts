@@ -1,6 +1,7 @@
 import LinearImage from "@/assets/images/apps/linear.png";
 import LinkedinImage from "@/assets/images/apps/linkedin.png";
 import LumaImage from "@/assets/images/apps/luma.png";
+import LongevityImage from "@/assets/images/apps/longevity.png";
 import { App } from "../apps-list";
 
 export const linear: App = {
@@ -44,6 +45,17 @@ export const luma: App = {
     {
       name: "Discover city",
       href: "/luma/discover-city",
+    },
+  ],
+};
+
+export const longevity: App = {
+  name: "Longevity",
+  imageSource: LongevityImage,
+  animations: [
+    {
+      name: "Onboarding animation",
+      href: "/longevity/onboarding",
     },
   ],
 };
