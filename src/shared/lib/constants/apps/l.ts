@@ -50,12 +50,12 @@ export const luma: App = {
 };
 
 export const longevity: App = {
-  name: "Longevity",
+  name: "Longevity Deck",
   imageSource: LongevityImage,
   animations: [
     {
       name: "Onboarding animation",
-      href: "/longevity/onboarding",
+      href: "/longevity-deck/onboarding",
     },
   ],
 };
