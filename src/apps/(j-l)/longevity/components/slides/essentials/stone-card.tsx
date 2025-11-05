@@ -18,12 +18,21 @@ export const StoneCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Slides card left (off-screen) when scrolling to next slide.
+     * Interpolation: [index, index+1] → [0, -screenWidth]
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index, index + 1],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Slightly shrinks card (1 → 0.98) when slide becomes inactive.
+     * Interpolation: [index, index-0.5] → [1, 0.98]
+     * Note: Uses index-0.5 (past) instead of index+0.5 (future) - scales down when leaving.
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index, index - 0.5],

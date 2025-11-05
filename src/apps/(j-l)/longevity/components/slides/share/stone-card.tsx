@@ -18,18 +18,31 @@ export const StoneCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Card enters from right (40% screen width), centers, then exits left.
+     * Interpolation: [index-0.25, index, index+1] → [screenWidth/2.5, 0, -screenWidth]
+     * Starts earlier (index-0.25) for smoother entry transition.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 0.25, index, index + 1],
       [screenWidth / 2.5, 0, -screenWidth],
       Extrapolation.CLAMP
     );
+    /**
+     * rotate: Straightens card from 4° tilt to 0° as slide becomes active.
+     * Interpolation: [index, index+0.5] → [4deg, 0deg]
+     */
     const rotate = interpolate(
       activeIndex.get(),
       [index, index + 0.5],
       [4, 0],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Slightly shrinks card (1 → 0.97) as slide becomes active.
+     * Interpolation: [index, index+0.5] → [1, 0.97]
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index, index + 0.5],

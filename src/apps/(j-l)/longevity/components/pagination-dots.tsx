@@ -9,6 +9,11 @@ interface DotProps {
   activeIndex: SharedValue<number>;
 }
 
+/**
+ * Individual pagination dot that transitions color based on proximity to active slide.
+ * Interpolation: [index-1, index, index+1] → [gray, white, gray]
+ * Creates smooth color fade for dots adjacent to active slide.
+ */
 const Dot: FC<DotProps> = ({ index, activeIndex }) => {
   const animatedStyle = useAnimatedStyle(() => {
     return {

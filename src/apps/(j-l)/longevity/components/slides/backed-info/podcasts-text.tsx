@@ -14,6 +14,11 @@ export const PodcastsText: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Text enters from right, centers, then exits left.
+     * Interpolation: [index-1, index, index+1] → [screenWidth*0.75, 0, -screenWidth]
+     * Starts 75% screen width to the right, creating staggered entry effect.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 1],

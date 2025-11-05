@@ -18,18 +18,33 @@ export const BlueCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Card enters from right (1/3 screen width), centers, then exits left.
+     * Interpolation: [index-0.5, index, index+1] → [screenWidth/3, 0, -screenWidth]
+     * Starts mid-transition from previous slide for smooth entrance.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 0.5, index, index + 1],
       [screenWidth / 3, 0, -screenWidth],
       Extrapolation.CLAMP
     );
+    /**
+     * rotate: Card tilts from 0° to -4° then back to 0°.
+     * Interpolation: [index-1, index, index+0.5] → [0deg, -4deg, 0deg]
+     * Creates subtle "card settling" effect as slide becomes active.
+     */
     const rotate = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 0.5],
       [0, -4, 0],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Dramatic size change from 150% down to 100%, then slightly shrinks.
+     * Interpolation: [index-1, index, index+0.5] → [1.5, 1, 0.98]
+     * Card starts large (zoom effect) then scales to normal size.
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 0.5],

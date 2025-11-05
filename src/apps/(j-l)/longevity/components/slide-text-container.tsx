@@ -11,6 +11,12 @@ interface Props extends AnimatedProps<ViewProps> {
   textClassName?: string;
 }
 
+/**
+ * Platform-optimized text container with blur effects.
+ * iOS: Uses native BlurView for performance-optimized glassmorphism effect.
+ * Android: Falls back to semi-transparent background + border (BlurView has performance issues).
+ * borderCurve: "continuous" enables iOS-style rounded corners for modern look.
+ */
 export const SlideTextContainer: FC<PropsWithChildren<Props>> = ({
   children,
   className,

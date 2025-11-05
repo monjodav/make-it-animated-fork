@@ -14,6 +14,11 @@ export const AttentionText: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Text enters from right (50% screen width), centers, then exits left.
+     * Interpolation: [index-1, index, index+1] → [screenWidth*0.5, 0, -screenWidth]
+     * Smooth entry animation for attention-grabbing text.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 1],

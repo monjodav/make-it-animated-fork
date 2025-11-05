@@ -14,6 +14,10 @@ export const EightyThreeIsBetterText: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Slides text left (off-screen) when scrolling to next slide.
+     * Interpolation: [index, index+1] → [0, -screenWidth]
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index, index + 1],

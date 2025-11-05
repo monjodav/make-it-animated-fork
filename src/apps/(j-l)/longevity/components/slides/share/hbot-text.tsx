@@ -14,6 +14,11 @@ export const HbotText: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Text enters from far right (150% screen width), centers, then exits left.
+     * Interpolation: [index-1, index, index+1] → [screenWidth*1.5, 0, -screenWidth]
+     * Starts off-screen to the right for dramatic entrance effect.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 1],

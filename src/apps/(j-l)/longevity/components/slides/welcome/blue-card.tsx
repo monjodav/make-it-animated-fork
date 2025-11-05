@@ -18,18 +18,31 @@ export const BlueCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Slides card left (off-screen) when scrolling to next slide.
+     * Interpolation: [index, index+1] → [0, -screenWidth]
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index, index + 1],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
+    /**
+     * rotate: Straightens card from -6° tilt to 0° as slide becomes active.
+     * Interpolation: [index, index+0.5] → [-6deg, 0deg]
+     * Negative rotation creates counter-clockwise tilt effect.
+     */
     const rotate = interpolate(
       activeIndex.get(),
       [index, index + 0.5],
       [-6, 0],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Slightly shrinks card (1 → 0.98) as slide becomes active.
+     * Interpolation: [index, index+0.5] → [1, 0.98]
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index, index + 0.5],

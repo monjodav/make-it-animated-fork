@@ -18,18 +18,33 @@ export const RedCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Red card moves right across multiple slides for extended animation.
+     * Interpolation: [index, index+1, index+2] → [0, screenWidth, screenWidth*2]
+     * Travels 2x screen width to create dramatic exit effect.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index, index + 1, index + 2],
       [0, screenWidth, screenWidth * 2],
       Extrapolation.CLAMP
     );
+    /**
+     * rotate: Dynamic rotation that changes direction (-2° → -4° → 3°).
+     * Interpolation: [index, index+1, index+2] → [-2deg, -4deg, 3deg]
+     * Creates a "spinning" effect as card moves across slides.
+     */
     const rotate = interpolate(
       activeIndex.get(),
       [index, index + 1, index + 2],
       [-2, -4, 3],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Dramatic size change (1 → 0.98 → 1.2) as card moves.
+     * Interpolation: [index, index+1, index+2] → [1, 0.98, 1.2]
+     * Shrinks slightly then expands to 120% for emphasis.
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index, index + 1, index + 2],

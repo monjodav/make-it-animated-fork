@@ -14,6 +14,11 @@ export const UpdatedTodayText: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Text enters from right, centers, then exits left.
+     * Interpolation: [index-1, index, index+1] → [screenWidth*0.25, 0, -screenWidth]
+     * Starts 25% screen width to the right for subtle entry effect.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 1],

@@ -18,6 +18,11 @@ export const BlueCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * opacity: Fades card in/out based on slide proximity.
+     * Interpolation: [index-0.5, index, index+1] → [0, 1, 0]
+     * Creates crossfade effect - card appears as slide becomes active.
+     */
     const opacity = interpolate(
       activeIndex.get(),
       [index - 0.5, index, index + 1],
@@ -25,18 +30,32 @@ export const BlueCard: FC<SlideItemProps> = ({ index }) => {
       Extrapolation.CLAMP
     );
 
+    /**
+     * translateX: Card enters from left (-50% screen width), centers, then exits left.
+     * Interpolation: [index-1, index, index+1] → [-screenWidth*0.5, 0, -screenWidth]
+     * Starts partially off-screen to the left for smooth entry.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 1],
       [-screenWidth * 0.5, 0, -screenWidth],
       Extrapolation.CLAMP
     );
+    /**
+     * rotate: Card tilts from -2° to -4° then straightens to 0°.
+     * Interpolation: [index-0.5, index, index+0.5] → [-2deg, -4deg, 0deg]
+     * More dynamic rotation pattern for visual interest.
+     */
     const rotate = interpolate(
       activeIndex.get(),
       [index - 0.5, index, index + 0.5],
       [-2, -4, 0],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Slightly shrinks card (1 → 0.98) as slide becomes active.
+     * Interpolation: [index, index+0.5] → [1, 0.98]
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index, index + 0.5],

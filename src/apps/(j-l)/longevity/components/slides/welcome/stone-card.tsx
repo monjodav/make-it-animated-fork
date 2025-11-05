@@ -18,18 +18,33 @@ export const StoneCard: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Slides card left (off-screen) when scrolling to next slide.
+     * Interpolation: [index, index+1] → [0, -screenWidth]
+     * Moves card exactly one screen width to the left.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index, index + 1],
       [0, -screenWidth],
       Extrapolation.CLAMP
     );
+    /**
+     * rotate: Straightens card from 8° tilt to 0° as slide becomes active.
+     * Interpolation: [index, index+0.5] → [8deg, 0deg]
+     * Creates subtle "cards settling" effect during slide transition.
+     */
     const rotate = interpolate(
       activeIndex.get(),
       [index, index + 0.5],
       [8, 0],
       Extrapolation.CLAMP
     );
+    /**
+     * scale: Slightly shrinks card (1 → 0.97) as slide becomes active.
+     * Interpolation: [index, index+0.5] → [1, 0.97]
+     * Adds depth perception - cards appear to move backward when inactive.
+     */
     const scale = interpolate(
       activeIndex.get(),
       [index, index + 0.5],

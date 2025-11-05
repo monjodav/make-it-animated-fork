@@ -21,8 +21,17 @@ import { AnimatedIndexContext } from "../lib/animated-index-context";
 
 // longevity-onboarding-animation 🔽
 
+/**
+ * Creates an animated Pressable component to enable spring animations on button.
+ * Required because Pressable isn't natively animatable - see Reanimated docs:
+ * https://docs.swmansion.com/react-native-reanimated/docs/core/createAnimatedComponent
+ */
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+/**
+ * Color palette for bottom glow gradient, one color per slide.
+ * Interpolated via HSV color space for smooth transitions between slides.
+ */
 const PALETTE = ["#321A48", "#192444", "#1C3F2D", "#44382A", "#391C1D"];
 
 const TOTAL_SLIDES = 5;
@@ -31,15 +40,31 @@ const Onboarding = () => {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
+  /**
+   * Shared values that drive all animations:
+   * - scrollOffsetX: Raw pixel offset from scroll (for future use)
+   * - activeIndex: Normalized slide index (0-4), computed from scroll position
+   */
   const scrollOffsetX = useSharedValue(0);
   const activeIndex = useSharedValue(0);
 
+  /**
+   * Handles scroll events and updates shared values on the UI thread.
+   * activeIndex calculation: offsetX / width converts pixel position to slide index.
+   * This runs at 60fps via scrollEventThrottle={16} for smooth animations.
+   */
   const scrollHandler = useAnimatedScrollHandler((event) => {
     const offsetX = event.contentOffset.x;
     scrollOffsetX.set(offsetX);
     activeIndex.set(offsetX / width);
   });
 
+  /**
+   * Animates "I understand" button fade-in on the last slide.
+   * Interpolation: [beforeLastIndex, lastIndex] → [0, 1] opacity
+   * CLAMP prevents opacity > 1 if user scrolls beyond last slide.
+   * pointerEvents: "none" prevents taps before button is visible.
+   */
   const rButtonStyle = useAnimatedStyle(() => {
     const beforeLastIndex = TOTAL_SLIDES - 2;
     const lastIndex = TOTAL_SLIDES - 1;
@@ -60,6 +85,8 @@ const Onboarding = () => {
       <View className="flex-1 bg-[#161522]" style={{ paddingBottom: insets.bottom + 8 }}>
         <BottomGlow palette={PALETTE} width={width} height={height} activeIndex={activeIndex} />
 
+        {/* scrollEventThrottle={16} ensures scroll events fire at ~60fps (1000ms/16ms).
+            Critical for smooth animation - lower values = more events = smoother motion. */}
         <Animated.ScrollView
           contentContainerStyle={{ paddingTop: insets.top + 40 }}
           horizontal

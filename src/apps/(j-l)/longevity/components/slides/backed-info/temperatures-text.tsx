@@ -14,6 +14,11 @@ export const TemperaturesText: FC<SlideItemProps> = ({ index }) => {
   const { activeIndex } = use(AnimatedIndexContext);
 
   const rContainerStyle = useAnimatedStyle(() => {
+    /**
+     * translateX: Text enters from right, centers, then exits left.
+     * Interpolation: [index-1, index, index+1] → [screenWidth*0.5, 0, -screenWidth]
+     * Starts 50% screen width to the right for smooth entry animation.
+     */
     const translateX = interpolate(
       activeIndex.get(),
       [index - 1, index, index + 1],
