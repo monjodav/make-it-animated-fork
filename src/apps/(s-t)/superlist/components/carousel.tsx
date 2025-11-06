@@ -1,10 +1,16 @@
-import { FC, useCallback, useRef } from "react";
+import { FC, use, useCallback, useDebugValue, useRef, useState } from "react";
 import { Platform, ViewToken } from "react-native";
-import Animated, { Extrapolation, interpolate, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  useDerivedValue,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SlideItem } from "../components/slide-item";
 import Pagination from "./pagination";
 import { CarouselProps } from "./lib/types";
+import { scheduleOnRN } from "react-native-worklets";
 
 const Carousel: FC<CarouselProps> = ({
   setCurrentSlideIndex,
@@ -59,6 +65,12 @@ const Carousel: FC<CarouselProps> = ({
       pointerEvents: translateY.get() === 0 ? "auto" : "none",
     };
   });
+
+  const [horizontalScrollEnabled, setHorizontalScrollEnabled] = useState(false);
+  useDerivedValue(() => {
+    const atTop = translateY.get() <= -topCarouselOffset;
+    scheduleOnRN(setHorizontalScrollEnabled, !atTop);
+  }, []);
 
   return (
     <Animated.View
@@ -116,7 +128,7 @@ const Carousel: FC<CarouselProps> = ({
           }
         }}
         showsHorizontalScrollIndicator={false}
-        scrollEnabled={data.length > 3}
+        scrollEnabled={data.length > 3 && horizontalScrollEnabled}
       />
       <Animated.View style={[rPaginationStyle]}>
         <Pagination

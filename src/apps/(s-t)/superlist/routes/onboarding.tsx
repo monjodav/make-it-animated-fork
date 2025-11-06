@@ -40,7 +40,6 @@ export const SLIDES: OnboardingSlide[] = [
   },
 ];
 
-const VERTICAL_SWIPE_THRESHOLD = 50;
 const TOP_CAROUSEL_OFFSET = 230;
 
 export const Onboarding = () => {
@@ -87,6 +86,7 @@ export const Onboarding = () => {
   const singleTap = Gesture.Tap()
     .maxDuration(250)
     .onStart(() => {
+      if (translateY.get() < 0) return;
       scheduleOnRN(handleScrollToIndex, currentSlideIndex + 1);
       isDragging.set(false);
     });
@@ -167,7 +167,7 @@ export const Onboarding = () => {
     };
   });
 
-  const handler = () => {
+  const slideBottomHandler = () => {
     isDragging.set(false);
     translateY.set(
       withTiming(0, {
@@ -180,7 +180,7 @@ export const Onboarding = () => {
     <GestureDetector gesture={Gesture.Race(panGesture, singleTap)}>
       <View className="flex-1 bg-slate-900" style={[{ paddingBottom: insets.bottom + 10 }]}>
         <Animated.View className="mt-auto" style={[rButtonsBlockStyle]}>
-          <Pressable className="self-center mb-6" onPress={handler}>
+          <Pressable className="self-center mb-6" onPress={slideBottomHandler}>
             <ChevronDown size={26} color="grey" />
           </Pressable>
           <Text className="text-white text-center text-4xl font-bold">Let's get started</Text>
