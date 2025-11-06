@@ -22,6 +22,8 @@ export default function Home() {
       style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
     >
       {/* perplexity-header-animation 🔽 */}
+      {/* Header row: BreathingIcon provides subtle pulsing animation to draw attention
+          The breathing effect creates a gentle, non-intrusive visual cue */}
       <View className="flex-row px-5 items-center justify-between">
         <Pressable onPress={simulatePress}>
           <BreathingIcon />
@@ -29,6 +31,9 @@ export default function Home() {
         <LayoutGrid size={24} color="white" />
       </View>
 
+      {/* Logo section: Shimmer animation adds premium feel with gradient sweep
+          delay=2s: waits before starting shimmer, duration=4s: sweep speed
+          angle=75deg: diagonal gradient direction, colors: neutral gray palette */}
       <View className="pt-40 items-center justify-center px-5">
         <WithShimmer
           delay={2}
