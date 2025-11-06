@@ -6,6 +6,7 @@ import { useState } from "react";
 import { AddFileModal } from "../components/add-file-modal";
 import BreathingIcon from "../components/breathing-icon";
 import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
+import WithShimmer from "@/src/shared/components/with-shimmer";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
@@ -27,7 +28,15 @@ export default function Home() {
         <LayoutGrid size={24} color="white" />
       </View>
 
-      <Text className="text-white text-4xl text-center font-medium mt-32">perplexity</Text>
+      <View className="pt-40 items-center justify-center px-5">
+        <WithShimmer
+          highlightWidth={20}
+          angle={70}
+          colors={{ start: "#D9D9DB", middle: "#71717a", end: "#D9D9DB" }}
+        >
+          <Text className="text-4xl">perplexity</Text>
+        </WithShimmer>
+      </View>
 
       <Pressable
         onPress={simulatePress}

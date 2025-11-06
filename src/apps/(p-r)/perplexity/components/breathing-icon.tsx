@@ -11,7 +11,6 @@ import Animated, {
   Extrapolation,
   withDelay,
 } from "react-native-reanimated";
-import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 const OUTER_DIAMETER = 60;
 const INNER_DIAMETER = 40;
@@ -57,13 +56,13 @@ const BreathingIcon = () => {
 
   return (
     <>
-      {/* <View style={styles.container}>
+      <View style={styles.container}>
         <Animated.View
           pointerEvents="none"
           className="absolute border-[#22d3ee]"
           style={rRingStyle}
         />
-      </View> */}
+      </View>
       <CircleUser size={ICON_SIZE} color="white" />
     </>
   );
