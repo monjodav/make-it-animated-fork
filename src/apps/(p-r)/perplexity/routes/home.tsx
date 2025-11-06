@@ -21,7 +21,7 @@ export default function Home() {
       className="flex-1 bg-neutral-900"
       style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
     >
-      {/* perplexity-header-animation 🔽 */}
+      {/* perplexity-home-header-animation 🔽 */}
       {/* Header row: BreathingIcon provides subtle pulsing animation to draw attention
           The breathing effect creates a gentle, non-intrusive visual cue */}
       <View className="flex-row px-5 items-center justify-between">
@@ -44,7 +44,7 @@ export default function Home() {
           <Text className="text-4xl">perplexity</Text>
         </WithShimmer>
       </View>
-      {/* perplexity-header-animation 🔼 */}
+      {/* perplexity-home-header-animation 🔼 */}
 
       <Pressable
         onPress={simulatePress}

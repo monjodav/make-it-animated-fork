@@ -12,7 +12,7 @@ import Animated, {
   withDelay,
 } from "react-native-reanimated";
 
-// perplexity-header-animation 🔽
+// perplexity-home-header-animation 🔽
 
 // Ring dimensions: outer defines max expansion, inner defines starting size
 // Icon size used for centering calculations
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// perplexity-header-animation 🔼
+// perplexity-home-header-animation 🔼

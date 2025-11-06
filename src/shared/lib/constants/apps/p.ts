@@ -30,7 +30,7 @@ export const perplexity: App = {
       href: "/perplexity/chat",
     },
     {
-      name: "Header animation",
+      name: "Home header animation",
       href: "/perplexity/home",
     },
   ],
