@@ -14,19 +14,14 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import AnimatedInput from "../components/chat/animated-input";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Chat() {
+  const [isKeyboardStickyViewEnabled, setIsKeyboardStickyViewEnabled] = useState(false);
+
   const insets = useSafeAreaInsets();
 
   const { openDrawer } = useDrawerControl();
-
-  const [isEnabledKeyboard, setIsEnabledKeyboard] = useState(false);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsEnabledKeyboard(true);
-    }, 100);
-  }, []);
 
   return (
     <Pressable
@@ -110,7 +105,15 @@ export default function Chat() {
       {/* perplexity-chat-input-on-focus-animation 🔽 */}
       {/* KeyboardStickyView pins the composer above the keyboard and exposes safe-area changes, */}
       {/* letting AnimatedInput interpolate paddingBottom (insets.bottom+12 -> 12) for a smooth settle. */}
-      <KeyboardStickyView enabled={isEnabledKeyboard}>
+      <KeyboardStickyView
+        enabled={isKeyboardStickyViewEnabled}
+        onLayout={() =>
+          // This hack may be only actual for this app and not applicable for other cases.
+          setTimeout(() => {
+            setIsKeyboardStickyViewEnabled(true);
+          }, 100)
+        }
+      >
         {/* AnimatedInput owns focusProgress shared value coordinating width/height/mic/controls. */}
         <AnimatedInput />
       </KeyboardStickyView>
