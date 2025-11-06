@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useEffect } from "react";
 import { CircleUser } from "lucide-react-native";
 import Animated, {
@@ -11,6 +11,8 @@ import Animated, {
   Extrapolation,
   withDelay,
 } from "react-native-reanimated";
+
+// perplexity-header-animation 🔽
 
 const OUTER_DIAMETER = 60;
 const INNER_DIAMETER = 40;
@@ -81,3 +83,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+// perplexity-header-animation 🔼

@@ -29,5 +29,9 @@ export const perplexity: App = {
       name: "Chat input on focus animation",
       href: "/perplexity/chat",
     },
+    {
+      name: "Header animation",
+      href: "/perplexity/home",
+    },
   ],
 };

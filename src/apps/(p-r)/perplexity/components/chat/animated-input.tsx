@@ -3,6 +3,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSpring,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -125,7 +126,9 @@ const AnimatedInput = () => {
               selectionColor="#ffffff"
               onFocus={() => {
                 // Spring to 1 for a natural settle-in without abruptness. Default config keeps it snappy.
-                focusProgress.set(withSpring(1));
+                setTimeout(() => {
+                  focusProgress.set(withSpring(1));
+                }, 0);
               }}
               onBlur={() => {
                 // Return to collapsed state with the same spring for symmetry.

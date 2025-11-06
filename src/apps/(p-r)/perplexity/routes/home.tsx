@@ -21,6 +21,7 @@ export default function Home() {
       className="flex-1 bg-neutral-900"
       style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
     >
+      {/* perplexity-header-animation 🔽 */}
       <View className="flex-row px-5 items-center justify-between">
         <Pressable onPress={simulatePress}>
           <BreathingIcon />
@@ -30,13 +31,15 @@ export default function Home() {
 
       <View className="pt-40 items-center justify-center px-5">
         <WithShimmer
-          highlightWidth={20}
-          angle={70}
+          delay={2}
+          duration={4}
+          angle={75}
           colors={{ start: "#D9D9DB", middle: "#71717a", end: "#D9D9DB" }}
         >
           <Text className="text-4xl">perplexity</Text>
         </WithShimmer>
       </View>
+      {/* perplexity-header-animation 🔼 */}
 
       <Pressable
         onPress={simulatePress}

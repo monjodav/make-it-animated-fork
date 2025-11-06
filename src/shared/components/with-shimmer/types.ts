@@ -12,6 +12,7 @@ export interface WithShimmerProps {
   shimmerStyle?: ViewStyle;
   containerStyle?: ViewStyle;
   duration?: number;
+  delay?: number;
   highlightWidth?: number;
   direction?: "ltr" | "rtl";
   angle?: number;

@@ -49,16 +49,16 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
   return (
     <View className="px-5 gap-5 py-5">
       <AnimationItem
+        label={getItemProps(perplexity, 2).label}
+        onPress={getItemProps(perplexity, 2).onPress}
+      />
+      <AnimationItem
         label={getItemProps(longevity, 0).label}
         onPress={getItemProps(longevity, 0).onPress}
       />
       <AnimationItem
         label={getItemProps(perplexity, 1).label}
         onPress={getItemProps(perplexity, 1).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(perplexity, 0).label}
-        onPress={getItemProps(perplexity, 0).onPress}
       />
     </View>
   );
