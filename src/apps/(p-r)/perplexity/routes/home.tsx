@@ -6,6 +6,7 @@ import { useState } from "react";
 import { AddFileModal } from "../components/add-file-modal";
 import BreathingIcon from "../components/breathing-icon";
 import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
+import WithShimmer from "@/src/shared/components/with-shimmer";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
@@ -20,6 +21,9 @@ export default function Home() {
       className="flex-1 bg-neutral-900"
       style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
     >
+      {/* perplexity-home-header-animation 🔽 */}
+      {/* Header row: BreathingIcon provides subtle pulsing animation to draw attention
+          The breathing effect creates a gentle, non-intrusive visual cue */}
       <View className="flex-row px-5 items-center justify-between">
         <Pressable onPress={simulatePress}>
           <BreathingIcon />
@@ -27,7 +31,20 @@ export default function Home() {
         <LayoutGrid size={24} color="white" />
       </View>
 
-      <Text className="text-white text-4xl text-center font-medium mt-32">perplexity</Text>
+      {/* Logo section: Shimmer animation adds premium feel with gradient sweep
+          delay=2s: waits before starting shimmer, duration=4s: sweep speed
+          angle=75deg: diagonal gradient direction, colors: neutral gray palette */}
+      <View className="pt-40 items-center justify-center px-5">
+        <WithShimmer
+          delay={2}
+          duration={4}
+          angle={75}
+          colors={{ start: "#D9D9DB", middle: "#71717a", end: "#D9D9DB" }}
+        >
+          <Text className="text-4xl">perplexity</Text>
+        </WithShimmer>
+      </View>
+      {/* perplexity-home-header-animation 🔼 */}
 
       <Pressable
         onPress={simulatePress}
