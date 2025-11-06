@@ -137,6 +137,8 @@ const Carousel: FC<CarouselProps> = ({
           animatedSlideIndex={animatedSlideIndex}
           isDragging={isDragging}
           handleScrollToIndex={handleScrollToIndex}
+          translateY={translateY}
+          topCarouselOffset={topCarouselOffset}
         />
       </Animated.View>
     </Animated.View>

@@ -10,6 +10,8 @@ type PaginationProps = {
   animatedSlideIndex: SharedValue<number>;
   isDragging: SharedValue<boolean>;
   handleScrollToIndex: (index: number) => void;
+  translateY: SharedValue<number>;
+  topCarouselOffset: number;
 };
 
 export const Pagination: FC<PaginationProps> = ({
@@ -18,6 +20,8 @@ export const Pagination: FC<PaginationProps> = ({
   animatedSlideIndex,
   isDragging,
   handleScrollToIndex,
+  translateY,
+  topCarouselOffset,
 }) => {
   const { width: screenWidth } = useWindowDimensions();
 
@@ -46,6 +50,8 @@ export const Pagination: FC<PaginationProps> = ({
           isDragging={isDragging}
           slideDuration={slide.duration}
           handleScrollToIndex={handleScrollToIndex}
+          translateY={translateY}
+          topCarouselOffset={topCarouselOffset}
         />
       ))}
     </View>

@@ -1,6 +1,7 @@
 import { FC, useEffect } from "react";
 import Animated, {
   cancelAnimation,
+  Easing,
   Extrapolation,
   interpolate,
   SharedValue,
@@ -22,6 +23,8 @@ type PaginationItemProps = {
   slideDuration: number;
   isDragging: SharedValue<boolean>;
   handleScrollToIndex: (index: number) => void;
+  translateY: SharedValue<number>;
+  topCarouselOffset: number;
 };
 
 export const PaginationItem: FC<PaginationItemProps> = ({
@@ -34,6 +37,8 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   slideDuration,
   isDragging,
   handleScrollToIndex,
+  translateY,
+  topCarouselOffset,
 }) => {
   const slideProgress = useSharedValue(0);
 
@@ -140,6 +145,12 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   useAnimatedReaction(
     () => ({ slideProgress: slideProgress.get() }),
     ({ slideProgress }) => {
+      if (slideProgress === 1 && currentSlideIndex === totalSlides) {
+        isDragging.set(true);
+        translateY.set(
+          withTiming(-topCarouselOffset, { duration: 200, easing: Easing.inOut(Easing.quad) })
+        );
+      }
       if (!isDragging.get() && slideProgress === 1) {
         scheduleOnRN(handleScrollToIndex, currentSlideIndex + 1);
       }
