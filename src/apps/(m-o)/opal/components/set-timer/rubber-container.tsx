@@ -10,7 +10,7 @@ import Animated, {
 import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
 
 const ON_FINALIZE_SPRING_CONFIG = {
-  damping: 65,
+  damping: 60,
   stiffness: 900,
 };
 
@@ -66,7 +66,7 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
     .onFinalize(() => {
       isActive.set(false);
 
-      if (lastX.get() > 0 && lastX.get() < width) {
+      if (lastX.get() >= 0 && lastX.get() <= width) {
         return;
       }
 
@@ -81,8 +81,6 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
 
   const rOnActiveScaleContainerStyle = useAnimatedStyle(() => {
     return {
-      width,
-      height,
       transform: [
         {
           scale: isActive.get()
@@ -106,7 +104,7 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
     const scaleY = interpolate(
       lastX.get(),
       [-width * 0.1, 0, width, width + width * 0.1],
-      [0.95, 1, 1, 0.95],
+      [0.9, 1, 1, 0.9],
       Extrapolation.CLAMP
     );
 
