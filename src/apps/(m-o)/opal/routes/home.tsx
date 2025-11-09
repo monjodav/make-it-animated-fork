@@ -24,14 +24,7 @@ export const Home: FC = () => {
     <View className="flex-1 pb-2 bg-black justify-end" style={{ paddingTop: insets.top }}>
       <View className="flex-1 items-center justify-center gap-10">
         <Text className="text-xl">{formatMinutes(sliderValue)}</Text>
-        <TimeSlider
-          sliderWidth={width * 0.5}
-          sliderHeight={HEIGHT}
-          dividerCount={35}
-          min={5}
-          max={180}
-          onValueChange={(value) => setSliderValue(value)}
-        />
+        <TimeSlider />
       </View>
       {/* opal-start-timer-button-animation 🔽 */}
       <StartTimerButton />

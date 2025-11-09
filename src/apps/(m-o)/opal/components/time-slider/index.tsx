@@ -3,6 +3,7 @@ import { Dimensions, Platform, StyleSheet, View } from "react-native";
 import { BlurView } from "expo-blur";
 import { RubberContainer } from "../rubber-container";
 import { cn } from "@/src/shared/lib/utils/cn";
+import { Gesture } from "react-native-gesture-handler";
 
 const SLIDER_WIDTH = Dimensions.get("window").width * 0.65;
 const SLIDER_HEIGHT = 44;
@@ -18,8 +19,12 @@ const TimeSlider = () => {
     value: (index + 2) * 60,
   }));
 
+  const gesture = Gesture.Pan().onChange((event) => {
+    console.log(event.x);
+  });
+
   return (
-    <RubberContainer width={SLIDER_WIDTH} height={SLIDER_HEIGHT}>
+    <RubberContainer width={SLIDER_WIDTH} height={SLIDER_HEIGHT} gestures={[gesture]}>
       <View
         style={styles.container}
         className="flex-1 border border-neutral-800 rounded-2xl overflow-hidden py-2.5"

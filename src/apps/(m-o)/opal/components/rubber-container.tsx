@@ -7,7 +7,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
 
 const ON_FINALIZE_SPRING_CONFIG = {
   damping: 65,
@@ -24,6 +24,7 @@ interface Props extends ViewProps {
     maxScale?: number;
     stretchRatio?: number;
   };
+  gestures?: GestureType[];
 }
 
 export const RubberContainer: FC<PropsWithChildren<Props>> = ({
@@ -33,6 +34,7 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
   style,
   className,
   animationConfig,
+  gestures,
   ...props
 }) => {
   const {
@@ -74,6 +76,8 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
         lastX.set(withSpring(0, ON_FINALIZE_SPRING_CONFIG));
       }
     });
+
+  const composedGestures = Gesture.Simultaneous(gesture, ...(gestures ?? []));
 
   const rOnActiveScaleContainerStyle = useAnimatedStyle(() => {
     return {
@@ -120,7 +124,7 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
   });
 
   return (
-    <GestureDetector gesture={gesture}>
+    <GestureDetector gesture={composedGestures}>
       <Animated.View
         className={className}
         style={[
