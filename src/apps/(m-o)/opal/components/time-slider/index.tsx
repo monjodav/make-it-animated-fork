@@ -190,10 +190,9 @@ const TimeSlider = ({
   };
 
   return (
-    <GestureDetector gesture={composedGesture}>
-      <RubberContainer width={SLIDER_WIDTH} height={SLIDER_HEIGHT}>
-        <View className="flex-1 bg-red-500 rounded-lg" />
-        {/* <BlurView
+    <RubberContainer width={SLIDER_WIDTH} height={SLIDER_HEIGHT}>
+      <View className="flex-1 bg-red-500 rounded-2xl" />
+      {/* <BlurView
           intensity={Platform.OS === "ios" ? 40 : 25}
           experimentalBlurMethod="dimezisBlurView"
           style={StyleSheet.absoluteFillObject}
@@ -204,8 +203,7 @@ const TimeSlider = ({
         ))}
 
         <Animated.View style={[styles.fill, rFillStyle]} /> */}
-      </RubberContainer>
-    </GestureDetector>
+    </RubberContainer>
   );
 };
 
