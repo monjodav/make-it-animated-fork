@@ -25,7 +25,7 @@ export const Home: FC = () => {
       <View className="flex-1 items-center justify-center gap-10">
         <Text className="text-xl">{formatMinutes(sliderValue)}</Text>
         <TimeSlider
-          sliderWidth={width * 0.7}
+          sliderWidth={width * 0.5}
           sliderHeight={HEIGHT}
           dividerCount={35}
           min={5}

@@ -1,5 +1,5 @@
-import React from "react";
-import { Platform, StyleSheet } from "react-native";
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { Platform, StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,8 +9,9 @@ import Animated, {
   useAnimatedReaction,
   runOnJS,
 } from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureType } from "react-native-gesture-handler";
 import { BlurView } from "expo-blur";
+import { RubberContainer } from "../rubber-container";
 
 type TimeSliderProps = {
   sliderWidth: number;
@@ -40,65 +41,99 @@ const TimeSlider = ({
   const STEPS = Array.from({ length: dividerCount });
 
   const sliderProgress = useSharedValue(0);
-  const isActive = useSharedValue(false);
-  const stretchAmount = useSharedValue(0);
-
   const startProgress = useSharedValue(0);
 
-  const panGesture = Gesture.Pan()
-    .onBegin((event) => {
-      isActive.set(true);
-      const localX = event.x;
-      const initialProgress = Math.max(0, Math.min(1, localX / SLIDER_WIDTH));
-      sliderProgress.set(initialProgress);
-      startProgress.set(sliderProgress.get());
-    })
-    .onUpdate((event) => {
-      const delta = event.translationX / SLIDER_WIDTH;
-      let next = startProgress.get() + delta;
-      if (next < 0) {
-        const overflow = Math.abs(next) * SLIDER_WIDTH;
-        const stretch = overflow / 1.7;
-        stretchAmount.set(Math.min(stretch, 70));
-        next = 0;
-      } else {
-        stretchAmount.set(0);
-      }
-      sliderProgress.set(Math.max(0, Math.min(1, next)));
-    })
-    .onEnd(() => {
-      isActive.set(false);
-      stretchAmount.set(
-        withSpring(0, {
-          stiffness: 1300,
-          damping: 110,
-          mass: 6,
+  // Create shared values for rubber container
+  // These will be controlled by RubberContainer but accessible here
+  const stretchAmount = useSharedValue(0);
+  const isActive = useSharedValue(false);
+
+  // Get reference to RubberContainer to access its stretch gesture
+  const rubberContainerRef = useRef<RubberContainerRef>(null);
+  const [stretchGesture, setStretchGesture] = useState<GestureType | null>(null);
+
+  // Get stretch gesture from ref when available
+  useEffect(() => {
+    if (rubberContainerRef.current?.stretchGesture) {
+      setStretchGesture(rubberContainerRef.current.stretchGesture);
+    }
+  }, []);
+
+  // Create pan gesture for slider progress tracking
+  const panGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onBegin((event) => {
+          "worklet";
+          isActive.set(true);
+          const localX = event.x;
+          const initialProgress = Math.max(0, Math.min(1, localX / SLIDER_WIDTH));
+          sliderProgress.set(initialProgress);
+          startProgress.set(sliderProgress.get());
         })
-      );
-      sliderProgress.set(withSpring(sliderProgress.get()));
-    })
-    .onFinalize(() => {
-      isActive.set(false);
-    });
+        .onUpdate((event) => {
+          "worklet";
+          const delta = event.translationX / SLIDER_WIDTH;
+          let next = startProgress.get() + delta;
+          // Stretch is handled by RubberContainer, we just clamp progress
+          if (next < 0) {
+            next = 0;
+          }
+          sliderProgress.set(Math.max(0, Math.min(1, next)));
+        })
+        .onEnd(() => {
+          "worklet";
+          isActive.set(false);
+          sliderProgress.set(withSpring(sliderProgress.get()));
+        })
+        .onFinalize(() => {
+          "worklet";
+          isActive.set(false);
+        }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [SLIDER_WIDTH]
+  );
 
-  const tapGesture = Gesture.Tap()
-    .enabled(enableTap)
-    .hitSlop({ left: 10, right: 10, top: 10, bottom: 10 })
-    .onBegin((e) => {
-      isActive.set(true);
-      const p = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
-      sliderProgress.set(p);
-    })
-    .onEnd((e, success) => {
-      if (success) {
-        const progress = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
-        sliderProgress.set(withSpring(progress, { stiffness: 900, damping: 120 }));
-      }
-      isActive.set(false);
-      stretchAmount.set(withSpring(0));
-    });
+  // Create tap gesture for tap-to-set functionality
+  const tapGesture = useMemo(
+    () =>
+      Gesture.Tap()
+        .enabled(enableTap)
+        .hitSlop({ left: 10, right: 10, top: 10, bottom: 10 })
+        .onBegin((e) => {
+          "worklet";
+          isActive.set(true);
+          const p = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
+          sliderProgress.set(p);
+        })
+        .onEnd((e, success) => {
+          "worklet";
+          if (success) {
+            const progress = Math.max(0, Math.min(1, e.x / SLIDER_WIDTH));
+            sliderProgress.set(withSpring(progress, { stiffness: 900, damping: 120 }));
+          }
+          isActive.set(false);
+        }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [enableTap, SLIDER_WIDTH]
+  );
 
-  const composedGesture = enableTap ? Gesture.Race(tapGesture, panGesture) : panGesture;
+  // Compose tap and pan gestures (race - whichever wins)
+  const sliderGesture = useMemo(() => {
+    if (enableTap) {
+      return Gesture.Race(tapGesture, panGesture);
+    }
+    return panGesture;
+  }, [enableTap, tapGesture, panGesture]);
+
+  // Compose slider gestures with rubber container's stretch gesture
+  // The stretch gesture runs simultaneously with slider gestures
+  const composedGesture = useMemo(() => {
+    if (stretchGesture) {
+      return Gesture.Simultaneous(sliderGesture, stretchGesture);
+    }
+    return sliderGesture;
+  }, [sliderGesture, stretchGesture]);
 
   useAnimatedReaction(
     () => sliderProgress.get(),
@@ -131,58 +166,45 @@ const TimeSlider = ({
     };
   });
 
-  const rContainerStyle = useAnimatedStyle(() => {
-    const scale = withSpring(isActive.get() ? 1.034 : 1);
+  // Divider component that uses animated style
+  const Divider = ({ index }: { index: number }) => {
+    const rDividerStyle = useAnimatedStyle(() => {
+      const currentWidth = SLIDER_WIDTH + stretchAmount.get();
+      const segments = dividerCount + 1;
+      const part = currentWidth / segments;
+      return { left: part * (index + 1) - DIVIDER_WIDTH / 2 };
+    });
 
-    const stretchWidth = SLIDER_WIDTH + stretchAmount.get();
-    const stretchHeight = SLIDER_HEIGHT - stretchAmount.get() * 0.15;
-
-    return {
-      width: stretchWidth,
-      height: SLIDER_HEIGHT,
-      transform: [{ scale }, { scaleY: stretchHeight / SLIDER_HEIGHT }],
-    };
-  });
+    return (
+      <Animated.View
+        style={[
+          styles.divider,
+          {
+            height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.47 : SLIDER_HEIGHT * 0.3,
+            backgroundColor: index % 2 === 0 ? "#454545" : "#636164",
+          },
+          rDividerStyle,
+        ]}
+      />
+    );
+  };
 
   return (
     <GestureDetector gesture={composedGesture}>
-      <Animated.View
-        style={[
-          styles.sliderContainer,
-          { borderRadius: SLIDER_HEIGHT / 3, width: SLIDER_WIDTH },
-          rContainerStyle,
-        ]}
-      >
-        <BlurView
+      <RubberContainer width={SLIDER_WIDTH} height={SLIDER_HEIGHT}>
+        <View className="flex-1 bg-red-500 rounded-lg" />
+        {/* <BlurView
           intensity={Platform.OS === "ios" ? 40 : 25}
           experimentalBlurMethod="dimezisBlurView"
           style={StyleSheet.absoluteFillObject}
         />
 
-        {STEPS.map((_, index) => {
-          const rDividerStyle = useAnimatedStyle(() => {
-            const currentWidth = SLIDER_WIDTH + stretchAmount.get();
-            const segments = dividerCount + 1;
-            const part = currentWidth / segments;
-            return { left: part * (index + 1) - DIVIDER_WIDTH / 2 };
-          });
-          return (
-            <Animated.View
-              key={index}
-              style={[
-                styles.divider,
-                {
-                  height: index % 2 !== 0 ? SLIDER_HEIGHT * 0.47 : SLIDER_HEIGHT * 0.3,
-                  backgroundColor: index % 2 === 0 ? "#454545" : "#636164",
-                },
-                rDividerStyle,
-              ]}
-            />
-          );
-        })}
+        {STEPS.map((_, index) => (
+          <Divider key={index} index={index} />
+        ))}
 
-        <Animated.View style={[styles.fill, rFillStyle]} />
-      </Animated.View>
+        <Animated.View style={[styles.fill, rFillStyle]} /> */}
+      </RubberContainer>
     </GestureDetector>
   );
 };
