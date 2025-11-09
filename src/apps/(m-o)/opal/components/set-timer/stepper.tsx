@@ -6,6 +6,7 @@ import { ReText } from "react-native-redash";
 import { _borderCurve } from "@/src/apps/(j-l)/linear/components/tab-item";
 import { BlurView } from "expo-blur";
 import { Minus, Plus } from "lucide-react-native";
+import * as Haptics from "expo-haptics";
 
 const HEIGHT = 40;
 
@@ -19,6 +20,9 @@ const StepperButton: FC<PropsWithChildren<StepperButtonProps>> = ({ onPress, chi
       className="aspect-square rounded-full border border-neutral-700 items-center justify-center overflow-hidden"
       style={{ height: HEIGHT }}
       onPress={onPress}
+      onPressIn={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+      }}
     >
       {Platform.OS === "ios" && (
         <BlurView style={StyleSheet.absoluteFillObject} tint="systemUltraThinMaterialLight" />
@@ -50,9 +54,12 @@ export const Stepper: FC<Props> = ({ data, value }) => {
       >
         <Minus size={16} color="#f5f5f5" />
       </StepperButton>
-      <View
+      <Pressable
         className="w-20 rounded-2xl items-center justify-center bg-white"
         style={[styles.borderCurve, { height: HEIGHT }]}
+        onPressIn={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+        }}
       >
         <ReText
           text={stringValue}
@@ -65,7 +72,7 @@ export const Stepper: FC<Props> = ({ data, value }) => {
             fontWeight: "medium",
           }}
         />
-      </View>
+      </Pressable>
       <StepperButton
         onPress={() => {
           const currentIndex = data.findIndex((item) => item.value === value.get());
