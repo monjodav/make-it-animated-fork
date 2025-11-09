@@ -63,6 +63,11 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
     })
     .onFinalize(() => {
       isActive.set(false);
+
+      if (lastX.get() > 0 && lastX.get() < width) {
+        return;
+      }
+
       if (transformOrigin.get() === "left") {
         lastX.set(withSpring(width, ON_FINALIZE_SPRING_CONFIG, () => lastX.set(0)));
       } else {
