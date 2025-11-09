@@ -161,7 +161,7 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Search}
           options={{
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color }) => (
               <AnimatedIconWrapper scale={searchIconScale}>
                 <Feather name="search" size={22} color={color} />
               </AnimatedIconWrapper>
@@ -171,13 +171,9 @@ const TabsLayout = () => {
         <Tabs.Screen
           name={Tab.Grok}
           options={{
-            tabBarIcon: ({ color, focused }) => (
+            tabBarIcon: ({ color }) => (
               <AnimatedIconWrapper scale={grokIconScale}>
-                <AntDesign
-                  name={focused ? "minussquare" : "minussquareo"}
-                  size={20}
-                  color={color}
-                />
+                <AntDesign name="minus-square" size={20} color={color} />
               </AnimatedIconWrapper>
             ),
           }}

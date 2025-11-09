@@ -27,6 +27,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { cn } from "@/src/shared/lib/utils/cn";
+import { easeGradient } from "@/src/shared/lib/utils/ease-gradient";
 
 // opal-start-timer-button-animation 🔽
 
@@ -39,7 +40,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 // - BUTTON_WIDTH: full-width minus horizontal margins
 // - BUTTON_HEIGHT: fixed height used as base unit for all internal shape math
 const BUTTON_WIDTH = Dimensions.get("window").width - 24;
-const BUTTON_HEIGHT = 56;
+const BUTTON_HEIGHT = 58;
 
 // "Breathing" ovals constants
 // - OVAL_BREATHE_DURATION: ping-pong timing (ms) so left/right ovals alternate calmly
@@ -54,9 +55,11 @@ const OVAL_SECONDARY_COLOR = "#5c8e5bff";
 // - SHIMMER_REFERENCE_WIDTH: width used to compute responsive duration multiplier
 // - SHIMMER_OVERSHOOT: 1.2 makes the sweep start/end offscreen to avoid visible pop-in/out
 const SHIMMER_DELAY = 4000;
-const SHIMMER_BASE_DURATION = 750;
+const SHIMMER_BASE_DURATION = 1500;
 const SHIMMER_REFERENCE_WIDTH = 200;
 const SHIMMER_OVERSHOOT = 1.2;
+
+const GRADIENT_COLOR = "#99f6e4";
 
 const StartTimerButton = () => {
   // Oval layout derived from button height to keep proportions across devices
@@ -168,7 +171,7 @@ const StartTimerButton = () => {
       [0, 1],
       [-shimmerComponentWidth.get() * SHIMMER_OVERSHOOT, BUTTON_WIDTH * SHIMMER_OVERSHOOT]
     );
-    const opacity = interpolate(shimmerProgress.get(), [0, 0.2, 1], [0.1, 0.05, 0.025]);
+    const opacity = interpolate(shimmerProgress.get(), [0, 0.2, 0.7, 1], [0, 0.15, 0.1, 0]);
 
     return {
       opacity,
@@ -187,13 +190,36 @@ const StartTimerButton = () => {
         withSequence(
           // Delay the first pass to let breathing settle
           withDelay(SHIMMER_DELAY, withTiming(0, { duration: 0 })),
-          withTiming(1, { duration: duration, easing: Easing.in(Easing.ease) })
+          // Ease-in: starts slow and accelerates to the end (no deceleration tail)
+          withTiming(1, { duration: duration, easing: Easing.bezier(0.9, 0, 0.5, 0.3) })
         ),
         -1,
         false
       )
     );
   }, [shimmerProgress]);
+
+  const { colors: leftColors, locations: leftLocations } = easeGradient({
+    colorStops: {
+      0: {
+        color: colorKit.setAlpha(GRADIENT_COLOR, 0).hex(),
+      },
+      1: {
+        color: GRADIENT_COLOR,
+      },
+    },
+  });
+
+  const { colors: rightColors, locations: rightLocations } = easeGradient({
+    colorStops: {
+      0: {
+        color: GRADIENT_COLOR,
+      },
+      1: {
+        color: colorKit.setAlpha(GRADIENT_COLOR, 0).hex(),
+      },
+    },
+  });
 
   return (
     <Animated.View entering={FadeInDown}>
@@ -207,15 +233,20 @@ const StartTimerButton = () => {
         }}
         className={cn(
           "self-center rounded-full mb-4 overflow-hidden",
-          Platform.OS === "android" ? "border-neutral-900" : "border-neutral-600"
+          Platform.OS === "android" ? "border-neutral-900" : "border-neutral-700"
         )}
         style={[styles.container, rPressStyle]}
       >
         {/* Breathing shapes */}
         {Platform.OS === "ios" && (
-          <BlurView intensity={50} tint="dark" style={StyleSheet.absoluteFillObject} />
+          <BlurView
+            pointerEvents="none"
+            intensity={50}
+            tint="dark"
+            style={StyleSheet.absoluteFillObject}
+          />
         )}
-        <Canvas style={styles.canvas}>
+        <Canvas pointerEvents="none" style={styles.canvas}>
           <Path path={leftOvalPath} color={leftOvalColor}>
             <Blur blur={35} />
           </Path>
@@ -223,28 +254,34 @@ const StartTimerButton = () => {
             <Blur blur={35} />
           </Path>
         </Canvas>
-        <View className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center">
+        <View
+          pointerEvents="none"
+          className="absolute top-0 left-0 right-0 bottom-0 flex-row gap-1.5 items-center justify-center"
+        >
           <Ionicons name="play" size={18} color="white" />
           <Text className="text-white text-xl font-medium">Start Timer</Text>
         </View>
         {/* Shimmer */}
         <Animated.View
-          className="absolute left-0 top-0 bottom-0 w-1/4 flex-row"
+          pointerEvents="none"
+          className="absolute left-0 top-0 bottom-0 w-1/2 flex-row"
           style={rShimmerStyle}
           // Capture measured width to compute initial offscreen start
           onLayout={(e) => shimmerComponentWidth.set(e.nativeEvent.layout.width)}
         >
           <LinearGradient
-            // Three-stop gradient: transparent → white → transparent to simulate light sweep
-            colors={[
-              colorKit.setAlpha("#fff", 0).hex(),
-              "#fff",
-              colorKit.setAlpha("#fff", 0).hex(),
-            ]}
-            locations={[0, 0.5, 1]}
+            colors={leftColors}
+            locations={leftLocations}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={{ flex: 1 }}
+            style={styles.gradient}
+          />
+          <LinearGradient
+            colors={rightColors}
+            locations={rightLocations}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
           />
         </Animated.View>
       </AnimatedPressable>
@@ -262,6 +299,9 @@ const styles = StyleSheet.create({
   canvas: {
     flex: 1,
     borderRadius: 999,
+  },
+  gradient: {
+    flex: 1,
   },
 });
 

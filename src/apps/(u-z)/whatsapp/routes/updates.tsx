@@ -3,7 +3,6 @@ import { Insets } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
@@ -13,6 +12,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { LargeTitle } from "../components/large-title";
 import { SearchBar } from "../components/search-bar";
 import { UpdatesContent } from "../components/updates-content";
+import { scheduleOnRN } from "react-native-worklets";
 
 // whatsapp-updates-screen-header-animation 🔽
 
@@ -50,10 +50,10 @@ export default function Updates() {
       // Snap behavior: settle either fully open (0) or fully collapsed (_searchBarAnimationDistance)
       // Threshold at half of search bar height prevents awkward mid states
       if (y <= _searchBarHeight / 2) {
-        runOnJS(scrollToOffset)(0);
+        scheduleOnRN(scrollToOffset, 0);
       }
       if (y > _searchBarHeight / 2 && y < _searchBarAnimationDistance) {
-        runOnJS(scrollToOffset)(_searchBarAnimationDistance);
+        scheduleOnRN(scrollToOffset, _searchBarAnimationDistance);
       }
     },
   });

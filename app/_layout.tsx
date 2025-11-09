@@ -1,7 +1,7 @@
 import * as SplashScreen from "expo-splash-screen";
 import { View, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import { KeyboardController, KeyboardProvider } from "react-native-keyboard-controller";
 import { Drawer } from "expo-router/drawer";
 import "../global.css";
 import Animations from "@/src/shared/components/animations";
@@ -39,6 +39,8 @@ SplashScreen.setOptions({
   fade: true,
 });
 
+KeyboardController.preload();
+
 const DrawerContent = (props: DrawerContentComponentProps) => {
   return (
     <>
@@ -74,9 +76,11 @@ export default function RootLayout() {
     setTimeout(() => {
       SplashScreen.hide();
     }, 500);
-    setTimeout(() => {
-      OneSignal.Notifications.requestPermission(true);
-    }, 1000);
+    if (!__DEV__) {
+      setTimeout(() => {
+        OneSignal.Notifications.requestPermission(true);
+      }, 1000);
+    }
   }, []);
 
   if (!fontsLoaded) {

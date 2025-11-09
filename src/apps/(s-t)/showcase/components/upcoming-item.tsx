@@ -1,6 +1,7 @@
 import { BlurView } from "expo-blur";
 import { Platform, StyleSheet, View } from "react-native";
 import Animated, { interpolate, useAnimatedProps, useAnimatedStyle } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // showcase-upcoming-list-scroll-animation 🔽
 
@@ -8,10 +9,12 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 // Fixed item height for consistent scroll calculations
 const ITEM_HEIGHT = 170;
-// iOS large title compensation - accounts for nav header behavior
-const LARGE_TITLE_SCROLL_DISTANCE = Platform.OS === "ios" ? 150 : 0;
 
 export const UpcomingItem = ({ index, scrollY, itemY }: any) => {
+  const insets = useSafeAreaInsets();
+
+  const headerHeight = Platform.OS === "ios" ? insets.top + 45 : 0;
+
   // Main animation style - handles both translation and scaling during scroll
   const rContainerStyle = useAnimatedStyle(() => {
     return {
@@ -21,9 +24,9 @@ export const UpcomingItem = ({ index, scrollY, itemY }: any) => {
           translateY: interpolate(
             scrollY.value,
             [
-              itemY.value - index - 1 - LARGE_TITLE_SCROLL_DISTANCE, // Before animation zone
-              itemY.value - index - LARGE_TITLE_SCROLL_DISTANCE, // Animation start point
-              itemY.value - index + 1 - LARGE_TITLE_SCROLL_DISTANCE, // Animation end point
+              itemY.value - index - 1 - headerHeight, // Before animation zone
+              itemY.value - index - headerHeight, // Animation start point
+              itemY.value - index + 1 - headerHeight, // Animation end point
             ],
             [0, 0, 1] // No translation → No translation → 1px down
           ),
@@ -33,9 +36,9 @@ export const UpcomingItem = ({ index, scrollY, itemY }: any) => {
           scale: interpolate(
             scrollY.value,
             [
-              itemY.value - 1 - LARGE_TITLE_SCROLL_DISTANCE, // Before animation zone
-              itemY.value - LARGE_TITLE_SCROLL_DISTANCE, // Animation start point
-              itemY.value + ITEM_HEIGHT - LARGE_TITLE_SCROLL_DISTANCE, // Animation end point
+              itemY.value - 1 - headerHeight, // Before animation zone
+              itemY.value - headerHeight, // Animation start point
+              itemY.value + ITEM_HEIGHT - headerHeight, // Animation end point
             ],
             [1, 1, 0.9] // No scale → No scale → 0.9x scale
           ),
@@ -50,9 +53,9 @@ export const UpcomingItem = ({ index, scrollY, itemY }: any) => {
     const intensity = interpolate(
       scrollY.value,
       [
-        itemY.value - 1 - LARGE_TITLE_SCROLL_DISTANCE, // Before animation zone
-        itemY.value - LARGE_TITLE_SCROLL_DISTANCE, // Animation start point
-        itemY.value + ITEM_HEIGHT - LARGE_TITLE_SCROLL_DISTANCE, // Animation end point
+        itemY.value - 1 - headerHeight, // Before animation zone
+        itemY.value - headerHeight, // Animation start point
+        itemY.value + ITEM_HEIGHT - headerHeight, // Animation end point
       ],
       [0, 0, 15] // No blur → No blur → 15 blur
     );

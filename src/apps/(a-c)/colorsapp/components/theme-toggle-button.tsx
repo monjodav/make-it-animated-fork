@@ -8,7 +8,7 @@
  */
 
 import React, { FC } from "react";
-import { GestureResponderEvent, Pressable } from "react-native";
+import { GestureResponderEvent, Platform, Pressable } from "react-native";
 import switchTheme from "react-native-theme-switch-animation";
 import { Moon, Sun } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
@@ -28,7 +28,7 @@ export const ThemeToggleButton: FC<ThemeToggleButtonProps> = ({ theme, setTheme 
         switchThemeFunction: () => (theme === "dark" ? setTheme("light") : setTheme("dark")),
         animationConfig: {
           // Circular mask mimics iOS-style material transitions; avoids directional bias of linear wipes.
-          type: "circular",
+          type: Platform.OS === "ios" ? "circular" : "fade",
           // Magic number: 500ms chosen for readability of radial growth without feeling sluggish.
           // Shorter (<350ms) reads as a flash; longer (>650ms) feels heavy for a frequent action.
           duration: 500,

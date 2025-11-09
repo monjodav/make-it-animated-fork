@@ -1,9 +1,10 @@
 import { View } from "react-native";
-import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { SharedValue, useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import type { FC } from "react";
 
 import { AnimatedChar } from "./animated-char";
 import React from "react";
+import { scheduleOnRN } from "react-native-worklets";
 
 // alma-onboarding-carousel-animation 🔽
 
@@ -31,7 +32,7 @@ export const StaggeredText: FC<Props> = ({ text, activeIndex, showIndex }: Props
     (value) => {
       if (showIndex.includes(value)) {
         // Current carousel state matches this text's display indices
-        runOnJS(show)(); // Bridge to JS thread for setTimeout
+        scheduleOnRN(show); // Bridge to JS thread for setTimeout
       } else {
         // Hide text immediately when not in display range
         progress.value = 0;

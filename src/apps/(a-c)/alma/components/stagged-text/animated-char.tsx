@@ -26,8 +26,8 @@ export const AnimatedChar: FC<Props> = ({ index, char, progress, totalCount }) =
     return withDelay(
       delayMs,
       withSpring(progress.value, {
-        damping: 18, // Low damping for bouncy, playful character entrance
-        stiffness: 500, // High stiffness for quick, snappy animation
+        damping: 100, // Low damping for bouncy, playful character entrance
+        stiffness: 1400, // High stiffness for quick, snappy animation
       })
     );
   }, []);

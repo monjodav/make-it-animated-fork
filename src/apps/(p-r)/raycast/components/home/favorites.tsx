@@ -10,7 +10,6 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   withTiming,
@@ -19,6 +18,7 @@ import { useHeaderHeight } from "../../lib/hooks/use-header-height";
 import { useHapticOnScroll } from "@/src/shared/lib/hooks/use-haptic-on-scroll";
 import { useScrollDirection } from "@/src/shared/lib/hooks/use-scroll-direction";
 import { TopGradient } from "./top-gradient";
+import { scheduleOnRN } from "react-native-worklets";
 
 // raycast-home-search-transition-animation 🔽
 
@@ -43,13 +43,17 @@ export const Favorites = () => {
   const { screenView, offsetY, isListDragging, blurIntensity, onGoToCommands } = useHomeAnimation();
 
   // Why: Track scroll direction including negative pulls to coordinate haptics and thresholds.
-  const { onScroll: scrollDirectionOnScroll, scrollDirection } =
-    useScrollDirection("include-negative");
+  const {
+    onScroll: scrollDirectionOnScroll,
+    scrollDirection,
+    offsetYAnchorOnChangeDirection,
+  } = useScrollDirection("include-negative");
 
   // Why: Provide a single haptic feedback exactly when crossing trigger offset upward.
   const { singleHapticOnScroll } = useHapticOnScroll({
     isListDragging,
     scrollDirection,
+    offsetYAnchorOnChangeDirection,
     triggerOffset: TRIGGER_DRAG_DISTANCE,
   });
 
@@ -82,9 +86,9 @@ export const Favorites = () => {
     onEndDrag: (event) => {
       isListDragging.value = false;
       const scrollY = event.contentOffset.y;
-      // Switch to commands when pulled beyond trigger. Use runOnJS to keep UI thread responsive.
+      // Switch to commands when pulled beyond trigger. Use scheduleOnRN to keep UI thread responsive.
       if (scrollY < TRIGGER_DRAG_DISTANCE) {
-        runOnJS(onGoToCommands)();
+        scheduleOnRN(onGoToCommands);
       }
     },
   });
@@ -104,7 +108,7 @@ export const Favorites = () => {
   });
 
   return (
-    <View className="flex-1" style={rContainerStyle}>
+    <Animated.View className="flex-1" style={rContainerStyle}>
       <Animated.ScrollView
         className="px-5"
         style={{
@@ -135,7 +139,7 @@ export const Favorites = () => {
       >
         <TopGradient />
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 };
 

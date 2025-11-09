@@ -1,7 +1,8 @@
 import { useWindowDimensions } from "react-native";
 import { useCatchUpAnimation } from "../provider/catch-up-animation";
 import { useChannelAnimation } from "../provider/channel-animation";
-import { runOnJS, useAnimatedReaction, withTiming } from "react-native-reanimated";
+import { useAnimatedReaction, withTiming } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 // slack-catch-up-cards-swipe-animation 🔽
 
@@ -72,14 +73,14 @@ export const useFooterControlsAnimation = (index: number) => {
         onButtonPressed();
         // Slide left off-screen (keep unread). 2x width ensures it clears the viewport on all devices
         panX.set(withTiming(-width * 2, { duration: DURATION }));
-        runOnJS(resetKeepUnreadPressed)();
+        scheduleOnRN(resetKeepUnreadPressed);
       }
 
       if (isMarkAsReadPressedValue) {
         onButtonPressed();
         // Slide right off-screen (mark as read)
         panX.set(withTiming(width * 2, { duration: DURATION }));
-        runOnJS(resetMarkAsReadPressed)();
+        scheduleOnRN(resetMarkAsReadPressed);
       }
     }
   );

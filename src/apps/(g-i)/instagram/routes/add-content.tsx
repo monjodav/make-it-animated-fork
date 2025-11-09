@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { X } from "lucide-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Image } from "expo-image";
 
 // instagram-story-controls-animation 🔽
 
@@ -20,6 +21,10 @@ export default function AddContent() {
         className="flex-1 justify-between rounded-3xl bg-gray-500 overflow-hidden"
         style={styles.container}
       >
+        <Image
+          style={StyleSheet.absoluteFillObject}
+          placeholder={{ blurhash: "LEHV6nWB2yk8pyo0adR*.7kCMdnj" }}
+        />
         {/* Top toolbar - positioned at safe area top for thumb accessibility */}
         <View className="flex-row items-center justify-between">
           <Pressable onPress={simulatePress}>

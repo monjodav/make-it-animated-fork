@@ -27,4 +27,5 @@ make-it-animated-service-account.json
 
 .env.local
 .cursor
+.claude
 .workflow

@@ -36,7 +36,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
   expo: {
     name: getEnvironmentValues().name,
     slug: "make-it-animated",
-    version: "1.1.9",
+    version: "1.2.1",
     orientation: "portrait",
     scheme: "miaapp",
     userInterfaceStyle: "automatic",
@@ -56,6 +56,9 @@ export default ({ config }: { config: ExpoConfig }) => ({
       config: {
         usesNonExemptEncryption: false,
       },
+      infoPlist: {
+        UIDesignRequiresCompatibility: true,
+      },
     },
     android: {
       ...config.android,
@@ -70,12 +73,6 @@ export default ({ config }: { config: ExpoConfig }) => ({
     },
     plugins: [
       "expo-router",
-      [
-        "expo-dev-launcher",
-        {
-          launchMode: "most-recent",
-        },
-      ],
       "expo-font",
       [
         "expo-splash-screen",
