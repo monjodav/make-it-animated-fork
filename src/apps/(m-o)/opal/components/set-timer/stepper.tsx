@@ -51,11 +51,33 @@ type Props = {
 
 export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) => {
   const pressScale = useSharedValue(1);
+  const tapCount = useSharedValue(0);
+  const lastTapTime = useSharedValue(0);
 
   const stringValue = useDerivedValue(() => {
     if (value.get() < 60) return `${value.get()}m`;
     return `${Math.floor(value.get() / 60)}h`;
   });
+
+  const handleStepperPress = () => {
+    const now = Date.now();
+    const timeSinceLastTap = now - lastTapTime.get();
+
+    if (timeSinceLastTap > 300) {
+      tapCount.set(1);
+      lastTapTime.set(now);
+      return;
+    }
+
+    tapCount.set(tapCount.get() + 1);
+    lastTapTime.set(now);
+
+    if (tapCount.get() >= 2) {
+      tapCount.set(0);
+      lastTapTime.set(0);
+      onPressHandler();
+    }
+  };
 
   const handlePress = () => {
     pressScale.set(
@@ -88,6 +110,7 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
       <Animated.View style={rStepperButtonStyle}>
         <StepperButton
           onPress={() => {
+            handleStepperPress();
             const currentIndex = data.findIndex((item) => item.value === value.get());
             if (currentIndex === 1) return;
             value.set(data[currentIndex - 1].value);
@@ -122,6 +145,7 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
       <Animated.View style={rStepperButtonStyle}>
         <StepperButton
           onPress={() => {
+            handleStepperPress();
             const currentIndex = data.findIndex((item) => item.value === value.get());
             if (currentIndex === data.length - 1) return;
             value.set(data[currentIndex + 1].value);
