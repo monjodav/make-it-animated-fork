@@ -65,7 +65,7 @@ export const SetTimer: FC = () => {
   return (
     <View className="gap-4 flex-row">
       <Stepper data={DATA} value={value} onPressHandler={onPressHandler} progress={progress} />
-      <Animated.View style={[{ flex: 1 }, rBlockButtonStyle]}>
+      <Animated.View className="flex-1" style={[rBlockButtonStyle]}>
         <BlockButton />
       </Animated.View>
       <Animated.View className="absolute right-0 self-center" style={[rSliderStyle]}>

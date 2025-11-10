@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import StartTimerButton from "../components/start-timer-button";
 import { SetTimer } from "../components/set-timer";
@@ -9,11 +9,11 @@ export const Home: FC = () => {
 
   return (
     <View className="flex-1 pb-2 bg-black justify-end" style={{ paddingTop: insets.top }}>
-      <View className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-end pb-10 pt-10 px-3">
         <SetTimer />
       </View>
       {/* opal-start-timer-button-animation 🔽 */}
-      {/* <StartTimerButton /> */}
+      <StartTimerButton />
       {/* opal-start-timer-button-animation 🔼 */}
     </View>
   );

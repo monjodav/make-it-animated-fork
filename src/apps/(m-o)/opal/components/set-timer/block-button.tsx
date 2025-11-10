@@ -1,9 +1,11 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { BlurView } from "expo-blur";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 const BlockButton = () => {
   return (
-    <View
+    <Pressable
+      onPress={simulatePress}
       style={styles.container}
       className="flex-1 flex-row gap-4 justify-center border border-neutral-700 rounded-full overflow-hidden py-2.5"
     >
@@ -16,7 +18,7 @@ const BlockButton = () => {
         <View className="w-1 h-1 rounded-full bg-neutral-900" />
         <View className="w-1 h-1 rounded-full bg-neutral-900" />
       </View>
-    </View>
+    </Pressable>
   );
 };
 

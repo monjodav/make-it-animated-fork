@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren } from "react";
 import { View, StyleSheet, Pressable, Platform, Dimensions } from "react-native";
 import { TimerStep } from "../../lib/types";
 import {
@@ -17,8 +17,10 @@ import { Minus, Plus } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 import Animated from "react-native-reanimated";
 
-const WIDTH = Dimensions.get("window").width * 0.25;
+const WIDTH = Dimensions.get("window").width * 0.22;
 const HEIGHT = 40;
+const TIME_THRESHOLD = 300;
+const CLICKS_THRESHOLD = 2;
 
 type StepperButtonProps = {
   onPress: () => void;
@@ -63,7 +65,7 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
     const now = Date.now();
     const timeSinceLastTap = now - lastTapTime.get();
 
-    if (timeSinceLastTap > 300) {
+    if (timeSinceLastTap > TIME_THRESHOLD) {
       tapCount.set(1);
       lastTapTime.set(now);
       return;
@@ -72,7 +74,7 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
     tapCount.set(tapCount.get() + 1);
     lastTapTime.set(now);
 
-    if (tapCount.get() >= 2) {
+    if (tapCount.get() >= CLICKS_THRESHOLD) {
       tapCount.set(0);
       lastTapTime.set(0);
       onPressHandler();
