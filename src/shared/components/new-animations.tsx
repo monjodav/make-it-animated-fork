@@ -6,6 +6,7 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
 import { longevity } from "../lib/constants/apps/l";
 import { perplexity } from "../lib/constants/apps/p";
+import { opal } from "../lib/constants/apps/o";
 
 type AnimationItemProps = {
   label: string;
@@ -48,6 +49,7 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
 
   return (
     <View className="px-5 gap-5 py-5">
+      <AnimationItem label={getItemProps(opal, 3).label} onPress={getItemProps(opal, 3).onPress} />
       <AnimationItem
         label={getItemProps(perplexity, 2).label}
         onPress={getItemProps(perplexity, 2).onPress}
@@ -55,10 +57,6 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
       <AnimationItem
         label={getItemProps(longevity, 0).label}
         onPress={getItemProps(longevity, 0).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(perplexity, 1).label}
-        onPress={getItemProps(perplexity, 1).onPress}
       />
     </View>
   );
