@@ -17,10 +17,14 @@ import * as Haptics from "expo-haptics";
 import Animated from "react-native-reanimated";
 import { cn } from "@/src/shared/lib/utils/cn";
 
+// opal-set-timer-slider-animation 🔽
+
+// Stepper dimensions: 22% screen width for center button
 const WIDTH = Dimensions.get("window").width * 0.22;
 const HEIGHT = 40;
-const TIME_THRESHOLD = 300;
-const CLICKS_THRESHOLD = 3;
+// Tap detection thresholds: rapid taps (within 300ms) trigger slider presentation
+const TIME_THRESHOLD = 300; // Milliseconds between taps to count as rapid sequence
+const CLICKS_THRESHOLD = 3; // Number of rapid taps needed to trigger slider
 
 type StepperButtonProps = {
   onPress: () => void;
@@ -53,19 +57,25 @@ type Props = {
 };
 
 export const Stepper: FC<Props> = ({ data, value, onPressHandler, presentationState }) => {
-  const pressScale = useSharedValue(1);
-  const tapCount = useSharedValue(0);
-  const lastTapTime = useSharedValue(0);
+  // Shared values for button press animation and rapid tap detection
+  const pressScale = useSharedValue(1); // Scale animation for center button press feedback
+  const tapCount = useSharedValue(0); // Counter for rapid tap detection
+  const lastTapTime = useSharedValue(0); // Timestamp of last tap for threshold calculation
 
+  // Format timer value: minutes (< 60) or hours (>= 60) with appropriate suffix
+  // useDerivedValue automatically updates when value changes, optimized for worklet thread
   const stringValue = useDerivedValue(() => {
     if (value.get() < 60) return `${value.get()}m`;
     return `${Math.floor(value.get() / 60)}h`;
   });
 
+  // Rapid tap detection: if taps occur within TIME_THRESHOLD, increment counter
+  // When CLICKS_THRESHOLD reached, trigger slider presentation
   const handleStepperPress = () => {
     const now = Date.now();
     const timeSinceLastTap = now - lastTapTime.get();
 
+    // Reset counter if too much time passed since last tap
     if (timeSinceLastTap > TIME_THRESHOLD) {
       tapCount.set(1);
       lastTapTime.set(now);
@@ -75,6 +85,7 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, presentationSt
     tapCount.set(tapCount.get() + 1);
     lastTapTime.set(now);
 
+    // Trigger slider presentation on rapid tap sequence
     if (tapCount.get() >= CLICKS_THRESHOLD) {
       tapCount.set(0);
       lastTapTime.set(0);
@@ -82,6 +93,8 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, presentationSt
     }
   };
 
+  // Center button press animation: quick scale-down then scale-up for tactile feedback
+  // withSequence chains animations: first timing scales down, second scales back up
   const handlePress = () => {
     pressScale.set(
       withSequence(withTiming(0.95, { duration: 100 }), withTiming(1, { duration: 100 }))
@@ -89,21 +102,26 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, presentationSt
     onPressHandler();
   };
 
+  // Stepper buttons fade out as slider appears: opacity inversely tied to presentationState
+  // presentationState: 0 = stepper visible, 1 = slider visible
   const rStepperButtonStyle = useAnimatedStyle(() => {
     return {
       opacity: 1 - presentationState.get(),
     };
   });
 
+  // Center button slides left when slider appears: translateX moves by button height + gap
+  // High stiffness (1400) ensures quick response, moderate damping (90) prevents overshoot
+  // Scale transform applied on top of translation for press feedback
   const rCenterButtonStyle = useAnimatedStyle(() => {
-    const targetX = -presentationState.get() * (HEIGHT + 6);
+    const targetX = -presentationState.get() * (HEIGHT + 6); // 6px gap between button and slider
     const translateX = withSpring(targetX, {
       damping: 90,
       stiffness: 1400,
     });
 
     return {
-      transform: [{ translateX }, { scale: pressScale.get() }],
+      transform: [{ translateX }, { scale: pressScale.get() }], // Translation first, then scale
     };
   });
 
@@ -133,6 +151,8 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, presentationSt
             handlePress();
           }}
         >
+          {/* ReText: animated text component that updates on worklet thread without bridge crossing */}
+          {/* pointerEvents: "none" prevents text from intercepting touch events */}
           <ReText
             text={stringValue}
             style={{
@@ -168,3 +188,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// opal-set-timer-slider-animation 🔼
