@@ -38,7 +38,7 @@ export const RubberContainer: FC<PropsWithChildren<Props>> = ({
   ...props
 }) => {
   const {
-    activeScale = 1.04,
+    activeScale = 1.03,
     baseDistance = 100,
     maxScale = 2.5,
     stretchRatio = 2.5,

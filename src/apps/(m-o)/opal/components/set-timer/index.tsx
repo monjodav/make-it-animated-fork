@@ -13,6 +13,11 @@ import Animated, {
 } from "react-native-reanimated";
 import BlockButton from "./block-button";
 
+const SPRING_CONFIG = {
+  damping: 90,
+  stiffness: 1200,
+};
+
 const MINUTES: TimerStep[] = Array.from({ length: 13 }, (_, index) => ({
   id: index * 5,
   value: index * 5,
@@ -26,37 +31,34 @@ const HOURS: TimerStep[] = Array.from({ length: 23 }, (_, index) => ({
 const DATA: TimerStep[] = [...MINUTES, ...HOURS];
 
 export const SetTimer: FC = () => {
-  const value = useSharedValue<number>(0);
+  const value = useSharedValue<number>(5);
 
-  const progress = useSharedValue(0);
+  const presentationState = useSharedValue(0); // 0: stepper, 1: slider
 
   const onPressHandler = () => {
-    const targetValue = progress.get() === 0 ? 1 : 0;
-    progress.set(withTiming(targetValue, { duration: 180 }));
+    const targetValue = presentationState.get() === 0 ? 1 : 0;
+    presentationState.set(withTiming(targetValue, { duration: 180 }));
   };
 
   const rSliderStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(progress.get(), [0, 1], [0, 1], Extrapolation.CLAMP);
-    const scale = withSpring(interpolate(progress.get(), [0, 1], [0.8, 1], Extrapolation.CLAMP), {
-      damping: 18,
-      stiffness: 450,
-      mass: 1,
-    });
+    const opacity = interpolate(presentationState.get(), [0.8, 1], [0, 1], Extrapolation.CLAMP);
+    const scale = withSpring(
+      interpolate(presentationState.get(), [0, 1], [0.75, 1], Extrapolation.CLAMP),
+      SPRING_CONFIG
+    );
 
     return {
+      pointerEvents: opacity === 1 ? "auto" : "none",
       opacity,
       transform: [{ scale }],
     };
   });
 
   const rBlockButtonStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(progress.get(), [0, 1], [1, 0]);
-    const scale = withSpring(interpolate(progress.get(), [0, 1], [1, 0.8]), {
-      damping: 20,
-      stiffness: 300,
-      mass: 1,
-    });
+    const opacity = interpolate(presentationState.get(), [0, 1], [1, 0]);
+    const scale = withSpring(interpolate(presentationState.get(), [0, 1], [1, 0.8]), SPRING_CONFIG);
     return {
+      pointerEvents: opacity === 1 ? "auto" : "none",
       opacity,
       transform: [{ scale }],
     };
@@ -64,12 +66,17 @@ export const SetTimer: FC = () => {
 
   return (
     <View className="gap-4 flex-row">
-      <Stepper data={DATA} value={value} onPressHandler={onPressHandler} progress={progress} />
-      <Animated.View className="flex-1" style={[rBlockButtonStyle]}>
+      <Stepper
+        data={DATA}
+        value={value}
+        onPressHandler={onPressHandler}
+        presentationState={presentationState}
+      />
+      <Animated.View className="flex-1" style={rBlockButtonStyle}>
         <BlockButton />
       </Animated.View>
-      <Animated.View className="absolute right-0 self-center" style={[rSliderStyle]}>
-        <Slider data={DATA} value={value} />
+      <Animated.View className="absolute right-0 self-center" style={rSliderStyle}>
+        <Slider data={DATA} value={value} presentationState={presentationState} />
       </Animated.View>
     </View>
   );

@@ -21,9 +21,10 @@ const SLIDER_HEIGHT = 40;
 type Props = {
   data: TimerStep[];
   value: SharedValue<number>;
+  presentationState: SharedValue<number>;
 };
 
-export const Slider: FC<Props> = ({ data, value }) => {
+export const Slider: FC<Props> = ({ data, value, presentationState }) => {
   const totalSteps = data.length;
   const stepWidth = SLIDER_WIDTH / totalSteps;
 
@@ -38,12 +39,16 @@ export const Slider: FC<Props> = ({ data, value }) => {
       const tapX = event.x;
 
       const tappedStepIndex = Math.ceil(tapX / stepWidth);
-      const clampedStepIndex = Math.max(1, Math.min(tappedStepIndex, totalSteps));
+      const clampedStepIndex = Math.max(1, Math.min(tappedStepIndex, totalSteps - 1));
 
-      const newProgress = Math.max(0, Math.min(clampedStepIndex * stepWidth, SLIDER_WIDTH));
+      const newProgress =
+        clampedStepIndex === totalSteps - 1
+          ? SLIDER_WIDTH
+          : Math.max(0, Math.min(clampedStepIndex * stepWidth, SLIDER_WIDTH));
       progress.set(newProgress);
 
-      const newValue = data[clampedStepIndex - 1].value;
+      const newValue = data[clampedStepIndex].value;
+
       value.set(newValue);
 
       startX.set(event.x);
@@ -53,21 +58,24 @@ export const Slider: FC<Props> = ({ data, value }) => {
       const currentX = event.x;
 
       const currentStepIndex = Math.ceil(currentX / stepWidth);
-      const clampedStepIndex = Math.max(1, Math.min(currentStepIndex, totalSteps));
+      const clampedStepIndex = Math.max(1, Math.min(currentStepIndex, totalSteps - 1));
 
       if (clampedStepIndex !== lastStepCount.get()) {
         lastStepCount.set(clampedStepIndex);
 
-        const newProgress = Math.max(0, Math.min(clampedStepIndex * stepWidth, SLIDER_WIDTH));
+        const newProgress =
+          clampedStepIndex === totalSteps - 1
+            ? SLIDER_WIDTH
+            : Math.max(0, Math.min(clampedStepIndex * stepWidth, SLIDER_WIDTH));
         progress.set(newProgress);
 
-        const newValue = data[clampedStepIndex - 1].value;
+        const newValue = data[clampedStepIndex].value;
         value.set(newValue);
       }
     });
 
   const fireHaptic = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   useAnimatedReaction(
@@ -81,19 +89,18 @@ export const Slider: FC<Props> = ({ data, value }) => {
   useAnimatedReaction(
     () => value.get(),
     (newValue) => {
-      const values = stepValues.get();
-      let index = -1;
+      if (presentationState.get() === 1) return;
 
-      for (let i = 0; i < values.length; i++) {
-        if (values[i] === newValue) {
-          index = i;
-          break;
-        }
-      }
-      if (index !== -1) {
-        const newProgress = Math.max(0, Math.min((index + 1) * stepWidth, SLIDER_WIDTH));
+      const tappedStepIndex = stepValues.get().findIndex((v) => v === newValue);
+      const clampedStepIndex = Math.max(1, Math.min(tappedStepIndex, totalSteps - 1));
+
+      if (tappedStepIndex !== -1) {
+        const newProgress =
+          clampedStepIndex === totalSteps - 1
+            ? SLIDER_WIDTH
+            : Math.max(0, Math.min(clampedStepIndex * stepWidth, SLIDER_WIDTH));
         progress.set(newProgress);
-        lastStepCount.set(index + 1);
+        lastStepCount.set(clampedStepIndex);
       }
     }
   );
@@ -108,11 +115,12 @@ export const Slider: FC<Props> = ({ data, value }) => {
     <RubberContainer width={SLIDER_WIDTH} height={SLIDER_HEIGHT} gestures={[gesture]}>
       <View
         style={styles.container}
-        className="flex-1 border border-neutral-800 rounded-2xl overflow-hidden py-2.5"
-      >
-        {Platform.OS === "ios" && (
-          <BlurView style={StyleSheet.absoluteFillObject} tint="systemUltraThinMaterialLight" />
+        className={cn(
+          "flex-1 border-neutral-700 rounded-2xl overflow-hidden py-2.5",
+          Platform.OS === "android" && "bg-neutral-900 border-neutral-800"
         )}
+      >
+        {Platform.OS === "ios" && <BlurView style={StyleSheet.absoluteFill} tint="light" />}
         <View className="flex-1 flex-row">
           {data.map((item, index) => (
             <View
@@ -137,6 +145,7 @@ export const Slider: FC<Props> = ({ data, value }) => {
 
 const styles = StyleSheet.create({
   container: {
+    borderWidth: StyleSheet.hairlineWidth,
     borderCurve: "continuous",
   },
 });

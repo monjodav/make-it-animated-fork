@@ -11,16 +11,16 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { ReText } from "react-native-redash";
-import { _borderCurve } from "@/src/apps/(j-l)/linear/components/tab-item";
 import { BlurView } from "expo-blur";
 import { Minus, Plus } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 import Animated from "react-native-reanimated";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 const WIDTH = Dimensions.get("window").width * 0.22;
 const HEIGHT = 40;
 const TIME_THRESHOLD = 300;
-const CLICKS_THRESHOLD = 2;
+const CLICKS_THRESHOLD = 3;
 
 type StepperButtonProps = {
   onPress: () => void;
@@ -29,16 +29,17 @@ type StepperButtonProps = {
 const StepperButton: FC<PropsWithChildren<StepperButtonProps>> = ({ onPress, children }) => {
   return (
     <Pressable
-      className="aspect-square rounded-full border border-neutral-700 items-center justify-center overflow-hidden"
-      style={{ height: HEIGHT }}
+      className={cn(
+        "aspect-square rounded-full border border-neutral-700 items-center justify-center overflow-hidden",
+        Platform.OS === "android" && "bg-neutral-900 border-neutral-800"
+      )}
+      style={{ height: HEIGHT, borderWidth: StyleSheet.hairlineWidth }}
       onPress={onPress}
       onPressIn={() => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
       }}
     >
-      {Platform.OS === "ios" && (
-        <BlurView style={StyleSheet.absoluteFillObject} tint="systemUltraThinMaterialLight" />
-      )}
+      {Platform.OS === "ios" && <BlurView style={StyleSheet.absoluteFill} tint="light" />}
       {children}
     </Pressable>
   );
@@ -48,10 +49,10 @@ type Props = {
   data: TimerStep[];
   value: SharedValue<number>;
   onPressHandler: () => void;
-  progress: SharedValue<number>;
+  presentationState: SharedValue<number>;
 };
 
-export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) => {
+export const Stepper: FC<Props> = ({ data, value, onPressHandler, presentationState }) => {
   const pressScale = useSharedValue(1);
   const tapCount = useSharedValue(0);
   const lastTapTime = useSharedValue(0);
@@ -90,16 +91,15 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
 
   const rStepperButtonStyle = useAnimatedStyle(() => {
     return {
-      opacity: 1 - progress.get(),
+      opacity: 1 - presentationState.get(),
     };
   });
 
   const rCenterButtonStyle = useAnimatedStyle(() => {
-    const targetX = -progress.get() * (HEIGHT + 6);
+    const targetX = -presentationState.get() * (HEIGHT + 6);
     const translateX = withSpring(targetX, {
-      damping: 25,
-      stiffness: 300,
-      mass: 1,
+      damping: 90,
+      stiffness: 1400,
     });
 
     return {
@@ -123,8 +123,11 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
       </Animated.View>
       <Animated.View style={rCenterButtonStyle}>
         <Pressable
-          className="rounded-2xl items-center justify-center bg-white"
-          style={[styles.borderCurve, { height: HEIGHT, width: WIDTH }]}
+          className="rounded-[16px] items-center justify-center bg-white border-neutral-700"
+          style={[
+            styles.borderCurve,
+            { height: HEIGHT, width: WIDTH, borderWidth: StyleSheet.hairlineWidth },
+          ]}
           onPressIn={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft);
             handlePress();
@@ -162,6 +165,6 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
 
 const styles = StyleSheet.create({
   borderCurve: {
-    borderCurve: _borderCurve,
+    borderCurve: "continuous",
   },
 });
