@@ -15,7 +15,7 @@ import * as Haptics from "expo-haptics";
 import { scheduleOnRN } from "react-native-worklets";
 import { TimerStep } from "../../lib/types";
 
-const SLIDER_WIDTH = Dimensions.get("window").width * 0.65;
+const SLIDER_WIDTH = Dimensions.get("window").width * 0.73;
 const SLIDER_HEIGHT = 40;
 
 type Props = {
