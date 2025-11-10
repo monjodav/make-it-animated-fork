@@ -6,6 +6,9 @@ import {
   useDerivedValue,
   useAnimatedStyle,
   withSpring,
+  useSharedValue,
+  withSequence,
+  withTiming,
 } from "react-native-reanimated";
 import { ReText } from "react-native-redash";
 import { _borderCurve } from "@/src/apps/(j-l)/linear/components/tab-item";
@@ -47,12 +50,17 @@ type Props = {
 };
 
 export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) => {
+  const pressScale = useSharedValue(1);
+
   const stringValue = useDerivedValue(() => {
     if (value.get() < 60) return `${value.get()}m`;
     return `${Math.floor(value.get() / 60)}h`;
   });
 
   const handlePress = () => {
+    pressScale.set(
+      withSequence(withTiming(0.95, { duration: 100 }), withTiming(1, { duration: 100 }))
+    );
     onPressHandler();
   };
 
@@ -71,7 +79,7 @@ export const Stepper: FC<Props> = ({ data, value, onPressHandler, progress }) =>
     });
 
     return {
-      transform: [{ translateX }],
+      transform: [{ translateX }, { scale: pressScale.get() }],
     };
   });
 
