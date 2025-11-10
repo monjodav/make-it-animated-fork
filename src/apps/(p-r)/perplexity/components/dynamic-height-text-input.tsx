@@ -1,75 +1,69 @@
 import { cn } from "@/src/shared/lib/utils/cn";
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { TextInput, Text, TextInputProps, Platform } from "react-native";
+import React, { FC, useEffect, useState } from "react";
+import { TextInput, Text, TextInputProps, Platform, View } from "react-native";
 
 type DynamicHeightTextInputProps = TextInputProps & {
+  ref: React.RefObject<TextInput | null>;
   maxNumberOfLines?: number;
 };
 
-const DynamicHeightTextInput = forwardRef<TextInput, DynamicHeightTextInputProps>(
-  ({ className, maxNumberOfLines = 5, ...restProps }, ref) => {
-    const [text, setText] = useState("");
-    const [textHeight, setTextHeight] = useState(20);
+export const DynamicHeightTextInput: FC<DynamicHeightTextInputProps> = ({
+  ref,
+  className,
+  maxNumberOfLines = 5,
+  ...restProps
+}) => {
+  const [text, setText] = useState("");
+  const [textHeight, setTextHeight] = useState(0);
+  const [lines, setLines] = useState(1);
 
-    const lineHeight = textHeight * 1.1;
-    const maxHeight = lineHeight * (maxNumberOfLines + (Platform.OS === "android" ? 1 : 0));
+  const maxHeight = textHeight * (maxNumberOfLines + (Platform.OS === "android" ? 1 : 0));
 
-    const [inputHeight, setInputHeight] = useState(lineHeight);
+  const [inputHeight, setInputHeight] = useState(textHeight);
 
-    const handleTextChange = (newText: string) => {
-      setText(newText);
-      // Calculate height based on lines
-      const lines = newText.split("\n");
-      const lineCount = Math.max(1, lines.length);
-      const newInputHeight = lineCount * lineHeight;
-      setInputHeight(newInputHeight);
-    };
+  const handleTextChange = (newText: string) => {
+    setText(newText);
+    // Calculate height based on lines
+    // const lines = newText.split("\n");
+    // const lineCount = Math.max(1, lines.length);
+    // const newInputHeight = lineCount * textHeight;
+    // setInputHeight(newInputHeight);
+  };
 
-    useEffect(() => {
-      setInputHeight(lineHeight);
-    }, [textHeight]);
+  useEffect(() => {
+    setInputHeight(textHeight * lines);
+  }, [textHeight, lines]);
 
-    const innerRef = useRef<TextInput>(null);
-
-    useImperativeHandle(
-      ref,
-      () =>
-        ({
-          focus: () => innerRef.current?.focus(),
-          blur: () => innerRef.current?.blur(),
-          clear: () => innerRef.current?.clear(),
-          isFocused: () => innerRef.current?.isFocused?.() ?? false,
-          setNativeProps: (props: any) => innerRef.current?.setNativeProps(props),
-        }) as any
-    );
-
-    return (
-      <>
-        <TextInput
-          ref={innerRef}
-          value={text}
-          onChangeText={handleTextChange}
-          placeholder="Ask anything..."
-          placeholderTextColor="#737373"
-          multiline
-          className={cn(className, "text-neutral-50 font-medium")}
-          selectionColor="#ffffff"
-          style={{
-            lineHeight: lineHeight,
+  return (
+    <View>
+      <TextInput
+        ref={ref}
+        value={text}
+        onChangeText={handleTextChange}
+        placeholder="Ask anything..."
+        placeholderTextColor="#737373"
+        multiline
+        className={cn(className, "text-neutral-50")}
+        selectionColor="#ffffff"
+        style={[
+          {
             height: Math.min(inputHeight + (Platform.OS === "android" ? 20 : 5), maxHeight),
             maxHeight: maxHeight,
-          }}
-          {...restProps}
-        />
-        <Text
-          onTextLayout={(e) => {
+          },
+        ]}
+        {...restProps}
+      />
+      <Text
+        onTextLayout={(e) => {
+          if (textHeight === 0) {
             setTextHeight(e.nativeEvent.lines[0].height);
-          }}
-          className={cn(className, "absolute opacity-0 pointer-events-none")}
-        ></Text>
-      </>
-    );
-  }
-);
-
-export default DynamicHeightTextInput;
+          }
+          setLines(e.nativeEvent.lines.length);
+        }}
+        className={cn(className, "absolute bottom-0 opacity-50 pointer-events-none")}
+      >
+        {text}
+      </Text>
+    </View>
+  );
+};

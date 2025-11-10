@@ -6,10 +6,20 @@ import { useEffect, useRef, useState } from "react";
 import { AddFileModal } from "../components/add-file-modal";
 import BreathingIcon from "../components/breathing-icon";
 import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
-import { KeyboardEvents, KeyboardStickyView } from "react-native-keyboard-controller";
-import DynamicHeightTextInput from "../components/dynamic-height-text-input";
-import { useSharedValue } from "react-native-reanimated";
+import {
+  KeyboardController,
+  KeyboardEvents,
+  KeyboardStickyView,
+  useReanimatedKeyboardAnimation,
+} from "react-native-keyboard-controller";
+import { DynamicHeightTextInput } from "../components/dynamic-height-text-input";
+import Animated, {
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useMaxKeyboardHeight } from "@/src/shared/lib/hooks/use-max-keyboard-height";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
@@ -20,28 +30,20 @@ export default function Home() {
   );
 
   const inputRef = useRef<TextInput>(null);
-  const keyboardHeight = useSharedValue(0);
   const [offsetClosed, setOffsetClosed] = useState(0);
 
-  useEffect(() => {
-    const show = KeyboardEvents.addListener("keyboardDidShow", (e) => {
-      keyboardHeight.set(e.height);
-    });
-    return () => {
-      show.remove();
-    };
-  }, []);
+  const maxKeyboardHeight = useMaxKeyboardHeight();
 
   useEffect(() => {
     if (isModalVisible) {
-      setTimeout(() => Keyboard.dismiss(), 100);
-      setOffsetClosed(-keyboardHeight.get() + 30);
+      setOffsetClosed(-maxKeyboardHeight.get() + insets.bottom - 10);
+      setTimeout(() => KeyboardController.dismiss(), 200);
     }
-    if (!isModalVisible && keyboardHeight.get()) {
-      inputRef.current?.focus();
+    if (!isModalVisible && offsetClosed !== 0) {
+      KeyboardController.setFocusTo("current");
       setOffsetClosed(0);
     }
-  }, [isModalVisible]);
+  }, [isModalVisible, offsetClosed]);
 
   const SWIPE_UP_THRESHOLD = -50;
 
@@ -59,13 +61,7 @@ export default function Home() {
         className="flex-1 bg-neutral-900"
         style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
       >
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-            keyboardHeight.set(0);
-          }}
-          accessible={false}
-        >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={{ flex: 1 }}>
             <View className="flex-row px-5 items-center justify-between">
               <Pressable onPress={simulatePress}>
@@ -77,7 +73,7 @@ export default function Home() {
             <Text className="text-white text-4xl text-center font-medium mt-32">perplexity</Text>
           </View>
         </TouchableWithoutFeedback>
-        <KeyboardStickyView className="mt-auto" offset={{ closed: offsetClosed, opened: 30 }}>
+        <KeyboardStickyView offset={{ closed: offsetClosed, opened: 24 }}>
           <Pressable
             onPress={simulatePress}
             style={{ borderCurve: "continuous" }}
@@ -90,7 +86,11 @@ export default function Home() {
             style={{ borderCurve: "continuous" }}
             className="mx-4 p-3 bg-neutral-800 rounded-3xl border border-neutral-700/50"
           >
-            <DynamicHeightTextInput ref={inputRef} />
+            <DynamicHeightTextInput
+              ref={inputRef}
+              placeholder="Hello"
+              className="text-3xl font-medium"
+            />
 
             <View className="flex-row justify-between mt-5">
               <View className="flex-row items-center gap-3">
