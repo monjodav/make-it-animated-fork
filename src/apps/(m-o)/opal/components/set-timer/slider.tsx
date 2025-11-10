@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Dimensions, Platform, StyleSheet, View } from "react-native";
 import { BlurView } from "expo-blur";
 import { RubberContainer } from "./rubber-container";
@@ -28,6 +28,8 @@ export const Slider: FC<Props> = ({ data, value }) => {
   const stepWidth = SLIDER_WIDTH / totalSteps;
 
   const progress = useSharedValue(stepWidth);
+
+  const stepValues = useSharedValue<number[]>(data.map((d) => d.value));
   const startX = useSharedValue(0);
   const lastStepCount = useSharedValue(0);
 
@@ -73,6 +75,26 @@ export const Slider: FC<Props> = ({ data, value }) => {
     () => {
       if (Platform.OS === "android") return;
       scheduleOnRN(fireHaptic);
+    }
+  );
+
+  useAnimatedReaction(
+    () => value.get(),
+    (newValue) => {
+      const values = stepValues.get();
+      let index = -1;
+
+      for (let i = 0; i < values.length; i++) {
+        if (values[i] === newValue) {
+          index = i;
+          break;
+        }
+      }
+      if (index !== -1) {
+        const newProgress = Math.max(0, Math.min((index + 1) * stepWidth, SLIDER_WIDTH));
+        progress.set(newProgress);
+        lastStepCount.set(index + 1);
+      }
     }
   );
 
