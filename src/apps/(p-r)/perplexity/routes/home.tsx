@@ -8,7 +8,11 @@ import BreathingIcon from "../components/breathing-icon";
 import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
 import WithShimmer from "@/src/shared/components/with-shimmer";
 import { useMaxKeyboardHeight } from "@/src/shared/lib/hooks/use-max-keyboard-height";
-import { KeyboardController, KeyboardStickyView } from "react-native-keyboard-controller";
+import {
+  KeyboardController,
+  KeyboardStickyView,
+  useKeyboardState,
+} from "react-native-keyboard-controller";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 // perplexity-text-input-freeze-on-modal-open-animation 🔽
@@ -38,16 +42,31 @@ export default function Home() {
   // the exact offset needed to freeze text input position when modal opens
   const maxKeyboardHeight = useMaxKeyboardHeight();
 
-  // Restores text input focus and resets keyboard offset when modal closes
-  // This ensures smooth transition back to keyboard interaction state
+  const isKeyboardVisible = useKeyboardState((state) => state.isVisible);
+
+  // Restores text input focus after modal closes
+  // When modal was opened while text input was focused, this effect restores keyboard focus
+  // to maintain user's interaction context. setFocusTo("current") ensures the previously
+  // focused input regains focus, and isTextInputFocused flag is reset to prevent re-triggering
   useEffect(() => {
     if (!isModalVisible && isTextInputFocused) {
       KeyboardController.setFocusTo("current");
       setIsTextInputFocused(false);
-      setKeyboardOffsetClosed(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalVisible]);
+
+  // Resets keyboard offset when all conditions are cleared
+  // After modal closes and keyboard dismisses, this clears the frozen position offset
+  // that was applied to prevent visual jump. 200ms delay ensures keyboard animation
+  // completes before resetting offset, preventing visual glitches during transition
+  useEffect(() => {
+    if (!isKeyboardVisible && !isModalVisible && !isTextInputFocused) {
+      setTimeout(() => {
+        setKeyboardOffsetClosed(0);
+      }, 200);
+    }
+  }, [isKeyboardVisible, isModalVisible, isTextInputFocused]);
 
   // Pan gesture enables swipe-to-focus interaction: upward swipe focuses text input
   // runOnJS(true) ensures focus call executes on JS thread for reliability
@@ -138,7 +157,7 @@ export default function Home() {
                     if (textInputRef.current?.isFocused()) {
                       setIsTextInputFocused(true);
                       setKeyboardOffsetClosed(
-                        -maxKeyboardHeight + insets.bottom - (Platform.OS === "android" ? 70 : 10)
+                        -maxKeyboardHeight + insets.bottom - (Platform.OS === "android" ? 60 : 10)
                       );
                       setTimeout(() => KeyboardController.dismiss(), 200);
                     }
