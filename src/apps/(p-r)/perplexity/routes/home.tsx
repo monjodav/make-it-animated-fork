@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Keyboard, TouchableWithoutFeedback, TextInput } from "react-native";
+import { View, Text, Pressable, Keyboard, TextInput } from "react-native";
 import { AudioLines, LayoutGrid, Mic, Plus, Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
@@ -6,20 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { AddFileModal } from "../components/add-file-modal";
 import BreathingIcon from "../components/breathing-icon";
 import { useAndroidNote } from "@/src/shared/lib/hooks/use-android-note";
-import {
-  KeyboardController,
-  KeyboardEvents,
-  KeyboardStickyView,
-  useReanimatedKeyboardAnimation,
-} from "react-native-keyboard-controller";
-import { DynamicHeightTextInput } from "../components/dynamic-height-text-input";
-import Animated, {
-  useAnimatedReaction,
-  useDerivedValue,
-  useSharedValue,
-} from "react-native-reanimated";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import WithShimmer from "@/src/shared/components/with-shimmer";
 import { useMaxKeyboardHeight } from "@/src/shared/lib/hooks/use-max-keyboard-height";
+import { KeyboardController, KeyboardStickyView } from "react-native-keyboard-controller";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { DynamicHeightTextInput } from "../components/dynamic-height-text-input";
 
 export default function Home() {
   const insets = useSafeAreaInsets();
@@ -43,6 +34,7 @@ export default function Home() {
       KeyboardController.setFocusTo("current");
       setOffsetClosed(0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalVisible, offsetClosed]);
 
   const SWIPE_UP_THRESHOLD = -50;
@@ -61,18 +53,32 @@ export default function Home() {
         className="flex-1 bg-neutral-900"
         style={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={{ flex: 1 }}>
-            <View className="flex-row px-5 items-center justify-between">
-              <Pressable onPress={simulatePress}>
-                <BreathingIcon />
-              </Pressable>
-              <LayoutGrid size={24} color="white" />
-            </View>
-
-            <Text className="text-white text-4xl text-center font-medium mt-32">perplexity</Text>
+        <Pressable className="flex-1" onPress={Keyboard.dismiss}>
+          {/* perplexity-home-header-animation 🔽 */}
+          {/* Header row: BreathingIcon provides subtle pulsing animation to draw attention
+          The breathing effect creates a gentle, non-intrusive visual cue */}
+          <View className="flex-row px-5 items-center justify-between">
+            <Pressable onPress={simulatePress}>
+              <BreathingIcon />
+            </Pressable>
+            <LayoutGrid size={24} color="white" />
           </View>
-        </TouchableWithoutFeedback>
+
+          {/* Logo section: Shimmer animation adds premium feel with gradient sweep
+          delay=2s: waits before starting shimmer, duration=4s: sweep speed
+          angle=75deg: diagonal gradient direction, colors: neutral gray palette */}
+          <View className="pt-40 items-center justify-center px-5">
+            <WithShimmer
+              delay={2}
+              duration={4}
+              angle={75}
+              colors={{ start: "#D9D9DB", middle: "#71717a", end: "#D9D9DB" }}
+            >
+              <Text className="text-4xl">perplexity</Text>
+            </WithShimmer>
+          </View>
+          {/* perplexity-home-header-animation 🔼 */}
+        </Pressable>
         <KeyboardStickyView offset={{ closed: offsetClosed, opened: 24 }}>
           <Pressable
             onPress={simulatePress}
