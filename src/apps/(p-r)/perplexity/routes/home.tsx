@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Keyboard, TextInput } from "react-native";
+import { View, Text, Pressable, Keyboard, TextInput, Platform } from "react-native";
 import { AudioLines, LayoutGrid, Mic, Plus, Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
@@ -10,39 +10,51 @@ import WithShimmer from "@/src/shared/components/with-shimmer";
 import { useMaxKeyboardHeight } from "@/src/shared/lib/hooks/use-max-keyboard-height";
 import { KeyboardController, KeyboardStickyView } from "react-native-keyboard-controller";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { DynamicHeightTextInput } from "../components/dynamic-height-text-input";
+
+// perplexity-text-input-freeze-on-modal-open-animation 🔽
+
+// Swipe threshold in pixels: upward swipe must exceed -50px to trigger focus
+// Negative Y translation indicates upward gesture direction
+const SWIPE_UP_THRESHOLD = -50;
 
 export default function Home() {
-  const insets = useSafeAreaInsets();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  // Tracks if text input was focused before modal opened - used to restore focus state
+  const [isTextInputFocused, setIsTextInputFocused] = useState(false);
+  // Dynamic offset for KeyboardStickyView: when modal opens, this freezes the text input
+  // at its current keyboard-elevated position, preventing visual jump
+  const [keyboardOffsetClosed, setKeyboardOffsetClosed] = useState(0);
+  const [value, setValue] = useState("");
+
+  const insets = useSafeAreaInsets();
 
   useAndroidNote(
     "Regarding Bottom Sheet Backdrop. Android doesn't reliably support blur overlays. For consistency and performance, the fallback bottom sheet interpolates background color rather than applying a blur effect."
   );
 
-  const inputRef = useRef<TextInput>(null);
-  const [offsetClosed, setOffsetClosed] = useState(0);
+  const textInputRef = useRef<TextInput>(null);
 
+  // Maximum keyboard height across all device configurations - used to calculate
+  // the exact offset needed to freeze text input position when modal opens
   const maxKeyboardHeight = useMaxKeyboardHeight();
 
+  // Restores text input focus and resets keyboard offset when modal closes
+  // This ensures smooth transition back to keyboard interaction state
   useEffect(() => {
-    if (isModalVisible) {
-      setOffsetClosed(-maxKeyboardHeight.get() + insets.bottom - 10);
-      setTimeout(() => KeyboardController.dismiss(), 200);
-    }
-    if (!isModalVisible && offsetClosed !== 0) {
+    if (!isModalVisible && isTextInputFocused) {
       KeyboardController.setFocusTo("current");
-      setOffsetClosed(0);
+      setIsTextInputFocused(false);
+      setKeyboardOffsetClosed(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalVisible, offsetClosed]);
+  }, [isModalVisible]);
 
-  const SWIPE_UP_THRESHOLD = -50;
-
+  // Pan gesture enables swipe-to-focus interaction: upward swipe focuses text input
+  // runOnJS(true) ensures focus call executes on JS thread for reliability
   const panGesture = Gesture.Pan()
     .onEnd((event) => {
       if (event.translationY <= SWIPE_UP_THRESHOLD) {
-        inputRef.current?.focus();
+        textInputRef.current?.focus();
       }
     })
     .runOnJS(true);
@@ -79,7 +91,13 @@ export default function Home() {
           </View>
           {/* perplexity-home-header-animation 🔼 */}
         </Pressable>
-        <KeyboardStickyView offset={{ closed: offsetClosed, opened: 24 }}>
+        {/* KeyboardStickyView maintains text input position relative to keyboard
+        closed: Dynamic offset freezes input at keyboard-elevated position when modal opens
+        opened: Platform-specific spacing (Android: 36px, iOS: 24px) accounts for
+        different keyboard behaviors and safe area handling */}
+        <KeyboardStickyView
+          offset={{ closed: keyboardOffsetClosed, opened: Platform.OS === "android" ? 36 : 24 }}
+        >
           <Pressable
             onPress={simulatePress}
             style={{ borderCurve: "continuous" }}
@@ -92,17 +110,40 @@ export default function Home() {
             style={{ borderCurve: "continuous" }}
             className="mx-4 p-3 bg-neutral-800 rounded-3xl border border-neutral-700/50"
           >
-            <DynamicHeightTextInput
-              ref={inputRef}
-              placeholder="Hello"
-              className="text-3xl font-medium"
+            <TextInput
+              ref={textInputRef}
+              value={value}
+              onChangeText={setValue}
+              placeholder="Ask anything..."
+              placeholderTextColor="#737373"
+              selectionColor="#ffffff"
+              multiline
+              numberOfLines={5}
+              className="text-lg text-neutral-50 pt-4"
             />
 
             <View className="flex-row justify-between mt-5">
               <View className="flex-row items-center gap-3">
                 {/* perplexity-bottom-sheet-backdrop-animation 🔽 */}
+                {/* Modal opening handler: Freezes text input position to prevent visual jump
+                Calculation breakdown:
+                - -maxKeyboardHeight: Moves input up by keyboard height (negative = upward)
+                - + insets.bottom: Accounts for device safe area at bottom
+                - Platform offset: Android needs -70px (larger keyboard), iOS needs -10px
+                Result: Input stays visually frozen at its keyboard-elevated position
+                200ms delay before dismiss: Allows offset calculation to complete before
+                keyboard animation starts, ensuring smooth transition */}
                 <Pressable
-                  onPress={() => setIsModalVisible(true)}
+                  onPress={() => {
+                    if (textInputRef.current?.isFocused()) {
+                      setIsTextInputFocused(true);
+                      setKeyboardOffsetClosed(
+                        -maxKeyboardHeight + insets.bottom - (Platform.OS === "android" ? 70 : 10)
+                      );
+                      setTimeout(() => KeyboardController.dismiss(), 200);
+                    }
+                    setIsModalVisible(true);
+                  }}
                   className="p-2 rounded-full bg-neutral-700 items-center justify-center"
                 >
                   <Plus size={18} color="white" />
@@ -140,3 +181,5 @@ export default function Home() {
     </GestureDetector>
   );
 }
+
+// perplexity-text-input-freeze-on-modal-open-animation 🔼

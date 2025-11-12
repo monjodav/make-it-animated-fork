@@ -1,18 +1,19 @@
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
-import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { useEffect, useState } from "react";
+import { Keyboard } from "react-native";
 
 export const useMaxKeyboardHeight = () => {
-  const { height: keyboardHeight } = useReanimatedKeyboardAnimation();
-  const maxKeyboardHeight = useSharedValue(0);
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
 
-  useAnimatedReaction(
-    () => keyboardHeight.get(),
-    (height) => {
-      if (Math.abs(height) > maxKeyboardHeight.get()) {
-        maxKeyboardHeight.set(Math.abs(height));
-      }
-    }
-  );
+  useEffect(() => {
+    let keyboardShowEvent = Keyboard.addListener("keyboardDidShow", keyboardDidShow);
+    return () => {
+      keyboardShowEvent.remove();
+    };
+  }, []);
 
-  return maxKeyboardHeight;
+  const keyboardDidShow = (frames: any) => {
+    setKeyboardHeight(frames.endCoordinates.height);
+  };
+
+  return keyboardHeight;
 };
