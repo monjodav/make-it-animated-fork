@@ -1,16 +1,20 @@
-import { Pressable, TextInput, View } from "react-native";
+import { Platform, Pressable, TextInput, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withSpring,
+  useAnimatedReaction,
+  Extrapolation,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Plus, Search } from "lucide-react-native";
 import { MicButton } from "./mic-button";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import DynamicInput from "../dynamic-input";
+import { useRef, useState } from "react";
+import { scheduleOnRN } from "react-native-worklets";
 
 // perplexity-chat-input-on-focus-animation 🔽
 
@@ -30,12 +34,32 @@ const NEW_CHAT_BTN_SIZE = MIN_INPUT_CONTAINER_HEIGHT;
 const INPUT_NEW_CHAT_BTN_GAP = 10;
 
 const AnimatedInput = () => {
+  const [value, setValue] = useState("");
+
+  const dynamicInputRef = useRef<TextInput>(null);
+  const animatedInputRef = useRef<TextInput>(null);
+
   const insets = useSafeAreaInsets();
 
   // Single source of truth for focus progress (0 = idle, 1 = focused). Drives all interpolations in sync.
   const focusProgress = useSharedValue(0);
   // Measured max row width (captured once). Enables responsive width interpolation for the input.
   const maxInputWidth = useSharedValue(0);
+
+  // Watch focusProgress and switch focus between inputs
+  const focusTextInput = () => {
+    dynamicInputRef?.current?.focus();
+    animatedInputRef?.current?.blur();
+  };
+
+  useAnimatedReaction(
+    () => focusProgress.get(),
+    (current, previous) => {
+      if (current === 1 && previous !== 1) {
+        scheduleOnRN(focusTextInput);
+      }
+    }
+  );
 
   // Animate bottom padding to smoothly remove extra safe-area when focused
   // (avoids layout jump when keyboard sticks the composer).  insets.bottom+12 -> 12
@@ -97,83 +121,103 @@ const AnimatedInput = () => {
     };
   });
 
-  return (
-    <Animated.View style={rRootContainerStyle} className="px-3 pt-2 mt-auto">
-      <View
-        className="flex-row items-center"
-        style={{ gap: INPUT_NEW_CHAT_BTN_GAP }}
-        onLayout={(e) => {
-          const width = e.nativeEvent.layout.width;
-          // Capture the available width once to keep interpolations stable and avoid reflows.
-          if (maxInputWidth.get() === 0 && width > 0) {
-            maxInputWidth.set(width);
-          }
-        }}
-      >
-        <Animated.View
-          style={[
-            { borderCurve: "continuous", borderRadius: MIN_INPUT_CONTAINER_HEIGHT / 2 },
-            rInputContainerStyle,
-          ]}
-          className="overflow-hidden bg-neutral-800 border border-neutral-700/50"
-        >
-          <View className="flex-row items-center gap-2 pr-3">
-            <TextInput
-              placeholder="Ask a follow up..."
-              placeholderTextColor="grey"
-              className="flex-1 pl-5 text-neutral-50 text-lg/5 font-medium"
-              style={{ height: MIN_INPUT_CONTAINER_HEIGHT }}
-              selectionColor="#ffffff"
-              onFocus={() => {
-                // Spring to 1 for a natural settle-in without abruptness. Default config keeps it snappy.
-                setTimeout(() => {
-                  focusProgress.set(withSpring(1));
-                }, 0);
-              }}
-              onBlur={() => {
-                // Return to collapsed state with the same spring for symmetry.
-                focusProgress.set(withSpring(0));
-              }}
-            />
+  const rDynamicInputStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(focusProgress.get(), [0, 0.97, 1], [0, 0, 1], Extrapolation.CLAMP),
+      pointerEvents: focusProgress.get() > 0.5 ? "auto" : "none",
+    };
+  });
 
-            <Animated.View style={rMicButtonContainer}>
+  return (
+    <>
+      <Animated.View style={[rRootContainerStyle]} className="mx-3 pt-2 mt-auto">
+        <View
+          className="flex-row items-center"
+          style={{ gap: INPUT_NEW_CHAT_BTN_GAP }}
+          onLayout={(e) => {
+            const width = e.nativeEvent.layout.width;
+            // Capture the available width once to keep interpolations stable and avoid reflows.
+            if (maxInputWidth.get() === 0 && width > 0) {
+              maxInputWidth.set(width);
+            }
+          }}
+        >
+          <Animated.View
+            style={[
+              { borderCurve: "continuous", borderRadius: MIN_INPUT_CONTAINER_HEIGHT / 2 },
+              rInputContainerStyle,
+            ]}
+            className="overflow-hidden bg-neutral-800 border border-neutral-700/50"
+          >
+            <View className="flex-row items-center gap-2 pr-3">
+              <TextInput
+                ref={animatedInputRef}
+                value={value}
+                onChangeText={setValue}
+                placeholder="Ask a follow up..."
+                placeholderTextColor="#737373"
+                selectionColor="#ffffff"
+                className="flex-1 pl-5 mr-10 text-neutral-50 text-lg/5 font-medium"
+                style={{ marginTop: Platform.OS === "android" ? 10 : 18 }}
+                numberOfLines={1}
+                onFocus={() => {
+                  // Spring to 1 for a natural settle-in without abruptness. Default config keeps it snappy.
+                  setTimeout(() => {
+                    focusProgress.set(withSpring(1));
+                  }, 0);
+                }}
+                onBlur={() => {}}
+              />
+
+              <Animated.View className="absolute top-3 right-3" style={rMicButtonContainer}>
+                <MicButton />
+              </Animated.View>
+            </View>
+
+            {/* Secondary controls row (Plus/Search + mic) only visible when focused; opacity + pointerEvents are animated above. */}
+            <Animated.View
+              className="flex-1 flex-row items-center justify-between px-3 mt-6"
+              style={rControlsContainerStyle}
+            >
+              <View className="flex-row items-center gap-2">
+                <Pressable
+                  onPress={simulatePress}
+                  className="p-2 rounded-full bg-neutral-700 items-center justify-center"
+                >
+                  <Plus size={18} color="white" />
+                </Pressable>
+                <Pressable
+                  onPress={simulatePress}
+                  className="p-2 rounded-full bg-neutral-700 items-center justify-center"
+                >
+                  <Search size={18} color="white" />
+                </Pressable>
+              </View>
               <MicButton />
             </Animated.View>
-          </View>
-
-          {/* Secondary controls row (Plus/Search + mic) only visible when focused; opacity + pointerEvents are animated above. */}
-          <Animated.View
-            className="flex-1 flex-row items-center justify-between px-3"
-            style={rControlsContainerStyle}
-          >
-            <View className="flex-row items-center gap-2">
-              <Pressable
-                onPress={simulatePress}
-                className="p-2 rounded-full bg-neutral-700 items-center justify-center"
-              >
-                <Plus size={18} color="white" />
-              </Pressable>
-              <Pressable
-                onPress={simulatePress}
-                className="p-2 rounded-full bg-neutral-700 items-center justify-center"
-              >
-                <Search size={18} color="white" />
-              </Pressable>
-            </View>
-            <MicButton />
           </Animated.View>
-        </Animated.View>
 
-        {/* New chat pencil keeps size equal to collapsed input; translates out on focus for visual hierarchy. */}
-        <AnimatedPressable
-          className="rounded-full items-center justify-center bg-neutral-800 border border-neutral-700/50"
-          style={[{ width: NEW_CHAT_BTN_SIZE, height: NEW_CHAT_BTN_SIZE }, rPenBtnStyle]}
-          onPress={simulatePress}
-        >
-          <MaterialCommunityIcons name="pencil-plus-outline" size={19} color="white" />
-        </AnimatedPressable>
-      </View>
-    </Animated.View>
+          {/* New chat pencil keeps size equal to collapsed input; translates out on focus for visual hierarchy. */}
+          <AnimatedPressable
+            className="rounded-full items-center justify-center bg-neutral-800 border border-neutral-700/50"
+            style={[{ width: NEW_CHAT_BTN_SIZE, height: NEW_CHAT_BTN_SIZE }, rPenBtnStyle]}
+            onPress={simulatePress}
+          >
+            <MaterialCommunityIcons name="pencil-plus-outline" size={19} color="white" />
+          </AnimatedPressable>
+        </View>
+      </Animated.View>
+
+      <Animated.View className="absolute left-0 right-0 bottom-[12px]" style={[rDynamicInputStyle]}>
+        <DynamicInput
+          ref={dynamicInputRef}
+          value={value}
+          setValue={setValue}
+          focusProgress={focusProgress}
+          borderRadius={MIN_INPUT_CONTAINER_HEIGHT / 2}
+        />
+      </Animated.View>
+    </>
   );
 };
 
