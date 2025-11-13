@@ -1,8 +1,9 @@
-import { Pressable, TextInput, View } from "react-native";
+import { Platform, Pressable, TextInput, View } from "react-native";
 import { FC } from "react";
 import { Mic, Plus, Search } from "lucide-react-native";
 import Animated, { SharedValue, withSpring } from "react-native-reanimated";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 type DynamicInputProps = {
   ref: React.Ref<TextInput>;
@@ -40,7 +41,7 @@ const DynamicInput: FC<DynamicInputProps> = ({
         }}
       />
 
-      <View className="flex-row justify-between mt-9">
+      <View className={cn("flex-row justify-between mt-9", Platform.OS === "android" && "mt-5")}>
         <View className="flex-row items-center gap-2">
           <Pressable
             onPress={simulatePress}

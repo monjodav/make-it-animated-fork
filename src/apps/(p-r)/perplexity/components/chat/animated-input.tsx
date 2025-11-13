@@ -15,6 +15,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import DynamicInput from "../dynamic-input";
 import { useRef, useState } from "react";
 import { scheduleOnRN } from "react-native-worklets";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 // perplexity-chat-input-on-focus-animation 🔽
 
@@ -176,7 +177,10 @@ const AnimatedInput = () => {
 
             {/* Secondary controls row (Plus/Search + mic) only visible when focused; opacity + pointerEvents are animated above. */}
             <Animated.View
-              className="flex-1 flex-row items-center justify-between px-3 mt-6"
+              className={cn(
+                "flex-1 flex-row items-center justify-between px-3 mt-6",
+                Platform.OS === "android" && "mt-3"
+              )}
               style={rControlsContainerStyle}
             >
               <View className="flex-row items-center gap-2">
