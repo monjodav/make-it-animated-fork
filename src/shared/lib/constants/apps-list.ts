@@ -11,7 +11,7 @@ import { github, gmail, googleChrome, grok } from "./apps/g";
 import { queue } from "./apps/q";
 import { threads } from "./apps/t";
 import { fuse } from "./apps/f";
-import { raycast } from "./apps/r";
+import { raycast, reddit } from "./apps/r";
 import { shopify, showcase, slack } from "./apps/s";
 import { discord } from "./apps/d";
 import { opal } from "./apps/o";
@@ -76,6 +76,7 @@ export const apps: App[] = [
   queue,
   // R
   raycast,
+  reddit,
   // -----------------------
   // S
   shopify,

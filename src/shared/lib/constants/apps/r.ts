@@ -1,4 +1,5 @@
 import RaycastImage from "@/assets/images/apps/raycast.png";
+import RedditImage from "@/assets/images/apps/reddit.png";
 import { App } from "../apps-list";
 
 export const raycast: App = {
@@ -12,6 +13,17 @@ export const raycast: App = {
     {
       name: "Paywall screen animation",
       href: "/raycast/paywall",
+    },
+  ],
+};
+
+export const reddit: App = {
+  name: "Reddit",
+  imageSource: RedditImage,
+  animations: [
+    {
+      name: "Pull to refresh animation",
+      href: "/reddit/home",
     },
   ],
 };
