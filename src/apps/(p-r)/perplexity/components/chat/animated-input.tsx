@@ -131,7 +131,7 @@ const AnimatedInput = () => {
 
   return (
     <>
-      <Animated.View style={[rRootContainerStyle]} className="mx-3 pt-2 mt-auto">
+      <Animated.View style={rRootContainerStyle} className="mx-3 pt-2 mt-auto">
         <View
           className="flex-row items-center"
           style={{ gap: INPUT_NEW_CHAT_BTN_GAP }}
@@ -212,7 +212,7 @@ const AnimatedInput = () => {
         </View>
       </Animated.View>
 
-      <Animated.View className="absolute left-0 right-0 bottom-[12px]" style={[rDynamicInputStyle]}>
+      <Animated.View className="absolute left-0 right-0 bottom-[12px]" style={rDynamicInputStyle}>
         <DynamicInput
           ref={dynamicInputRef}
           value={value}
