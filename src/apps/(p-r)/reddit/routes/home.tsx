@@ -1,11 +1,25 @@
-import { View, Pressable, Text, StyleSheet, Animated } from "react-native";
+import { View, Pressable, Text, StyleSheet } from "react-native";
+import { useState } from "react";
 import { Home as HomeIcon, Plus, Bell, User, Menu, Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { createMockData, renderListItem } from "../components/mock-data";
+import { WithPullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
+import Animated from "react-native-reanimated";
+import LoadingIndicator from "../components/loading-indicator";
 
 const Home = () => {
   const insets = useSafeAreaInsets();
+  
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refresh = async () => {
+    setRefreshing(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setRefreshing(false);
+  };
+
   return (
     <View className="flex-1 bg-grey">
       <View
@@ -38,21 +52,33 @@ const Home = () => {
         </View>
       </View>
 
-      <Animated.FlatList
-        data={createMockData(10)}
-        keyExtractor={(item, index) => `${item}-${index}`}
-        renderItem={renderListItem}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{ borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "grey" }}
-          />
-        )}
-        keyboardShouldPersistTaps="always"
-        keyboardDismissMode="none"
-        showsVerticalScrollIndicator={false}
-        contentContainerClassName="bg-white"
-      />
-
+      <WithPullToRefresh
+        refreshComponent={<LoadingIndicator />}
+        refreshComponentContainerClassName="bg-neutral-100 justify-start overflow-hidden"
+        refreshThreshold={400}
+        refreshing={refreshing}
+        onRefresh={refresh}
+        refreshViewBaseHeight={250}
+        hapticFeedbackDirection="to-bottom"
+        backAnimationDuration={700}
+      >
+        <Animated.FlatList
+          data={createMockData(10)}
+          keyExtractor={(item, index) => `${item}-${index}`}
+          renderItem={renderListItem}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomColor: "grey",
+              }}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="bg-white"
+          scrollEnabled={!refreshing}
+        />
+      </WithPullToRefresh>
       <View
         className="px-4 flex-row bg-white items-center justify-between mt-auto"
         style={{ paddingBottom: insets.bottom }}
