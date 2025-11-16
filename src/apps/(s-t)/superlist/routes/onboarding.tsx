@@ -1,6 +1,7 @@
 import { ChevronDown, Mail, UserRound } from "lucide-react-native";
 import { useCallback, useRef, useState } from "react";
-import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
+import { Pressable, Text, useWindowDimensions, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -56,10 +57,9 @@ export const Onboarding = () => {
   const insets = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
 
-  const horizontalListRef = useRef<FlatList>(null);
+  const horizontalListRef = useRef<FlatList<OnboardingSlide>>(null);
 
-  // Current slide index in the carousel (1-based due to cloned slides)
-  const animatedSlideIndex = useSharedValue(1);
+  const animatedSlideIndex = useSharedValue(0);
   // Horizontal scroll offset for slide animations
   const scrollOffsetX = useSharedValue(0);
   // Whether user is currently dragging the carousel

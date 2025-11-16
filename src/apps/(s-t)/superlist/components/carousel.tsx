@@ -3,14 +3,18 @@ import { Platform, useWindowDimensions, ViewToken } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SlideItem } from "../components/slide-item";
 import Pagination from "./pagination";
-import { CarouselProps } from "./lib/types";
+import { CarouselProps, OnboardingSlide } from "./lib/types";
 import { scheduleOnRN } from "react-native-worklets";
+import { FlatList } from "react-native-gesture-handler";
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<OnboardingSlide>);
 
 const Carousel: FC<CarouselProps> = ({
   setCurrentSlideIndex,
@@ -24,10 +28,12 @@ const Carousel: FC<CarouselProps> = ({
   animatedSlideIndex,
   topCarouselOffset,
 }) => {
+  const [isHorizontalScrollEnabled, setIsHorizontalScrollEnabled] = useState(false);
+
+  const data = useMemo(() => [...SLIDES, SLIDES.at(0)!], []);
+
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-
-  const data = useMemo(() => [SLIDES.at(-1)!, ...SLIDES, SLIDES.at(0)!], []);
 
   const onViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -72,11 +78,24 @@ const Carousel: FC<CarouselProps> = ({
     };
   });
 
-  const [horizontalScrollEnabled, setHorizontalScrollEnabled] = useState(false);
-  useDerivedValue(() => {
-    const atTop = translateY.get() <= -topCarouselOffset;
-    scheduleOnRN(setHorizontalScrollEnabled, !atTop);
-  }, []);
+  const isExpanded = useDerivedValue(() => {
+    if (translateY.get() <= -topCarouselOffset / 2) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  useAnimatedReaction(
+    () => isExpanded.get(),
+    (isExpanded) => {
+      if (isExpanded) {
+        scheduleOnRN(setIsHorizontalScrollEnabled, false);
+      } else {
+        scheduleOnRN(setIsHorizontalScrollEnabled, true);
+      }
+    }
+  );
 
   return (
     <Animated.View
@@ -89,7 +108,7 @@ const Carousel: FC<CarouselProps> = ({
         rContainerStyle,
       ]}
     >
-      <Animated.FlatList
+      <AnimatedFlatList
         ref={horizontalListRef}
         data={data}
         renderItem={({ item, index }) => (
@@ -97,7 +116,7 @@ const Carousel: FC<CarouselProps> = ({
         )}
         horizontal
         pagingEnabled
-        initialScrollIndex={1}
+        initialScrollIndex={0}
         getItemLayout={(_, index) => ({
           length: screenWidth,
           offset: screenWidth * index,
@@ -107,34 +126,18 @@ const Carousel: FC<CarouselProps> = ({
         onScroll={scrollHandler}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
-        onStartReached={() => {
-          if (Platform.OS === "android") {
-            // Android needs delay to prevent scroll conflict during momentum
-            setTimeout(() => {
-              horizontalListRef?.current?.scrollToIndex({
-                index: data.length - 2,
-                animated: false,
-              });
-            }, 100);
-          } else {
-            horizontalListRef?.current?.scrollToIndex({
-              index: data.length - 2,
-              animated: false,
-            });
-          }
-        }}
         onEndReached={() => {
           if (Platform.OS === "android") {
             // Android needs delay to prevent scroll conflict during momentum
             setTimeout(() => {
-              horizontalListRef?.current?.scrollToIndex({ index: 1, animated: false });
+              horizontalListRef?.current?.scrollToIndex({ index: 0, animated: false });
             }, 100);
           } else {
-            horizontalListRef?.current?.scrollToIndex({ index: 1, animated: false });
+            horizontalListRef?.current?.scrollToIndex({ index: 0, animated: false });
           }
         }}
         showsHorizontalScrollIndicator={false}
-        scrollEnabled={data.length > 3 && horizontalScrollEnabled}
+        scrollEnabled={isHorizontalScrollEnabled}
       />
       <Animated.View style={rPaginationStyle}>
         <Pagination

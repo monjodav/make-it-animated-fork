@@ -31,13 +31,17 @@ export const Pagination: FC<PaginationProps> = ({
   const totalPaginationWidth = screenWidth - HORIZONTAL_PADDING;
   const totalGaps = (slides.length - 1) * GAP;
 
-  const totalItems = slides.length + 2;
+  const totalItems = slides.length + 2; // We add here because we have 2 extra widths for the active item
   const itemWidth = (totalPaginationWidth - totalGaps) / totalItems;
+
   const inactiveWidth = itemWidth;
   const activeWidth = itemWidth * 3;
 
   return (
-    <View className="flex-row items-center justify-center pb-4 px-20" style={{ gap: GAP }}>
+    <View
+      className="flex-row items-center justify-center pb-4 px-20"
+      style={{ gap: GAP, paddingHorizontal: HORIZONTAL_PADDING / 2 }}
+    >
       {slides.map((slide, index) => (
         <PaginationItem
           key={index}

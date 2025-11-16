@@ -5,7 +5,7 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { OnboardingSlide } from "./lib/types";
 
 type SlideItemProps = {
@@ -16,29 +16,19 @@ type SlideItemProps = {
 };
 
 export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffsetX }) => {
-  const [itemHeight, setItemHeight] = useState(320);
-
   const rStyle = useAnimatedStyle(() => {
-    const inputRange = [width * index, width * (index + 1)];
-    const rotate = interpolate(scrollOffsetX.get(), inputRange, [0, -3], Extrapolation.CLAMP);
+    const inputRange = [width * (index - 1), width * index, width * (index + 1)];
+
+    const rotate = interpolate(scrollOffsetX.get(), inputRange, [2, 0, -2], Extrapolation.CLAMP);
+    const translateY = interpolate(scrollOffsetX.get(), inputRange, [4, 0, 4], Extrapolation.CLAMP);
 
     return {
-      transform: [
-        { translateX: width / 2 },
-        { translateY: itemHeight / 2 },
-        { rotate: `${rotate}deg` },
-        { translateX: -width / 2 },
-        { translateY: -itemHeight / 2 },
-      ],
+      transform: [{ translateY }, { rotate: `${rotate}deg` }],
     };
   }, [scrollOffsetX, index, width]);
 
   return (
-    <Animated.View
-      className="px-7 py-5"
-      style={[{ width }, rStyle]}
-      onLayout={(e) => setItemHeight(e.nativeEvent.layout.height)}
-    >
+    <Animated.View className="px-7 py-5" style={[{ width }, rStyle]}>
       <View
         className="flex-1 items-center p-20 px-8 rounded-3xl"
         style={{

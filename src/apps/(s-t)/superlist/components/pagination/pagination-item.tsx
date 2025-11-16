@@ -43,7 +43,7 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   const slideProgress = useSharedValue(0);
 
   const barWidth = useDerivedValue(() => {
-    const adjustedIndex = animatedSlideIndex.get() - 1;
+    const adjustedIndex = animatedSlideIndex.get();
     // Normal interpolation for the current dash
     let width = interpolate(
       adjustedIndex,
@@ -75,31 +75,6 @@ export const PaginationItem: FC<PaginationItemProps> = ({
       width = adjustedIndex >= totalSlides - 1 ? loopToFirstWidth : width;
     }
 
-    // Handle looping from first to last (scrolling left on first slide)
-    if (index === 0) {
-      const loopToLastWidth = interpolate(
-        adjustedIndex,
-        [-1, 0],
-        [inactiveWidth, activeWidth],
-        Extrapolation.CLAMP
-      );
-
-      if (adjustedIndex < 0) {
-        width = loopToLastWidth;
-      }
-    }
-
-    if (index === totalSlides - 1) {
-      const loopFromFirstWidth = interpolate(
-        adjustedIndex,
-        [-1, 0],
-        [activeWidth, inactiveWidth],
-        Extrapolation.CLAMP
-      );
-
-      width = adjustedIndex < 0 ? loopFromFirstWidth : width;
-    }
-
     return width;
   });
 
@@ -123,7 +98,7 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   }, []);
 
   useEffect(() => {
-    if (currentSlideIndex - 1 === index) {
+    if (currentSlideIndex === index) {
       slideProgress.set(0);
       slideProgress.set(withTiming(1, { duration: slideDuration }));
     } else {
@@ -135,7 +110,7 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   useAnimatedReaction(
     () => ({ isDragging: isDragging.get() }),
     ({ isDragging }) => {
-      if (!isDragging && currentSlideIndex - 1 === index && slideProgress.get() > 0) {
+      if (!isDragging && currentSlideIndex === index && slideProgress.get() > 0) {
         slideProgress.set(0);
         slideProgress.set(withTiming(1, { duration: slideDuration }));
       }
@@ -145,7 +120,7 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   useAnimatedReaction(
     () => ({ slideProgress: slideProgress.get() }),
     ({ slideProgress }) => {
-      if (slideProgress === 1 && currentSlideIndex === totalSlides) {
+      if (slideProgress === 1 && currentSlideIndex === totalSlides - 1) {
         isDragging.set(true);
         translateY.set(
           withTiming(-topCarouselOffset, { duration: 200, easing: Easing.inOut(Easing.quad) })
