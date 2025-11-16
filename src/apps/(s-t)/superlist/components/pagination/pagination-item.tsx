@@ -42,11 +42,16 @@ export const PaginationItem: FC<PaginationItemProps> = ({
   translateY,
   topCarouselOffset,
 }) => {
+  // Progress from 0 to 1 for the active slide's progress bar animation
   const slideProgress = useSharedValue(0);
 
+  // Interpolates pagination bar width based on scroll position
+  // Active bar expands to 3x width, inactive bars shrink to base width
   const barWidth = useDerivedValue(() => {
     const adjustedIndex = animatedSlideIndex.get();
-    // Normal interpolation for the current dash
+    // Normal interpolation: expands when current slide is active, shrinks when adjacent
+    // Input range: [prev slide, current slide, next slide]
+    // Output: [inactiveWidth, activeWidth, inactiveWidth] - creates smooth width transition
     let width = interpolate(
       adjustedIndex,
       [index - 1, index, index + 1],
@@ -54,8 +59,11 @@ export const PaginationItem: FC<PaginationItemProps> = ({
       Extrapolation.CLAMP
     );
 
-    // Handle looping from last to first (scrolling right on last slide)
+    // Handle infinite loop: when scrolling from last slide (index 4) to first (index 0)
+    // The carousel duplicates the first slide at the end, so index 5 = slide 0
     if (index === 0) {
+      // When at last slide (index 4) transitioning to duplicated first (index 5)
+      // First pagination bar should expand smoothly
       const loopFromLastWidth = interpolate(
         adjustedIndex,
         [totalSlides - 1, totalSlides],
@@ -67,6 +75,7 @@ export const PaginationItem: FC<PaginationItemProps> = ({
     }
 
     if (index === totalSlides - 1) {
+      // When transitioning from last slide to duplicated first, last bar should shrink
       const loopToFirstWidth = interpolate(
         adjustedIndex,
         [totalSlides - 1, totalSlides],
@@ -86,22 +95,30 @@ export const PaginationItem: FC<PaginationItemProps> = ({
     };
   }, []);
 
+  // Animated style for the white progress bar that fills the active pagination indicator
   const rBarProgressStyle = useAnimatedStyle(() => {
+    // Cancel auto-advance progress when user manually drags
     if (isDragging.get()) {
       cancelAnimation(slideProgress);
     }
 
+    // Interpolate progress (0-1) to percentage width (0-100%)
+    // Creates the filling effect as slide auto-advances
     const progressWidth = interpolate(slideProgress.get(), [0, 1], [0, 100], Extrapolation.CLAMP);
 
     return {
       width: `${progressWidth}%`,
+      // Fade in progress bar only when pagination indicator is expanded (active)
+      // Prevents progress bar from showing on inactive indicators
       opacity: interpolate(barWidth.get(), [0, activeWidth], [0, 1], Extrapolation.CLAMP),
     };
   }, []);
 
+  // Start progress animation when this slide becomes active
   useEffect(() => {
     if (currentSlideIndex === index) {
       slideProgress.set(0);
+      // Animate progress bar from 0 to 1 over slideDuration (2000-3000ms)
       slideProgress.set(withTiming(1, { duration: slideDuration }));
     } else {
       slideProgress.set(0);
@@ -109,6 +126,8 @@ export const PaginationItem: FC<PaginationItemProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSlideIndex]);
 
+  // Resume progress animation after user finishes dragging
+  // Prevents progress from restarting mid-drag, ensuring smooth UX
   useAnimatedReaction(
     () => ({ isDragging: isDragging.get() }),
     ({ isDragging }) => {
@@ -119,15 +138,18 @@ export const PaginationItem: FC<PaginationItemProps> = ({
     }
   );
 
+  // Auto-advance to next slide when progress completes, or expand carousel on last slide
   useAnimatedReaction(
     () => ({ slideProgress: slideProgress.get() }),
     ({ slideProgress }) => {
+      // On last slide completion, expand carousel upward to reveal sign-in buttons
       if (slideProgress === 1 && currentSlideIndex === totalSlides - 1) {
         isDragging.set(true);
         translateY.set(
           withTiming(-topCarouselOffset, { duration: 200, easing: Easing.inOut(Easing.quad) })
         );
       }
+      // Auto-advance to next slide when progress completes (unless user is dragging)
       if (!isDragging.get() && slideProgress === 1) {
         scheduleOnRN(handleScrollToIndex, currentSlideIndex + 1);
       }

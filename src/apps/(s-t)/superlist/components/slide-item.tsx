@@ -18,10 +18,18 @@ type SlideItemProps = {
 };
 
 export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffsetX }) => {
+  // Animated style for slide card transforms during horizontal scroll
+  // Creates parallax-like effect: cards rotate and translate vertically as user swipes
   const rStyle = useAnimatedStyle(() => {
+    // Input range: [previous slide center, current slide center, next slide center]
+    // Each slide is screenWidth pixels wide, so centers are at width * index
     const inputRange = [width * (index - 1), width * index, width * (index + 1)];
 
+    // Rotation interpolation: card tilts ±2deg when adjacent to center
+    // Creates depth perception as cards rotate away from center position
     const rotate = interpolate(scrollOffsetX.get(), inputRange, [2, 0, -2], Extrapolation.CLAMP);
+    // Vertical translation: card moves ±4px vertically when adjacent
+    // Combined with rotation, creates 3D card stack effect
     const translateY = interpolate(scrollOffsetX.get(), inputRange, [4, 0, 4], Extrapolation.CLAMP);
 
     return {

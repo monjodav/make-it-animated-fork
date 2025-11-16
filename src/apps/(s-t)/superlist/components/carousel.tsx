@@ -16,6 +16,9 @@ import { FlatList } from "react-native-gesture-handler";
 
 // superlist-onboarding-flow-animation 🔽
 
+// Create animated version of FlatList to enable scroll-driven animations
+// Required for useAnimatedScrollHandler to work with FlatList scroll events
+// See: https://docs.swmansion.com/react-native-reanimated/docs/core/createAnimatedComponent
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<OnboardingSlide>);
 
 const Carousel: FC<CarouselProps> = ({
@@ -30,8 +33,12 @@ const Carousel: FC<CarouselProps> = ({
   animatedSlideIndex,
   topCarouselOffset,
 }) => {
+  // Disable horizontal scroll when carousel is expanded (swiped up)
+  // Prevents scroll conflicts between vertical pan gesture and horizontal carousel scroll
   const [isHorizontalScrollEnabled, setIsHorizontalScrollEnabled] = useState(false);
 
+  // Duplicate first slide at end to enable infinite loop scrolling
+  // When user reaches duplicated slide, we instantly jump back to real first slide
   const data = useMemo(() => [...SLIDES, SLIDES.at(0)!], []);
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -50,6 +57,8 @@ const Carousel: FC<CarouselProps> = ({
     [setCurrentSlideIndex]
   );
 
+  // Viewability config: only trigger when slide is 100% visible (pagingEnabled ensures this)
+  // minimumViewTime: 0 means immediate callback, no delay needed for paged scrolling
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 100,
     minimumViewTime: 0,
@@ -62,12 +71,17 @@ const Carousel: FC<CarouselProps> = ({
     });
   }, []);
 
+  // Animated container style: translates carousel vertically for swipe-up gesture
+  // translateY: 0 = collapsed (default), -topCarouselOffset = fully expanded
   const rContainerStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: translateY.get() }],
     };
   });
 
+  // Pagination fade-out animation: hides pagination as carousel expands upward
+  // Fades out in first 25% of expansion (0 to -57.5px) for smooth transition
+  // pointerEvents: "none" prevents pagination taps when carousel is expanded
   const rPaginationStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
@@ -80,6 +94,8 @@ const Carousel: FC<CarouselProps> = ({
     };
   });
 
+  // Determine if carousel is expanded past midpoint threshold
+  // Used to disable horizontal scrolling when carousel is mostly expanded
   const isExpanded = useDerivedValue(() => {
     if (translateY.get() <= -topCarouselOffset / 2) {
       return true;
@@ -88,6 +104,8 @@ const Carousel: FC<CarouselProps> = ({
     }
   });
 
+  // Disable horizontal scroll when expanded to prevent gesture conflicts
+  // Vertical pan gesture takes priority when carousel is swiped up
   useAnimatedReaction(
     () => isExpanded.get(),
     (isExpanded) => {
@@ -124,13 +142,18 @@ const Carousel: FC<CarouselProps> = ({
           offset: screenWidth * index,
           index,
         })}
+        // 16ms throttle = ~60fps, ensures smooth scroll-driven animations
+        // Lower values (1-4ms) cause performance issues, higher values (32ms+) feel laggy
         scrollEventThrottle={16}
         onScroll={scrollHandler}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
+        // Infinite loop: when user reaches duplicated first slide (last item)
+        // Instantly jump back to real first slide without animation
         onEndReached={() => {
           if (Platform.OS === "android") {
-            // Android needs delay to prevent scroll conflict during momentum
+            // Android needs delay to prevent scroll conflict during momentum scrolling
+            // Without delay, scrollToIndex can conflict with ongoing scroll momentum
             setTimeout(() => {
               horizontalListRef?.current?.scrollToIndex({ index: 0, animated: false });
             }, 100);

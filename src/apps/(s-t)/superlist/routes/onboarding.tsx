@@ -50,7 +50,11 @@ export const SLIDES: OnboardingSlide[] = [
   },
 ];
 
+// Distance in pixels to translate carousel upward when fully expanded
+// Reveals sign-in buttons below carousel
 const TOP_CAROUSEL_OFFSET = 230;
+// Minimum swipe distance (in pixels) to trigger expand/collapse transition
+// Prevents accidental toggles from small finger movements
 const SWIPE_UP_THRESHOLD = 20;
 
 export const Onboarding = () => {
@@ -61,26 +65,39 @@ export const Onboarding = () => {
 
   const horizontalListRef = useRef<FlatList<OnboardingSlide>>(null);
 
+  // Continuous slide index (0.0, 0.5, 1.0, 1.5...) derived from scrollOffsetX / screenWidth
+  // Enables smooth pagination width interpolation between discrete slide indices
   const animatedSlideIndex = useSharedValue(0);
-  // Horizontal scroll offset for slide animations
+  // Horizontal scroll offset in pixels, drives slide card animations (rotate/translateY)
+  // Updated via scrollHandler on every scroll event (throttled to 16ms)
   const scrollOffsetX = useSharedValue(0);
-  // Whether user is currently dragging the carousel
+  // Prevents auto-advance and progress animations during user interaction
+  // Set to true on drag start, false on drag end
   const isDragging = useSharedValue(false);
-  // Vertical translation for swipe up gesture
+  // Vertical translation for swipe-up gesture: 0 = collapsed, -TOP_CAROUSEL_OFFSET = expanded
+  // Negative values move carousel upward, revealing content below
   const translateY = useSharedValue(0);
-  // Track gesture start position to accumulate deltas correctly
+  // Stores translateY value at gesture start, used to calculate relative movement
+  // Critical for pan gesture: accumulates translation from gesture start, not absolute position
   const gestureStartY = useSharedValue(0);
 
+  // Scroll handler: updates shared values for scroll-driven animations
+  // Runs on UI thread (worklet), enabling 60fps animations without JS bridge overhead
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag: () => {
+      // Disable auto-advance when user starts dragging
       isDragging.set(true);
     },
     onScroll: (event) => {
       const offsetX = event.contentOffset.x;
+      // Update scroll position for slide card animations (rotate/translateY)
       scrollOffsetX.set(offsetX);
+      // Calculate continuous slide index for smooth pagination width interpolation
+      // Example: offsetX = 150px, screenWidth = 375px → animatedSlideIndex = 0.4
       animatedSlideIndex.set(offsetX / screenWidth);
     },
     onEndDrag: () => {
+      // Re-enable auto-advance and resume progress animations
       isDragging.set(false);
     },
   });
@@ -92,50 +109,67 @@ export const Onboarding = () => {
     });
   }, []);
 
+  // Single tap gesture: advances to next slide when carousel is collapsed
+  // maxDuration: 250ms ensures quick taps register, longer presses ignored
   const singleTap = Gesture.Tap()
     .maxDuration(250)
     .onStart(() => {
+      // Only advance if carousel is fully collapsed (translateY >= 0)
       if (translateY.get() < 0) return;
       scheduleOnRN(handleScrollToIndex, currentSlideIndex + 1);
       isDragging.set(false);
     });
 
+  // Pan gesture: handles vertical swipe-up/down to expand/collapse carousel
+  // Uses damping factor (÷4) for smoother, more controlled feel
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       isDragging.set(true);
-      // Remember where we started this gesture
+      // Store starting position to calculate relative movement
+      // Critical: gestureStartY captures translateY at gesture start, not absolute 0
       gestureStartY.set(translateY.get());
     })
     .onUpdate((e) => {
-      // Forbid further swipe up when container is already at the top offset
+      // Prevent overscroll: block upward swipe when already at max expansion
       if (translateY.get() <= -TOP_CAROUSEL_OFFSET && e.translationY < 0) {
         return;
       }
 
-      // Calculate new position relative to gesture start, with a damping factor for a nicer feel
+      // Calculate new position: start position + gesture delta with damping
+      // Damping factor (÷4): reduces sensitivity, creates smoother drag feel
+      // e.translationY: positive = swipe down, negative = swipe up
       const proposed = gestureStartY.get() + e.translationY / 4;
-      // Clamp between fully down (0) and fully up (-TOP_CAROUSEL_OFFSET)
+      // Clamp between bounds: 0 (collapsed) to -TOP_CAROUSEL_OFFSET (expanded)
       const clamped = Math.min(0, Math.max(proposed, -TOP_CAROUSEL_OFFSET));
       translateY.set(clamped);
     })
     .onEnd((e) => {
       const currentY = translateY.get();
 
+      // Determine if carousel is currently expanded (negative translateY)
       const isExpanded = currentY < 0;
 
+      // Check if user swiped up enough to trigger transition
+      // Compares absolute values: if moved up by threshold, expand
       const isTopThresholdReached =
         Math.abs(gestureStartY.get()) - Math.abs(currentY) > SWIPE_UP_THRESHOLD;
 
+      // Check if user swiped down enough to trigger collapse
       const isBottomThresholdReached =
         Math.abs(currentY) - Math.abs(gestureStartY.get()) > SWIPE_UP_THRESHOLD;
 
+      // Determine target position based on swipe direction and threshold
+      // If swiped up past threshold: expand (go to 0 or stay at -TOP_CAROUSEL_OFFSET)
       const expandedPositionMap = isTopThresholdReached ? 0 : -TOP_CAROUSEL_OFFSET;
+      // If swiped down past threshold: collapse (go to -TOP_CAROUSEL_OFFSET or stay at 0)
       const collapsedPositionMap = isBottomThresholdReached ? -TOP_CAROUSEL_OFFSET : 0;
 
       const target = isExpanded ? expandedPositionMap : collapsedPositionMap;
 
+      // Animate to target with spring physics for natural feel
       translateY.set(
         withSpring(target, {}, (finished) => {
+          // Re-enable interactions only when fully collapsed
           if (finished && target === 0) {
             isDragging.set(false);
           }
@@ -143,6 +177,9 @@ export const Onboarding = () => {
       );
     });
 
+  // Fade in sign-in buttons block as carousel expands upward
+  // Input: translateY from 0 (collapsed) to -TOP_CAROUSEL_OFFSET (expanded)
+  // Output: opacity from 0 (hidden) to 1 (visible)
   const rButtonsBlockStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
@@ -154,6 +191,8 @@ export const Onboarding = () => {
     };
   });
 
+  // "Sign Up / Sign In" button: slides up 40px as carousel expands
+  // Creates staggered reveal effect with "Continue with email" button
   const rSignUpStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -169,6 +208,8 @@ export const Onboarding = () => {
     };
   });
 
+  // "Continue with email" button: slides down from 40px offset to 0 as carousel expands
+  // Starts below final position, creating upward slide-in animation
   const rContinueWithEmailStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -184,6 +225,8 @@ export const Onboarding = () => {
     };
   });
 
+  // Gradient overlay: fades in as carousel expands to add depth/darkening effect
+  // Helps separate carousel from sign-in buttons below
   const rGradientStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(
@@ -195,6 +238,8 @@ export const Onboarding = () => {
     };
   });
 
+  // Collapse carousel when user taps chevron down button
+  // Smoothly animates translateY back to 0 (collapsed position)
   const slideBottomHandler = () => {
     isDragging.set(false);
     translateY.set(

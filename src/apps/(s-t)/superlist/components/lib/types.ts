@@ -21,10 +21,15 @@ export type CarouselProps = {
   horizontalListRef: React.RefObject<FlatList<OnboardingSlide> | null>;
   scrollHandler: (event: any) => void;
   currentSlideIndex: number;
+  // Vertical translation for swipe-up gesture: 0 = collapsed, -topCarouselOffset = expanded
   translateY: SharedValue<number>;
+  // Horizontal scroll position in pixels, drives slide card animations (rotate/translateY)
   scrollOffsetX: SharedValue<number>;
+  // Prevents auto-advance during user interaction, resets progress animations
   isDragging: SharedValue<boolean>;
+  // Continuous slide index (0, 1, 2...) derived from scrollOffsetX, enables smooth pagination width interpolation
   animatedSlideIndex: SharedValue<number>;
+  // Distance in pixels to translate carousel up when expanded (230px)
   topCarouselOffset: number;
 };
 
