@@ -26,8 +26,16 @@ export const perplexity: App = {
       href: "/perplexity/home",
     },
     {
+      name: "Text input freeze on modal open animation",
+      href: "/perplexity/home",
+    },
+    {
       name: "Chat input on focus animation",
       href: "/perplexity/chat",
+    },
+    {
+      name: "Home header animation",
+      href: "/perplexity/home",
     },
   ],
 };

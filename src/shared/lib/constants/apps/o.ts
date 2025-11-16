@@ -17,5 +17,9 @@ export const opal: App = {
       name: "Schedule timer tabs transition animation",
       href: "/opal/schedule",
     },
+    {
+      name: "Set timer slider animation",
+      href: "/opal/home",
+    },
   ],
 };

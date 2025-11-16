@@ -4,9 +4,9 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { App } from "../lib/constants/apps-list";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import * as Haptics from "expo-haptics";
-import { linear } from "../lib/constants/apps/l";
-import { appStore } from "../lib/constants/apps/a";
+import { longevity } from "../lib/constants/apps/l";
 import { perplexity } from "../lib/constants/apps/p";
+import { opal } from "../lib/constants/apps/o";
 
 type AnimationItemProps = {
   label: string;
@@ -53,17 +53,10 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
         label={getItemProps(perplexity, 1).label}
         onPress={getItemProps(perplexity, 1).onPress}
       />
+      <AnimationItem label={getItemProps(opal, 3).label} onPress={getItemProps(opal, 3).onPress} />
       <AnimationItem
-        label={getItemProps(perplexity, 0).label}
-        onPress={getItemProps(perplexity, 0).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(appStore, 0).label}
-        onPress={getItemProps(appStore, 0).onPress}
-      />
-      <AnimationItem
-        label={getItemProps(linear, 2).label}
-        onPress={getItemProps(linear, 2).onPress}
+        label={getItemProps(longevity, 0).label}
+        onPress={getItemProps(longevity, 0).onPress}
       />
     </View>
   );
