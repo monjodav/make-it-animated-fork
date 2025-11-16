@@ -35,17 +35,24 @@ export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffset
 
   return (
     <Animated.View
-      className="p-7 pb-0"
-      style={[{ width, borderCurve: "continuous" }, rStyle]}
-      onLayout={(e) => {
-        setItemHeight(e.nativeEvent.layout.height);
-      }}
+      className="px-7 py-5"
+      style={[{ width }, rStyle]}
+      onLayout={(e) => setItemHeight(e.nativeEvent.layout.height)}
     >
       <View
-        className="flex-1 items-center justify-center rounded-3xl"
-        style={{ backgroundColor: item.bgColor }}
+        className="flex-1 items-center p-20 px-8 rounded-3xl"
+        style={{
+          backgroundColor: item.bgColor,
+          shadowColor: "black",
+          shadowOffset: { width: 0, height: 12 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 3,
+          borderCurve: "continuous",
+        }}
       >
-        <Text className="text-white">Slide {index}</Text>
+        <Text className="text-white text-4xl font-bold text-center mb-20">{item.title}</Text>
+        <View className="w-3/4 aspect-[1/1.3] rounded-3xl bg-white/20" />
       </View>
     </Animated.View>
   );

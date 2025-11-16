@@ -1,5 +1,5 @@
-import { FC, use, useCallback, useDebugValue, useRef, useState } from "react";
-import { Platform, ViewToken } from "react-native";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
+import { Platform, useWindowDimensions, ViewToken } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -16,18 +16,19 @@ const Carousel: FC<CarouselProps> = ({
   setCurrentSlideIndex,
   horizontalListRef,
   scrollHandler,
-  data,
   currentSlideIndex,
   translateY,
   scrollOffsetX,
-  screenHeight,
-  screenWidth,
   SLIDES,
   isDragging,
   animatedSlideIndex,
   topCarouselOffset,
 }) => {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+
+  const data = useMemo(() => [SLIDES.at(-1)!, ...SLIDES, SLIDES.at(0)!], []);
+
   const onViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
       if (viewableItems.length > 0) {
@@ -61,7 +62,12 @@ const Carousel: FC<CarouselProps> = ({
 
   const rPaginationStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(translateY.get(), [0, -topCarouselOffset], [1, 0], Extrapolation.CLAMP),
+      opacity: interpolate(
+        translateY.get(),
+        [0, -topCarouselOffset * 0.25],
+        [1, 0],
+        Extrapolation.CLAMP
+      ),
       pointerEvents: translateY.get() === 0 ? "auto" : "none",
     };
   });
@@ -130,7 +136,7 @@ const Carousel: FC<CarouselProps> = ({
         showsHorizontalScrollIndicator={false}
         scrollEnabled={data.length > 3 && horizontalScrollEnabled}
       />
-      <Animated.View style={[rPaginationStyle]}>
+      <Animated.View style={rPaginationStyle}>
         <Pagination
           slides={SLIDES}
           currentSlideIndex={currentSlideIndex}

@@ -1,5 +1,5 @@
 import { ChevronDown, Mail, UserRound } from "lucide-react-native";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { FlatList, Pressable, Text, useWindowDimensions, View } from "react-native";
 import Animated, {
   Extrapolation,
@@ -7,6 +7,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,40 +17,46 @@ import Carousel from "../components/carousel";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { scheduleOnRN } from "react-native-worklets";
+import { LinearGradient } from "expo-linear-gradient";
 
 export const SLIDES: OnboardingSlide[] = [
   {
     bgColor: "#7872E0",
     duration: 3000,
+    title: "Create tasks at the speed of thought",
   },
   {
     bgColor: "#FB5A44",
     duration: 3000,
+    title: "Take notes and transform thoughts into action",
   },
   {
     bgColor: "#7872E0",
     duration: 3000,
+    title: "Start your next project in seconds using AI templates",
   },
   {
     bgColor: "#2188DA",
     duration: 2000,
+    title: "Organize your team with shared lists and tasks",
   },
   {
     bgColor: "#7872E0",
     duration: 3000,
+    title: "Get things done with a bit more fun",
   },
 ];
 
 const TOP_CAROUSEL_OFFSET = 230;
+const SWIPE_UP_THRESHOLD = 20;
 
 export const Onboarding = () => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
 
   const insets = useSafeAreaInsets();
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-  const horizontalListRef = useRef<FlatList>(null);
+  const { width: screenWidth } = useWindowDimensions();
 
-  const data = useMemo(() => [SLIDES.at(-1)!, ...SLIDES, SLIDES.at(0)!], []);
+  const horizontalListRef = useRef<FlatList>(null);
 
   // Current slide index in the carousel (1-based due to cloned slides)
   const animatedSlideIndex = useSharedValue(1);
@@ -110,16 +117,24 @@ export const Onboarding = () => {
       translateY.set(clamped);
     })
     .onEnd((e) => {
-      // Decide snap based on where we ended relative to halfway between top and bottom
-      const halfway = -TOP_CAROUSEL_OFFSET / 2;
       const currentY = translateY.get();
-      const target = currentY < halfway ? -TOP_CAROUSEL_OFFSET : 0;
+
+      const isExpanded = currentY < 0;
+
+      const isTopThresholdReached =
+        Math.abs(gestureStartY.get()) - Math.abs(currentY) > SWIPE_UP_THRESHOLD;
+
+      const isBottomThresholdReached =
+        Math.abs(currentY) - Math.abs(gestureStartY.get()) > SWIPE_UP_THRESHOLD;
+
+      const expandedPositionMap = isTopThresholdReached ? 0 : -TOP_CAROUSEL_OFFSET;
+      const collapsedPositionMap = isBottomThresholdReached ? -TOP_CAROUSEL_OFFSET : 0;
+
+      const target = isExpanded ? expandedPositionMap : collapsedPositionMap;
 
       translateY.set(
-        withTiming(target, { duration: 300 }, (finished) => {
+        withSpring(target, {}, (finished) => {
           if (finished && target === 0) {
-            // Clear dragging state when animation finishes
-
             isDragging.set(false);
           }
         })
@@ -167,6 +182,17 @@ export const Onboarding = () => {
     };
   });
 
+  const rGradientStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        translateY.get(),
+        [0, -TOP_CAROUSEL_OFFSET],
+        [0, 1],
+        Extrapolation.CLAMP
+      ),
+    };
+  });
+
   const slideBottomHandler = () => {
     isDragging.set(false);
     translateY.set(
@@ -178,7 +204,7 @@ export const Onboarding = () => {
 
   return (
     <GestureDetector gesture={Gesture.Race(panGesture, singleTap)}>
-      <View className="flex-1 bg-slate-900" style={[{ paddingBottom: insets.bottom + 10 }]}>
+      <View className="flex-1 bg-slate-900" style={{ paddingBottom: insets.bottom + 10 }}>
         <Animated.View className="mt-auto" style={[rButtonsBlockStyle]}>
           <Pressable className="self-center mb-6" onPress={slideBottomHandler}>
             <ChevronDown size={26} color="grey" />
@@ -221,20 +247,24 @@ export const Onboarding = () => {
         </Pressable>
 
         <Carousel
+          SLIDES={SLIDES}
+          currentSlideIndex={currentSlideIndex}
           setCurrentSlideIndex={setCurrentSlideIndex}
+          animatedSlideIndex={animatedSlideIndex}
           horizontalListRef={horizontalListRef}
           scrollHandler={scrollHandler}
-          data={data}
-          currentSlideIndex={currentSlideIndex}
           translateY={translateY}
           scrollOffsetX={scrollOffsetX}
-          screenHeight={screenHeight}
-          screenWidth={screenWidth}
-          SLIDES={SLIDES}
           isDragging={isDragging}
-          animatedSlideIndex={animatedSlideIndex}
           topCarouselOffset={TOP_CAROUSEL_OFFSET}
         />
+
+        <Animated.View className="absolute inset-0 pointer-events-none" style={rGradientStyle}>
+          <LinearGradient
+            colors={["rgba(0,0,0,0.6)", "transparent"]}
+            style={{ width: "100%", height: "60%" }}
+          />
+        </Animated.View>
       </View>
     </GestureDetector>
   );

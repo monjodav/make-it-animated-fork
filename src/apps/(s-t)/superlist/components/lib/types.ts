@@ -9,19 +9,18 @@ export type OnboardingSlide = {
   bgColor: string;
   /** Duration in milliseconds for the slide's progress animation */
   duration: number;
+  /** Title of the slide */
+  title: string;
 };
 
 export type CarouselProps = {
+  SLIDES: OnboardingSlide[];
   setCurrentSlideIndex: (index: number) => void;
   horizontalListRef: React.RefObject<FlatList<any> | null>;
   scrollHandler: (event: any) => void;
-  data: Array<OnboardingSlide>;
   currentSlideIndex: number;
   translateY: SharedValue<number>;
   scrollOffsetX: SharedValue<number>;
-  screenHeight: number;
-  screenWidth: number;
-  SLIDES: Array<OnboardingSlide>;
   isDragging: SharedValue<boolean>;
   animatedSlideIndex: SharedValue<number>;
   topCarouselOffset: number;
