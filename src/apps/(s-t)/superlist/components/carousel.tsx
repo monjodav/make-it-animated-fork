@@ -14,6 +14,8 @@ import { CarouselProps, OnboardingSlide } from "./lib/types";
 import { scheduleOnRN } from "react-native-worklets";
 import { FlatList } from "react-native-gesture-handler";
 
+// superlist-onboarding-flow-animation 🔽
+
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList<OnboardingSlide>);
 
 const Carousel: FC<CarouselProps> = ({
@@ -155,3 +157,5 @@ const Carousel: FC<CarouselProps> = ({
 };
 
 export default Carousel;
+
+// superlist-onboarding-flow-animation 🔼

@@ -4,6 +4,8 @@ import { SharedValue } from "react-native-reanimated";
 import { OnboardingSlide } from "../lib/types";
 import { PaginationItem } from "./pagination-item";
 
+// superlist-onboarding-flow-animation 🔽
+
 type PaginationProps = {
   slides: OnboardingSlide[];
   currentSlideIndex: number;
@@ -63,3 +65,5 @@ export const Pagination: FC<PaginationProps> = ({
 };
 
 export default Pagination;
+
+// superlist-onboarding-flow-animation 🔼

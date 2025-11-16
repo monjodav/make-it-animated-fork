@@ -8,6 +8,8 @@ import Animated, {
 import { FC } from "react";
 import { OnboardingSlide } from "./lib/types";
 
+// superlist-onboarding-flow-animation 🔽
+
 type SlideItemProps = {
   item: OnboardingSlide;
   index: number;
@@ -47,3 +49,5 @@ export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffset
     </Animated.View>
   );
 };
+
+// superlist-onboarding-flow-animation 🔼

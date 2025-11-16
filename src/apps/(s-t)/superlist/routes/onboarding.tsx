@@ -20,6 +20,8 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { scheduleOnRN } from "react-native-worklets";
 import { LinearGradient } from "expo-linear-gradient";
 
+// superlist-onboarding-flow-animation 🔽
+
 export const SLIDES: OnboardingSlide[] = [
   {
     bgColor: "#7872E0",
@@ -269,3 +271,5 @@ export const Onboarding = () => {
     </GestureDetector>
   );
 };
+
+// superlist-onboarding-flow-animation-end 🔼

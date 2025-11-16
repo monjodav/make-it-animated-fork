@@ -58,7 +58,7 @@ export const superlist: App = {
   imageSource: SuperlistImage,
   animations: [
     {
-      name: "Onboarding animation",
+      name: "Onboarding flow animation",
       href: "/superlist/onboarding",
     },
   ],

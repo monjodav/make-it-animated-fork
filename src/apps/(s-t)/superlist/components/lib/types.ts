@@ -1,6 +1,8 @@
 import { FlatList } from "react-native-gesture-handler";
 import { SharedValue } from "react-native-reanimated";
 
+// superlist-onboarding-flow-animation 🔽
+
 /**
  * Represents a single slide in the onboarding carousel
  */
@@ -25,3 +27,5 @@ export type CarouselProps = {
   animatedSlideIndex: SharedValue<number>;
   topCarouselOffset: number;
 };
+
+// superlist-onboarding-flow-animation 🔼

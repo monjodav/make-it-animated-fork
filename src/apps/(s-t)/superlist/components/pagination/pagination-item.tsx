@@ -13,6 +13,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
+// superlist-onboarding-flow-animation 🔽
+
 type PaginationItemProps = {
   index: number;
   currentSlideIndex: number;
@@ -144,3 +146,5 @@ export const PaginationItem: FC<PaginationItemProps> = ({
     </Animated.View>
   );
 };
+
+// superlist-onboarding-flow-animation 🔼
