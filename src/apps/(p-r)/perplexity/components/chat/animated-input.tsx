@@ -20,9 +20,9 @@ import { cn } from "@/src/shared/lib/utils/cn";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 // Base geometry unit for the composer. Collapsed height; also used for radii and icon sizing.
-export const MIN_INPUT_CONTAINER_HEIGHT = 56;
+const MIN_INPUT_CONTAINER_HEIGHT = 56;
 // Expanded height on focus (2x). Big enough to reveal secondary controls without overwhelming the screen.
-export const MAX_INPUT_CONTAINER_HEIGHT = 2 * MIN_INPUT_CONTAINER_HEIGHT;
+const MAX_INPUT_CONTAINER_HEIGHT = 2 * MIN_INPUT_CONTAINER_HEIGHT;
 
 // Square button size matches collapsed input for visual rhythm and hit target consistency.
 const NEW_CHAT_BTN_SIZE = MIN_INPUT_CONTAINER_HEIGHT;
