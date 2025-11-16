@@ -8,9 +8,10 @@ import { WithPullToRefresh } from "@/src/shared/components/with-pull-to-refresh"
 import Animated from "react-native-reanimated";
 import LoadingIndicator from "../components/loading-indicator";
 
+const REFRESH_VIEW_BASE_HEIGHT = 250; 
+
 const Home = () => {
   const insets = useSafeAreaInsets();
-  
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -53,12 +54,12 @@ const Home = () => {
       </View>
 
       <WithPullToRefresh
-        refreshComponent={<LoadingIndicator />}
+        refreshComponent={<LoadingIndicator refreshViewBaseHeight={REFRESH_VIEW_BASE_HEIGHT} />}
         refreshComponentContainerClassName="bg-neutral-100 justify-start overflow-hidden"
         refreshThreshold={400}
         refreshing={refreshing}
         onRefresh={refresh}
-        refreshViewBaseHeight={250}
+        refreshViewBaseHeight={REFRESH_VIEW_BASE_HEIGHT}
         hapticFeedbackDirection="to-bottom"
         backAnimationDuration={700}
       >
