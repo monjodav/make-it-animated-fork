@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { usePullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
 import Animated, {
   Extrapolation,
@@ -14,6 +14,8 @@ import Animated, {
 } from "react-native-reanimated";
 import Svg, { Path } from "react-native-svg";
 import { interpolatePath, parse } from "react-native-redash";
+import LottieView from "lottie-react-native";
+import { scheduleOnRN } from "react-native-worklets";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
@@ -28,6 +30,7 @@ const PATH_VECTOR_2 = parse(
 const SVG_HEIGHT = 80;
 
 const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBaseHeight }) => {
+  const animationRef = useRef<LottieView>(null);
   const { refreshing, refreshProgress, derivedRefreshOffsetY } = usePullToRefresh();
 
   const wasRefreshing = useSharedValue(false);
@@ -36,6 +39,13 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
   const pathProgress = useSharedValue(0);
   const hasTriggeredPathAnimation = useSharedValue(false);
   const svgScale = useSharedValue(1);
+
+  const playLottieAnimation = () => {
+    animationRef.current?.play();
+  };
+  const stopLottieAnimation = () => {
+    animationRef.current?.reset();
+  };
 
   useDerivedValue(() => {
     const currentDerivedHeight = derivedRefreshOffsetY.get();
@@ -47,7 +57,7 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
       hasTriggeredPathAnimation.set(true);
       pathProgress.set(withSpring(1, { stiffness: 1500, damping: 20, mass: 1 }));
       // Start heart pumping animation with sequence
-
+      scheduleOnRN(playLottieAnimation);
       svgScale.set(
         withRepeat(
           withSequence(withTiming(1.01, { duration: 200 }), withTiming(0.99, { duration: 200 })),
@@ -62,6 +72,7 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
       hasTriggeredPathAnimation.set(false);
       pathProgress.set(0);
       svgScale.set(1);
+      scheduleOnRN(stopLottieAnimation);
     }
 
     // Handle scaling animation during refresh phases
@@ -138,21 +149,34 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
   });
 
   return (
-    <Animated.View className="items-center" style={rOuterContainerStyle}>
-      <Animated.View
-        className="absolute top-[11px] rounded-full w-[55px] h-[55px] bg-[#FF4400]"
-        style={rBackgroundStyle}
+    <>
+      <Animated.View className="items-center" style={rOuterContainerStyle}>
+        <Animated.View
+          className="absolute top-[11px] rounded-full w-[55px] h-[55px] bg-[#FF4400]"
+          style={rBackgroundStyle}
+        />
+        <AnimatedSvg
+          style={rSvgScaleStyle}
+          width={SVG_HEIGHT - 10}
+          height={SVG_HEIGHT}
+          viewBox={"0 35 105 45"}
+          fill="none"
+        >
+          <AnimatedPath animatedProps={svgAnimatedProps} fill="#FF4400" />
+        </AnimatedSvg>
+      </Animated.View>
+      <LottieView
+        ref={animationRef}
+        source={require("../../../../../assets/lottie/runner.json")}
+        loop
+        style={{
+          position: "absolute",
+          top: -10,
+          width: 95,
+          height: 95,
+        }}
       />
-      <AnimatedSvg
-        style={rSvgScaleStyle}
-        width={SVG_HEIGHT - 10}
-        height={SVG_HEIGHT}
-        viewBox={"0 35 105 45"}
-        fill="none"
-      >
-        <AnimatedPath animatedProps={svgAnimatedProps} fill="#FF4400" />
-      </AnimatedSvg>
-    </Animated.View>
+    </>
   );
 };
 

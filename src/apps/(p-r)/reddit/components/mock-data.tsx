@@ -16,6 +16,6 @@ export const renderListItem = () => (
       }}
     />
     <View className="w-36 h-4 bg-neutral-400 rounded-full mt-3" />
-    <View className="h-60 w-full rounded-lg bg-neutral-400 my-3" />
+    <View className="h-72 w-full rounded-lg bg-neutral-400 my-3" />
   </View>
 );
