@@ -13,6 +13,10 @@ export const adidas: App = {
       name: "Home header marquee animation",
       href: "/adidas/home",
     },
+    {
+      name: "Carousel animation",
+      href: "/adidas/product",
+    },
   ],
 };
 
