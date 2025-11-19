@@ -1,26 +1,28 @@
-import React, { FC, useEffect } from "react";
+import { FC } from "react";
 import { useHits } from "react-instantsearch-core";
-import { View, Text } from "react-native";
-import Video from "react-native-video";
+import AnimationCard from "./animation-card";
+import { LegendList } from "@legendapp/list";
+import { AlgoliaRawResult, AnimationHit } from "../../lib/types/algolia-search";
 
-type Props = {};
-
-export const Results: FC<Props> = ({}) => {
-  const { results } = useHits();
-
-  const firstItem = results?.hits[0];
-
-  const playbackId = firstItem?.video?.dev?.playback_id;
-  const url = `https://stream.mux.com/${playbackId}.m3u8`;
+export const Results: FC = () => {
+  const { results } = useHits<AlgoliaRawResult>();
+  const hits = results?.hits as AnimationHit[] | undefined;
 
   return (
-    <View className="flex-1 items-center justify-center">
-      <View
-        className="w-[300px] aspect-square rounded-[32px] overflow-hidden"
-        style={{ borderCurve: "continuous" }}
-      >
-        <Video source={{ uri: url }} style={{ width: "100%", height: "100%" }} />
-      </View>
-    </View>
+    <LegendList
+      data={hits ?? []}
+      renderItem={({ item }) => (
+        <AnimationCard
+          playback_id={item.video.dev.playback_id}
+          appTitle={item.app.title}
+          animationTitle={item.title}
+          logoUrl={item.app.icon_url}
+          createdAt={item._creationTime}
+        />
+      )}
+      keyExtractor={(item) => item._id}
+      recycleItems
+      maintainVisibleContentPosition
+    />
   );
 };
