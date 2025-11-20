@@ -1,4 +1,4 @@
-import { Platform, Text, TextInput, View } from "react-native";
+import { Platform, Pressable, Text, TextInput, View } from "react-native";
 import { Search, X } from "lucide-react-native";
 import { useAnimationsStore } from "../../lib/store/animations";
 
@@ -7,6 +7,8 @@ const HEIGHT = 44;
 const SearchInput = () => {
   const query = useAnimationsStore((state) => state.query);
   const setQuery = useAnimationsStore((state) => state.setQuery);
+  const clearQuery = useAnimationsStore((state) => state.clearQuery);
+
   return (
     <>
       <Text className="text-white mb-2">Search</Text>
@@ -34,7 +36,11 @@ const SearchInput = () => {
           value={query}
           onChangeText={setQuery}
         />
-        <X size={16} color="#a8a29e" className="" />
+        {query.length > 0 && (
+          <Pressable onPress={clearQuery}>
+            <X size={16} color="#a8a29e" />
+          </Pressable>
+        )}
       </View>
     </>
   );
