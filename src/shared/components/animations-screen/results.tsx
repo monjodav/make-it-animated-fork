@@ -7,7 +7,7 @@ import { AlgoliaRawResult, AnimationHit } from "../../lib/types/algolia-search";
 export const Results: FC = () => {
   const { results } = useHits<AlgoliaRawResult>();
   const hits = results?.hits as AnimationHit[] | undefined;
-
+  // console.log(">>", JSON.stringify(results, null, 2));
   return (
     <LegendList
       data={hits ?? []}
