@@ -19,6 +19,7 @@ export const Blocks: FC = () => {
         showsVerticalScrollIndicator={false}
       >
         <Text className="text-neutral-50 text-xl font-semibold mb-4">Now</Text>
+        {/* opal-moving-dashed-border-animation 🔽 */}
         <Pressable className="mb-8" onPress={simulatePress}>
           <AnimatedDashedBorder
             style={styles.borderCurve}
@@ -37,6 +38,7 @@ export const Blocks: FC = () => {
             </View>
           </AnimatedDashedBorder>
         </Pressable>
+        {/* opal-moving-dashed-border-animation 🔼 */}
 
         <Text className="text-neutral-50 text-xl font-semibold mb-4">Upcoming</Text>
         <View className="w-full h-[120px] rounded-3xl p-4 pt-6 bg-neutral-900/70 mb-4">
