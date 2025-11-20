@@ -118,27 +118,12 @@ const filterData: Record<FilterType, string[]> = {
 export default function Animations() {
   const sheetRef = useRef<BottomSheet>(null);
 
-  // Zustand store selectors
   const currentFilter = useAnimationsStore((state) => state.currentFilter);
   const selectedFilters = useAnimationsStore((state) => state.selectedFilters);
-  const setCurrentFilter = useAnimationsStore((state) => state.setCurrentFilter);
   const toggleItem = useAnimationsStore((state) => state.toggleItem);
-  const removeItem = useAnimationsStore((state) => state.removeItem);
-  const clearAll = useAnimationsStore((state) => state.clearAll);
 
   const data = useMemo(() => filterData[currentFilter], [currentFilter]);
   const snapPoints = useMemo(() => ["25%", "50%", "75%"], []);
-
-  const handleSheetChange = useCallback((index: number) => {
-    console.log("handleSheetChange", index);
-  }, []);
-
-  const handleFilterSelect = useCallback(
-    (type: FilterType) => {
-      setCurrentFilter(type);
-    },
-    [setCurrentFilter]
-  );
 
   const handleItemToggle = useCallback(
     (item: string) => {
@@ -146,17 +131,6 @@ export default function Animations() {
     },
     [toggleItem]
   );
-
-  const handleRemoveItem = useCallback(
-    (type: FilterType, item: string) => {
-      removeItem(type, item);
-    },
-    [removeItem]
-  );
-
-  const handleClearAll = useCallback(() => {
-    clearAll();
-  }, [clearAll]);
 
   const renderItem = useCallback(
     (item: string) => {
@@ -175,20 +149,14 @@ export default function Animations() {
 
   return (
     <AlgoliaProvider>
-      <Results
-        sheetRef={sheetRef}
-        handleFilterSelect={handleFilterSelect}
-        selectedFilters={selectedFilters}
-        handleRemoveItem={handleRemoveItem}
-        handleClearAll={handleClearAll}
-      />
+      <Results sheetRef={sheetRef} />
 
       <BottomSheet
         ref={sheetRef}
         index={-1}
         snapPoints={snapPoints}
         enableDynamicSizing={false}
-        onChange={handleSheetChange}
+        onChange={() => {}}
         enablePanDownToClose
         backgroundStyle={{ backgroundColor: "#1C1C1C" }}
       >

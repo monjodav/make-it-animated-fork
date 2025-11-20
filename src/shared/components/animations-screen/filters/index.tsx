@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { FC, ReactNode, RefObject, useState, useEffect } from "react";
+import { FC, RefObject, useState, useEffect } from "react";
 import Filter from "./filter";
 import BottomSheet from "@gorhom/bottom-sheet";
 

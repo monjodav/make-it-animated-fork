@@ -1,44 +1,34 @@
-import { FC, useRef, useState } from "react";
+import { FC, RefObject, useCallback, useRef, useState } from "react";
 import { useHits } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
 import { LegendList } from "@legendapp/list";
 import { AlgoliaRawResult, AnimationHit } from "../../lib/types/algolia-search";
 import SearchInput from "./search-input";
-import {
-  View,
-  Pressable,
-  Text,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-} from "react-native";
+import { View, Pressable, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import Switcher from "./switcher";
 import Filters from "./filters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowUp } from "lucide-react-native";
+import { FilterType, useAnimationsStore } from "../../lib/store/animations";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 type ResultsProps = {
-  sheetRef: any;
-  handleFilterSelect: any;
-  selectedFilters: any;
-  handleRemoveItem: any;
-  handleClearAll: any;
+  sheetRef: RefObject<BottomSheet | null>;
 };
 
-export const Results: FC<ResultsProps> = ({
-  sheetRef,
-  handleFilterSelect,
-  selectedFilters,
-  handleRemoveItem,
-  handleClearAll,
-}) => {
+export const Results: FC<ResultsProps> = ({ sheetRef }) => {
   const { top, bottom } = useSafeAreaInsets();
   const { results } = useHits<AlgoliaRawResult>();
   const hits = results?.hits as AnimationHit[] | undefined;
   const listRef = useRef<any>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
+
+  const selectedFilters = useAnimationsStore((state) => state.selectedFilters);
+  const setCurrentFilter = useAnimationsStore((state) => state.setCurrentFilter);
+  const removeItem = useAnimationsStore((state) => state.removeItem);
+  const clearAll = useAnimationsStore((state) => state.clearAll);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -48,6 +38,24 @@ export const Results: FC<ResultsProps> = ({
   const scrollToTop = () => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
+
+  const handleFilterSelect = useCallback(
+    (type: FilterType) => {
+      setCurrentFilter(type);
+    },
+    [setCurrentFilter]
+  );
+
+  const handleRemoveItem = useCallback(
+    (type: FilterType, item: string) => {
+      removeItem(type, item);
+    },
+    [removeItem]
+  );
+
+  const handleClearAll = useCallback(() => {
+    clearAll();
+  }, [clearAll]);
 
   return (
     <View style={{ flex: 1 }}>
