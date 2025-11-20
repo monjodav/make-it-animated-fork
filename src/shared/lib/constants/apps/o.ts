@@ -21,5 +21,9 @@ export const opal: App = {
       name: "Set timer slider animation",
       href: "/opal/home",
     },
+    {
+      name: "Moving dashed border animation",
+      href: "/opal/blocks",
+    },
   ],
 };

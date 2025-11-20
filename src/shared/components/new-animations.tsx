@@ -49,6 +49,7 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
 
   return (
     <View className="px-5 gap-5 py-5">
+      <AnimationItem label={getItemProps(opal, 4).label} onPress={getItemProps(opal, 4).onPress} />
       <AnimationItem
         label={getItemProps(superlist, 0).label}
         onPress={getItemProps(superlist, 0).onPress}
@@ -57,7 +58,6 @@ export const NewAnimations: FC<Props> = ({ navigation }) => {
         label={getItemProps(perplexity, 1).label}
         onPress={getItemProps(perplexity, 1).onPress}
       />
-      <AnimationItem label={getItemProps(opal, 3).label} onPress={getItemProps(opal, 3).onPress} />
     </View>
   );
 };

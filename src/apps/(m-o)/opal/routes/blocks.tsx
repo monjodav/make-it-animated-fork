@@ -39,12 +39,12 @@ export const Blocks: FC = () => {
         </Pressable>
 
         <Text className="text-neutral-50 text-xl font-semibold mb-4">Upcoming</Text>
-        <View className="w-full h-[120px] rounded-3xl p-4 bg-neutral-900/70 mb-4">
+        <View className="w-full h-[120px] rounded-3xl p-4 pt-6 bg-neutral-900/70 mb-4">
           <View className="mb-2 w-1/3 h-5 rounded-full bg-neutral-900" />
           <View className="mb-2 w-2/3 h-5 rounded-full bg-neutral-900" />
           <View className="w-2/3 h-5 rounded-full bg-neutral-900" />
         </View>
-        <View className="w-full h-[120px] rounded-3xl p-4 bg-neutral-900/70 mb-12">
+        <View className="w-full h-[120px] rounded-3xl p-4 pt-6 bg-neutral-900/70 mb-12">
           <View className="mb-2 w-1/3 h-5 rounded-full bg-neutral-900" />
           <View className="mb-2 w-2/3 h-5 rounded-full bg-neutral-900" />
           <View className="w-2/3 h-5 rounded-full bg-neutral-900" />
