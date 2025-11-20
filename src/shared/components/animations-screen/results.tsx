@@ -4,7 +4,14 @@ import AnimationCard from "./animation-card";
 import { LegendList } from "@legendapp/list";
 import { AlgoliaRawResult, AnimationHit } from "../../lib/types/algolia-search";
 import SearchInput from "./search-input";
-import { View, Pressable, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import {
+  View,
+  Pressable,
+  Text,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from "react-native";
 import Switcher from "./switcher";
 import Filters from "./filters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

@@ -1,11 +1,10 @@
 import { StyleSheet, Text } from "react-native";
 import { Results } from "@/src/shared/components/animations-screen/results";
 import { AlgoliaProvider } from "@/src/shared/lib/providers/algolia-provider";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import FilterItem from "@/src/shared/components/animations-screen/filters/filter-item";
-
-type FilterType = "apps" | "technologies" | "components" | "difficulty";
+import { useAnimationsStore, FilterType } from "@/src/shared/lib/store/animations";
 
 const filterData: Record<FilterType, string[]> = {
   apps: [
@@ -116,17 +115,16 @@ const filterData: Record<FilterType, string[]> = {
   difficulty: ["Easy", "Medium", "Hard"],
 };
 
-type SelectedFilters = Record<FilterType, string[]>;
-
 export default function Animations() {
   const sheetRef = useRef<BottomSheet>(null);
-  const [currentFilter, setCurrentFilter] = useState<FilterType>("apps");
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
-    apps: [],
-    technologies: [],
-    components: [],
-    difficulty: [],
-  });
+
+  // Zustand store selectors
+  const currentFilter = useAnimationsStore((state) => state.currentFilter);
+  const selectedFilters = useAnimationsStore((state) => state.selectedFilters);
+  const setCurrentFilter = useAnimationsStore((state) => state.setCurrentFilter);
+  const toggleItem = useAnimationsStore((state) => state.toggleItem);
+  const removeItem = useAnimationsStore((state) => state.removeItem);
+  const clearAll = useAnimationsStore((state) => state.clearAll);
 
   const data = useMemo(() => filterData[currentFilter], [currentFilter]);
   const snapPoints = useMemo(() => ["25%", "50%", "75%"], []);
@@ -135,42 +133,30 @@ export default function Animations() {
     console.log("handleSheetChange", index);
   }, []);
 
-  const handleFilterSelect = useCallback((type: FilterType) => {
-    setCurrentFilter(type);
-  }, []);
+  const handleFilterSelect = useCallback(
+    (type: FilterType) => {
+      setCurrentFilter(type);
+    },
+    [setCurrentFilter]
+  );
 
   const handleItemToggle = useCallback(
     (item: string) => {
-      setSelectedFilters((prev) => {
-        const currentItems = prev[currentFilter];
-        const isSelected = currentItems.includes(item);
-
-        return {
-          ...prev,
-          [currentFilter]: isSelected
-            ? currentItems.filter((i) => i !== item)
-            : [...currentItems, item],
-        };
-      });
+      toggleItem(item);
     },
-    [currentFilter]
+    [toggleItem]
   );
 
-  const handleRemoveItem = useCallback((type: FilterType, item: string) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [type]: prev[type].filter((i) => i !== item),
-    }));
-  }, []);
+  const handleRemoveItem = useCallback(
+    (type: FilterType, item: string) => {
+      removeItem(type, item);
+    },
+    [removeItem]
+  );
 
   const handleClearAll = useCallback(() => {
-    setSelectedFilters({
-      apps: [],
-      technologies: [],
-      components: [],
-      difficulty: [],
-    });
-  }, []);
+    clearAll();
+  }, [clearAll]);
 
   const renderItem = useCallback(
     (item: string) => {

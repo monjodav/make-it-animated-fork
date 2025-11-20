@@ -1,11 +1,12 @@
 import { Platform, Text, TextInput, View } from "react-native";
-import { useState } from "react";
 import { Search, X } from "lucide-react-native";
+import { useAnimationsStore } from "../../lib/store/animations";
 
 const HEIGHT = 44;
 
 const SearchInput = () => {
-  const [query, setQuery] = useState("");
+  const query = useAnimationsStore((state) => state.query);
+  const setQuery = useAnimationsStore((state) => state.setQuery);
   return (
     <>
       <Text className="text-white mb-2">Search</Text>
