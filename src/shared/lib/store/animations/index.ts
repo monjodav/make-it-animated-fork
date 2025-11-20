@@ -10,3 +10,4 @@ export const useAnimationsStore = create<AnimationsStore>()((...a) => ({
 }));
 
 export type { FilterType, SelectedFilters } from "./filters";
+export { filterData } from "./filters";
