@@ -1,10 +1,6 @@
-import { View, Button, StyleSheet, Text } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, Text } from "react-native";
 import { Results } from "@/src/shared/components/animations-screen/results";
 import { AlgoliaProvider } from "@/src/shared/lib/providers/algolia-provider";
-import SearchInput from "@/src/shared/components/animations-screen/search-input";
-import Switcher from "@/src/shared/components/animations-screen/switcher";
-import Filters from "@/src/shared/components/animations-screen/filters";
 import { useCallback, useMemo, useRef, useState } from "react";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import FilterItem from "@/src/shared/components/animations-screen/filters/filter-item";
@@ -123,7 +119,6 @@ const filterData: Record<FilterType, string[]> = {
 type SelectedFilters = Record<FilterType, string[]>;
 
 export default function Animations() {
-  const { top } = useSafeAreaInsets();
   const sheetRef = useRef<BottomSheet>(null);
   const [currentFilter, setCurrentFilter] = useState<FilterType>("apps");
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({
@@ -194,19 +189,14 @@ export default function Animations() {
 
   return (
     <AlgoliaProvider>
-      <View className="flex-1 bg-black px-4" style={{ paddingTop: top + 12 }}>
-        <SearchInput />
-        <View className="h-6" />
-        <Filters
-          sheetRef={sheetRef}
-          onFilterSelect={handleFilterSelect}
-          selectedFilters={selectedFilters}
-          onRemoveItem={handleRemoveItem}
-          onClearAll={handleClearAll}
-        />
-        <Switcher />
-        <Results />
-      </View>
+      <Results
+        sheetRef={sheetRef}
+        handleFilterSelect={handleFilterSelect}
+        selectedFilters={selectedFilters}
+        handleRemoveItem={handleRemoveItem}
+        handleClearAll={handleClearAll}
+      />
+
       <BottomSheet
         ref={sheetRef}
         index={-1}

@@ -53,7 +53,7 @@ const Filter: FC<FilterProps> = ({
       </View>
 
       {hasSelectedItems && (
-        <View className="px-2 py-1 bg-red-400 flex-row flex-wrap gap-1">
+        <View className="px-2 py-1 flex-row flex-wrap gap-1">
           {selectedItems.map((item) => (
             <View key={item}>
               <SelectedFilterChip

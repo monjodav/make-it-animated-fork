@@ -7,7 +7,6 @@ type FilterType = "apps" | "technologies" | "components" | "difficulty";
 type SelectedFilters = Record<FilterType, string[]>;
 
 type FiltersProps = {
-  children?: ReactNode;
   sheetRef: RefObject<BottomSheet | null>;
   onFilterSelect: (type: FilterType) => void;
   selectedFilters: SelectedFilters;
@@ -16,7 +15,6 @@ type FiltersProps = {
 };
 
 const Filters: FC<FiltersProps> = ({
-  children,
   sheetRef,
   onFilterSelect,
   selectedFilters,
@@ -100,7 +98,6 @@ const Filters: FC<FiltersProps> = ({
           </View>
         </View>
       </View>
-      {children}
     </View>
   );
 };
