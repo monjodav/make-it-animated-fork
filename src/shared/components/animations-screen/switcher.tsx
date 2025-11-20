@@ -5,7 +5,7 @@ import { simulatePress } from "../../lib/utils/simulate-press";
 
 const Switcher: FC = () => {
   return (
-    <View className="flex-row items-center gap-5 self-end my-4">
+    <View className="flex-row items-center gap-5 self-end mt-1">
       <Pressable onPress={simulatePress}>
         <List size={25} strokeWidth={3} color="#a8a29e" />
       </Pressable>
