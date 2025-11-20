@@ -8,6 +8,6 @@ export type BaseSlice = {
 };
 
 export const createBaseSlice: StateCreator<BaseSlice> = (set) => ({
-  viewMode: "list",
+  viewMode: "grid",
   setViewMode: (mode) => set({ viewMode: mode }),
 });
