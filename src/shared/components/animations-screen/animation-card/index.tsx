@@ -1,94 +1,79 @@
-import { FC, useMemo } from "react";
-import { Text, View, Image } from "react-native";
+import { FC, useMemo, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import Video from "react-native-video";
 import { useAnimationsStore } from "../../../lib/store/animations";
+import { Header } from "./header";
+import { Animation } from "../../../lib/types/app";
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
+import { DotsLoader } from "./loader";
 
 type AnimationCardProps = {
-  playback_id: string;
-  appTitle: string;
-  animationTitle?: string;
-  logoUrl: string;
-  createdAt: number;
+  animation: Animation;
 };
 
 const getRandomRotation = () => {
   return Math.floor(Math.random() * 9) - 4;
 };
 
-const isLessThanTenDays = (timestamp: number): boolean => {
-  const TEN_DAYS_IN_MS = 10 * 24 * 60 * 60 * 1000;
-  const now = Date.now();
-  return now - timestamp < TEN_DAYS_IN_MS;
-};
+const AnimationCard: FC<AnimationCardProps> = ({ animation }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
 
-const AnimationCard: FC<AnimationCardProps> = ({
-  playback_id,
-  appTitle,
-  animationTitle,
-  logoUrl,
-  createdAt,
-}) => {
-  const url = `https://stream.mux.com/${playback_id}.m3u8`;
+  const playbackId = animation.video.dev.playback_id;
+
+  const url = `https://stream.mux.com/${playbackId}.m3u8`;
+
   const rotation = useMemo(() => getRandomRotation(), []);
+
   const viewMode = useAnimationsStore((state) => state.viewMode);
 
-  // List mode - only show header
+  const rVideoContainerStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isLoaded ? 1 : 0),
+    };
+  });
+
+  // List view
   if (viewMode === "list") {
     return (
-      <View className="flex-row my-4 gap-3 items-center mx-1">
-        <Image
-          className="w-[45px] h-[45px] bg-white rounded-[10px] p-[1.5px]"
-          style={{
-            transform: [{ rotate: `0deg` }],
-          }}
-          source={{ uri: logoUrl }}
-        />
-        <View className="flex-1">
-          <Text className="text-neutral-400 font-semibold">
-            {appTitle}{" "}
-            {isLessThanTenDays(createdAt) ? (
-              <Text className="text-red-500 font-medium">new drop ✨</Text>
-            ) : null}
-          </Text>
-          <Text numberOfLines={1} className="text-white text-lg font-semibold">
-            {animationTitle}
-          </Text>
-        </View>
+      <View className="py-4">
+        <Header animation={animation} rotation={0} />
       </View>
     );
   }
 
-  // Grid mode - show full card
+  // Grid view
   return (
-    <View className="flex-1 mt-[40px]">
-      <View className="flex-row mb-4 gap-3 items-center mx-1">
-        <Image
-          className="w-[45px] h-[45px] bg-white rounded-[10px] p-[1.5px]"
-          style={{
-            transform: [{ rotate: `${rotation}deg` }],
-          }}
-          source={{ uri: logoUrl }}
-        />
-        <View className="flex-1">
-          <Text className="text-neutral-400 font-semibold">
-            {appTitle}{" "}
-            {isLessThanTenDays(createdAt) ? (
-              <Text className="text-red-500 font-medium">new drop ✨</Text>
-            ) : null}
-          </Text>
-          <Text numberOfLines={1} className="text-white text-lg font-semibold">
-            {animationTitle}
-          </Text>
-        </View>
-      </View>
+    <View className="py-8 gap-4">
+      <Header animation={animation} rotation={rotation} />
       <View
-        className="w-full aspect-square rounded-[32px] overflow-hidden"
-        style={{ borderCurve: "continuous" }}
+        className="w-full aspect-square rounded-[32px] bg-foreground overflow-hidden"
+        style={styles.borderCurve}
       >
-        <Video source={{ uri: url }} style={{ width: "100%", height: "100%" }} />
+        {!isLoaded && (
+          <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            className="absolute inset-0 items-center justify-center"
+          >
+            <DotsLoader size="lg" />
+          </Animated.View>
+        )}
+        <Animated.View className="size-full" style={rVideoContainerStyle}>
+          <Video source={{ uri: url }} style={styles.video} onLoad={() => setIsLoaded(true)} />
+        </Animated.View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  video: {
+    width: "100%",
+    height: "100%",
+  },
+  borderCurve: {
+    borderCurve: "continuous",
+  },
+});
 
 export default AnimationCard;

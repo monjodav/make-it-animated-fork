@@ -2,7 +2,6 @@ import { FC, RefObject, useCallback, useRef, useState } from "react";
 import { useHits } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
 import { LegendList } from "@legendapp/list";
-import { AlgoliaRawResult, AnimationHit } from "../../lib/types/algolia-search";
 import SearchInput from "./search-input";
 import { View, Pressable, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import Switcher from "./switcher";
@@ -11,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowUp } from "lucide-react-native";
 import { FilterType, useAnimationsStore } from "../../lib/store/animations";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { Animation } from "../../lib/types/app";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
@@ -20,8 +20,8 @@ type ResultsProps = {
 
 export const Results: FC<ResultsProps> = ({ sheetRef }) => {
   const { top, bottom } = useSafeAreaInsets();
-  const { results } = useHits<AlgoliaRawResult>();
-  const hits = results?.hits as AnimationHit[] | undefined;
+  const { results } = useHits<Animation>();
+  const hits = results?.hits ?? [];
   const listRef = useRef<any>(null);
   const [showBackToTop, setShowBackToTop] = useState(false);
 
@@ -58,27 +58,15 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
   }, [clearAll]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className="flex-1 bg-background">
       <LegendList
         ref={listRef}
-        data={hits ?? []}
-        renderItem={({ item }) => (
-          <AnimationCard
-            playback_id={item.video.dev.playback_id}
-            appTitle={item.app.title}
-            animationTitle={item.title}
-            logoUrl={item.app.icon_url}
-            createdAt={item._creationTime}
-          />
-        )}
+        data={hits?.slice(0, 2) ?? []}
         keyExtractor={(item) => item._id}
-        recycleItems
-        maintainVisibleContentPosition
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
+        renderItem={({ item }) => <AnimationCard animation={item} />}
         ListHeaderComponent={() => {
           return (
-            <View style={{ paddingTop: top + 12 }}>
+            <View>
               <SearchInput />
               <View className="h-6" />
               <Filters
@@ -92,7 +80,13 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
             </View>
           );
         }}
-        contentContainerClassName="px-4 pb-8 bg-black"
+        contentContainerClassName="px-4"
+        contentContainerStyle={{ paddingTop: top + 12 }}
+        showsVerticalScrollIndicator={false}
+        // recycleItems
+        // maintainVisibleContentPosition
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       />
 
       {showBackToTop && (

@@ -17,11 +17,11 @@ import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { useFonts } from "expo-font";
 import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
 import {
-  Poppins_400Regular,
-  Poppins_500Medium,
-  Poppins_600SemiBold,
-  Poppins_700Bold,
-} from "@expo-google-fonts/poppins";
+  Outfit_400Regular,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+  Outfit_700Bold,
+} from "@expo-google-fonts/outfit";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -55,10 +55,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_600SemiBold,
-    Poppins_700Bold,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
   });
 
   useVersionCheck();
