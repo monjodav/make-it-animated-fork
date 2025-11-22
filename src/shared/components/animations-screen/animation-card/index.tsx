@@ -1,11 +1,12 @@
 import { FC, useMemo, useRef, useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import Video, { VideoRef } from "react-native-video";
 import { useAnimationsStore } from "../../../lib/store/animations";
 import { Header } from "./header";
 import { Animation } from "../../../lib/types/app";
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { DotsLoader } from "./loader";
+import { Link, useNavigation, useRouter } from "expo-router";
 
 const getRandomRotation = () => {
   return Math.floor(Math.random() * 9) - 4;
@@ -19,6 +20,10 @@ type AnimationCardProps = {
 
 const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIndices }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const router = useRouter();
+
+  const navigation = useNavigation();
 
   const videoRef = useRef<VideoRef>(null);
 
@@ -57,7 +62,13 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
 
   // Grid view
   return (
-    <View className="py-8 gap-4">
+    <Pressable
+      className="py-8 gap-4"
+      onPress={() => {
+        router.back();
+        router.push(animation.app_deeplink.replace("miaapp://", "/"));
+      }}
+    >
       <Header animation={animation} rotation={rotation} />
       <View
         className="w-full aspect-square rounded-[32px] bg-foreground overflow-hidden"
@@ -82,7 +93,7 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
           />
         </Animated.View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

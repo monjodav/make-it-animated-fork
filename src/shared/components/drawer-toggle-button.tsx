@@ -13,10 +13,10 @@ export const DrawerToggleButton: FC = () => {
   return (
     <Animated.View
       className="absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none z-[9999]"
-      style={{ opacity }}
+      // style={{ opacity }}
     >
       <Pressable
-        className="size-10 items-center justify-center rounded-xl bg-[#131316]"
+        className="size-10 items-center justify-center rounded-xl bg-brand"
         style={styles.borderCurve}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

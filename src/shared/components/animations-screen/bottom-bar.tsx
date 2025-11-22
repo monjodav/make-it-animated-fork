@@ -1,6 +1,6 @@
 import { FC, useCallback } from "react";
 import { View, Pressable, StyleSheet, TextInput, Platform } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MoreHorizontal, Search, Settings2 } from "lucide-react-native";
 import { simulatePress } from "../../lib/utils/simulate-press";
@@ -15,6 +15,8 @@ type BottomBarProps = {
 export const BottomBar: FC<BottomBarProps> = ({ textInputRef }) => {
   const { bottom } = useSafeAreaInsets();
   const { query } = useSearchBox();
+
+  const router = useRouter();
 
   const fireHaptic = useCallback(() => {
     if (Platform.OS === "android") return;
@@ -63,9 +65,14 @@ export const BottomBar: FC<BottomBarProps> = ({ textInputRef }) => {
         </View>
       </View>
 
-      <Link href="/" replace onPress={fireHaptic}>
+      <Pressable
+        onPress={() => {
+          fireHaptic();
+          router.back();
+        }}
+      >
         <Octicons name="home" size={22} color="#FFFFF5" />
-      </Link>
+      </Pressable>
 
       <Pressable className="p-2" onPress={simulatePress}>
         <MoreHorizontal size={24} color="#FFFFF5" />
