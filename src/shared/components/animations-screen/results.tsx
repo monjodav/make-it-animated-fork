@@ -1,18 +1,14 @@
 import { FC, RefObject, useCallback, useRef, useState } from "react";
 import { useHits } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
-import SearchInput from "./search-input";
 import {
   View,
   Pressable,
-  Dimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
   ViewToken,
   useWindowDimensions,
 } from "react-native";
-import Switcher from "./switcher";
-import Filters from "./filters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowUp } from "lucide-react-native";
 import { FilterType, useAnimationsStore } from "../../lib/store/animations";
@@ -20,8 +16,6 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { Animation } from "../../lib/types/app";
 import { FlashList } from "@shopify/flash-list";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
-import LogoWithText from "@/assets/images/misc/logo-with-text.png";
-import { Image } from "expo-image";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -33,7 +27,7 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [visibleItemIndices, setVisibleItemIndices] = useState<Set<number>>(new Set());
 
-  const { top, bottom } = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
 
   const { results } = useHits<Animation>();
@@ -97,7 +91,7 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
           <AnimationCard animation={item} index={index} visibleItemIndices={visibleItemIndices} />
         )}
         contentContainerClassName="px-4"
-        contentContainerStyle={{ paddingBottom: bottom + 40 }}
+        contentContainerStyle={{ paddingBottom: bottom + 50 }}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
@@ -110,10 +104,10 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
           entering={FadeInDown.springify()}
           exiting={FadeOutDown.springify()}
           onPress={() => listRef.current?.scrollToOffset({ offset: 0, animated: true })}
-          className="absolute w-[44px] h-[44px] right-7 bg-muted-foreground rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
-          style={{ bottom: bottom + 8 }}
+          className="absolute w-[44px] h-[44px] right-6 bg-neutral-700 rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
+          style={{ bottom: bottom + 86 }}
         >
-          <ArrowUp size={20} color="#FFFFF5" />
+          <ArrowUp size={20} color="#FFFFF5" strokeWidth={2.5} />
         </AnimatedPressable>
       )}
     </View>
