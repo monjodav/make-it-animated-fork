@@ -15,7 +15,6 @@ import {
 } from "@/src/apps/(a-c)/app-store/lib/providers/scroll-provider";
 import { APP_STORE_CONSTANTS } from "@/src/apps/(a-c)/app-store/lib/constants/animation-config";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import { Image } from "expo-image";
 import AppImage from "@/assets/images/icon-ios.png";
 import { cn } from "@/src/shared/lib/utils/cn";
@@ -30,8 +29,6 @@ const BLUR_END_OFFSET = APP_STORE_CONSTANTS.BLUR_END_OFFSET;
 const CONTENT_DISAPPEAR_OFFSET = APP_STORE_CONSTANTS.CONTENT_DISAPPEAR_OFFSET;
 
 const AppStoreStackScreen = () => {
-  const { openDrawer } = useDrawerControl();
-
   const { scrollY } = useScrollContext();
 
   // Drives header background opacity based on scroll position.
@@ -77,10 +74,7 @@ const AppStoreStackScreen = () => {
   );
 
   const headerRight = () => (
-    <Animated.View
-      className="flex-row items-center"
-      style={headerButtonsStyle}
-    >
+    <Animated.View className="flex-row items-center" style={headerButtonsStyle}>
       {/* <Image source={AppImage} style={styles.image} /> */}
 
       <Pressable className="bg-blue-600 rounded-full px-4 py-1" onPress={simulatePress}>
@@ -109,7 +103,7 @@ const AppStoreStackScreen = () => {
             </Animated.View>
           ),
           headerLeft: () => (
-            <Pressable className="flex-row items-center pr-3" onPress={openDrawer}>
+            <Pressable className="flex-row items-center pr-3" onPress={simulatePress}>
               <ChevronLeft size={28} color="#007AFF" />
               <Text className="text-[#007AFF] text-xl font-medium">Search</Text>
             </Pressable>

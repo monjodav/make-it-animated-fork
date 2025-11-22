@@ -1,39 +1,18 @@
-import { DrawerActions } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 import { AlignLeft } from "lucide-react-native";
-import React, { FC, useEffect } from "react";
+import React, { FC } from "react";
 import { Pressable, StyleSheet } from "react-native";
-import Animated, { useSharedValue, withSequence, withTiming } from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { useDrawerStatus } from "@react-navigation/drawer";
-import { usePathname } from "expo-router";
-import { cn } from "../lib/utils/cn";
 
 export const DrawerToggleButton: FC = () => {
-  const pathname = usePathname();
-  const navigation = useNavigation();
-  const drawerStatus = useDrawerStatus();
+  const router = useRouter();
 
   const opacity = useSharedValue(0);
 
-  useEffect(() => {
-    if (drawerStatus === "closed") {
-      opacity.value = withSequence(
-        withTiming(1, { duration: 300 }),
-        withTiming(1, { duration: 1000 }),
-        withTiming(0.1, { duration: 600 })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drawerStatus]);
-
   return (
     <Animated.View
-      className={cn(
-        "absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none z-[9999]",
-        pathname === "/instagram/add-content" && "pl-20",
-        pathname === "/perplexity/home" && "pb-40"
-      )}
+      className="absolute top-0 bottom-0 left-0 justify-center pl-3 pointer-events-box-none z-[9999]"
       style={{ opacity }}
     >
       <Pressable
@@ -41,7 +20,7 @@ export const DrawerToggleButton: FC = () => {
         style={styles.borderCurve}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          navigation.dispatch(DrawerActions.openDrawer());
+          router.push("/animations");
         }}
       >
         <AlignLeft size={20} color="white" />

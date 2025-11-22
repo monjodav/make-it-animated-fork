@@ -1,22 +1,27 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import Video from "react-native-video";
+import Video, { VideoRef } from "react-native-video";
 import { useAnimationsStore } from "../../../lib/store/animations";
 import { Header } from "./header";
 import { Animation } from "../../../lib/types/app";
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { DotsLoader } from "./loader";
 
-type AnimationCardProps = {
-  animation: Animation;
-};
-
 const getRandomRotation = () => {
   return Math.floor(Math.random() * 9) - 4;
 };
 
-const AnimationCard: FC<AnimationCardProps> = ({ animation }) => {
+type AnimationCardProps = {
+  animation: Animation;
+  index: number;
+  visibleItemIndices: Set<number>;
+};
+
+const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIndices }) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPaused, setIsPaused] = useState(true);
+
+  const videoRef = useRef<VideoRef>(null);
 
   const playbackId = animation.video.dev.playback_id;
 
@@ -25,6 +30,12 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation }) => {
   const rotation = useMemo(() => getRandomRotation(), []);
 
   const viewMode = useAnimationsStore((state) => state.viewMode);
+
+  // Pause/resume video based on visibility
+  useEffect(() => {
+    const isVisible = visibleItemIndices.has(index);
+    setIsPaused(!isVisible);
+  }, [visibleItemIndices, index]);
 
   const rVideoContainerStyle = useAnimatedStyle(() => {
     return {
@@ -59,7 +70,14 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation }) => {
           </Animated.View>
         )}
         <Animated.View className="size-full" style={rVideoContainerStyle}>
-          <Video source={{ uri: url }} style={styles.video} onLoad={() => setIsLoaded(true)} />
+          <Video
+            ref={videoRef}
+            source={{ uri: url }}
+            style={styles.video}
+            repeat
+            paused={isPaused}
+            onLoad={() => setIsLoaded(true)}
+          />
         </Animated.View>
       </View>
     </View>

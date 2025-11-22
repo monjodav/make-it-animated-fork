@@ -1,9 +1,16 @@
 import { FC, RefObject, useCallback, useRef, useState } from "react";
 import { useHits } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
-import { LegendList } from "@legendapp/list";
 import SearchInput from "./search-input";
-import { View, Pressable, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import {
+  View,
+  Pressable,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  ViewToken,
+  useWindowDimensions,
+} from "react-native";
 import Switcher from "./switcher";
 import Filters from "./filters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,19 +18,28 @@ import { ArrowUp } from "lucide-react-native";
 import { FilterType, useAnimationsStore } from "../../lib/store/animations";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { Animation } from "../../lib/types/app";
+import { FlashList } from "@shopify/flash-list";
+import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
+import LogoWithText from "@/assets/images/misc/logo-with-text.png";
+import { Image } from "expo-image";
 
-const SCREEN_HEIGHT = Dimensions.get("window").height;
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type ResultsProps = {
   sheetRef: RefObject<BottomSheet | null>;
 };
 
 export const Results: FC<ResultsProps> = ({ sheetRef }) => {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [visibleItemIndices, setVisibleItemIndices] = useState<Set<number>>(new Set());
+
   const { top, bottom } = useSafeAreaInsets();
+  const { height: screenHeight } = useWindowDimensions();
+
   const { results } = useHits<Animation>();
   const hits = results?.hits ?? [];
+
   const listRef = useRef<any>(null);
-  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const selectedFilters = useAnimationsStore((state) => state.selectedFilters);
   const setCurrentFilter = useAnimationsStore((state) => state.setCurrentFilter);
@@ -32,11 +48,7 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    setShowBackToTop(offsetY > SCREEN_HEIGHT * 1.5);
-  };
-
-  const scrollToTop = () => {
-    listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    setShowBackToTop(offsetY > screenHeight);
   };
 
   const handleFilterSelect = useCallback(
@@ -57,46 +69,52 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
     clearAll();
   }, [clearAll]);
 
+  const handleViewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken<Animation>[] }) => {
+      // Extract indices from viewable items and create a Set for efficient lookup
+      const indices = new Set<number>(
+        viewableItems
+          .map((item) => item.index)
+          .filter((index): index is number => index !== null && index !== undefined)
+      );
+      setVisibleItemIndices(indices);
+    },
+    []
+  );
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 100,
+    minimumViewTime: 500,
+  }).current;
+
   return (
-    <View className="flex-1 bg-background">
-      <LegendList
+    <View className="h-full bg-background">
+      <FlashList
         ref={listRef}
-        data={hits?.slice(0, 2) ?? []}
+        data={hits?.slice(0, 5) ?? []}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) => <AnimationCard animation={item} />}
-        ListHeaderComponent={() => {
-          return (
-            <View>
-              <SearchInput />
-              <View className="h-6" />
-              <Filters
-                sheetRef={sheetRef}
-                onFilterSelect={handleFilterSelect}
-                selectedFilters={selectedFilters}
-                onRemoveItem={handleRemoveItem}
-                onClearAll={handleClearAll}
-              />
-              <Switcher />
-            </View>
-          );
-        }}
+        renderItem={({ item, index }) => (
+          <AnimationCard animation={item} index={index} visibleItemIndices={visibleItemIndices} />
+        )}
         contentContainerClassName="px-4"
-        contentContainerStyle={{ paddingTop: top + 12 }}
+        contentContainerStyle={{ paddingBottom: bottom + 40 }}
         showsVerticalScrollIndicator={false}
-        // recycleItems
-        // maintainVisibleContentPosition
         onScroll={handleScroll}
         scrollEventThrottle={16}
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={handleViewableItemsChanged}
       />
 
       {showBackToTop && (
-        <Pressable
-          onPress={scrollToTop}
-          className="absolute w-[50px] h-[50px] right-3 bg-white rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
-          style={{ bottom }}
+        <AnimatedPressable
+          entering={FadeInDown.springify()}
+          exiting={FadeOutDown.springify()}
+          onPress={() => listRef.current?.scrollToOffset({ offset: 0, animated: true })}
+          className="absolute w-[44px] h-[44px] right-7 bg-muted-foreground rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
+          style={{ bottom: bottom + 8 }}
         >
-          <ArrowUp size={24} color="#000" strokeWidth={2.5} />
-        </Pressable>
+          <ArrowUp size={20} color="#FFFFF5" />
+        </AnimatedPressable>
       )}
     </View>
   );

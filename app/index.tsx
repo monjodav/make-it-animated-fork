@@ -1,9 +1,5 @@
-import { useDrawerStatus } from "@react-navigation/drawer";
 import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
-import { useKeyboardState } from "react-native-keyboard-controller";
-import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
-import { useDrawer } from "@/src/shared/lib/providers/drawer-provider";
 import { CameraView } from "@/src/shared/components/index-screen/camera-view";
 import { PressToScanBtn } from "@/src/shared/components/index-screen/press-to-scan-btn";
 import { IndexAnimationProvider } from "@/src/shared/lib/providers/index-animation";
@@ -11,6 +7,7 @@ import { ExploreAnimationsBtn } from "@/src/shared/components/index-screen/explo
 import { OtaUpdate } from "@/src/shared/components/index-screen/ota-update";
 import { View } from "react-native";
 import { Redirect } from "expo-router";
+import { VisitWebsite } from "@/src/shared/components/visit-website";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -19,20 +16,8 @@ configureReanimatedLogger({
 
 export default function Index() {
   useWarmUpBrowser();
-
-  const keyboardStatus = useKeyboardState();
-  const drawerStatus = useDrawerStatus();
-
-  const { drawerTextInputRef } = useDrawer();
-
-  useEffect(() => {
-    if (keyboardStatus.isVisible && drawerStatus === "closed") {
-      drawerTextInputRef.current?.blur();
-    }
-  }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
-
   // VS ------------
-  return <Redirect href="/animations" />
+  // return <Redirect href="/instagram/home" />
 
   return (
     <IndexAnimationProvider>
@@ -40,6 +25,7 @@ export default function Index() {
         <CameraView />
         <OtaUpdate />
         <PressToScanBtn />
+        <VisitWebsite />
         <ExploreAnimationsBtn />
       </View>
     </IndexAnimationProvider>

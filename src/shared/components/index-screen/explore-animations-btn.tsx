@@ -1,18 +1,17 @@
 import React, { FC } from "react";
 import { Pressable, Text, StyleSheet, View, Platform } from "react-native";
 import Animated, { FadeInDown, interpolate, useAnimatedStyle } from "react-native-reanimated";
-import { DrawerActions } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 import { useIndexAnimation } from "../../lib/providers/index-animation";
 import { useWindowDimensions } from "react-native";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
 
 export const ExploreAnimationsBtn: FC = () => {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
-  const navigation = useNavigation();
+  const router = useRouter();
 
   const { state } = useIndexAnimation();
 
@@ -28,7 +27,7 @@ export const ExploreAnimationsBtn: FC = () => {
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            navigation.dispatch(DrawerActions.openDrawer());
+            router.push("/animations");
           }}
           className="h-16 rounded-3xl flex items-center justify-center overflow-hidden"
           style={[

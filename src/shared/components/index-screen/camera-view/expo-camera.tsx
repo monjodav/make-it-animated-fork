@@ -5,14 +5,12 @@ import * as Haptics from "expo-haptics";
 import { usePathname } from "expo-router";
 import { useAppStore } from "../../../lib/store/app";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { useDrawerStatus } from "@react-navigation/drawer";
 
 export const ExpoCamera: FC = () => {
   const indexView = useAppStore.use.indexView();
   const pathname = usePathname();
-  const drawerStatus = useDrawerStatus();
 
-  const showCamera = pathname === "/" && indexView === "qr" && drawerStatus === "closed";
+  const showCamera = pathname === "/" && indexView === "qr";
 
   const hasHandledScan = useRef(false);
 
