@@ -1,4 +1,4 @@
-import { FC, RefObject, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useRef, useState } from "react";
 import { useHits } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
 import {
@@ -12,18 +12,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowUp } from "lucide-react-native";
 import { FilterType, useAnimationsStore } from "../../lib/store/animations";
-import BottomSheet from "@gorhom/bottom-sheet";
 import { Animation } from "../../lib/types/app";
 import { FlashList } from "@shopify/flash-list";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-type ResultsProps = {
-  sheetRef: RefObject<BottomSheet | null>;
-};
-
-export const Results: FC<ResultsProps> = ({ sheetRef }) => {
+export const Results: FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [visibleItemIndices, setVisibleItemIndices] = useState<Set<number>>(new Set());
 
@@ -35,7 +30,6 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
 
   const listRef = useRef<any>(null);
 
-  const selectedFilters = useAnimationsStore((state) => state.selectedFilters);
   const setCurrentFilter = useAnimationsStore((state) => state.setCurrentFilter);
   const removeItem = useAnimationsStore((state) => state.removeItem);
   const clearAll = useAnimationsStore((state) => state.clearAll);
@@ -97,6 +91,7 @@ export const Results: FC<ResultsProps> = ({ sheetRef }) => {
         scrollEventThrottle={16}
         viewabilityConfig={viewabilityConfig}
         onViewableItemsChanged={handleViewableItemsChanged}
+        keyboardDismissMode="on-drag"
       />
 
       {showBackToTop && (
