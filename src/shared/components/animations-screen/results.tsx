@@ -1,5 +1,5 @@
-import { FC, useCallback, useRef, useState } from "react";
-import { useHits } from "react-instantsearch-core";
+import { FC, RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { useConfigure, useHits, useInfiniteHits } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
 import {
   View,
@@ -8,54 +8,62 @@ import {
   NativeScrollEvent,
   ViewToken,
   useWindowDimensions,
+  FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowUp } from "lucide-react-native";
 import { FilterType, useAnimationsStore } from "../../lib/store/animations";
 import { Animation } from "../../lib/types/app";
-import { FlashList } from "@shopify/flash-list";
-import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
+import Animated, { FadeInDown, FadeOutDown, useSharedValue } from "react-native-reanimated";
+import { AppText } from "../app-text";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const Results: FC = () => {
+type Props = {
+  listRef: RefObject<FlashListRef<Animation> | null>;
+};
+
+export const Results: FC<Props> = ({ listRef }: Props) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [visibleItemIndices, setVisibleItemIndices] = useState<Set<number>>(new Set());
 
   const { bottom } = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
 
-  const { results } = useHits<Animation>();
-  const hits = results?.hits ?? [];
+  const { items, isLastPage, showMore } = useInfiniteHits<Animation>();
 
-  const listRef = useRef<any>(null);
+  const {} = useHits<Animation>();
 
-  const setCurrentFilter = useAnimationsStore((state) => state.setCurrentFilter);
-  const removeItem = useAnimationsStore((state) => state.removeItem);
-  const clearAll = useAnimationsStore((state) => state.clearAll);
+  useConfigure({
+    hitsPerPage: 6,
+    disjunctiveFacets: ["difficulty", "app.title", "components", "technologies"],
+    // disjunctiveFacetsRefinements: {
+    //   difficulty,
+    //   "app.title": apps,
+    //   components,
+    //   technologies,
+    // },
+  });
+
+  // Track if showMore is currently being called to prevent multiple simultaneous calls
+  const isLoadingMoreRef = useRef<boolean>(false);
+  // Track the items length when showMore was called to detect when new items are loaded
+  const itemsLengthWhenLoadingRef = useRef<number>(0);
+
+  // Reset loading state when items length changes (indicating new page loaded)
+  useEffect(() => {
+    if (isLoadingMoreRef.current && items.length > itemsLengthWhenLoadingRef.current) {
+      // New items have been loaded, reset the loading flag
+      isLoadingMoreRef.current = false;
+      itemsLengthWhenLoadingRef.current = items.length;
+    }
+  }, [items.length]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     setShowBackToTop(offsetY > screenHeight);
   };
-
-  const handleFilterSelect = useCallback(
-    (type: FilterType) => {
-      setCurrentFilter(type);
-    },
-    [setCurrentFilter]
-  );
-
-  const handleRemoveItem = useCallback(
-    (type: FilterType, item: string) => {
-      removeItem(type, item);
-    },
-    [removeItem]
-  );
-
-  const handleClearAll = useCallback(() => {
-    clearAll();
-  }, [clearAll]);
 
   const handleViewableItemsChanged = useCallback(
     ({ viewableItems }: { viewableItems: ViewToken<Animation>[] }) => {
@@ -70,41 +78,58 @@ export const Results: FC = () => {
     []
   );
 
-  const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 100,
-    minimumViewTime: 500,
-  }).current;
+  const viewabilityConfig = {
+    itemVisiblePercentThreshold: 60,
+    minimumViewTime: 300,
+  };
 
   return (
-    <View className="h-full bg-background">
+    <Animated.View className="flex-1">
       <FlashList
         ref={listRef}
-        data={hits?.slice(0, 5) ?? []}
+        data={items}
         keyExtractor={(item) => item._id}
         renderItem={({ item, index }) => (
           <AnimationCard animation={item} index={index} visibleItemIndices={visibleItemIndices} />
         )}
+        ListFooterComponent={() => {
+          if (!isLastPage || items.length === 0) {
+            return null;
+          }
+          return (
+            <AppText className="ml-3 text-base text-muted-foreground font-sans-medium">
+              Yay! You have seen it all 🎉
+            </AppText>
+          );
+        }}
         contentContainerClassName="px-4"
-        contentContainerStyle={{ paddingBottom: bottom + 50 }}
+        contentContainerStyle={{ paddingBottom: 30 }}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
         viewabilityConfig={viewabilityConfig}
         onViewableItemsChanged={handleViewableItemsChanged}
         keyboardDismissMode="on-drag"
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          // Only call showMore if we're not on the last page and not already loading
+          if (!isLastPage && !isLoadingMoreRef.current) {
+            isLoadingMoreRef.current = true;
+            itemsLengthWhenLoadingRef.current = items.length;
+            showMore();
+          }
+        }}
       />
-
       {showBackToTop && (
         <AnimatedPressable
           entering={FadeInDown.springify()}
           exiting={FadeOutDown.springify()}
           onPress={() => listRef.current?.scrollToOffset({ offset: 0, animated: true })}
-          className="absolute w-[44px] h-[44px] right-6 bg-neutral-700 rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
-          style={{ bottom: bottom + 86 }}
+          className="absolute w-[44px] h-[44px] right-6 bottom-4 bg-neutral-700 rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
         >
           <ArrowUp size={20} color="#FFFFF5" strokeWidth={2.5} />
         </AnimatedPressable>
       )}
-    </View>
+    </Animated.View>
   );
 };

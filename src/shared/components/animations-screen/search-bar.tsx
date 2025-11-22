@@ -1,21 +1,54 @@
 import { Platform, Pressable, TextInput, View, StyleSheet } from "react-native";
 import { Search, X } from "lucide-react-native";
-import { useAnimationsStore } from "../../lib/store/animations";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
-import { FC } from "react";
+import { FC, useState, RefObject, useCallback } from "react";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import { useSearchBox } from "react-instantsearch-core";
+import useDebouncedCallback from "../../lib/hooks/use-debounced-callback";
+import { FlashListRef } from "@shopify/flash-list";
+import { Animation } from "../../lib/types/app";
+import * as Haptics from "expo-haptics";
 
 const HEIGHT = 48;
 
 type SearchBarProps = {
   textInputRef: React.RefObject<TextInput | null>;
+  listRef: RefObject<FlashListRef<Animation> | null>;
 };
 
-export const SearchBar: FC<SearchBarProps> = ({ textInputRef }) => {
-  const query = useAnimationsStore((state) => state.query);
-  const setQuery = useAnimationsStore((state) => state.setQuery);
-  const clearQuery = useAnimationsStore((state) => state.clearQuery);
+export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
+  const { query, clear, refine } = useSearchBox();
+
+  // Local state for immediate UI updates while typing
+  const [value, setValue] = useState<string>(query || "");
+
+  // Debounce Algolia refine calls when typing
+  const debouncedRefine = useDebouncedCallback((next: string) => {
+    refine(next);
+    setTimeout(() => {
+      listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, 500);
+  }, 250);
+
+  const onChangeText = (next: string) => {
+    // Update local state immediately for responsive UI
+    setValue(next);
+    // Debounce Algolia refine to reduce API calls
+    debouncedRefine(next);
+  };
+
+  const fireHaptic = useCallback(() => {
+    if (Platform.OS === "android") return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }, []);
+
+  const onClear = () => {
+    fireHaptic();
+    debouncedRefine.cancel();
+    setValue("");
+    clear();
+  };
 
   const { progress } = useReanimatedKeyboardAnimation();
 
@@ -51,15 +84,17 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef }) => {
           <Search size={16} color="#B2ACA9" className="self-center mr-2" strokeWidth={2.5} />
           <TextInput
             ref={textInputRef}
-            value={query}
-            onChangeText={setQuery}
+            value={value}
+            onChangeText={onChangeText}
             placeholder="Animation..."
             placeholderTextColor="#B2ACA9"
             selectionColor="#fffff4"
             className="flex-1 text-foreground text-lg/6 font-sans-medium pb-0.5"
+            autoCorrect={false}
+            autoComplete="off"
           />
-          {query.length > 0 && (
-            <Pressable onPress={clearQuery} hitSlop={16}>
+          {value.length > 0 && (
+            <Pressable onPress={onClear} hitSlop={16}>
               <X size={16} color="#B2ACA9" strokeWidth={2.5} />
             </Pressable>
           )}

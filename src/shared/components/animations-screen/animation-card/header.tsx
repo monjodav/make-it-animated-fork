@@ -37,7 +37,7 @@ export const Header: FC<HeaderProps> = ({ animation, rotation }) => {
         <Image style={styles.image} contentFit="cover" source={{ uri: logoUrl }} />
       </View>
       <View className="flex-1">
-        <AppText numberOfLines={1} className="text-muted-foreground font-sans-medium">
+        <AppText numberOfLines={1} className="text-base/5 text-muted-foreground font-sans-medium">
           {appTitle}{" "}
           {isAnimationNew && (
             <AppText className="text-brand font-sans-semibold">new drop ✨</AppText>

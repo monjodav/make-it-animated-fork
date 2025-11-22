@@ -1,5 +1,5 @@
 import * as SplashScreen from "expo-splash-screen";
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardController, KeyboardProvider } from "react-native-keyboard-controller";
 import "../global.css";
@@ -36,6 +36,8 @@ SplashScreen.setOptions({
 });
 
 KeyboardController.preload();
+
+const screenHeight = Dimensions.get("window").height;
 
 export default function RootLayout() {
   let [fontsLoaded] = useFonts({
@@ -81,7 +83,7 @@ export default function RootLayout() {
             options={{
               presentation: "formSheet",
               sheetCornerRadius: 32,
-              contentStyle: { height: "100%" },
+              contentStyle: { height: screenHeight * 0.92 },
             }}
           />
         </Stack>

@@ -19,13 +19,12 @@ type AnimationCardProps = {
 
 const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIndices }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
 
   const videoRef = useRef<VideoRef>(null);
 
   const playbackId = animation.video.dev.playback_id;
 
-  const url = `https://stream.mux.com/${playbackId}.m3u8`;
+  const url = `https://stream.mux.com/${playbackId}.m3u8?min_resolution=480p`;
 
   const rotation = useMemo(() => getRandomRotation(), []);
 
@@ -34,7 +33,11 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
   // Pause/resume video based on visibility
   useEffect(() => {
     const isVisible = visibleItemIndices.has(index);
-    setIsPaused(!isVisible);
+    if (isVisible) {
+      videoRef.current?.resume();
+    } else {
+      videoRef.current?.pause();
+    }
   }, [visibleItemIndices, index]);
 
   const rVideoContainerStyle = useAnimatedStyle(() => {
@@ -75,7 +78,6 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
             source={{ uri: url }}
             style={styles.video}
             repeat
-            paused={isPaused}
             onLoad={() => setIsLoaded(true)}
           />
         </Animated.View>

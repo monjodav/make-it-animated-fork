@@ -7,5 +7,5 @@ interface Props extends TextProps {
 }
 
 export const AppText: FC<Props> = ({ className, ...props }) => {
-  return <Text className={cn("text-foreground font-sans-regular", className)} {...props} />;
+  return <Text className={cn("text-foreground font-sans-normal", className)} {...props} />;
 };
