@@ -7,6 +7,7 @@ import { Animation } from "../../../lib/types/app";
 type HeaderProps = {
   animation: Animation;
   rotation: number;
+  index: number;
 };
 
 const isNew = (timestamp: number): boolean => {
@@ -15,7 +16,7 @@ const isNew = (timestamp: number): boolean => {
   return now - timestamp < TEN_DAYS_IN_MS;
 };
 
-export const Header: FC<HeaderProps> = ({ animation, rotation }) => {
+export const Header: FC<HeaderProps> = ({ animation, rotation, index }) => {
   const {
     app: { title: appTitle, icon_url: logoUrl },
     title: animationTitle,
@@ -39,7 +40,7 @@ export const Header: FC<HeaderProps> = ({ animation, rotation }) => {
       <View className="flex-1">
         <AppText numberOfLines={1} className="text-base/5 text-muted-foreground font-sans-medium">
           {appTitle}{" "}
-          {isAnimationNew && (
+          {isAnimationNew && index === 0 && (
             <AppText className="text-brand font-sans-semibold">new drop ✨</AppText>
           )}
         </AppText>

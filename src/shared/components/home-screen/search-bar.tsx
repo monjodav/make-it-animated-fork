@@ -11,6 +11,7 @@ import { Animation } from "../../lib/types/app";
 import { useAppStore } from "../../lib/store/app";
 import { useAnimationsStore } from "../../lib/store/animations";
 import { fireHaptic } from "../../lib/utils/fire-haptic";
+import { cn } from "../../lib/utils/cn";
 
 const HEIGHT = 48;
 
@@ -103,9 +104,14 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
             value={value}
             onChangeText={onChangeText}
             placeholder="Animation..."
+            placeholderClassName="text-lg/6 font-sans-medium"
             placeholderTextColor="#B2ACA9"
             selectionColor="#fffff4"
-            className="flex-1 text-foreground text-lg/6 font-sans-medium pb-0.5"
+            className={cn(
+              "flex-1 h-full text-foreground text-lg/6 font-sans-medium pb-0.5",
+              Platform.OS === "android" && "pb-2.5"
+            )}
+            textAlignVertical="center"
             autoCorrect={false}
             autoComplete="off"
             onFocus={() => setIsFocused(true)}

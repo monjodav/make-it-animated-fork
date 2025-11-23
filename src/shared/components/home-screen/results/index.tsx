@@ -1,23 +1,21 @@
 import { FC, RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { useConfigure, useInfiniteHits, useInstantSearch } from "react-instantsearch-core";
-import AnimationCard from "./animation-card";
+import AnimationCard from "../animation-card";
 import {
-  Pressable,
   NativeSyntheticEvent,
   NativeScrollEvent,
   ViewToken,
   useWindowDimensions,
   RefreshControl,
 } from "react-native";
-import { ArrowUp } from "lucide-react-native";
-import { Animation } from "../../lib/types/app";
+import { Animation } from "../../../lib/types/app";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
-import { AppText } from "../app-text";
-import { MANUAL_ERROR_CAPTURE } from "../../lib/utils/sentry";
-import { useRefinementStatus } from "../../lib/hooks/use-refinement-status";
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import Animated from "react-native-reanimated";
+import { AppText } from "../../app-text";
+import { MANUAL_ERROR_CAPTURE } from "../../../lib/utils/sentry";
+import { useRefinementStatus } from "../../../lib/hooks/use-refinement-status";
+import { OtaUpdateButton } from "./ota-update-button";
+import { BackToTopButton } from "./back-to-top-button";
 
 type Props = {
   listRef: RefObject<FlashListRef<Animation> | null>;
@@ -126,13 +124,14 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
           );
         }}
         contentContainerClassName="px-5"
-        contentContainerStyle={{ paddingBottom: 30 }}
+        contentContainerStyle={{ paddingBottom: 26 }}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
         viewabilityConfig={viewabilityConfig}
         onViewableItemsChanged={handleViewableItemsChanged}
         keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="#B2ACA9" />
         }
@@ -146,16 +145,8 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
           }
         }}
       />
-      {showBackToTop && (
-        <AnimatedPressable
-          entering={FadeInDown.springify()}
-          exiting={FadeOutDown.springify()}
-          onPress={() => listRef.current?.scrollToOffset({ offset: 0, animated: true })}
-          className="absolute w-12 h-12 right-6 bottom-4 bg-neutral-700 rounded-full items-center justify-center"
-        >
-          <ArrowUp size={20} color="#FFFFF5" strokeWidth={2.5} />
-        </AnimatedPressable>
-      )}
+      <OtaUpdateButton />
+      <BackToTopButton listRef={listRef} showBackToTop={showBackToTop} />
     </Animated.View>
   );
 };

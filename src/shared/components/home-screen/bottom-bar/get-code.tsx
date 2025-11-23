@@ -19,9 +19,9 @@ export const GetCode: FC = () => {
         });
       }}
     >
-      <View className="flex-row gap-1 items-end">
+      <View className="flex-row gap-1 items-baseline">
         <AppText className="text-lg">Get code</AppText>
-        <View className="size-2 mb-[4px] rounded-full bg-brand" />
+        <View className="size-2 rounded-full bg-brand translate-y-0.5" />
       </View>
     </Pressable>
   );

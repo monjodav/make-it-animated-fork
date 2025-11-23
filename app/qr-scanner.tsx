@@ -35,7 +35,10 @@ export default function QrScanner() {
   const _innerRectWidth = width > 500 ? 400 : width * 0.8;
   const _innerRectHeight = _innerRectWidth;
   const _rectFormSheetCorrection = Platform.OS === "ios" ? insets.top + 12 : 0;
-  const _cornerFormSheetCorrection = _rectFormSheetCorrection - 6;
+  const _cornerFormSheetCorrection =
+    Platform.OS === "ios"
+      ? _rectFormSheetCorrection - 6
+      : _rectFormSheetCorrection + insets.top - 13;
 
   const outer = rrect(rect(0, 0, width, height), 0, 0);
   const inner = rrect(
@@ -153,7 +156,7 @@ export default function QrScanner() {
       <Pressable
         hitSlop={20}
         className="absolute right-5"
-        style={{ top: 20 }}
+        style={{ top: Platform.OS === "ios" ? 20 : insets.top + 20 }}
         onPress={() => {
           router.back();
         }}

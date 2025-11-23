@@ -76,6 +76,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
       <KeyboardProvider>
         <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+          <Stack.Screen name="(apps)" options={{ animation: "slide_from_right" }} />
           <Stack.Screen
             name="qr-scanner"
             options={{

@@ -61,7 +61,7 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
   if (viewMode === "list") {
     return (
       <Pressable className="py-4" onPress={handleRedirect}>
-        <Header animation={animation} rotation={0} />
+        <Header animation={animation} rotation={0} index={index} />
       </Pressable>
     );
   }
@@ -69,7 +69,7 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
   // Grid view
   return (
     <AnimatedPressable className="pt-6 pb-8 gap-4" onPress={handleRedirect}>
-      <Header animation={animation} rotation={rotation} />
+      <Header animation={animation} rotation={rotation} index={index} />
       <View
         className="w-full aspect-square rounded-[32px] bg-foreground overflow-hidden"
         style={styles.borderCurve}
