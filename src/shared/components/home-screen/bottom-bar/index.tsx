@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { View, Pressable, StyleSheet, TextInput, Platform } from "react-native";
-import { MoreHorizontal, Search, Settings2 } from "lucide-react-native";
-import { simulatePress } from "../../../lib/utils/simulate-press";
+import { Search } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { fireHaptic } from "../../../lib/utils/fire-haptic";
 import { useWarmUpBrowser } from "../../../lib/hooks/use-warm-up-browser";
 import { GetCode } from "./get-code";
 import { useRefinementStatus } from "@/src/shared/lib/hooks/use-refinement-status";
+import { QrScannerButton } from "./qr-scanner-button";
 
 type BottomBarProps = {
   textInputRef: React.RefObject<TextInput | null>;
@@ -17,11 +17,11 @@ export const BottomBar: FC<BottomBarProps> = ({ textInputRef }) => {
 
   const insets = useSafeAreaInsets();
 
-  const { hasSearch, hasFilters } = useRefinementStatus();
+  const { hasSearch } = useRefinementStatus();
 
   return (
     <View
-      className="px-[23px] border-t border-neutral-800"
+      className="px-[23px] border-t border-neutral-700/75"
       style={{
         paddingTop: 12,
         paddingBottom: insets.bottom + (Platform.OS === "ios" ? 6 : 12),
@@ -64,9 +64,7 @@ export const BottomBar: FC<BottomBarProps> = ({ textInputRef }) => {
 
         <GetCode />
 
-        <Pressable className="p-2" onPress={simulatePress}>
-          <MoreHorizontal size={24} color="#FFFFF5" />
-        </Pressable>
+        <QrScannerButton />
       </View>
     </View>
   );

@@ -1,5 +1,5 @@
 import * as SplashScreen from "expo-splash-screen";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardController, KeyboardProvider } from "react-native-keyboard-controller";
 import "../global.css";
@@ -75,7 +75,19 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
       <KeyboardProvider>
-        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }} />
+        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+          <Stack.Screen
+            name="qr-scanner"
+            options={{
+              gestureEnabled: true,
+              presentation: "formSheet",
+              sheetCornerRadius: 32,
+              contentStyle: {
+                height: "100%",
+              },
+            }}
+          />
+        </Stack>
       </KeyboardProvider>
     </GestureHandlerRootView>
   );

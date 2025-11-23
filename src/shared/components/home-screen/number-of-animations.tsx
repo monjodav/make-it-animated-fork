@@ -41,7 +41,7 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
 
   return (
     <View
-      className="px-6 py-3 border-neutral-800 flex-row items-center justify-between"
+      className="px-6 py-3 border-neutral-700/75 flex-row items-center justify-between"
       style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
     >
       <View className={cn("flex-1 items-center justify-center", hasRefinements && "items-start")}>
