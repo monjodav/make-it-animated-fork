@@ -4,7 +4,12 @@ import React, { FC, useMemo } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import Animated, {
+  SlideInRight,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 import { fireHaptic } from "../lib/utils/fire-haptic";
 import { useAppStore } from "../lib/store/app";
 import { scheduleOnRN } from "react-native-worklets";
@@ -27,18 +32,23 @@ export const HomeAnchorButton: FC = () => {
   const safeAreaLeft = insets.left;
   const safeAreaRight = insets.right;
 
-  // Calculate initial position boundaries
-  // Button starts at left-[85%] which means left edge is at 85% of screen width
-  // Button starts at top-[50%] which means top edge is at 50% of screen height
-  const initialLeftX = useMemo(() => screenWidth * 0.85, [screenWidth]);
-  const initialTopY = useMemo(() => screenHeight * 0.75, [screenHeight]);
+  // Calculate initial position: single source of truth
+  // Button positioned 20px from right edge, vertically centered at 75% of screen height
+  const initialLeftX = useMemo(() => screenWidth - SIZE - 20, [screenWidth]);
+  const initialTopY = useMemo(() => screenHeight * 0.65, [screenHeight]);
 
   // Shared values for position translation (offsets from initial position)
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+  // Shared value for scale animation
+  const scale = useSharedValue(1);
 
   // Pan gesture handler for drag functionality
   const panGesture = Gesture.Pan()
+    .onBegin(() => {
+      // Scale up to 1.2 when pan gesture begins
+      scale.value = withSpring(1.3, SPRING_CONFIG);
+    })
     .onChange((event) => {
       // Calculate boundary constraints accounting for safe area insets
       // Min X: left edge should not go beyond safe area left (safeAreaLeft)
@@ -66,7 +76,7 @@ export const HomeAnchorButton: FC = () => {
       const maxY = screenHeight - initialTopY - SIZE - safeAreaBottom;
 
       // Maximum slide distance: 100px
-      const MAX_SLIDE_DISTANCE = 100;
+      const MAX_SLIDE_DISTANCE = 150;
 
       // Get current position
       const currentX = translateX.get();
@@ -102,6 +112,8 @@ export const HomeAnchorButton: FC = () => {
       // Animate to target position with spring animation
       translateX.set(withSpring(clampedX, SPRING_CONFIG));
       translateY.set(withSpring(clampedY, SPRING_CONFIG));
+      // Scale back to 1 when pan gesture ends
+      scale.set(withSpring(1, SPRING_CONFIG));
     });
 
   const handleTap = () => {
@@ -119,9 +131,16 @@ export const HomeAnchorButton: FC = () => {
   const composedGesture = Gesture.Race(panGesture, tapGesture);
 
   // Animated style for button position
+  // Uses initialLeftX and initialTopY as base position, with translateX/Y as offsets
   const animatedButtonStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ translateX: translateX.get() }, { translateY: translateY.get() }],
+      left: initialLeftX,
+      top: initialTopY,
+      transform: [
+        { translateX: translateX.get() },
+        { translateY: translateY.get() },
+        { scale: scale.get() },
+      ],
     };
   });
 
@@ -129,7 +148,8 @@ export const HomeAnchorButton: FC = () => {
     <View className="absolute inset-0 pointer-events-box-none z-[9999]">
       <GestureDetector gesture={composedGesture}>
         <Animated.View
-          className="absolute left-[86%] top-[75%] items-center justify-center rounded-full bg-brand"
+          entering={SlideInRight.springify().damping(80).mass(3).delay(100)}
+          className="absolute items-center justify-center rounded-full bg-brand"
           style={[styles.container, animatedButtonStyle]}
         >
           <View className="mb-0.5">
