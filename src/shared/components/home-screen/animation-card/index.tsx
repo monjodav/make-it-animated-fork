@@ -6,7 +6,10 @@ import { Header } from "./header";
 import { Animation } from "../../../lib/types/app";
 import Animated, { FadeIn, FadeOut, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { DotsLoader } from "./loader";
-import { Link, useNavigation, useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
+import { fireHaptic } from "@/src/shared/lib/utils/fire-haptic";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const getRandomRotation = () => {
   return Math.floor(Math.random() * 9) - 4;
@@ -22,8 +25,6 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
   const [isLoaded, setIsLoaded] = useState(false);
 
   const router = useRouter();
-
-  const navigation = useNavigation();
 
   const videoRef = useRef<VideoRef>(null);
 
@@ -45,6 +46,11 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
     }
   }, [visibleItemIndices, index]);
 
+  const handleRedirect = () => {
+    fireHaptic();
+    router.push(animation.app_deeplink.replace("miaapp://", "/") as Href);
+  };
+
   const rVideoContainerStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(isLoaded ? 1 : 0),
@@ -54,21 +60,15 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
   // List view
   if (viewMode === "list") {
     return (
-      <View className="py-4">
+      <Pressable className="py-4" onPress={handleRedirect}>
         <Header animation={animation} rotation={0} />
-      </View>
+      </Pressable>
     );
   }
 
   // Grid view
   return (
-    <Pressable
-      className="py-8 gap-4"
-      onPress={() => {
-        router.back();
-        router.push(animation.app_deeplink.replace("miaapp://", "/"));
-      }}
-    >
+    <AnimatedPressable className="pt-6 pb-8 gap-4" onPress={handleRedirect}>
       <Header animation={animation} rotation={rotation} />
       <View
         className="w-full aspect-square rounded-[32px] bg-foreground overflow-hidden"
@@ -83,7 +83,7 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
             <DotsLoader size="lg" />
           </Animated.View>
         )}
-        <Animated.View className="size-full" style={rVideoContainerStyle}>
+        <Animated.View className="size-full" pointerEvents="none" style={rVideoContainerStyle}>
           <Video
             ref={videoRef}
             source={{ uri: url }}
@@ -93,7 +93,7 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
           />
         </Animated.View>
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 };
 

@@ -1,14 +1,16 @@
 import { Platform, Pressable, TextInput, View, StyleSheet } from "react-native";
 import { Search, X } from "lucide-react-native";
-import { KeyboardStickyView } from "react-native-keyboard-controller";
-import { FC, useState, RefObject, useCallback } from "react";
+import { KeyboardStickyView, KeyboardController } from "react-native-keyboard-controller";
+import { FC, useState, RefObject, useEffect } from "react";
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import { useSearchBox } from "react-instantsearch-core";
 import useDebouncedCallback from "../../lib/hooks/use-debounced-callback";
 import { FlashListRef } from "@shopify/flash-list";
 import { Animation } from "../../lib/types/app";
-import * as Haptics from "expo-haptics";
+import { useAppStore } from "../../lib/store/app";
+import { useAnimationsStore } from "../../lib/store/animations";
+import { fireHaptic } from "../../lib/utils/fire-haptic";
 
 const HEIGHT = 48;
 
@@ -18,36 +20,36 @@ type SearchBarProps = {
 };
 
 export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
-  const { query, clear, refine } = useSearchBox();
+  const [isFocused, setIsFocused] = useState(false);
 
-  // Local state for immediate UI updates while typing
-  const [value, setValue] = useState<string>(query || "");
+  const { clear, refine } = useSearchBox();
 
-  // Debounce Algolia refine calls when typing
+  const value = useAnimationsStore.use.query();
+  const setValue = useAnimationsStore.use.setQuery();
+
+  const isHomeAnchorButtonPressed = useAppStore.use.isHomeAnchorButtonPressed();
+  const setIsHomeAnchorButtonPressed = useAppStore.use.setIsHomeAnchorButtonPressed();
+
   const debouncedRefine = useDebouncedCallback((next: string) => {
     refine(next);
-    setTimeout(() => {
+    if (isFocused) {
       listRef.current?.scrollToOffset({ offset: 0, animated: true });
-    }, 500);
+    }
   }, 250);
 
   const onChangeText = (next: string) => {
-    // Update local state immediately for responsive UI
     setValue(next);
-    // Debounce Algolia refine to reduce API calls
     debouncedRefine(next);
   };
-
-  const fireHaptic = useCallback(() => {
-    if (Platform.OS === "android") return;
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  }, []);
 
   const onClear = () => {
     fireHaptic();
     debouncedRefine.cancel();
     setValue("");
     clear();
+    setTimeout(() => {
+      listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, 300);
   };
 
   const { progress } = useReanimatedKeyboardAnimation();
@@ -58,6 +60,20 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
       pointerEvents: progress.get() > 0 ? "auto" : "none",
     };
   });
+
+  // HACK: Hide search bar and dismiss keyboard when home anchor button is pressed
+  // This is a workaround because for some reason the keyboard appears on navigation.goBack()
+  useEffect(() => {
+    if (isHomeAnchorButtonPressed) {
+      KeyboardController.dismiss();
+      setIsHomeAnchorButtonPressed(false);
+    }
+  }, [isHomeAnchorButtonPressed, setIsHomeAnchorButtonPressed]);
+
+  // Return null if home anchor button was pressed (part of the keyboard workaround)
+  if (isHomeAnchorButtonPressed) {
+    return null;
+  }
 
   return (
     <KeyboardStickyView>
@@ -92,6 +108,8 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
             className="flex-1 text-foreground text-lg/6 font-sans-medium pb-0.5"
             autoCorrect={false}
             autoComplete="off"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
           {value.length > 0 && (
             <Pressable onPress={onClear} hitSlop={16}>

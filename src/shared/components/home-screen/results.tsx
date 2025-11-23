@@ -17,6 +17,7 @@ import { Animation } from "../../lib/types/app";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import Animated, { FadeInDown, FadeOutDown, useSharedValue } from "react-native-reanimated";
 import { AppText } from "../app-text";
+import { simulatePress } from "../../lib/utils/simulate-press";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,12 +29,9 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [visibleItemIndices, setVisibleItemIndices] = useState<Set<number>>(new Set());
 
-  const { bottom } = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
 
   const { items, isLastPage, showMore } = useInfiniteHits<Animation>();
-
-  const {} = useHits<Animation>();
 
   useConfigure({
     hitsPerPage: 6,
@@ -98,11 +96,12 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
           }
           return (
             <AppText className="ml-3 text-base text-muted-foreground font-sans-medium">
+              {/* VS - change the message if query is applied */}
               Yay! You have seen it all 🎉
             </AppText>
           );
         }}
-        contentContainerClassName="px-4"
+        contentContainerClassName="px-5"
         contentContainerStyle={{ paddingBottom: 30 }}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
@@ -125,7 +124,7 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
           entering={FadeInDown.springify()}
           exiting={FadeOutDown.springify()}
           onPress={() => listRef.current?.scrollToOffset({ offset: 0, animated: true })}
-          className="absolute w-[44px] h-[44px] right-6 bottom-4 bg-neutral-700 rounded-full items-center justify-center shadow-[0_4_8_#1C1C1C80] elevation-8"
+          className="absolute w-12 h-12 right-6 bottom-4 bg-neutral-700 rounded-full items-center justify-center"
         >
           <ArrowUp size={20} color="#FFFFF5" strokeWidth={2.5} />
         </AnimatedPressable>
