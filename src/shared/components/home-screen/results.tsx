@@ -1,23 +1,20 @@
 import { FC, RefObject, useCallback, useEffect, useRef, useState } from "react";
-import { useConfigure, useHits, useInfiniteHits } from "react-instantsearch-core";
+import { useConfigure, useInfiniteHits, useInstantSearch } from "react-instantsearch-core";
 import AnimationCard from "./animation-card";
 import {
-  View,
   Pressable,
   NativeSyntheticEvent,
   NativeScrollEvent,
   ViewToken,
   useWindowDimensions,
-  FlatList,
+  RefreshControl,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowUp } from "lucide-react-native";
-import { FilterType, useAnimationsStore } from "../../lib/store/animations";
 import { Animation } from "../../lib/types/app";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
-import Animated, { FadeInDown, FadeOutDown, useSharedValue } from "react-native-reanimated";
+import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { AppText } from "../app-text";
-import { simulatePress } from "../../lib/utils/simulate-press";
+import { MANUAL_ERROR_CAPTURE } from "../../lib/utils/sentry";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,10 +25,34 @@ type Props = {
 export const Results: FC<Props> = ({ listRef }: Props) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [visibleItemIndices, setVisibleItemIndices] = useState<Set<number>>(new Set());
+  const [refreshing, setRefreshing] = useState(false);
 
   const { height: screenHeight } = useWindowDimensions();
 
   const { items, isLastPage, showMore } = useInfiniteHits<Animation>();
+  const { refresh, status } = useInstantSearch();
+
+  const loading = status === "loading" || status === "stalled";
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      refresh();
+    } catch (error) {
+      MANUAL_ERROR_CAPTURE({
+        title: "Results screen refresh error",
+        error,
+      });
+    }
+  }, [refresh]);
+
+  useEffect(() => {
+    if (!loading && refreshing) {
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
+    }
+  }, [loading, refreshing]);
 
   useConfigure({
     hitsPerPage: 6,
@@ -109,6 +130,9 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
         viewabilityConfig={viewabilityConfig}
         onViewableItemsChanged={handleViewableItemsChanged}
         keyboardDismissMode="on-drag"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="#B2ACA9" />
+        }
         onEndReachedThreshold={0.5}
         onEndReached={() => {
           // Only call showMore if we're not on the last page and not already loading

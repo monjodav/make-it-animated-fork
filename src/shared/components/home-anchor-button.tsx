@@ -47,7 +47,7 @@ export const HomeAnchorButton: FC = () => {
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       // Scale up to 1.2 when pan gesture begins
-      scale.value = withSpring(1.3, SPRING_CONFIG);
+      scale.set(withSpring(1.3, SPRING_CONFIG));
     })
     .onChange((event) => {
       // Calculate boundary constraints accounting for safe area insets

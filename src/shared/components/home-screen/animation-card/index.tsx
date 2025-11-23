@@ -89,6 +89,7 @@ const AnimationCard: FC<AnimationCardProps> = ({ animation, index, visibleItemIn
             source={{ uri: url }}
             style={styles.video}
             repeat
+            muted
             onLoad={() => setIsLoaded(true)}
           />
         </Animated.View>
