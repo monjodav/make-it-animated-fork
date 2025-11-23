@@ -15,6 +15,7 @@ import { FlashList, FlashListRef } from "@shopify/flash-list";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { AppText } from "../app-text";
 import { MANUAL_ERROR_CAPTURE } from "../../lib/utils/sentry";
+import { useRefinementStatus } from "../../lib/hooks/use-refinement-status";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -31,6 +32,7 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
 
   const { items, isLastPage, showMore } = useInfiniteHits<Animation>();
   const { refresh, status } = useInstantSearch();
+  const { hasRefinements } = useRefinementStatus();
 
   const loading = status === "loading" || status === "stalled";
 
@@ -117,8 +119,9 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
           }
           return (
             <AppText className="ml-3 text-base text-muted-foreground font-sans-medium">
-              {/* VS - change the message if query is applied */}
-              Yay! You have seen it all 🎉
+              {hasRefinements
+                ? "No more results for your search 🎯"
+                : "Yay! You have seen it all 🎉"}
             </AppText>
           );
         }}

@@ -7,7 +7,7 @@ import { useAppStore } from "../store/app";
 export const updateAlert = {
   title: "Update available",
   message:
-    "We've added new animations or important updates that are ready for you to use! The app needs a quick refresh to load these updates (no download required).",
+    "New animations or important updates are ready for you to use! The app needs a quick refresh to load these updates (no download required).",
 };
 
 export const useOtaUpdate = () => {

@@ -1,5 +1,3 @@
-export type IndexView = "home" | "qr";
-
 export type App = {
   _creationTime: number;
   _id: string;
