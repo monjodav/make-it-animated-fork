@@ -21,9 +21,12 @@ const TabsLayout = () => {
         tabBarShowLabel: false,
         tabBarActiveTintColor: "white",
         tabBarInactiveTintColor: "gray",
+
         tabBarStyle: {
           borderTopWidth: 0,
-          backgroundColor: "#000",
+          backgroundColor: "transparent",
+          position: "absolute",
+          elevation: 0,
         },
         tabBarButton: (props) => (
           <Pressable
