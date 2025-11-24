@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { Home } from "lucide-react-native";
 import React, { FC, useMemo } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
@@ -20,7 +20,9 @@ const SIZE = 44;
 const SPRING_CONFIG = { damping: 60, mass: 3 };
 
 export const HomeAnchorButton: FC = () => {
+  const router = useRouter();
   const navigation = useNavigation();
+
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
@@ -119,7 +121,11 @@ export const HomeAnchorButton: FC = () => {
   const handleTap = () => {
     fireHaptic();
     setIsHomeAnchorButtonPressed(true);
-    navigation.goBack();
+    if (router.canGoBack()) {
+      navigation.goBack();
+    } else {
+      router.replace("/");
+    }
   };
 
   // Tap gesture handler for press action (navigation.goBack)
