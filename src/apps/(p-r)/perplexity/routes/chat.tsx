@@ -11,7 +11,6 @@ import {
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import AnimatedInput from "../components/chat/animated-input";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
 import { useState } from "react";
@@ -20,8 +19,6 @@ export default function Chat() {
   const [isKeyboardStickyViewEnabled, setIsKeyboardStickyViewEnabled] = useState(false);
 
   const insets = useSafeAreaInsets();
-
-  const { openDrawer } = useDrawerControl();
 
   return (
     <Pressable
@@ -35,7 +32,7 @@ export default function Chat() {
         <View className="px-4 pb-2">
           <View className="flex-row items-center justify-between">
             <Pressable
-              onPress={openDrawer}
+              onPress={simulatePress}
               className="p-2 rounded-full bg-neutral-800 items-center justify-center"
             >
               <ArrowLeft size={18} color="white" />

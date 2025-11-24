@@ -16,7 +16,6 @@ import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import Animated from "react-native-reanimated";
 import { FeatureItem } from "../components/paywall/feature-item";
 import { cn } from "@/src/shared/lib/utils/cn";
-import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import UpgradeButton from "../components/paywall/upgrade-button";
 import PlanControl from "../components/paywall/plan-control";
 
@@ -35,8 +34,6 @@ export const Paywall = () => {
   const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
 
-  const { openDrawer } = useDrawerControl();
-
   // Image height: 25% of screen for a lightweight parallax-style header area
   // Used to compute content top padding so the list starts under the image
   const _imageHeight = height * 0.25;
@@ -51,7 +48,7 @@ export const Paywall = () => {
         }}
       />
       <Pressable
-        onPress={openDrawer}
+        onPress={simulatePress}
         style={{ marginTop: insets.top + 8 }}
         className="absolute rounded-full left-4 z-10 p-2.5 bg-neutral-900"
       >

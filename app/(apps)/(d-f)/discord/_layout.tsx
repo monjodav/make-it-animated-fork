@@ -1,15 +1,13 @@
-import { Stack, useNavigation } from "expo-router";
+import { Stack } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { Pressable, View, StyleSheet } from "react-native";
-import { DrawerActions } from "@react-navigation/native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 
 const HEADER_TINT_COLOR = "#e5e5e5";
 
 const HeaderLeft = () => {
-  const navigation = useNavigation();
-
   return (
-    <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())} hitSlop={15}>
+    <Pressable onPress={simulatePress} hitSlop={15}>
       <ArrowLeft size={22} color={HEADER_TINT_COLOR} />
     </Pressable>
   );

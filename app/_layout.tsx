@@ -1,27 +1,23 @@
 import * as SplashScreen from "expo-splash-screen";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardController, KeyboardProvider } from "react-native-keyboard-controller";
-import { Drawer } from "expo-router/drawer";
 import "../global.css";
-import Animations from "@/src/shared/components/animations";
 import * as Sentry from "@sentry/react-native";
-import { VisitWebsite } from "@/src/shared/components/visit-website";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
 import * as Linking from "expo-linking";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import { useCallback, useEffect } from "react";
-import { DrawerProvider } from "@/src/shared/lib/providers/drawer-provider";
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { useFonts } from "expo-font";
 import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
 import {
-  Poppins_400Regular,
-  Poppins_500Medium,
-  Poppins_600SemiBold,
-  Poppins_700Bold,
-} from "@expo-google-fonts/poppins";
+  Outfit_400Regular,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+  Outfit_700Bold,
+} from "@expo-google-fonts/outfit";
+import { Stack } from "expo-router";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -41,24 +37,13 @@ SplashScreen.setOptions({
 
 KeyboardController.preload();
 
-const DrawerContent = (props: DrawerContentComponentProps) => {
-  return (
-    <>
-      <Animations {...props} />
-      <View className="absolute bottom-0 left-0 right-0">
-        <VisitWebsite />
-      </View>
-    </>
-  );
-};
-
 export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
-    Poppins_400Regular,
-    Poppins_500Medium,
-    Poppins_600SemiBold,
-    Poppins_700Bold,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
   });
 
   useVersionCheck();
@@ -90,19 +75,20 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
       <KeyboardProvider>
-        <DrawerProvider>
-          <Drawer
-            drawerContent={(props: DrawerContentComponentProps) => <DrawerContent {...props} />}
-            screenOptions={{
-              headerShown: false,
-              drawerStyle: {
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-                backgroundColor: "#171717",
+        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+          <Stack.Screen name="(apps)" options={{ animation: "slide_from_right" }} />
+          <Stack.Screen
+            name="qr-scanner"
+            options={{
+              gestureEnabled: true,
+              presentation: "formSheet",
+              sheetCornerRadius: 32,
+              contentStyle: {
+                height: "100%",
               },
             }}
           />
-        </DrawerProvider>
+        </Stack>
       </KeyboardProvider>
     </GestureHandlerRootView>
   );

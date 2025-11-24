@@ -1,15 +1,15 @@
-import { useDrawerStatus } from "@react-navigation/drawer";
 import { useWarmUpBrowser } from "@/src/shared/lib/hooks/use-warm-up-browser";
-import { useKeyboardState } from "react-native-keyboard-controller";
-import { useEffect } from "react";
 import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-reanimated";
-import { useDrawer } from "@/src/shared/lib/providers/drawer-provider";
-import { CameraView } from "@/src/shared/components/index-screen/camera-view";
-import { PressToScanBtn } from "@/src/shared/components/index-screen/press-to-scan-btn";
-import { IndexAnimationProvider } from "@/src/shared/lib/providers/index-animation";
-import { ExploreAnimationsBtn } from "@/src/shared/components/index-screen/explore-animations-btn";
-import { OtaUpdate } from "@/src/shared/components/index-screen/ota-update";
-import { View } from "react-native";
+import { Platform, TextInput, View } from "react-native";
+import { useRef } from "react";
+import { FlashListRef } from "@shopify/flash-list";
+import { AlgoliaProvider } from "@/src/shared/lib/providers/algolia-provider";
+import { NumberOfAnimations } from "@/src/shared/components/home-screen/number-of-animations";
+import { Results } from "@/src/shared/components/home-screen/results";
+import { BottomBar } from "@/src/shared/components/home-screen/bottom-bar";
+import { SearchBar } from "@/src/shared/components/home-screen/search-bar";
+import { Animation } from "@/src/shared/lib/types/app";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -17,27 +17,26 @@ configureReanimatedLogger({
 });
 
 export default function Index() {
+  const insets = useSafeAreaInsets();
+
   useWarmUpBrowser();
 
-  const keyboardStatus = useKeyboardState();
-  const drawerStatus = useDrawerStatus();
-
-  const { drawerTextInputRef } = useDrawer();
-
-  useEffect(() => {
-    if (keyboardStatus.isVisible && drawerStatus === "closed") {
-      drawerTextInputRef.current?.blur();
-    }
-  }, [keyboardStatus, drawerStatus, drawerTextInputRef]);
+  const listRef = useRef<FlashListRef<Animation>>(null);
+  const textInputRef = useRef<TextInput>(null);
 
   return (
-    <IndexAnimationProvider>
-      <View className="flex-1 items-center justify-center">
-        <CameraView />
-        <OtaUpdate />
-        <PressToScanBtn />
-        <ExploreAnimationsBtn />
+    <AlgoliaProvider>
+      <View
+        className="flex-1 bg-background"
+        style={{
+          paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
+        }}
+      >
+        <NumberOfAnimations listRef={listRef} />
+        <Results listRef={listRef} />
+        <BottomBar textInputRef={textInputRef} />
+        <SearchBar textInputRef={textInputRef} listRef={listRef} />
       </View>
-    </IndexAnimationProvider>
+    </AlgoliaProvider>
   );
 }
