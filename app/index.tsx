@@ -10,6 +10,7 @@ import { BottomBar } from "@/src/shared/components/home-screen/bottom-bar";
 import { SearchBar } from "@/src/shared/components/home-screen/search-bar";
 import { Animation } from "@/src/shared/lib/types/app";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Redirect } from "expo-router";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -23,6 +24,7 @@ export default function Index() {
 
   const listRef = useRef<FlashListRef<Animation>>(null);
   const textInputRef = useRef<TextInput>(null);
+  return <Redirect href="/alma/nutrients" />;
 
   return (
     <AlgoliaProvider>
