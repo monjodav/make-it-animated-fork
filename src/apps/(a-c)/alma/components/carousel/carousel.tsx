@@ -18,27 +18,29 @@ type Props = {
 
 const CarouselComponent: FC<Props> = ({ slides, scrollOffsetX }) => {
   const allItemsWidth = slides.length * ITEM_WIDTH;
-  const activeIndex = Math.round(scrollOffsetX.value / ITEM_WIDTH);
+  const activeIndex = Math.round(scrollOffsetX.get() / ITEM_WIDTH);
 
   const autoScrollActive = useSharedValue(true);
 
   useEffect(() => {
     let intervalId: any = null;
-    autoScrollActive.value = true;
+    autoScrollActive.set(true);
     function startAutoScroll() {
       intervalId = setInterval(() => {
-        if (autoScrollActive.value) {
-          scrollOffsetX.value = withSpring(scrollOffsetX.value + ITEM_WIDTH, {
-            duration: SPRING_DURATION,
-            dampingRatio: 0.7,
-          });
+        if (autoScrollActive.get()) {
+          scrollOffsetX.set(
+            withSpring(scrollOffsetX.get() + ITEM_WIDTH, {
+              duration: SPRING_DURATION,
+              dampingRatio: 0.74,
+            })
+          );
         }
       }, INTERVAL_DURATION);
     }
     startAutoScroll();
     return () => {
       if (intervalId) clearInterval(intervalId);
-      autoScrollActive.value = false;
+      autoScrollActive.set(false);
     };
   }, []);
 

@@ -1,11 +1,14 @@
-import { FC, memo } from "react";
-import { Text, StyleSheet } from "react-native";
+import { FC, memo, useEffect } from "react";
+import { Text, StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
   SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
-  useDerivedValue,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
 type Props = {
@@ -31,13 +34,10 @@ const CarouselItemComponent: FC<Props> = ({
   screenWidth,
   screenHeight,
 }) => {
-  useDerivedValue(() => {
-    console.log(">>>>>", Math.round(scrollOffsetX.value / itemWidth));
-  }, [scrollOffsetX]);
   const rContainerStyle = useAnimatedStyle(() => {
     // Normalize scroll offset to prevent overflow and enable infinite scrolling
     const normalizedOffset =
-      ((scrollOffsetX.value % allItemsWidth) + allItemsWidth) % allItemsWidth;
+      ((scrollOffsetX.get() % allItemsWidth) + allItemsWidth) % allItemsWidth;
     // Circular trajectory parameters
     const radius = screenWidth * 0.48 * 1.5;
     const centerX = screenWidth / 2;
@@ -56,22 +56,11 @@ const CarouselItemComponent: FC<Props> = ({
     // Rotation so the item always points outward from the circle
     const rotation = angle * (180 / Math.PI);
 
-    // ++++++++++++
-    // way 1
-    // const normalizedScrollX = ((scrollOffsetX.value % allItemsWidth) + allItemsWidth) % allItemsWidth;
-    // const slidePosition = index * _itemWidth;
-    // let distancePx = Math.abs(slidePosition - normalizedScrollX);
-    // if (distancePx > allItemsWidth / 2) {
-    //   distancePx = allItemsWidth - distancePx;
-    // }
-    // const scale = interpolate(distancePx, [0, _itemWidth, _itemWidth * 2], [1, 0.8, 0.7], Extrapolation.CLAMP);
-    // ++++++++++++
-
-    // ++++++++++++
     const normalizedScrollX =
-      ((scrollOffsetX.value % allItemsWidth) + allItemsWidth) % allItemsWidth;
+      ((scrollOffsetX.get() % allItemsWidth) + allItemsWidth) % allItemsWidth;
     const slidePosition = index * itemWidth;
     let distancePx = Math.abs(slidePosition - normalizedScrollX);
+
     if (distancePx > allItemsWidth / 2) {
       distancePx = allItemsWidth - distancePx;
     }
@@ -81,27 +70,79 @@ const CarouselItemComponent: FC<Props> = ({
       [1, 0.8, 0.7],
       Extrapolation.CLAMP
     );
-    // ++++++++++++
 
     return {
-      left: x - itemWidth / 2 - 1, // adjust for observed right shift (empirically measured)
+      left: x - itemWidth / 2,
       top: y - itemHeight,
       transform: [{ rotateZ: `${rotation + 90}deg` }, { scale }],
     };
   });
 
+  const scaleProgress = useSharedValue(0);
+
+  // set scaleProgress to 1.2 for first slide on initial render if centered
+  useEffect(() => {
+    if (slide.id === 1 && scrollOffsetX.get() === 0) {
+      scaleProgress.set(1.2);
+    }
+  }, []);
+
+  useAnimatedReaction(
+    () => {
+      const normalizedScrollX =
+        ((scrollOffsetX.get() % allItemsWidth) + allItemsWidth) % allItemsWidth;
+      const slidePosition = index * itemWidth;
+      let signedDistance = slidePosition - normalizedScrollX;
+      if (signedDistance > allItemsWidth / 2) {
+        signedDistance -= allItemsWidth;
+      } else if (signedDistance < -allItemsWidth / 2) {
+        signedDistance += allItemsWidth;
+      }
+      return signedDistance;
+    },
+    (curr, _) => {
+      if (curr > 160 && curr < 180) {
+        scaleProgress.set(withSpring(1.2, { damping: 20, stiffness: 100, mass: 3 }));
+      } else if (curr < -10) {
+        scaleProgress.set(withTiming(0));
+      }
+    }
+  );
+
+  const rBackgroundStyle = useAnimatedStyle(() => {
+    const scale = scaleProgress.get();
+
+    return {
+      transform: [{ scale }],
+    };
+  });
+
   return (
     <Animated.View
-      className="absolute rounded-[30px] px-4 mt-20 bg-white items-center justify-center"
+      className="absolute mt-20"
       style={[
         rContainerStyle,
-        { width: itemWidth, height: itemHeight, transformOrigin: "center bottom" },
-        styles.borderCurve,
+        {
+          width: itemWidth,
+          height: itemHeight,
+          transformOrigin: "center bottom",
+        },
       ]}
     >
-      <Text>{slide.id}</Text>
-      <Text className="text-4xl">{slide.emoji}</Text>
-      <Text className="text-2xl font-medium text-center">{slide.description}</Text>
+      <Animated.View
+        className="justify-center items-center"
+        style={[{ top: itemHeight / 2 }, rBackgroundStyle]}
+      >
+        {slide.backgroundElement}
+      </Animated.View>
+
+      <View
+        className="flex-1 rounded-[30px] px-4 bg-white items-center justify-center"
+        style={styles.borderCurve}
+      >
+        <Text className="text-4xl">{slide.emoji}</Text>
+        <Text className="text-2xl font-medium text-center">{slide.description}</Text>
+      </View>
     </Animated.View>
   );
 };

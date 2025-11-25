@@ -10,35 +10,97 @@ export type NutrientsItem = {
   id: number;
   emoji: string;
   description: string;
+  backgroundElement: React.ReactNode;
 };
 
 const SLIDES: NutrientsItem[] = [
-  { id: 1, emoji: "🦴", description: "Bone health" },
-  { id: 2, emoji: "⚡️", description: "Support energy" },
+  {
+    id: 1,
+    emoji: "🦴",
+    description: "Bone health",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[150px] bg-orange-200/50 rotate-[-45deg]" />
+        <View className="absolute w-[90px] h-[90px] rounded-full bg-orange-700/50 -top-[80px] left-[0px]" />
+        <View className="absolute w-[80px] h-[120px] rounded-full bg-green-700 -bottom-[120px] right-[30px] rotate-[45deg]" />
+      </>
+    ),
+  },
+  {
+    id: 2,
+    emoji: "⚡️",
+    description: "Support energy",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[150px] bg-orange-200/50 rotate-[-45deg]" />
+        <View className="absolute w-[90px] h-[90px] rounded-full bg-orange-700/50 -top-[80px] left-[0px]" />
+        <View className="absolute w-[80px] h-[120px] rounded-full bg-green-700 -bottom-[120px] right-[30px] rotate-[45deg]" />
+      </>
+    ),
+  },
   {
     id: 3,
     emoji: "⚖️",
     description: "Gain weight",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[130px] bg-red-200 rotate-[45deg]" />
+        <View className="absolute w-[100px] h-[80px] rounded-full bg-orange-500 top-[20px] left-[10px]" />
+        <View className="absolute w-[90px] h-[130px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[20deg]" />
+      </>
+    ),
   },
   {
     id: 4,
     emoji: "🔬",
     description: "Track custom nutrients",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[130px] bg-orange-100 rotate-[45deg]" />
+        <View className="absolute w-[130px] h-[130px] rounded-full bg-yellow-300 -top-[30px] left-[0px] items-center justify-center">
+          <View className="w-[110px] h-[110px] rounded-full bg-orange-500" />
+        </View>
+        <View className="absolute w-[80px] h-[100px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[40deg]" />
+      </>
+    ),
   },
   {
     id: 5,
     emoji: "⚖️",
     description: "Maintain weight",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[150px] bg-orange-200/50 rotate-[-45deg]" />
+        <View className="absolute w-[90px] h-[90px] rounded-full bg-orange-700/50 -top-[80px] left-[0px]" />
+        <View className="absolute w-[80px] h-[120px] rounded-full bg-green-700 -bottom-[120px] right-[30px] rotate-[45deg]" />
+      </>
+    ),
   },
   {
     id: 6,
     emoji: "🫀",
     description: "Heart health",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[130px] bg-red-200 rotate-[45deg]" />
+        <View className="absolute w-[100px] h-[80px] rounded-full bg-orange-500 top-[20px] left-[10px]" />
+        <View className="absolute w-[90px] h-[130px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[20deg]" />
+      </>
+    ),
   },
   {
     id: 7,
     emoji: "🤧",
     description: "Boost immunity",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[220px] h-[130px] bg-orange-100 rotate-[45deg]" />
+        <View className="absolute w-[130px] h-[130px] rounded-full bg-yellow-300 -top-[30px] left-[0px] items-center justify-center">
+          <View className="w-[110px] h-[110px] rounded-full bg-orange-500" />
+        </View>
+        <View className="absolute w-[80px] h-[100px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[40deg]" />
+      </>
+    ),
   },
 ];
 
