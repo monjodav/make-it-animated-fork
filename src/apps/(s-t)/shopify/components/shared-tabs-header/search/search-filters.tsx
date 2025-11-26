@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
 import FilterItem from "./search-filter-item";
-import { useSharedValue } from "react-native-reanimated";
 import { SEARCH_FILTERS_HEIGHT } from "../../../lib/constants/styles";
 import { useRouter } from "expo-router";
 
@@ -25,13 +24,6 @@ export const SearchFilters = () => {
    * so the selected tab is brought into focus.
    */
   const flatListRef = useRef<FlatList<string>>(null);
-
-  /**
-   * SharedValue used by all tab items to reflect instantaneous press state
-   * without triggering React re-renders. Using a shared value enables UI-thread
-   * updates for press-in/press-out feedback at 60fps.
-   */
-  const pressedItem = useSharedValue<string | null>(null);
 
   useEffect(() => {
     if (activeFilterItem) {
@@ -58,7 +50,6 @@ export const SearchFilters = () => {
           <FilterItem
             item={item}
             index={index}
-            pressedItem={pressedItem}
             activeFilterItem={activeFilterItem}
             flatListRef={flatListRef}
             setActiveFilterItem={setActiveFilterItem}
