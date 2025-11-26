@@ -1,148 +1,61 @@
-import { FC, memo, useEffect } from "react";
-import { Text, StyleSheet, View } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  SharedValue,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
+import { FC, memo } from "react";
+import { Text, StyleSheet, View, useWindowDimensions } from "react-native";
+import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
 
 type Props = {
   index: number;
-  scrollOffsetX: SharedValue<number>;
-  allItemsWidth: number;
-  activeIndex: number;
-  slide: any;
   itemWidth: number;
   itemHeight: number;
-  screenWidth: number;
-  screenHeight: number;
+  slide: any;
+  animatedIndex: SharedValue<number>;
 };
 
 const CarouselItemComponent: FC<Props> = ({
-  index,
-  scrollOffsetX,
-  allItemsWidth,
-  activeIndex,
   slide,
+  index,
+  animatedIndex,
   itemWidth,
   itemHeight,
-  screenWidth,
-  screenHeight,
 }) => {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+
+  // Circle parameters: center at bottom center, radius from bottom to card center
+  const circleCenterX = screenWidth / 2;
+  const circleCenterY = screenHeight;
+  const radius = screenHeight / 2;
+
   const rContainerStyle = useAnimatedStyle(() => {
-    // Normalize scroll offset to prevent overflow and enable infinite scrolling
-    const normalizedOffset =
-      ((scrollOffsetX.get() % allItemsWidth) + allItemsWidth) % allItemsWidth;
-    // Circular trajectory parameters
-    const radius = screenWidth * 0.48 * 1.5;
-    const centerX = screenWidth / 2;
-    const centerY = screenHeight / 2;
-    const totalItems = allItemsWidth / itemWidth;
-    const angleStep = (2 * Math.PI) / totalItems;
-    // Calculate the angle so that the active item is always at the center (angle = 0)
-    const activeAngle = activeIndex * angleStep;
-    const baseAngle = index * angleStep;
-    const offsetAngle = (normalizedOffset / allItemsWidth) * 2 * Math.PI;
-    // Shift all items so active item is at angle 0 (center)
-    const angle = baseAngle - offsetAngle - activeAngle + 11;
-    // x, y are the coordinates of the circle
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
-    // Rotation so the item always points outward from the circle
-    const rotation = angle * (180 / Math.PI);
+    const inputRange = [index - 1, index, index + 1];
 
-    const normalizedScrollX =
-      ((scrollOffsetX.get() % allItemsWidth) + allItemsWidth) % allItemsWidth;
-    const slidePosition = index * itemWidth;
-    let distancePx = Math.abs(slidePosition - normalizedScrollX);
-
-    if (distancePx > allItemsWidth / 2) {
-      distancePx = allItemsWidth - distancePx;
-    }
-    const scale = interpolate(
-      distancePx,
-      [0, itemWidth, itemWidth * 2],
-      [1, 0.8, 0.7],
-      Extrapolation.CLAMP
-    );
+    const translateX = interpolate(animatedIndex.get(), inputRange, [
+      -itemWidth * 0.3,
+      0,
+      itemWidth * 0.3,
+    ]);
+    const translateY = interpolate(animatedIndex.get(), inputRange, [
+      itemHeight * 0.15,
+      0,
+      itemHeight * 0.15,
+    ]);
 
     return {
-      left: x - itemWidth / 2,
-      top: y - itemHeight,
-      transform: [{ rotateZ: `${rotation + 90}deg` }, { scale }],
-    };
-  });
-
-  const scaleProgress = useSharedValue(0);
-
-  // set scaleProgress to 1.2 for first slide on initial render if centered
-  useEffect(() => {
-    if (slide.id === 1 && scrollOffsetX.get() === 0) {
-      scaleProgress.set(1.2);
-    }
-  }, []);
-
-  useAnimatedReaction(
-    () => {
-      const normalizedScrollX =
-        ((scrollOffsetX.get() % allItemsWidth) + allItemsWidth) % allItemsWidth;
-      const slidePosition = index * itemWidth;
-      let signedDistance = slidePosition - normalizedScrollX;
-      if (signedDistance > allItemsWidth / 2) {
-        signedDistance -= allItemsWidth;
-      } else if (signedDistance < -allItemsWidth / 2) {
-        signedDistance += allItemsWidth;
-      }
-      return signedDistance;
-    },
-    (curr, _) => {
-      if (curr > 160 && curr < 180) {
-        scaleProgress.set(withSpring(1.2, { damping: 20, stiffness: 100, mass: 3 }));
-      } else if (curr < -10) {
-        scaleProgress.set(withTiming(0));
-      }
-    }
-  );
-
-  const rBackgroundStyle = useAnimatedStyle(() => {
-    const scale = scaleProgress.get();
-
-    return {
-      transform: [{ scale }],
+      transform: [{ translateX }, { translateY }],
     };
   });
 
   return (
     <Animated.View
-      className="absolute mt-20"
-      style={[
-        rContainerStyle,
-        {
-          width: itemWidth,
-          height: itemHeight,
-          transformOrigin: "center bottom",
-        },
-      ]}
+      className="items-center justify-center bg-blue-200 border border-red-500"
+      style={[rContainerStyle, { width: itemWidth, height: itemHeight }]}
     >
       <Animated.View
-        className="justify-center items-center"
-        style={[{ top: itemHeight / 2 }, rBackgroundStyle]}
+        className="w-[80%] aspect-[1/0.7] rounded-[36px] px-4 bg-white items-center justify-center"
+        style={[styles.borderCurve, { width: screenWidth * 0.6 }]}
       >
-        {slide.backgroundElement}
+        <Text className="text-4xl mb-2">{index}</Text>
+        <Text className="text-4xl mb-2">{slide.emoji}</Text>
+        <Text className="text-3xl font-medium text-center">{slide.description}</Text>
       </Animated.View>
-
-      <View
-        className="flex-1 rounded-[30px] px-4 bg-white items-center justify-center"
-        style={styles.borderCurve}
-      >
-        <Text className="text-4xl">{slide.emoji}</Text>
-        <Text className="text-2xl font-medium text-center">{slide.description}</Text>
-      </View>
     </Animated.View>
   );
 };

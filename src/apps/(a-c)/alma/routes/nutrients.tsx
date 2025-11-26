@@ -1,10 +1,9 @@
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { FC } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeft } from "lucide-react-native";
-import { Carousel } from "../components/carousel/carousel";
+import { Carousel } from "../components/carousel";
 
 export type NutrientsItem = {
   id: number;
@@ -106,33 +105,36 @@ const SLIDES: NutrientsItem[] = [
 
 export const Nutrients: FC = () => {
   const insets = useSafeAreaInsets();
-  const scrollOffsetX = useSharedValue(0);
 
   return (
-    <View className="flex-1 bg-[#F7F5ED]" style={{ paddingTop: insets.top + 8 }}>
-      <View className="items-center justify-center">
+    <View
+      className="flex-1 bg-[#F7F5ED]"
+      style={{ paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }}
+    >
+      <View className="absolute inset-0 justify-center items-center">
+        <Carousel slides={SLIDES} />
+      </View>
+
+      <View className="items-center justify-center mb-10">
         <Pressable
-          className="absolute left-6 z-50 w-12 h-12 rounded-[17px] bg-white items-center justify-center"
+          className="absolute left-6 z-50 size-12 rounded-2xl items-center justify-center border border-stone-200"
+          style={styles.borderCurve}
           onPress={simulatePress}
         >
           <ArrowLeft size={24} color="black" className="m-4" />
         </Pressable>
-        <View className="w-12 h-12 rounded-[17px] bg-[#3C5627]" style={styles.borderCurve} />
+        <View className="size-12 rounded-2xl bg-[#3C5627]" style={styles.borderCurve} />
       </View>
 
       <Text
-        className="text-[24px] mt-10 px-10 text-center"
+        className="text-[24px] px-10 text-center"
         style={{ fontFamily: "LibreBaskerville_400Regular", transform: [{ scaleY: 1.2 }] }}
       >
         Track nutrients towards the goals{" "}
         <Text className="text-[#3C5627] underline">you care about</Text>
       </Text>
 
-      <View className="flex-1 mt-5 pt-20">
-        <Carousel slides={SLIDES} scrollOffsetX={scrollOffsetX} />
-      </View>
-
-      <View className="bg-[#F7F5ED] px-8 mt-auto" style={{ paddingBottom: insets.bottom + 8 }}>
+      <View className="px-8 mt-auto">
         <Pressable
           className="bg-[#3C5627] h-[56px] px-3 rounded-[19px] items-center justify-center"
           style={styles.borderCurve}
