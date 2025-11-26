@@ -16,6 +16,7 @@ import { MANUAL_ERROR_CAPTURE } from "../../../lib/utils/sentry";
 import { useRefinementStatus } from "../../../lib/hooks/use-refinement-status";
 import { OtaUpdateButton } from "./ota-update-button";
 import { BackToTopButton } from "./back-to-top-button";
+import { BlackFridayBanner } from "./black-friday-banner";
 
 type Props = {
   listRef: RefObject<FlashListRef<Animation> | null>;
@@ -111,6 +112,7 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
         renderItem={({ item, index }) => (
           <AnimationCard animation={item} index={index} visibleItemIndices={visibleItemIndices} />
         )}
+        ListHeaderComponent={<BlackFridayBanner />}
         ListFooterComponent={() => {
           if (!isLastPage || items.length === 0) {
             return null;
@@ -123,7 +125,7 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
             </AppText>
           );
         }}
-        contentContainerClassName="px-5"
+        contentContainerClassName="pt-5 px-5"
         contentContainerStyle={{ paddingBottom: 26 }}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
