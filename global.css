@@ -1,3 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import 'uniwind';
+
+@theme {
+  /* Colors */
+  --color-background: #171717;
+  --color-foreground: #FFFFF5;
+  --color-muted: #212126;
+  --color-muted-foreground: #B2ACA9;
+  --color-brand: #FF4A3D;
+  --color-linear-back: #0A090C;
+  --color-linear-front: #3a3446;
+  --color-linear-text: #A1A1A4;
+  --color-linkedin-back: #21262E;
+  --color-linkedin-front: #333c47;
+  --color-x-back: #000000;
+  --color-x-front: #171717;
+  --color-instagram-back: #000000;
+  --color-instagram-front: #171717;
+
+  /* Font Families - Single font per variant (no fallbacks) */
+  --font-sans-normal: 'Outfit_400Regular';
+  --font-sans-medium: 'Outfit_500Medium';
+  --font-sans-semibold: 'Outfit_600SemiBold';
+  --font-sans-bold: 'Outfit_700Bold';
+}
