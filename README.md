@@ -34,6 +34,8 @@ npm run dev
 
 > **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point.
 
+> **Note:** The app list is currently loading with Algolia and if you clone the repo it will not work. I'm working currently to provide static list and it will be available on reset-project script until the end of November. Sorry for inconvenience.
+
 ## System Requirements
 
 - **Expo SDK 54** - For more details, check the [Expo 54 Changelog Blog Post ](https://expo.dev/changelog/sdk-54)
