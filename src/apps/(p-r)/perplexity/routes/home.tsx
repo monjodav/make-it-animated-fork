@@ -70,17 +70,16 @@ export default function Home() {
 
   // Pan gesture enables swipe-to-focus interaction: upward swipe focuses text input
   // runOnJS(true) ensures focus call executes on JS thread for reliability
- const panGesture = Gesture.Pan()
-   .onEnd((event) => {
-     if (event.translationY <= SWIPE_UP_THRESHOLD) {
-       setKeyboardOffsetClosed(0); // Reset sticky offset
-       setTimeout(() => {
-         textInputRef.current?.focus();
-         KeyboardController.setFocusTo("current");
-       }, 50); // Small delay to ensure gesture finishes
-     }
-   })
-   .runOnJS(true);
+  const panGesture = Gesture.Pan()
+    .onEnd((event) => {
+      if (event.translationY <= SWIPE_UP_THRESHOLD) {
+        setKeyboardOffsetClosed(0); // Reset sticky offset
+        setTimeout(() => {
+          textInputRef.current?.focus();
+        }, 100); // Small delay to ensure gesture finishes
+      }
+    })
+    .runOnJS(true);
 
   return (
     <GestureDetector gesture={panGesture}>
