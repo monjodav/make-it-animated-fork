@@ -50,8 +50,8 @@ export const SearchFilters = () => {
           <FilterItem
             item={item}
             index={index}
-            activeFilterItem={activeFilterItem}
             flatListRef={flatListRef}
+            activeFilterItem={activeFilterItem}
             setActiveFilterItem={setActiveFilterItem}
           />
         )}

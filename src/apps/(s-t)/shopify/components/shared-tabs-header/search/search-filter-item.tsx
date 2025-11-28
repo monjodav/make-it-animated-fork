@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import React from "react";
+import { Pressable, Text } from "react-native";
 import { ListFilter } from "lucide-react-native";
 import type { RefObject } from "react";
 import type { FlatList } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { cn } from "@/src/shared/lib/utils/cn";
 
 // shopify-search-screen-top-tabs-animation 🔽
 
@@ -22,30 +24,32 @@ const FilterItem = ({
   setActiveFilterItem,
 }: FilterItemProps) => {
   const isActive = activeFilterItem === item;
+  const isPressed = useSharedValue(false);
 
-  const [pressed, setPressed] = useState(false);
+  const rStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: isPressed.get() ? "#737373" : "rgba(0, 0, 0, 0)",
+    };
+  });
 
   return (
     <Pressable
-      onPressIn={() => {
-        setPressed(true);
-      }}
-      onPressOut={() => {
-        setPressed(false);
-      }}
+      onPressIn={() => isPressed.set(true)}
+      onPressOut={() => isPressed.set(false)}
       onPress={() => {
         setActiveFilterItem(item);
         // Center the selected tab in view for better discoverability (viewPosition: 0.5)
         flatListRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.5 });
       }}
+      className={cn("rounded-full bg-transparent", isActive && "bg-[#303030]")}
     >
-      <View
+      <Animated.View
         className="flex-row gap-2 items-center justify-center px-4 py-1 rounded-full"
-        style={{ backgroundColor: pressed ? "#737373" : !isActive ? "transparent" : "#303030" }}
+        style={rStyle}
       >
         {item === "All filters" ? <ListFilter size={18} color={"#E5E7EB"} /> : null}
         <Text className="text-lg text-gray-200 ">{item}</Text>
-      </View>
+      </Animated.View>
     </Pressable>
   );
 };
