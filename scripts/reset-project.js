@@ -89,6 +89,20 @@ const resetProject = async () => {
     await fs.promises.writeFile(appJsonPath, JSON.stringify(appJsonContent, null, 2) + "\n");
     console.log("📝 Created app.json with specified configuration.");
 
+    // Set IS_ALGOLIA_ENABLED to false
+    const baseConstantsPath = path.join(root, "src/shared/lib/constants/base.ts");
+    if (fs.existsSync(baseConstantsPath)) {
+      let content = await fs.promises.readFile(baseConstantsPath, "utf8");
+      content = content.replace(
+        /export const IS_ALGOLIA_ENABLED = true;/g,
+        "export const IS_ALGOLIA_ENABLED = false;"
+      );
+      await fs.promises.writeFile(baseConstantsPath, content, "utf8");
+      console.log("📝 Updated IS_ALGOLIA_ENABLED to false.");
+    } else {
+      console.log("➡️ base.ts does not exist, skipping.");
+    }
+
     console.log("\n✅ Project reset complete!");
   } catch (error) {
     console.error(`❌ Error during script execution: ${error.message}`);

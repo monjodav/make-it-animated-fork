@@ -32,9 +32,7 @@ npm run android
 npm run dev
 ```
 
-> **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point.
-
-> **Note:** The app list is currently loading with Algolia and if you clone the repo it will not work. I'm working currently to provide static list and it will be available on reset-project script until the end of November. Sorry for inconvenience.
+> **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point. It also sets up the static animations list by disabling Algolia, as Algolia can only be used in the production app.
 
 ## System Requirements
 
