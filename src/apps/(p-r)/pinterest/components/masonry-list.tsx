@@ -1,4 +1,4 @@
-import { FlashList } from "@shopify/flash-list";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
 import React, { FC, memo, useRef, useState } from "react";
 import { Platform, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
@@ -10,7 +10,7 @@ import { LoadingIndicator } from "./loading-indicator";
 // pinterest-pull-to-refresh-loading-animation 🔽
 
 // Wrap FlashList to allow Reanimated props (e.g., entering, animated styles) to run on UI thread
-const AnimatedList = Animated.createAnimatedComponent(FlashList);
+const AnimatedList = Animated.createAnimatedComponent(FlashList<number>);
 
 type Props = {
   boardName: string;
@@ -19,7 +19,7 @@ type Props = {
 
 const MasonryList: FC<Props> = ({ boardName, data }) => {
   const [refreshing, setRefreshing] = useState(false);
-  const listRef = useRef<FlashList<Board>>(null);
+  const listRef = useRef<FlashListRef<number>>(null);
 
   useScrollToTop(listRef);
 
