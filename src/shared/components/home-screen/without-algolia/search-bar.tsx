@@ -6,17 +6,17 @@ import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated"
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import useDebouncedCallback from "../../../lib/hooks/use-debounced-callback";
 import { FlashListRef } from "@shopify/flash-list";
-import { Animation } from "../../../lib/types/app";
 import { useAppStore } from "../../../lib/store/app";
 import { useAnimationsStore } from "../../../lib/store/animations";
 import { fireHaptic } from "../../../lib/utils/fire-haptic";
 import { cn } from "../../../lib/utils/cn";
+import { StaticAnimation } from "@/src/shared/lib/constants/apps";
 
 const HEIGHT = 48;
 
 type SearchBarProps = {
   textInputRef: React.RefObject<TextInput | null>;
-  listRef: RefObject<FlashListRef<Animation> | null>;
+  listRef: RefObject<FlashListRef<StaticAnimation> | null>;
 };
 
 export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
@@ -28,19 +28,20 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
   const isHomeAnchorButtonPressed = useAppStore.use.isHomeAnchorButtonPressed();
   const setIsHomeAnchorButtonPressed = useAppStore.use.setIsHomeAnchorButtonPressed();
 
-  const debouncedRefine = useDebouncedCallback((next: string) => {
+  const debouncedScrollToTop = useDebouncedCallback(() => {
     if (isFocused) {
       listRef.current?.scrollToOffset({ offset: 0, animated: true });
     }
-  }, 250);
+  }, 500);
 
   const onChangeText = (next: string) => {
     setValue(next);
+    debouncedScrollToTop();
   };
 
   const onClear = () => {
     fireHaptic();
-    debouncedRefine.cancel();
+    debouncedScrollToTop.cancel();
     setValue("");
 
     setTimeout(() => {

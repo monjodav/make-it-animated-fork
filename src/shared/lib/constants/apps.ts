@@ -1,12 +1,12 @@
 import { Href } from "expo-router";
 
-export type App = {
+export type StaticAnimation = {
   appName: string;
   animationName: string;
   href: Href;
 };
 
-export const APPS: App[] = [
+export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
     animationName: "Moving dashed border animation",
     appName: "Opal",

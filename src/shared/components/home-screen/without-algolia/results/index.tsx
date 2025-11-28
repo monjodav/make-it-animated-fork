@@ -1,30 +1,27 @@
 import { FC, RefObject, useState } from "react";
-import {
-  FlatList,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { APPS } from "../../../../lib/constants/apps";
+import { NativeScrollEvent, NativeSyntheticEvent, useWindowDimensions, View } from "react-native";
+import { STATIC_ANIMATIONS, StaticAnimation } from "../../../../lib/constants/apps";
 import { useAnimationsStore } from "../../../../lib/store/animations";
-import { Header } from "../header";
+import { ListItem } from "./list-item";
 import { BackToTopButton } from "./back-to-top-button";
+import CurvedDivider from "../../../curved-divider";
+import { FlashList, FlashListRef } from "@shopify/flash-list";
+import { AppText } from "../../../app-text";
 
 type Props = {
-  listRef: RefObject<FlatList | null>;
+  listRef: RefObject<FlashListRef<StaticAnimation> | null>;
 };
-const Results: FC<Props> = ({ listRef }) => {
+
+export const Results: FC<Props> = ({ listRef }) => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const value = useAnimationsStore.use.query();
 
   const { height: screenHeight } = useWindowDimensions();
 
-  const filteredApps =
+  const filteredStaticAnimations =
     value.trim().length === 0
-      ? APPS
-      : APPS.filter(
+      ? STATIC_ANIMATIONS
+      : STATIC_ANIMATIONS.filter(
           (app) =>
             app.appName.toLowerCase().includes(value.toLowerCase()) ||
             app.animationName.toLowerCase().includes(value.toLowerCase())
@@ -37,24 +34,27 @@ const Results: FC<Props> = ({ listRef }) => {
 
   return (
     <View className="flex-1">
-      <FlatList
+      <FlashList
         ref={listRef}
-        data={filteredApps}
+        data={filteredStaticAnimations}
         keyExtractor={(item) => item.animationName + "-" + item.appName}
-        renderItem={({ item, index }) => <Header animation={item} index={index} />}
-        contentContainerClassName="pt-5 pb-4 px-5 gap-4"
+        renderItem={({ item, index }) => <ListItem animation={item} index={index} />}
+        ItemSeparatorComponent={() => (
+          <View className="my-2">
+            <CurvedDivider />
+          </View>
+        )}
+        contentContainerClassName="py-5"
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         ListEmptyComponent={() => (
-          <Text className="text-white text-2xl text-center mt-10">No results found</Text>
+          <AppText className="text-white text-xl text-center mt-10">No results found 😔</AppText>
         )}
       />
       <BackToTopButton listRef={listRef} showBackToTop={showBackToTop} />
     </View>
   );
 };
-
-export default Results;

@@ -1,27 +1,33 @@
 import { FC } from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
-import { AppText } from "../../app-text";
-import { App } from "@/src/shared/lib/constants/apps";
+import { View, StyleSheet, Pressable } from "react-native";
+import { AppText } from "../../../app-text";
 import { router } from "expo-router";
 import { fireHaptic } from "@/src/shared/lib/utils/fire-haptic";
+import { cn } from "@/src/shared/lib/utils/cn";
+import { StaticAnimation } from "@/src/shared/lib/constants/apps";
 
-type HeaderProps = {
-  animation: App;
+type Props = {
+  animation: StaticAnimation;
   index: number;
 };
 
-export const Header: FC<HeaderProps> = ({ animation, index }) => {
+export const ListItem: FC<Props> = ({ animation, index }) => {
   const handleRedirect = () => {
     fireHaptic();
     router.push(animation.href);
   };
   return (
-    <Pressable onPress={handleRedirect} className="flex-row gap-3 items-center mx-2">
+    <Pressable onPress={handleRedirect} className="flex-row gap-3 items-center px-5 py-3">
       <View
-        className="w-[44px] h-[44px] rounded-2xl bg-foreground p-[1.5px] items-center justify-center"
+        className={cn(
+          "size-[44px] rounded-2xl border bg-muted border-foreground/5 items-center justify-center",
+          index > 98 && "w-[64px] h-[44px]"
+        )}
         style={[styles.borderCurve]}
       >
-        <Text className="w-full text-center text-4xl font-display">{index + 1}</Text>
+        <AppText className="w-full text-center text-4xl font-display text-foreground">
+          {index + 1}
+        </AppText>
       </View>
 
       <View className="flex-1">
