@@ -9,7 +9,10 @@
     "build:ios": "eas build --platform ios --profile production",
     "submit:ios": "eas build --platform ios --profile production --auto-submit",
     "android": "APP_VARIANT=development expo run:android --device",
-    "submit:android": "eas build --platform android --profile production --auto-submit"
+    "submit:android": "eas build --platform android --profile production --auto-submit",
+    "update": "node ./scripts/check-dev-mode.js && eas update",
+    "update:ios": "node ./scripts/check-dev-mode.js && eas update --platform=ios",
+    "update:android": "node ./scripts/check-dev-mode.js && eas update --platform=android"
   },
   "jest": {
     "preset": "jest-expo"
