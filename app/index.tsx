@@ -13,8 +13,9 @@ import { Animation } from "@/src/shared/lib/types/app";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Results as StaticResults } from "@/src/shared/components/home-screen/without-algolia/results";
 import { StaticAnimation } from "@/src/shared/lib/constants/apps";
-import { IS_ALGOLIA_ENABLED } from "@/src/shared/lib/constants/base";
+import { DEV_MODE_HREF, IS_ALGOLIA_ENABLED } from "@/src/shared/lib/constants/base";
 import { StaticBottomBar } from "@/src/shared/components/home-screen/without-algolia/static-bottom-bar";
+import { Redirect } from "expo-router";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -29,6 +30,10 @@ export default function Index() {
   const algoliaListRef = useRef<FlashListRef<Animation>>(null);
   const staticListRef = useRef<FlashListRef<StaticAnimation>>(null);
   const textInputRef = useRef<TextInput>(null);
+
+  if (DEV_MODE_HREF) {
+    return <Redirect href={DEV_MODE_HREF} />;
+  }
 
   return (
     <View

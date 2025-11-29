@@ -146,7 +146,6 @@ export function WithPullToRefresh({
         {(children.props as any).ListHeaderComponent?.()}
       </>
     ),
-    bounces: false,
   });
 
   const isListDragging = useSharedValue(false);
@@ -233,7 +232,7 @@ export function WithPullToRefresh({
 
   // Why: Allow native scroll to continue while our pan listens, avoiding gesture
   // ownership fights (Simultaneous resolves nested scroll + pull gestures cleanly).
-  const nativeGesture = Gesture.Native();
+  const nativeGesture = Gesture.Native().shouldActivateOnStart(true);
   const composedGestures = Gesture.Simultaneous(panGesture, nativeGesture);
 
   // Why: When external refreshing flag flips to false, collapse the header. Timing
