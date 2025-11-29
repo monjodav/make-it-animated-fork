@@ -178,7 +178,7 @@ export function WithPullToRefresh({
       // even after the animation has finished. By setting refreshOffsetY to a non-zero value here,
       // we ensure that the update logic in onChange only kicks in when a new touch actually begins,
       // avoiding interference from any incomplete touches.
-      refreshOffsetY.set(1);
+      refreshOffsetY.set(0.1);
     })
     .onChange((e) => {
       // Why: Work with deltas to avoid frame-to-frame accumulation error.
@@ -233,7 +233,7 @@ export function WithPullToRefresh({
 
   // Why: Allow native scroll to continue while our pan listens, avoiding gesture
   // ownership fights (Simultaneous resolves nested scroll + pull gestures cleanly).
-  const nativeGesture = Gesture.Native();
+  const nativeGesture = Gesture.Native().shouldActivateOnStart(true);
   const composedGestures = Gesture.Simultaneous(panGesture, nativeGesture);
 
   // Why: When external refreshing flag flips to false, collapse the header. Timing

@@ -32,7 +32,7 @@ npm run android
 npm run dev
 ```
 
-> **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point.
+> **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point. It also sets up the static animations list by disabling Algolia, as Algolia can only be used in the production app.
 
 ## System Requirements
 
