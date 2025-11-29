@@ -83,10 +83,9 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
         renderItem={_renderItem}
         ItemSeparatorComponent={_renderItemSeparator}
         showsVerticalScrollIndicator={false}
-        // Top padding creates space so the refresh indicator can overlap without jumping content
-        contentContainerStyle={{ paddingTop: 50 }}
         // Disable scroll during active refresh to prevent gesture conflicts with spring back animation
         scrollEnabled={!refreshing}
+        contentContainerClassName="pt-[50px]"
       />
     </WithPullToRefresh>
   );

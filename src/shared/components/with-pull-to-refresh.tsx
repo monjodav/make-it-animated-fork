@@ -146,6 +146,7 @@ export function WithPullToRefresh({
         {(children.props as any).ListHeaderComponent?.()}
       </>
     ),
+    bounces: false,
   });
 
   const isListDragging = useSharedValue(false);
@@ -177,7 +178,7 @@ export function WithPullToRefresh({
       // even after the animation has finished. By setting refreshOffsetY to a non-zero value here,
       // we ensure that the update logic in onChange only kicks in when a new touch actually begins,
       // avoiding interference from any incomplete touches.
-      refreshOffsetY.set(1);
+      refreshOffsetY.set(0.1);
     })
     .onChange((e) => {
       // Why: Work with deltas to avoid frame-to-frame accumulation error.
