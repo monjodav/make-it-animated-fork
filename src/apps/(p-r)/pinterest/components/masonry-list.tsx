@@ -1,9 +1,8 @@
 import { FlashList, FlashListRef } from "@shopify/flash-list";
 import React, { FC, memo, useRef, useState } from "react";
-import { Platform, View } from "react-native";
+import { View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { WithPullToRefresh } from "../../../../shared/components/with-pull-to-refresh";
-import { Board } from "../lib/types";
 import { useScrollToTop } from "@react-navigation/native";
 import { LoadingIndicator } from "./loading-indicator";
 
@@ -60,28 +59,6 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
     return <View className="h-3" />;
   };
 
-  if (Platform.OS === "android") {
-    return (
-      <AnimatedList
-        ref={listRef}
-        // Initial content appearance; short downward fade grounds the list under the refresh header
-        entering={FadeInDown}
-        data={data}
-        numColumns={2}
-        masonry
-        horizontal={false}
-        ListHeaderComponent={_renderListHeader}
-        renderItem={_renderItem}
-        ItemSeparatorComponent={_renderItemSeparator}
-        showsVerticalScrollIndicator={false}
-        // Top padding creates space so the refresh indicator can overlap without jumping content
-        contentContainerStyle={{ paddingTop: 50 }}
-        // Disable scroll during active refresh to prevent gesture conflicts with spring back animation
-        scrollEnabled={!refreshing}
-      />
-    );
-  }
-
   return (
     <WithPullToRefresh
       // Custom spinner; driven by shared refreshProgress from provider for tight coupling
@@ -106,10 +83,9 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
         renderItem={_renderItem}
         ItemSeparatorComponent={_renderItemSeparator}
         showsVerticalScrollIndicator={false}
-        // Top padding creates space so the refresh indicator can overlap without jumping content
-        contentContainerStyle={{ paddingTop: 50 }}
         // Disable scroll during active refresh to prevent gesture conflicts with spring back animation
         scrollEnabled={!refreshing}
+        contentContainerClassName="pt-[50px]"
       />
     </WithPullToRefresh>
   );
