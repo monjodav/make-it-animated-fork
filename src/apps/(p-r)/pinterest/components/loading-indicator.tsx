@@ -101,6 +101,7 @@ export const LoadingIndicator: FC = () => {
   });
 
   const rInnerContainerStyle = useAnimatedStyle(() => {
+    console.log("🔴 2 🔴", refreshProgress.get()); // VS remove
     return {
       // Fade-in earlier than full pull distance to pre-announce the indicator
       opacity: interpolate(refreshProgress.get(), [0, 0.75], [0, 1], Extrapolation.CLAMP),

@@ -1,6 +1,7 @@
 import { FC, useRef } from "react";
 import { usePullToRefresh } from "@/src/shared/components/with-pull-to-refresh";
 import Animated, {
+  Easing,
   Extrapolation,
   interpolate,
   useAnimatedProps,
@@ -78,7 +79,9 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
     // Handle scaling animation during refresh phases
     if (wasRefreshing.get() && !refreshing) {
       isPhase3.set(true);
-      animatedScale.set(withTiming(scaleTarget, { duration: 120 }));
+      animatedScale.set(
+        withTiming(scaleTarget, { duration: 150, easing: Easing.out(Easing.ease) })
+      );
     }
     // Reset states after phase 3 completes
     if (currentDerivedHeight < 1) {
@@ -93,36 +96,17 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
   });
 
   const rOuterContainerStyle = useAnimatedStyle(() => {
-    const currentDerivedHeight = derivedRefreshOffsetY.get();
-    const derivedBaseHeight = refreshViewBaseHeight / 3;
-    const progress = refreshProgress.get();
-
-    // Phase 1: Pull down - indicator appears slowly using refreshProgress
-    // Phase 2: Settled at base height - indicator stays at visible position
-    // Phase 3: Collapsing - indicator disappears (moves from visible to hidden)
-    const pullProgress = interpolate(progress, [0, 1], [0, 1], Extrapolation.CLAMP);
-
-    const collapseProgress = interpolate(
-      currentDerivedHeight,
-      [0, derivedBaseHeight],
+    const translateY = interpolate(
+      refreshProgress.get(),
       [0, 1],
-      Extrapolation.CLAMP
-    );
-
-    // Use pullProgress when pulling (progress < 1), otherwise use collapseProgress
-    const finalProgress = progress < 1 && !refreshing ? pullProgress : collapseProgress;
-
-    const indicatorPosition = interpolate(
-      finalProgress,
-      [0, 1],
-      [-SVG_HEIGHT - 10, 0],
+      [-SVG_HEIGHT, 0],
       Extrapolation.CLAMP
     );
 
     return {
       transform: [
         {
-          translateY: indicatorPosition,
+          translateY,
         },
       ],
     };
@@ -152,7 +136,7 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
     <>
       <Animated.View className="items-center" style={rOuterContainerStyle}>
         <Animated.View
-          className="absolute top-[11px] rounded-full w-[55px] h-[55px] bg-[#FF4400]"
+          className="absolute top-3 rounded-full size-[55px] bg-[#FF4400]"
           style={rBackgroundStyle}
         />
         <AnimatedSvg

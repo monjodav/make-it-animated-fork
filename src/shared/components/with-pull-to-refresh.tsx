@@ -102,8 +102,18 @@ export function WithPullToRefresh({
   // Interpolation: input [0, refreshThreshold] -> output [0, 1] with CLAMP to prevent
   // overshooting beyond 1 when users over-pull.
   const refreshProgress = useDerivedValue(() => {
-    if (refreshOffsetY.get() <= 1) return 0;
-    return interpolate(refreshOffsetY.get(), [0, refreshThreshold], [0, 1], Extrapolation.CLAMP);
+    const inputRangeFinalValue = lockRefreshViewOnRelease
+      ? refreshThreshold
+      : refreshViewBaseHeight;
+
+    if (refreshing) return 1;
+
+    return interpolate(
+      refreshOffsetY.get(),
+      [0, inputRangeFinalValue],
+      [0, 1],
+      Extrapolation.CLAMP
+    );
   });
 
   // Why: Track list scroll to know when we're at the very top. 16ms throttle (below)
