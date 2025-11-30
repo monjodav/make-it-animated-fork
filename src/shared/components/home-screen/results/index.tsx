@@ -135,7 +135,7 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="#B2ACA9" />
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="grey" />
         }
         onEndReachedThreshold={0.5}
         onEndReached={() => {
