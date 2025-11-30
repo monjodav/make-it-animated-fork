@@ -8,6 +8,11 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Pull to refresh loading animation",
+    appName: "Reddit",
+    href: "/reddit/home",
+  },
+  {
     animationName: "Moving dashed border animation",
     appName: "Opal",
     href: "/opal/blocks",

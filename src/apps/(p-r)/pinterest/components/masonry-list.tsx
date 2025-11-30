@@ -70,6 +70,7 @@ const MasonryList: FC<Props> = ({ boardName, data }) => {
       hapticFeedbackDirection="to-bottom"
       // Time to animate content back after release; slightly longer for Pinterest-like elasticity
       backAnimationDuration={700}
+      dampingFactor={3}
     >
       <AnimatedList
         ref={listRef}
