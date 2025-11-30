@@ -52,15 +52,25 @@ const Home = () => {
         </View>
       </View>
 
+      {/* reddit-pull-to-refresh-loading-animation 🔽 */}
       <WithPullToRefresh
         refreshing={refreshing}
         refreshComponent={<LoadingIndicator />}
+        // Neutral background matches Reddit's design; justify-start aligns indicator to top
+        // overflow-hidden prevents indicator from spilling outside container during animations
         refreshComponentContainerClassName="bg-neutral-50 justify-start overflow-hidden"
+        // Threshold: 160px pull distance triggers refresh
+        // Tuned to match visual indicator reveal timing (logo fully visible)
         refreshThreshold={160}
+        // Base height: 85px keeps indicator visible during refresh
+        // Sized to fit logo (80px) + small padding, matches ANIMATED_SVG_HEIGHT
         refreshViewBaseHeight={85}
+        // Haptic feedback only on downward pulls (more natural UX)
         hapticFeedbackDirection="to-bottom"
         onRefresh={refresh}
       >
+        {/* Animated.FlatList required: enables scroll event tracking on UI thread
+            Regular FlatList won't work - needs Reanimated's animated component for gesture coordination */}
         <Animated.FlatList
           data={Array.from({ length: 10 })}
           keyExtractor={(item, index) => `${item}-${index}`}
@@ -74,10 +84,12 @@ const Home = () => {
             />
           )}
           showsVerticalScrollIndicator={false}
+          // Disable scrolling during refresh to prevent gesture conflicts
           scrollEnabled={!refreshing}
           contentContainerStyle={{ paddingBottom: insets.bottom + 12 }}
         />
       </WithPullToRefresh>
+      {/* reddit-pull-to-refresh-loading-animation 🔼 */}
     </View>
   );
 };
