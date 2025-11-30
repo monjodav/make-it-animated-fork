@@ -43,6 +43,12 @@ interface WithPullToRefreshProps {
   backAnimationDuration?: number;
   refreshComponentContainerClassName?: string;
   hapticFeedbackDirection?: "to-bottom" | "both";
+  // Why: Factor to divide rawRefreshContainerHeight by to create elastic damping effect.
+  // Higher values create more damping (e.g., 3 = 1/3 movement). Default 1 means no damping.
+  dampingFactor?: number;
+  // Why: Offset added to refreshThreshold when calculating refreshProgress. Allows fine-tuning
+  // the progress calculation without changing the actual refresh trigger threshold.
+  refreshThresholdOffset?: number;
 }
 
 // -----------------------------------------
@@ -50,9 +56,11 @@ interface WithPullToRefreshProps {
 const WithPullToRefreshContext = createContext<{
   refreshing: boolean;
   refreshProgress: DerivedValue<number>;
-  refreshOffsetY: SharedValue<number>;
-  derivedRefreshOffsetY: DerivedValue<number>;
-  lockedRefreshOffsetY: SharedValue<number>;
+  rawRefreshContainerHeight: SharedValue<number>;
+  displayedRefreshContainerHeight: DerivedValue<number>;
+  lockedRefreshContainerHeight: SharedValue<number>;
+  refreshViewBaseHeight: number;
+  hasRefreshed: SharedValue<boolean>;
 } | null>(null);
 
 export const usePullToRefresh = () => {
@@ -67,17 +75,24 @@ export const usePullToRefresh = () => {
 
 export function WithPullToRefresh({
   children,
+  refreshing,
   refreshComponent,
   refreshThreshold = 200,
-  refreshing,
-  onRefresh,
   refreshViewBaseHeight = 200,
   lockRefreshViewOnRelease = false,
   backAnimationDuration = 400,
   refreshComponentContainerClassName,
   hapticFeedbackDirection = "both",
+  dampingFactor = 1,
+  onRefresh,
 }: WithPullToRefreshProps) {
   const { height: screenHeight } = useWindowDimensions();
+
+  // Why: Track if refresh has completed. Set to true when refreshing transitions from true to false,
+  // and reset to false when refreshing becomes true again.
+  const hasRefreshed = useSharedValue(false);
+  // Why: Track previous refreshing state to detect transitions.
+  const prevRefreshing = useSharedValue(refreshing);
 
   // Why: Live scroll offset from child list. Drives gesture gating (only when at top)
   // to avoid fighting with internal list physics.
@@ -86,31 +101,41 @@ export function WithPullToRefresh({
   // re-entrancy and subtle translationY drift during animations).
   const isAnimating = useSharedValue(false);
 
-  // Why: Raw finger-driven offset. We keep this separate from the displayed height so
-  // we can dampen the header movement relative to finger travel.
-  const refreshOffsetY = useSharedValue(0);
+  // Why: Height of the refresh container which equals the user pull offsetY value in 1:1 coefficient.
+  // We keep this separate from the displayed height so we can dampen the header movement relative to finger travel.
+  const rawRefreshContainerHeight = useSharedValue(0);
   // Why: Snapshot of release position used when locking the header at release height.
-  const lockedRefreshOffsetY = useSharedValue(0);
+  const lockedRefreshContainerHeight = useSharedValue(0);
 
-  // Why: Dampen header stretch to 1/3 of finger movement for elastic feel and to
+  // Why: Dampen header stretch by dividing raw height by dampingFactor for elastic feel and to
   // avoid oversized header inflation on long pulls.
-  const derivedRefreshOffsetY = useDerivedValue(() => {
-    return refreshOffsetY.get() / 3;
+  const displayedRefreshContainerHeight = useDerivedValue(() => {
+    return rawRefreshContainerHeight.get() / dampingFactor;
   });
 
-  // Why: Normalized progress 0..1 used by refresh indicator animations.
-  // Interpolation: input [0, refreshThreshold] -> output [0, 1] with CLAMP to prevent
-  // overshooting beyond 1 when users over-pull.
+  // Why: Normalized progress 0..1 used by refresh indicator animations. When refreshing, returns 1.
+  // When hasRefreshed is true, uses effectiveThreshold (refreshThreshold or refreshViewBaseHeight based on
+  // lockRefreshViewOnRelease). Otherwise uses refreshThreshold. Interpolation maps input [0, threshold]
+  // -> output [0, 1] with CLAMP to prevent overshooting beyond 1 when users over-pull.
   const refreshProgress = useDerivedValue(() => {
-    const inputRangeFinalValue = lockRefreshViewOnRelease
-      ? refreshThreshold
-      : refreshViewBaseHeight;
-
     if (refreshing) return 1;
 
+    if (hasRefreshed.get()) {
+      const effectiveThreshold = lockRefreshViewOnRelease
+        ? refreshThreshold
+        : refreshViewBaseHeight;
+
+      return interpolate(
+        rawRefreshContainerHeight.get(),
+        [0, effectiveThreshold],
+        [0, 1],
+        Extrapolation.CLAMP
+      );
+    }
+
     return interpolate(
-      refreshOffsetY.get(),
-      [0, inputRangeFinalValue],
+      rawRefreshContainerHeight.get(),
+      [0, refreshThreshold],
       [0, 1],
       Extrapolation.CLAMP
     );
@@ -136,7 +161,7 @@ export function WithPullToRefresh({
   // Why: Bind header height to derived offset so heavy UI (blur/spinner) stays smooth
   // on the UI thread.
   const rHeaderStyle = useAnimatedStyle(() => {
-    return { height: derivedRefreshOffsetY.get() };
+    return { height: displayedRefreshContainerHeight.get() };
   });
 
   // Why: Inject an animated header before user's header to host the refresh UI and
@@ -185,10 +210,10 @@ export function WithPullToRefresh({
       isListDragging.set(true);
       lastDragY.set(0);
       // Why is this needed? Because there's a subtle issue where translationY can continue updating
-      // even after the animation has finished. By setting refreshOffsetY to a non-zero value here,
+      // even after the animation has finished. By setting rawRefreshContainerHeight to a non-zero value here,
       // we ensure that the update logic in onChange only kicks in when a new touch actually begins,
       // avoiding interference from any incomplete touches.
-      refreshOffsetY.set(0.1);
+      rawRefreshContainerHeight.set(0.1);
     })
     .onChange((e) => {
       // Why: Work with deltas to avoid frame-to-frame accumulation error.
@@ -198,23 +223,23 @@ export function WithPullToRefresh({
       // Why: Only allow pulling when list is scrolled to top (<= 0). Once pulling,
       // continue responding even if listOffsetY fluctuates around 0. Clamp to screen
       // height to prevent runaway values on long drags.
-      if (listOffsetY.get() <= 0 || refreshOffsetY.get() > 1) {
-        const next = Math.max(0, Math.min(refreshOffsetY.get() + deltaY, screenHeight));
-        refreshOffsetY.set(next);
+      if (listOffsetY.get() <= 0 || rawRefreshContainerHeight.get() > 1) {
+        const next = Math.max(0, Math.min(rawRefreshContainerHeight.get() + deltaY, screenHeight));
+        rawRefreshContainerHeight.set(next);
         scrollDirectionOnScroll(next);
         singleHapticOnScroll(next);
       }
     })
     .onEnd(() => {
       // Why: Snapshot the release height for optional locking behavior.
-      lockedRefreshOffsetY.set(refreshOffsetY.get());
+      lockedRefreshContainerHeight.set(rawRefreshContainerHeight.get());
       isAnimating.set(true);
 
-      if (refreshOffsetY.get() >= refreshThreshold) {
+      if (rawRefreshContainerHeight.get() >= refreshThreshold) {
         // Why: Crossed threshold — settle to loading height with spring for elastic feel.
-        refreshOffsetY.set(
+        rawRefreshContainerHeight.set(
           withSpring(
-            lockRefreshViewOnRelease ? lockedRefreshOffsetY.get() : refreshViewBaseHeight,
+            lockRefreshViewOnRelease ? lockedRefreshContainerHeight.get() : refreshViewBaseHeight,
             {},
             (finished) => {
               if (finished) {
@@ -228,7 +253,7 @@ export function WithPullToRefresh({
         scheduleOnRN(onRefresh);
       } else {
         // Why: Not enough pull — animate header back with a quick timing curve.
-        refreshOffsetY.set(
+        rawRefreshContainerHeight.set(
           withTiming(0, { duration: backAnimationDuration }, (finished) => {
             if (finished) {
               isAnimating.set(false);
@@ -246,14 +271,27 @@ export function WithPullToRefresh({
   const nativeGesture = Gesture.Native().shouldActivateOnStart(true);
   const composedGestures = Gesture.Simultaneous(panGesture, nativeGesture);
 
-  // Why: When external refreshing flag flips to false, collapse the header. Timing
-  // mirrors the non-refresh path for consistent motion language.
+  // Why: Track refreshing state transitions and handle header collapse. When refreshing transitions
+  // from true to false, set hasRefreshed to true and collapse the header. When collapse animation
+  // finishes, reset hasRefreshed to false. Timing mirrors the non-refresh path for consistent motion language.
   useEffect(() => {
+    const prevRefreshingValue = prevRefreshing.get();
+
+    // When refreshing goes from true to false, set hasRefreshed to true
+    if (prevRefreshingValue && !refreshing) {
+      hasRefreshed.set(true);
+    }
+
+    prevRefreshing.set(refreshing);
+
     if (!refreshing) {
       isAnimating.set(true);
-      refreshOffsetY.set(
+      rawRefreshContainerHeight.set(
         withTiming(0, { duration: backAnimationDuration }, (finished) => {
-          if (finished) isAnimating.set(false);
+          if (finished) {
+            hasRefreshed.set(false);
+            isAnimating.set(false);
+          }
         })
       );
     }
@@ -262,15 +300,19 @@ export function WithPullToRefresh({
 
   const contextValue = {
     refreshing,
+    // Why: SharedValue flag indicating if refresh has completed. True when refreshing transitions from true to false, false otherwise.
+    hasRefreshed,
     // Why: Consumers animate indicators using a normalized value (0..1), independent
     // of actual pixel pull distance.
     refreshProgress,
-    // Why: Raw gesture offset for advanced consumers needing exact pull distance.
-    refreshOffsetY,
-    // Why: Damped header height used by this HOC to size the refresh container.
-    derivedRefreshOffsetY,
+    // Why: Height of the refresh container which equals the user pull offsetY value in 1:1 coefficient.
+    rawRefreshContainerHeight,
+    // Why: Displayed height of the refresh container used by this HOC to size the refresh container.
+    displayedRefreshContainerHeight,
     // Why: Release snapshot for lock-on-release behavior.
-    lockedRefreshOffsetY,
+    lockedRefreshContainerHeight,
+    // Why: Base height for the refresh view.
+    refreshViewBaseHeight,
   };
 
   return (
