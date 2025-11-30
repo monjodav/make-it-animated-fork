@@ -17,6 +17,7 @@ import Svg, { Path } from "react-native-svg";
 import { interpolatePath, parse } from "react-native-redash";
 import LottieView from "lottie-react-native";
 import { scheduleOnRN } from "react-native-worklets";
+import CakeRunner from "@/assets/lottie/cakerun.json";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
@@ -151,13 +152,14 @@ const LoadingIndicator: FC<{ refreshViewBaseHeight: number }> = ({ refreshViewBa
       </Animated.View>
       <LottieView
         ref={animationRef}
-        source={require("../../../../../assets/lottie/runner.json")}
+        source={CakeRunner}
+        speed={1.5}
         loop
         style={{
           position: "absolute",
-          top: -10,
-          width: 95,
-          height: 95,
+          top: 6,
+          width: 65,
+          height: 65,
         }}
       />
     </>

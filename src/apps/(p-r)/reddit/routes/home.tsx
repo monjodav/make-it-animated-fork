@@ -17,7 +17,7 @@ const Home = () => {
 
   const refresh = async () => {
     setRefreshing(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 4000));
     setRefreshing(false);
   };
 
@@ -60,7 +60,7 @@ const Home = () => {
         refreshComponentContainerClassName="bg-neutral-50 justify-start overflow-hidden"
         refreshing={refreshing}
         onRefresh={refresh}
-        refreshThreshold={REFRESH_VIEW_BASE_HEIGHT}
+        refreshThreshold={250}
         refreshViewBaseHeight={REFRESH_VIEW_BASE_HEIGHT}
         hapticFeedbackDirection="to-bottom"
         backAnimationDuration={500}
