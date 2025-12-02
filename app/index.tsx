@@ -31,6 +31,8 @@ export default function Index() {
   const staticListRef = useRef<FlashListRef<StaticAnimation>>(null);
   const textInputRef = useRef<TextInput>(null);
 
+  return <Redirect href='/juventus/home' />;
+
   if (DEV_MODE_HREF) {
     return <Redirect href={DEV_MODE_HREF} />;
   }
