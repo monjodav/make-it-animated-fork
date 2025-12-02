@@ -54,7 +54,7 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
           ) : (
             <View
               className={cn(
-                "translate-x-[10px] w-[150px] bg-red-300",
+                "translate-x-[10px] w-[150px]",
                 Platform.OS === "android" && "w-[160px]"
               )}
             >
