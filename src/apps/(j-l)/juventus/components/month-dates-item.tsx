@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { Game } from "../lib/constants";
 
 type MonthDatesItemProps = {
@@ -7,9 +7,16 @@ type MonthDatesItemProps = {
   weeks: Array<Array<Date | null>>;
   dateCellSize: number;
   games: Game[];
+  onDatePress?: (date: Date) => void;
 };
 
-const MonthDatesItem: FC<MonthDatesItemProps> = ({ screenWidth, weeks, dateCellSize, games }) => {
+const MonthDatesItem: FC<MonthDatesItemProps> = ({
+  screenWidth,
+  weeks,
+  dateCellSize,
+  games,
+  onDatePress,
+}) => {
   // Helper to check if a date has a game
   const hasGame = (date: Date | null) => {
     if (!date) return false;
@@ -34,20 +41,26 @@ const MonthDatesItem: FC<MonthDatesItemProps> = ({ screenWidth, weeks, dateCellS
                 style={{ width: dateCellSize, height: dateCellSize }}
               >
                 {date ? (
-                  <View className="relative items-center justify-center">
-                    {isGameDay && (
-                      <View
-                        className="absolute rounded-full border-2 border-red-700"
-                        style={{
-                          width: dateCellSize - 4,
-                          height: dateCellSize - 4,
-                        }}
-                      />
-                    )}
-                    <Text className="text-white text-lg font-semibold text-center">
-                      {date.getDate()}
-                    </Text>
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => isGameDay && onDatePress?.(date)}
+                    disabled={!isGameDay}
+                    activeOpacity={isGameDay ? 0.6 : 1}
+                  >
+                    <View className="relative items-center justify-center">
+                      {isGameDay && (
+                        <View
+                          className="absolute rounded-full border-2 border-red-700"
+                          style={{
+                            width: dateCellSize - 4,
+                            height: dateCellSize - 4,
+                          }}
+                        />
+                      )}
+                      <Text className="text-white text-lg font-semibold text-center">
+                        {date.getDate()}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 ) : null}
               </View>
             );

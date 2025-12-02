@@ -6,8 +6,11 @@ import Animated, {
   useSharedValue,
   useAnimatedRef,
   scrollTo,
+  useAnimatedReaction,
+  interpolate,
+  Extrapolation,
 } from "react-native-reanimated";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MonthItem from "./month-item";
 import { getMonths, getMonthWeeks } from "../lib/utils";
 import MonthDatesItem from "./month-dates-item";
@@ -18,6 +21,8 @@ import {
   MONTHS_GAP,
   MONTHS_OVERLAY_SCROLL_HEIGHT,
 } from "../lib/constants";
+import GameCard from "./game-card";
+import { scheduleOnRN } from "react-native-worklets";
 
 const Calendar = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -25,14 +30,39 @@ const Calendar = () => {
   const months = getMonths();
 
   const [monthWidths, setMonthWidths] = useState<number[]>([]);
+  //🚀🚀🚀
+  const [activeMonthIndex, setActiveMonthIndex] = useState(0);
 
   const scrollOffsetX = useSharedValue(0);
   const activeIndexProgress = useSharedValue(0);
 
   const scrollMonthsRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollDatesRef1 = useAnimatedRef<Animated.ScrollView>();
-  const scrollDatesRef2 = useAnimatedRef<Animated.ScrollView>();
+  const scrollDatesRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollDatesOverlayRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollGamesRef = useAnimatedRef<Animated.ScrollView>();
   const syncing = useSharedValue(false);
+
+  //🚀🚀🚀 Track active month index for games display
+  useAnimatedReaction(
+    () => activeIndexProgress.get(),
+    (current) => {
+      const rounded = Math.round(current);
+      if (activeMonthIndex !== rounded) {
+        scheduleOnRN(setActiveMonthIndex, rounded);
+      }
+    }
+  );
+
+  // 🚀🚀🚀Filter games for the currently visible month
+  const activeMonthGames = useMemo(() => {
+    if (activeMonthIndex >= months.length) return [];
+    const activeMonth = months[activeMonthIndex];
+    return MOCK_GAMES.filter(
+      (game) =>
+        game.date.getMonth() === activeMonth.date.getMonth() &&
+        game.date.getFullYear() === activeMonth.date.getFullYear()
+    );
+  }, [activeMonthIndex, months]);
 
   useDerivedValue(() => {
     if (monthWidths.length === months.length && monthWidths.every((w) => w > 0)) {
@@ -86,7 +116,7 @@ const Calendar = () => {
       scrollOffsetX.set(offsetX);
       activeIndexProgress.set(offsetX / screenWidth);
       syncing.set(true);
-      scrollTo(scrollDatesRef2, offsetX, 0, false);
+      scrollTo(scrollDatesOverlayRef, offsetX, 0, false);
       queueMicrotask(() => {
         syncing.set(false);
       });
@@ -99,7 +129,7 @@ const Calendar = () => {
       scrollOffsetX.set(offsetX);
       activeIndexProgress.set(offsetX / screenWidth);
       syncing.set(true);
-      scrollTo(scrollDatesRef1, offsetX, 0, false);
+      scrollTo(scrollDatesRef, offsetX, 0, false);
       queueMicrotask(() => {
         syncing.set(false);
       });
@@ -129,6 +159,30 @@ const Calendar = () => {
     return { width };
   });
 
+  const rGamesStyle = useAnimatedStyle(() => {
+    const progress = activeIndexProgress.get();
+    const frac = progress - Math.floor(progress);
+    const opacity = interpolate(frac, [0, 0.3, 0.7, 1], [1, 0, 0, 1], Extrapolation.CLAMP);
+    return { opacity };
+  });
+
+  // Handle date click to scroll to corresponding game
+  const handleDatePress = (date: Date) => {
+    const gameIndex = activeMonthGames.findIndex(
+      (game) =>
+        game.date.getDate() === date.getDate() &&
+        game.date.getMonth() === date.getMonth() &&
+        game.date.getFullYear() === date.getFullYear()
+    );
+
+    if (gameIndex !== -1 && scrollGamesRef.current) {
+      // Each game card is 280px wide + margin
+      const GAME_CARD_WIDTH = 280 + 12; // width + margin-right
+      const scrollOffset = gameIndex * GAME_CARD_WIDTH;
+      scrollGamesRef.current.scrollTo({ x: scrollOffset, animated: true });
+    }
+  };
+
   return (
     <View>
       <View className="items-center">
@@ -157,7 +211,7 @@ const Calendar = () => {
 
         <View style={{ height: MONTHS_OVERLAY_SCROLL_HEIGHT }} className="absolute">
           <Animated.ScrollView
-            ref={scrollDatesRef2}
+            ref={scrollDatesOverlayRef}
             horizontal
             showsHorizontalScrollIndicator={false}
             pagingEnabled
@@ -195,7 +249,7 @@ const Calendar = () => {
 
       <View className="items-center mt-6">
         <Animated.ScrollView
-          ref={scrollDatesRef1}
+          ref={scrollDatesRef}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -211,11 +265,34 @@ const Calendar = () => {
                 weeks={weeks}
                 dateCellSize={DATE_CELL_SIZE}
                 games={MOCK_GAMES}
+                onDatePress={handleDatePress}
               />
             );
           })}
         </Animated.ScrollView>
       </View>
+
+      {/* Games horizontal scroll for active month */}
+      <Animated.View style={rGamesStyle}>
+        {activeMonthGames.length > 0 ? (
+          <Animated.ScrollView
+            ref={scrollGamesRef}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ marginHorizontal: 16 }}
+          >
+            {activeMonthGames.map((game) => (
+              <GameCard key={game.id} game={game} />
+            ))}
+          </Animated.ScrollView>
+        ) : (
+          <View className="bg-white self-center rounded-2xl p-4 mr-3 w-[280px] h-[120px] justify-center">
+            <Text className="text-red-500 text-3xl text-center">
+              No official matches available this month
+            </Text>
+          </View>
+        )}
+      </Animated.View>
     </View>
   );
 };
