@@ -1,8 +1,8 @@
-// Generate months: 12 before now, current, 6 after
+// Generate months: 1.5 years (18 months) ahead from current month
 export const getMonths = (): { label: string; date: Date }[] => {
   const now = new Date();
   const months: { label: string; date: Date }[] = [];
-  for (let i = -12; i <= 6; i++) {
+  for (let i = 0; i <= 18; i++) {
     const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
     const label = d.toLocaleString("default", {
       month: "long",

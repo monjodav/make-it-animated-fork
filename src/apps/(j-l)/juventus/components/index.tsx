@@ -11,11 +11,13 @@ import { useState } from "react";
 import MonthItem from "./month-item";
 import { getMonths, getMonthWeeks } from "../lib/utils";
 import MonthDatesItem from "./month-dates-item";
-
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-const MONTHS_GAP = 30;
-const DATE_CELL_SIZE = 35;
-const MONTHS_OVERLAY_SCROLL_HEIGHT = 40;
+import {
+  DATE_CELL_SIZE,
+  DAYS,
+  MOCK_GAMES,
+  MONTHS_GAP,
+  MONTHS_OVERLAY_SCROLL_HEIGHT,
+} from "../lib/constants";
 
 const Calendar = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -110,7 +112,7 @@ const Calendar = () => {
       return { width: 0 };
     }
 
-    const progress = activeIndexProgress.value;
+    const progress = activeIndexProgress.get();
     const lastIdx = monthWidths.length - 1;
 
     // Clamp progress to valid range
@@ -208,6 +210,7 @@ const Calendar = () => {
                 screenWidth={screenWidth}
                 weeks={weeks}
                 dateCellSize={DATE_CELL_SIZE}
+                games={MOCK_GAMES}
               />
             );
           })}
