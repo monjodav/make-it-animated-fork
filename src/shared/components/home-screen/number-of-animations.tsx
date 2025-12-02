@@ -52,15 +52,21 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
               No animations found
             </AppText>
           ) : (
-            <View className="translate-x-[5px]">
+            <View
+              className={cn(
+                "translate-x-[10px] w-[150px] bg-red-300",
+                Platform.OS === "android" && "w-[160px]"
+              )}
+            >
               <WithShimmer
                 delay={3}
                 colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
+                containerStyle={{ width: "100%" }}
               >
                 <AppText
                   className={cn(
-                    "text-base font-sans-medium w-[145px]",
-                    Platform.OS === "android" && "w-[155px]"
+                    "text-base font-sans-medium w-[150px]",
+                    Platform.OS === "android" && "w-[160px]"
                   )}
                   maxFontSizeMultiplier={1}
                 >
