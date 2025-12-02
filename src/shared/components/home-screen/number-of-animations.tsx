@@ -1,5 +1,5 @@
 import { FC, RefObject } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
+import { View, StyleSheet, Pressable, Platform } from "react-native";
 import { useClearRefinements, useInstantSearch, useSearchBox } from "react-instantsearch-core";
 import { AppText } from "../app-text";
 import { useRefinementStatus } from "../../lib/hooks/use-refinement-status";
@@ -52,20 +52,21 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
               No animations found
             </AppText>
           ) : (
-            <View className="flex-row items-center">
+            <View className="translate-x-[5px]">
               <WithShimmer
                 delay={3}
                 colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
               >
-                <AppText className="text-base font-sans-medium w-[145px]" maxFontSizeMultiplier={1}>
+                <AppText
+                  className={cn(
+                    "text-base font-sans-medium w-[145px]",
+                    Platform.OS === "android" && "w-[155px]"
+                  )}
+                  maxFontSizeMultiplier={1}
+                >
                   {`${count} awesome animations`}
                 </AppText>
               </WithShimmer>
-              {!hasRefinements && (
-                <AppText className="text-base font-sans-medium" maxFontSizeMultiplier={1}>
-                  🌀
-                </AppText>
-              )}
             </View>
           )}
         </Animated.View>
