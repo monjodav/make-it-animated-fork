@@ -45,35 +45,25 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
       className="px-6 py-3 border-neutral-700/75 flex-row items-center justify-between"
       style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
     >
-      <View className={cn("flex-1 items-center justify-center", hasRefinements && "items-start")}>
+      <View className={cn("flex-1 items-center", hasRefinements && "items-start")}>
         <Animated.View layout={LinearTransition.springify()}>
           {count === 0 && hasRefinements ? (
             <AppText className="text-base text-muted-foreground font-sans-medium">
               No animations found
             </AppText>
           ) : (
-            <View
-              className={cn(
-                "translate-x-[10px] w-[150px]",
-                Platform.OS === "android" && "w-[160px]"
-              )}
+            <WithShimmer
+              delay={3}
+              colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
+              containerStyle={{
+                width: Platform.OS === "android" ? 160 : 155,
+                alignItems: "center",
+              }}
             >
-              <WithShimmer
-                delay={3}
-                colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
-                containerStyle={{ width: "100%" }}
-              >
-                <AppText
-                  className={cn(
-                    "text-base font-sans-medium w-[150px]",
-                    Platform.OS === "android" && "w-[160px]"
-                  )}
-                  maxFontSizeMultiplier={1}
-                >
-                  {`${count} awesome animations`}
-                </AppText>
-              </WithShimmer>
-            </View>
+              <AppText className="text-base font-sans-medium" maxFontSizeMultiplier={1}>
+                {`${count} awesome animations`}
+              </AppText>
+            </WithShimmer>
           )}
         </Animated.View>
       </View>
