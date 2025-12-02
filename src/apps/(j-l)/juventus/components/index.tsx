@@ -1,17 +1,13 @@
 import { Text, useWindowDimensions, View } from "react-native";
 import Animated, {
-  interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  Extrapolation,
-  useAnimatedReaction,
   useAnimatedRef,
   scrollTo,
 } from "react-native-reanimated";
 import { useState } from "react";
-import { scheduleOnRN } from "react-native-worklets";
 import MonthItem from "./month-item";
 import { getMonths, getMonthWeeks } from "../lib/utils";
 import MonthDatesItem from "./month-dates-item";
@@ -27,7 +23,6 @@ const Calendar = () => {
   const months = getMonths();
 
   const [monthWidths, setMonthWidths] = useState<number[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const scrollOffsetX = useSharedValue(0);
   const activeIndexProgress = useSharedValue(0);
@@ -82,17 +77,6 @@ const Calendar = () => {
     }
   });
 
-  useAnimatedReaction(
-    () => activeIndexProgress.get(),
-    (current, _) => {
-      const rounded = Math.round(current);
-
-      if (Math.abs(current - rounded) < 0.01 && activeIndex !== rounded) {
-        scheduleOnRN(setActiveIndex, rounded);
-      }
-    }
-  );
-
   const scrollHandlerDates1 = useAnimatedScrollHandler({
     onScroll: (event) => {
       if (syncing.get()) return;
@@ -121,25 +105,26 @@ const Calendar = () => {
   });
 
   const rRedLineStyle = useAnimatedStyle(() => {
-    if (activeIndexProgress.get() <= 0) {
-      return {
-        width: monthWidths[0],
-      };
+    // Guard until widths are measured
+    if (monthWidths.length === 0) {
+      return { width: 0 };
     }
-    if (activeIndexProgress.get() >= monthWidths.length - 1) {
-      return {
-        width: monthWidths[monthWidths.length - 1],
-      };
-    }
-    const width = interpolate(
-      activeIndexProgress.get(),
-      [activeIndex - 1, activeIndex, activeIndex + 1],
-      [monthWidths[activeIndex - 1], monthWidths[activeIndex], monthWidths[activeIndex + 1]],
-      Extrapolation.CLAMP
-    );
-    return {
-      width,
-    };
+
+    const progress = activeIndexProgress.value;
+    const lastIdx = monthWidths.length - 1;
+
+    // Clamp progress to valid range
+    const clamped = Math.max(0, Math.min(progress, lastIdx));
+    const leftIndex = Math.floor(clamped);
+    const rightIndex = Math.min(leftIndex + 1, lastIdx);
+    const t = clamped - leftIndex;
+
+    // Interpolate width between left and right month
+    const leftW = monthWidths[leftIndex] ?? 0;
+    const rightW = monthWidths[rightIndex] ?? leftW;
+    const width = leftW + t * (rightW - leftW);
+
+    return { width };
   });
 
   return (
