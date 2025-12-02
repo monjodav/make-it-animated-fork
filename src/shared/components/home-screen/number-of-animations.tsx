@@ -9,6 +9,7 @@ import { fireHaptic } from "../../lib/utils/fire-haptic";
 import { FlashListRef } from "@shopify/flash-list";
 import { Animation } from "../../lib/types/app";
 import { useAnimationsStore } from "../../lib/store/animations";
+import WithShimmer from "../with-shimmer";
 
 type NumberOfAnimationsProps = {
   listRef: RefObject<FlashListRef<Animation> | null>;
@@ -46,17 +47,33 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
     >
       <View className={cn("flex-1 items-center justify-center", hasRefinements && "items-start")}>
         <Animated.View layout={LinearTransition.springify()}>
-          <AppText className="text-base text-muted-foreground font-sans-medium">
-            {count === 0 && hasRefinements
-              ? "No animations found"
-              : `${count} awesome animations 🌀`}
-          </AppText>
+          {count === 0 && hasRefinements ? (
+            <AppText className="text-base text-muted-foreground font-sans-medium">
+              No animations found
+            </AppText>
+          ) : (
+            <View className="flex-row items-center">
+              <WithShimmer
+                delay={3}
+                colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
+              >
+                <AppText className="text-base font-sans-medium w-[145px]" maxFontSizeMultiplier={1}>
+                  {`${count} awesome animations`}
+                </AppText>
+              </WithShimmer>
+              {!hasRefinements && (
+                <AppText className="text-base font-sans-medium" maxFontSizeMultiplier={1}>
+                  🌀
+                </AppText>
+              )}
+            </View>
+          )}
         </Animated.View>
       </View>
       {hasRefinements && (
         <View className="flex-1 items-end">
           <Pressable onPress={handleReset} hitSlop={12}>
-            <AppText className="text-base text-muted-foreground">Reset</AppText>
+            <AppText className="text-base text-brand">Reset</AppText>
           </Pressable>
         </View>
       )}
