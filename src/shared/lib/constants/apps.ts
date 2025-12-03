@@ -8,6 +8,11 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Profile segmented control animation",
+    appName: "Perplexity",
+    href: "/perplexity/profile",
+  },
+  {
     animationName: "Pull to refresh loading animation",
     appName: "Reddit",
     href: "/reddit/home",
