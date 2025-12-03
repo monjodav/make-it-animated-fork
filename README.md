@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/images/misc/github-banner.png" alt="Make it Animated Logo" width="100%"/>
+  <img src="./assets/images/misc/repo-banner.png" alt="Make it Animated Logo" width="100%"/>
 </p>
 
 ## Thank you for purchasing access to Make it Animated!

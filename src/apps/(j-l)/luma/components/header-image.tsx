@@ -9,7 +9,7 @@ import Animated, {
 import { _headerHeight, _headerWidth, _topOffset } from "./header";
 import { BlurredImage } from "./blurred-image";
 // NOTE: The image must be portrait orientation
-import DubaiImage from "@/assets/images/misc/dubai.png";
+import DubaiImage from "@/assets/images/misc/luma/dubai.png";
 
 // luma-blurred-header-image-animation 🔽
 
