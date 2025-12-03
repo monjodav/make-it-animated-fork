@@ -39,7 +39,7 @@ const TabContent: FC<TabContentProps> = ({
         transition={200}
       />
       <Text className="text-white text-3xl font-medium">{title}</Text>
-      <Text className="text-white text-base mt-3">{description}</Text>
+      <Text className="text-white text-lg mt-3">{description}</Text>
       <Pressable
         onPress={onButtonPress ?? simulatePress}
         // borderCurve: "continuous" maintains visual consistency with container
@@ -49,7 +49,7 @@ const TabContent: FC<TabContentProps> = ({
       >
         {buttonIcon}
 
-        <Text className="text-black text-lg">{buttonText}</Text>
+        <Text className="text-black font-medium text-lg">{buttonText}</Text>
       </Pressable>
     </View>
   );

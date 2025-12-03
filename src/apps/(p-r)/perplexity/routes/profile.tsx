@@ -47,8 +47,8 @@ export default function Profile() {
           <TabContent
             imageSrc={threadsImage}
             title="Get started"
-            description="Created a thread to dive into a new world of curiosity and knowledge"
-            buttonText="Created a thread"
+            description="Create a thread to dive into a new world of curiosity and knowledge"
+            buttonText="Create a thread"
             buttonIcon={<Menu size={16} strokeWidth={3} color="black" />}
           />
         )}
@@ -57,7 +57,7 @@ export default function Profile() {
             imageSrc={spacesImage}
             title="Get started"
             description="Organize your threads and collaborate with others on a journey of discovery"
-            buttonText="Created a space"
+            buttonText="Create a space"
             buttonIcon={<Group size={16} strokeWidth={3} color="black" />}
           />
         )}
