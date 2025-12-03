@@ -30,7 +30,7 @@ const Calendar = () => {
   const months = getMonths();
 
   const [monthWidths, setMonthWidths] = useState<number[]>([]);
-  //🚀🚀🚀
+
   const [activeMonthIndex, setActiveMonthIndex] = useState(0);
 
   const scrollOffsetX = useSharedValue(0);
@@ -42,7 +42,7 @@ const Calendar = () => {
   const scrollGamesRef = useAnimatedRef<Animated.ScrollView>();
   const syncing = useSharedValue(false);
 
-  //🚀🚀🚀 Track active month index for games display
+  // Track active month index for games display
   useAnimatedReaction(
     () => activeIndexProgress.get(),
     (current) => {
@@ -53,7 +53,7 @@ const Calendar = () => {
     }
   );
 
-  // 🚀🚀🚀Filter games for the currently visible month
+  // Filter games for the currently visible month
   const activeMonthGames = useMemo(() => {
     if (activeMonthIndex >= months.length) return [];
     const activeMonth = months[activeMonthIndex];
