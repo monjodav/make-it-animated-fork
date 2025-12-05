@@ -2,8 +2,6 @@ import { Platform, Pressable, TextInput, View, StyleSheet } from "react-native";
 import { Search, X } from "lucide-react-native";
 import { KeyboardStickyView, KeyboardController } from "react-native-keyboard-controller";
 import { FC, useState, RefObject, useEffect } from "react";
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import useDebouncedCallback from "../../../lib/hooks/use-debounced-callback";
 import { FlashListRef } from "@shopify/flash-list";
 import { useAppStore } from "../../../lib/store/app";
@@ -11,6 +9,7 @@ import { useAnimationsStore } from "../../../lib/store/animations";
 import { fireHaptic } from "../../../lib/utils/fire-haptic";
 import { cn } from "../../../lib/utils/cn";
 import { StaticAnimation } from "@/src/shared/lib/constants/apps";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HEIGHT = 48;
 
@@ -21,6 +20,8 @@ type SearchBarProps = {
 
 export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
   const [isFocused, setIsFocused] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   const value = useAnimationsStore.use.query();
   const setValue = useAnimationsStore.use.setQuery();
@@ -49,15 +50,6 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
     }, 300);
   };
 
-  const { progress } = useReanimatedKeyboardAnimation();
-
-  const rContainerStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(progress.get() > 0 ? 1 : 0, { duration: 200 }),
-      pointerEvents: progress.get() > 0 ? "auto" : "none",
-    };
-  });
-
   // HACK: Hide search bar and dismiss keyboard when home anchor button is pressed
   // This is a workaround because for some reason the keyboard appears on navigation.goBack()
   useEffect(() => {
@@ -73,10 +65,10 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
   }
 
   return (
-    <KeyboardStickyView>
-      <Animated.View
-        className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-background border-neutral-700"
-        style={[rContainerStyle, { borderTopWidth: StyleSheet.hairlineWidth }]}
+    <KeyboardStickyView offset={{ opened: insets.bottom }}>
+      <View
+        className="absolute bottom-0 left-0 right-0 px-5 pt-3 bg-background border-neutral-700"
+        style={{ borderTopWidth: StyleSheet.hairlineWidth, paddingBottom: insets.bottom + 12 }}
       >
         <View
           className="flex-row items-center gap-2 rounded-2xl px-3 mb-1 overflow-hidden"
@@ -119,7 +111,7 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
             </Pressable>
           )}
         </View>
-      </Animated.View>
+      </View>
     </KeyboardStickyView>
   );
 };
