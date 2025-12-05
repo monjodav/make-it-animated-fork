@@ -1,10 +1,6 @@
 import { useWindowDimensions } from "react-native";
 import { useRef } from "react";
-import Animated, {
-  useAnimatedScrollHandler,
-  useDerivedValue,
-  useSharedValue,
-} from "react-native-reanimated";
+import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { USERS } from "../../lib/data/users";
 import UserItem from "./user-item";
 
@@ -13,22 +9,15 @@ const UsersCarousel = () => {
 
   const scrollRef = useRef<Animated.FlatList>(null);
 
-  const scrollOffsetX = useSharedValue(0);
-
-  const indexProgress = useSharedValue(0);
-  const activeIndex = useSharedValue(0);
-
-  useDerivedValue(() => {
-    console.log("indexProgress:", indexProgress.value);
-  });
+  const indexUserProgress = useSharedValue(0);
+  const activeUserIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      scrollOffsetX.set(event.contentOffset.x);
-      indexProgress.set(event.contentOffset.x / width);
+      indexUserProgress.set(event.contentOffset.x / width);
     },
     onMomentumEnd: (event) => {
-      activeIndex.set(Math.round(event.contentOffset.x / width));
+      activeUserIndex.set(Math.round(event.contentOffset.x / width));
     },
   });
 
@@ -39,11 +28,13 @@ const UsersCarousel = () => {
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item, index }) => (
         <UserItem
-          item={item}
-          index={index}
-          indexProgress={indexProgress}
+          userItem={item}
+          userIndex={index}
+          indexUserProgress={indexUserProgress}
           width={width}
+          activeUserIndex={activeUserIndex}
           scrollRef={scrollRef}
+          totalUsers={USERS.length}
         />
       )}
       horizontal

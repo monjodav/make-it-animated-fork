@@ -35,6 +35,8 @@ export default function Index() {
     return <Redirect href={DEV_MODE_HREF} />;
   }
 
+  return <Redirect href="/instagram/search" />;
+
   return (
     <View
       className="flex-1 bg-background"
