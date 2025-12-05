@@ -24,19 +24,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       
+      - name: Checkout dev branch and push to pre-main
+        run: |
+          git checkout dev
+          git pull origin dev || true
+          git push origin dev:pre-main --force
+      
       - name: Checkout pre-main branch
         run: |
           git fetch origin pre-main:pre-main 2>/dev/null || true
-          if git show-ref --verify --quiet refs/heads/pre-main || git show-ref --verify --quiet refs/remotes/origin/pre-main; then
-            git checkout pre-main
-            git pull origin pre-main || true
-          else
-            git checkout -b pre-main
-          fi
-      
-      - name: Merge dev into pre-main
-        run: |
-          git merge --no-ff -X theirs dev -m "chore: merge dev into pre-main"
+          git checkout pre-main || git checkout -b pre-main
+          git pull origin pre-main || true
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -55,7 +53,7 @@ jobs:
           git add -A
           git commit -m "chore: reset project for public release" || echo "No changes to commit"
       
-      - name: Push changes to pre-main
+      - name: Push reset changes to pre-main
         run: |
-          git push origin pre-main
+          git push origin pre-main --force
 
