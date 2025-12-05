@@ -36,7 +36,7 @@ jobs:
       
       - name: Merge dev into pre-main
         run: |
-          git merge --no-ff dev -m "chore: merge dev into pre-main"
+          git merge --no-ff -X theirs dev -m "chore: merge dev into pre-main"
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
