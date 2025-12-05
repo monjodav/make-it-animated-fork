@@ -16,8 +16,8 @@ Getting started with Make it Animated is easy. Follow these steps to run the pro
 # Clone the repository
 git clone https://github.com/make-it-animated/react-native.git
 
-# Run reset-project script
-npm run reset-project
+# Change to react-native directory
+cd react-native
 
 # Install dependencies
 npm install
@@ -31,8 +31,6 @@ npm run android
 # Start the development server
 npm run dev
 ```
-
-> **Note:** The `reset-project` script removes unnecessary settings from the app config file to give you a clean starting point. It also sets up the static animations list by disabling Algolia, as Algolia can only be used in the production app.
 
 ## System Requirements
 
