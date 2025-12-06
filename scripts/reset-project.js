@@ -9,7 +9,7 @@
  * - reset-index.js: Resets app/index.tsx to clean state
  * - reset-layout.js: Resets app/_layout.tsx to clean state
  * - reset-package-scripts.js: Resets package.json scripts to clean state
- * - Removes scripts folder (runs last)
+ * - Removes scripts and .github folders (runs last)
  * 
  * You can remove the `reset-project` script from package.json and safely delete this file after running it.
  * Individual reset scripts can also be run independently if needed.
@@ -48,6 +48,16 @@ const resetProject = async () => {
 
     // Reset package.json scripts to clean state
     await resetPackageScripts();
+    console.log();
+
+    // Remove .github folder
+    const githubPath = path.join(root, ".github");
+    if (fs.existsSync(githubPath)) {
+      await fs.promises.rm(githubPath, { recursive: true, force: true });
+      console.log("❌ .github folder deleted.");
+    } else {
+      console.log("➡️ .github folder does not exist, skipping.");
+    }
     console.log();
 
     // Remove scripts folder (must run last)
