@@ -8,14 +8,14 @@ When you clone this repository, you have two common scenarios:
 
 ### Scenario 1: No Changes to Commit (Read-Only)
 
-If you're only exploring the codebase, running the app, or learning from the examples **without making any changes**, you can safely work on the `main` branch:
+If you're only exploring the codebase, running the app, or learning from the examples **without making any changes**, you can safely work on the `public` branch:
 
 ```bash
-# Clone and stay on main branch
+# Clone and stay on public branch
 git clone https://github.com/make-it-animated/react-native.git
 cd react-native
 
-# You're already on main branch - safe to explore!
+# You're already on public branch - safe to explore!
 ```
 
 **When to use this:**
@@ -49,7 +49,7 @@ git checkout -b your-feature-branch
 
 ## Why Use Your Own Branch?
 
-Working on your own branch allows you to regularly pull updates from `main` without conflicts. Your changes are isolated, making it easier to resolve conflicts when pulling updates and keep your development work separate from the main branch.
+Working on your own branch allows you to regularly pull updates from `public` without conflicts. Your changes are isolated, making it easier to resolve conflicts when pulling updates and keep your development work separate from the public branch.
 
 ## Recommended Workflow
 
@@ -61,13 +61,13 @@ git checkout your-feature-branch
 
 # 2. Before starting work, pull latest changes
 git fetch origin
-git merge origin/main
+git merge origin/public
 
-# Or merge from local main (update main first)
-git checkout main
-git pull origin main
+# Or merge from local public (update public first)
+git checkout public
+git pull origin public
 git checkout your-feature-branch
-git merge main
+git merge public
 
 # 3. Make your changes
 # ... edit files ...
@@ -82,27 +82,27 @@ git push origin your-feature-branch
 
 ### Keeping Your Branch Updated
 
-Regularly sync with the main branch to avoid large merge conflicts:
+Regularly sync with the public branch to avoid large merge conflicts:
 
 ```bash
 # Fetch latest changes
 git fetch origin
 
-# Merge main into your branch
-git merge origin/main
+# Merge public into your branch
+git merge origin/public
 
-# Or merge from local main (update main first)
-git checkout main
-git pull origin main
+# Or merge from local public (update public first)
+git checkout public
+git pull origin public
 git checkout your-feature-branch
-git merge main
+git merge public
 ```
 
 ## Quick Reference
 
 | Situation           | Branch to Use   | Why                            |
 | ------------------- | --------------- | ------------------------------ |
-| Just exploring      | `main`          | No conflicts, simple workflow  |
+| Just exploring      | `public`        | No conflicts, simple workflow  |
 | Making changes      | Your own branch | Isolated work, easy updates    |
 | Regular development | Your own branch | Stay updated without conflicts |
 

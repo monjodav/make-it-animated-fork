@@ -13,7 +13,7 @@ I'm thrilled to have you on board. Your support means a lot to me, and I'm confi
 Getting started with Make it Animated is easy. Follow these steps to run the project locally:
 
 ```bash
-# Clone the repository
+# Clone the repository (default branch is 'public')
 git clone https://github.com/make-it-animated/rn-makeitanimated.git
 
 # Change to rn-makeitanimated directory
@@ -31,6 +31,16 @@ npm run android
 # Start the development server
 npm run dev
 ```
+
+> **📌 Default Branch:** The default branch of this repository is `public`. When you clone the repository, you'll be on the `public` branch by default.
+
+> **🔄 Already Cloned with `main` Branch?** If you cloned this repository before the default branch was changed to `public`, you can switch to the `public` branch with:
+> ```bash
+> git fetch origin
+> git checkout public
+> git branch -u origin/public public
+> ```
+> This will switch your local repository to the `public` branch and set it to track the remote `public` branch.
 
 > **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
 
