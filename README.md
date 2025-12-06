@@ -14,10 +14,10 @@ Getting started with Make it Animated is easy. Follow these steps to run the pro
 
 ```bash
 # Clone the repository
-git clone https://github.com/make-it-animated/react-native.git
+git clone https://github.com/make-it-animated/rn-makeitanimated.git
 
-# Change to react-native directory
-cd react-native
+# Change to rn-makeitanimated directory
+cd rn-makeitanimated
 
 # Install dependencies
 npm install
@@ -33,6 +33,8 @@ npm run dev
 ```
 
 > **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
+
+> **📝 Repository Name Change (December 06, 2025):** This repository was renamed from `react-native` to `rn-makeitanimated` to avoid confusion with the React Native framework. GitHub automatically handles redirects (301), but if you encounter issues pulling changes, update your remote: `git remote set-url origin git@github.com:make-it-animated/rn-makeitanimated.git` (check current remote with `git remote -v`).
 
 ## System Requirements
 
@@ -53,7 +55,7 @@ npm run dev
 The project is organized as follows:
 
 ```
-make-it-animated/
+rn-makeitanimated/
 ├── app/                  # Expo Router navigation structure
 │   ├── (apps)/           # Group containing individual animation routes
 │   │   ├── (a-c)/        # Alphabetically grouped app routes
