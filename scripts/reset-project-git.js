@@ -4,15 +4,14 @@
 /**
  * This script orchestrates the git workflow for resetting the project:
  * 1. Checks if working directory is clean
- * 2. Stashes current state
+ * 2. Saves current HEAD commit hash
  * 3. Runs reset-project script
  * 4. Commits changes with "chore: reset project for public release"
- * 5. Restores original code from stash
+ * 5. Restores original code from saved commit hash
  * 6. Commits restored code with "chore: reset project for dev purposes"
  */
 
 const { execSync } = require("child_process");
-const STASH_MESSAGE = "reset-project-git-temp-stash";
 
 /**
  * Executes a git command and returns the output
@@ -42,53 +41,32 @@ const isWorkingDirectoryClean = () => {
 };
 
 /**
- * Creates a stash from HEAD state with a specific message
- * Since working directory is already verified to be clean, we stash the committed code
- * @param {string} message - Stash message
+ * Gets the current HEAD commit hash
+ * @returns {string} Commit hash
  */
-const createStash = (message) => {
+const getHeadCommitHash = () => {
   try {
-    // Stash the HEAD state using git stash create
-    // This creates a stash from the current HEAD without modifying the working directory
-    const stashHash = gitCommand("stash create");
-    if (!stashHash || stashHash.trim() === "") {
-      throw new Error("Failed to create stash from HEAD");
+    const commitHash = gitCommand("rev-parse HEAD");
+    if (!commitHash || commitHash.trim() === "") {
+      throw new Error("Failed to get HEAD commit hash");
     }
-    gitCommand(`stash store -m "${message}" ${stashHash}`);
-    console.log(`✅ Stashed HEAD state with message: "${message}"`);
+    return commitHash.trim();
   } catch (error) {
-    throw new Error(`Failed to create stash: ${error.message}`);
+    throw new Error(`Failed to get HEAD commit hash: ${error.message}`);
   }
 };
 
 /**
- * Applies and removes the stash
+ * Restores all files from a specific commit
+ * @param {string} commitHash - Commit hash to restore from
  */
-const popStash = () => {
+const restoreFromCommit = (commitHash) => {
   try {
-    // Find the stash index by message
-    const stashList = gitCommand("stash list");
-    if (stashList === "" || !stashList.includes(STASH_MESSAGE)) {
-      throw new Error(`Stash with message "${STASH_MESSAGE}" not found`);
-    }
-    
-    const lines = stashList.split("\n");
-    const stashLine = lines.find((line) => line.includes(STASH_MESSAGE));
-    if (!stashLine) {
-      throw new Error(`Stash with message "${STASH_MESSAGE}" not found`);
-    }
-    
-    const stashMatch = stashLine.match(/^stash@\{(\d+)\}/);
-    if (!stashMatch) {
-      throw new Error(`Could not parse stash index from: ${stashLine}`);
-    }
-    
-    const stashIndex = stashMatch[1];
-    gitCommand(`stash apply stash@{${stashIndex}}`);
-    gitCommand(`stash drop stash@{${stashIndex}}`);
-    console.log("✅ Restored original code from stash");
+    // Checkout all files from the specified commit
+    gitCommand(`checkout ${commitHash} -- .`);
+    console.log(`✅ Restored original code from commit ${commitHash.substring(0, 7)}`);
   } catch (error) {
-    throw new Error(`Failed to pop stash: ${error.message}`);
+    throw new Error(`Failed to restore from commit: ${error.message}`);
   }
 };
 
@@ -134,10 +112,10 @@ const main = async () => {
     }
     console.log("✅ Working directory is clean\n");
 
-    // Step 2: Stash HEAD state (committed code)
-    console.log("📦 Stashing HEAD state...");
-    createStash(STASH_MESSAGE);
-    console.log();
+    // Step 2: Save current HEAD commit hash
+    console.log("📦 Saving current HEAD commit hash...");
+    const originalCommitHash = getHeadCommitHash();
+    console.log(`✅ Saved HEAD commit: ${originalCommitHash.substring(0, 7)}\n`);
 
     // Step 3: Run reset-project script
     runResetProject();
@@ -148,9 +126,9 @@ const main = async () => {
     commitChanges("chore: reset project for public release");
     console.log();
 
-    // Step 5: Restore original code
-    console.log("🔄 Restoring original code from stash...");
-    popStash();
+    // Step 5: Restore original code from saved commit
+    console.log("🔄 Restoring original code from saved commit...");
+    restoreFromCommit(originalCommitHash);
     console.log();
 
     // Step 6: Commit restored code
@@ -162,8 +140,8 @@ const main = async () => {
   } catch (error) {
     console.error(`❌ Error during workflow execution: ${error.message}`);
     console.error("\n⚠️  You may need to manually restore your working directory:");
-    console.error(`   git stash list`);
-    console.error(`   git stash pop`);
+    console.error(`   git log --oneline -n 5`);
+    console.error(`   git checkout <commit-hash> -- .`);
     process.exit(1);
   }
 };
