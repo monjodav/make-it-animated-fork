@@ -2,9 +2,9 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script resets package.json scripts section to a clean state.
+ * This script resets package.json scripts section to a clean state for public branch.
  * Replaces complex scripts with simple dev, ios, and android scripts.
- * Can be run independently or as part of reset-project.js
+ * Can be run independently or as part of prepare-public.js
  */
 
 const fs = require("fs");

@@ -2,8 +2,8 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script removes app.config.ts and creates app.json with basic configuration.
- * Can be run independently or as part of reset-project.js
+ * This script removes app.config.ts and creates app.json with basic configuration for public branch.
+ * Can be run independently or as part of prepare-public.js
  */
 
 const fs = require("fs");

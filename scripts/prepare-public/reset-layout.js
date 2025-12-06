@@ -2,8 +2,8 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script resets app/_layout.tsx to a clean state.
- * Can be run independently or as part of reset-project.js
+ * This script resets app/_layout.tsx to a clean state for public branch.
+ * Can be run independently or as part of prepare-public.js
  */
 
 const fs = require("fs");

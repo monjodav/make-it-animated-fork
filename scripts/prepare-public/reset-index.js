@@ -2,8 +2,8 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script resets app/index.tsx to a clean state with static components.
- * Can be run independently or as part of reset-project.js
+ * This script resets app/index.tsx to a clean state with static components for public branch.
+ * Can be run independently or as part of prepare-public.js
  */
 
 const fs = require("fs");

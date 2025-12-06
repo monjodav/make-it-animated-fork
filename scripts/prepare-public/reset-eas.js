@@ -2,8 +2,8 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script removes eas.json if it exists.
- * Can be run independently or as part of reset-project.js
+ * This script removes eas.json for public branch.
+ * Can be run independently or as part of prepare-public.js
  */
 
 const fs = require("fs");

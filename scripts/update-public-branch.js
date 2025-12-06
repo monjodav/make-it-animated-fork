@@ -2,13 +2,13 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script orchestrates the git workflow for resetting the project:
+ * This script orchestrates the git workflow for updating the public branch:
  * 1. Checks if working directory is clean
  * 2. Saves current HEAD commit hash
- * 3. Runs reset-project script
- * 4. Commits changes with "chore: reset project for public release"
+ * 3. Runs prepare-public script
+ * 4. Commits changes with "chore: prepare public branch"
  * 5. Restores original code from saved commit hash
- * 6. Commits restored code with "chore: reset project for dev purposes"
+ * 6. Commits restored code with "chore: restore main branch"
  */
 
 const { execSync } = require("child_process");
@@ -85,15 +85,15 @@ const commitChanges = (message) => {
 };
 
 /**
- * Runs the reset-project npm script
+ * Runs the prepare-public npm script
  */
-const runResetProject = () => {
+const runPreparePublic = () => {
   try {
-    console.log("🔄 Running reset-project script...\n");
-    execSync("npm run reset-project", { stdio: "inherit" });
-    console.log("\n✅ Reset-project script completed");
+    console.log("🔄 Running prepare-public script...\n");
+    execSync("npm run prepare-public", { stdio: "inherit" });
+    console.log("\n✅ Prepare-public script completed");
   } catch (error) {
-    throw new Error(`Failed to run reset-project: ${error.message}`);
+    throw new Error(`Failed to run prepare-public: ${error.message}`);
   }
 };
 
@@ -102,7 +102,7 @@ const runResetProject = () => {
  */
 const main = async () => {
   try {
-    console.log("🚀 Starting git reset workflow...\n");
+    console.log("🚀 Starting public branch update workflow...\n");
 
     // Step 1: Check if working directory is clean
     console.log("📋 Checking if working directory is clean...");
@@ -117,13 +117,13 @@ const main = async () => {
     const originalCommitHash = getHeadCommitHash();
     console.log(`✅ Saved HEAD commit: ${originalCommitHash.substring(0, 7)}\n`);
 
-    // Step 3: Run reset-project script
-    runResetProject();
+    // Step 3: Run prepare-public script
+    runPreparePublic();
     console.log();
 
-    // Step 4: Commit reset changes
-    console.log("📝 Committing reset changes for public release...");
-    commitChanges("chore: reset project for public release");
+    // Step 4: Commit changes for public branch
+    console.log("📝 Committing changes for public branch...");
+    commitChanges("chore: prepare public branch");
     console.log();
 
     // Step 5: Restore original code from saved commit
@@ -131,12 +131,12 @@ const main = async () => {
     restoreFromCommit(originalCommitHash);
     console.log();
 
-    // Step 6: Commit restored code
-    console.log("📝 Committing restored code for dev purposes...");
-    commitChanges("chore: reset project for dev purposes");
+    // Step 6: Commit restored code for main branch
+    console.log("📝 Committing restored code for main branch...");
+    commitChanges("chore: restore main branch");
     console.log();
 
-    console.log("✅ Git reset workflow completed successfully!");
+    console.log("✅ Public branch update workflow completed successfully!");
   } catch (error) {
     console.error(`❌ Error during workflow execution: ${error.message}`);
     console.error("\n⚠️  You may need to manually restore your working directory:");
@@ -147,3 +147,4 @@ const main = async () => {
 };
 
 main();
+
