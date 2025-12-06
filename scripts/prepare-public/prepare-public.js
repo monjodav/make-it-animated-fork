@@ -13,6 +13,8 @@
  * Individual reset scripts can also be run independently if needed.
  */
 
+const fs = require("fs");
+const path = require("path");
 const { resetAppConfig } = require("./reset-app-config");
 const { resetEas } = require("./reset-eas");
 const { resetIndex } = require("./reset-index");
@@ -42,6 +44,13 @@ const preparePublic = async () => {
     // Prepare package.json scripts to clean state for public branch
     await resetPackageScripts();
     console.log();
+
+    // Remove scripts folder at the end
+    const scriptsFolderPath = path.join(process.cwd(), "scripts");
+    if (fs.existsSync(scriptsFolderPath)) {
+      fs.rmSync(scriptsFolderPath, { recursive: true, force: true });
+      console.log("🗑️  Removed scripts folder");
+    }
 
     console.log("✅ Preparation for public branch complete!");
   } catch (error) {
