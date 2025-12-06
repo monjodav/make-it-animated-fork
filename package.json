@@ -3,9 +3,18 @@
   "main": "expo-router/entry",
   "version": "2.0.0",
   "scripts": {
-    "dev": "expo start -c",
-    "ios": "expo run:ios --device",
-    "android": "expo run:android --device"
+    "push": "git push origin dev && git push origin dev:pre-main --force",
+    "reset-project": "node ./scripts/reset-project.js",
+    "reset-project-git": "node ./scripts/reset-project-git.js",
+    "dev": "APP_VARIANT=development expo start -c",
+    "ios": "APP_VARIANT=development expo run:ios --device",
+    "build:ios": "eas build --platform ios --profile production",
+    "submit:ios": "eas build --platform ios --profile production --auto-submit",
+    "android": "APP_VARIANT=development expo run:android --device",
+    "submit:android": "eas build --platform android --profile production --auto-submit",
+    "update": "node ./scripts/check-dev-mode.js && eas update",
+    "update:ios": "node ./scripts/check-dev-mode.js && eas update --platform=ios",
+    "update:android": "node ./scripts/check-dev-mode.js && eas update --platform=android"
   },
   "jest": {
     "preset": "jest-expo"
