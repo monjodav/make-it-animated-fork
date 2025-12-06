@@ -32,6 +32,8 @@ npm run android
 npm run dev
 ```
 
+> **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
+
 ## System Requirements
 
 - **Expo SDK 54** - For more details, check the [Expo 54 Changelog Blog Post ](https://expo.dev/changelog/sdk-54)
