@@ -108,3 +108,7 @@ Visit [www.makeitanimated.dev](https://www.makeitanimated.dev) and choose the co
 ---
 
 Thank you again for your support! Happy animating! 🚀
+
+---
+
+[License Agreement](./LICENSE)
