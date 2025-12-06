@@ -7,8 +7,9 @@
  * 2. Saves current HEAD commit hash
  * 3. Runs prepare-public script
  * 4. Commits changes with "chore: prepare public branch"
- * 5. Restores original code from saved commit hash
- * 6. Commits restored code with "chore: restore main branch"
+ * 5. Pushes code from main to public branch with force
+ * 6. Restores original code from saved commit hash
+ * 7. Commits restored code with "chore: restore main branch"
  */
 
 const { execSync } = require("child_process");
@@ -85,6 +86,19 @@ const commitChanges = (message) => {
 };
 
 /**
+ * Pushes code from main branch to public branch with force
+ */
+const pushMainToPublic = () => {
+  try {
+    console.log("📤 Pushing main to public branch with force...");
+    gitCommand("push origin main:public --force");
+    console.log("✅ Successfully pushed main to public branch");
+  } catch (error) {
+    throw new Error(`Failed to push to public branch: ${error.message}`);
+  }
+};
+
+/**
  * Runs the prepare-public npm script
  */
 const runPreparePublic = () => {
@@ -126,12 +140,16 @@ const main = async () => {
     commitChanges("chore: prepare public branch");
     console.log();
 
-    // Step 5: Restore original code from saved commit
+    // Step 5: Push main to public branch with force
+    pushMainToPublic();
+    console.log();
+
+    // Step 6: Restore original code from saved commit
     console.log("🔄 Restoring original code from saved commit...");
     restoreFromCommit(originalCommitHash);
     console.log();
 
-    // Step 6: Commit restored code for main branch
+    // Step 7: Commit restored code for main branch
     console.log("📝 Committing restored code for main branch...");
     commitChanges("chore: restore main branch");
     console.log();
