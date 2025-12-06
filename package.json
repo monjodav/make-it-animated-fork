@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "2.0.0",
   "scripts": {
-    "push": "git push origin dev:pre-main --force",
+    "push": "git push origin dev && git push origin dev:pre-main --force",
     "reset-project": "node ./scripts/reset-project.js",
     "dev": "APP_VARIANT=development expo start -c",
     "ios": "APP_VARIANT=development expo run:ios --device",
