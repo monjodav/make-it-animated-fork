@@ -3,7 +3,7 @@ name: Dev push
 on:
   push:
     branches:
-      - dev
+      - pre-main
 
 jobs:
   dev-push:
@@ -24,16 +24,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
       
-      - name: Checkout dev branch and push to pre-main
-        run: |
-          git checkout dev
-          git pull origin dev || true
-          git push origin dev:pre-main --force
-      
       - name: Checkout pre-main branch
         run: |
-          git fetch origin pre-main:pre-main 2>/dev/null || true
-          git checkout pre-main || git checkout -b pre-main
+          git checkout pre-main
           git pull origin pre-main || true
       
       - name: Setup Node.js
