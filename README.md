@@ -6,7 +6,7 @@
 
 I'm thrilled to have you on board. Your support means a lot to me, and I'm confident that this library will help you create stunning and engaging applications. I'm excited to see what you'll build! Stay tuned for future updates.
 
-> **Note:** All animation previews are available on our website: [www.makeitanimated.dev](https://www.makeitanimated.dev)
+> **Note:** All animation previews are available on the website: [www.makeitanimated.dev](https://www.makeitanimated.dev)
 
 ## Quick Start
 
@@ -34,6 +34,8 @@ npm run dev
 
 > **📌 Default Branch:** The default branch of this repository is `public`. When you clone the repository, you'll be on the `public` branch by default.
 
+---
+
 > **🔄 Already Cloned with `main` Branch?** If you cloned this repository before the default branch was changed to `public`, you can switch to the `public` branch with:
 > ```bash
 > git fetch origin
@@ -42,7 +44,11 @@ npm run dev
 > ```
 > This will switch your local repository to the `public` branch and set it to track the remote `public` branch.
 
+---
+
 > **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
+
+---
 
 > **📝 Repository Name Change (December 06, 2025):** This repository was renamed from `react-native` to `rn-makeitanimated` to avoid confusion with the React Native framework. GitHub automatically handles redirects (301), but if you encounter issues pulling changes, update your remote: `git remote set-url origin git@github.com:make-it-animated/rn-makeitanimated.git` (check current remote with `git remote -v`).
 
