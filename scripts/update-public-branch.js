@@ -58,13 +58,48 @@ const getHeadCommitHash = () => {
 };
 
 /**
- * Restores all files from a specific commit
+ * Gets the list of files tracked in a specific commit
+ * @param {string} commitHash - Commit hash
+ * @returns {string[]} Array of file paths
+ */
+const getTrackedFiles = (commitHash) => {
+  try {
+    const files = gitCommand(`ls-tree -r --name-only ${commitHash}`);
+    return files.split("\n").filter((file) => file.trim() !== "");
+  } catch (error) {
+    throw new Error(`Failed to get tracked files: ${error.message}`);
+  }
+};
+
+/**
+ * Restores all files from a specific commit and removes files that weren't in that commit
  * @param {string} commitHash - Commit hash to restore from
  */
 const restoreFromCommit = (commitHash) => {
   try {
+    // Get list of files that existed in the original commit
+    const originalFiles = getTrackedFiles(commitHash);
+    const originalFilesSet = new Set(originalFiles);
+
     // Checkout all files from the specified commit
     gitCommand(`checkout ${commitHash} -- .`);
+
+    // Get current tracked files
+    const currentFiles = gitCommand("ls-files").split("\n").filter((file) => file.trim() !== "");
+
+    // Remove files that exist now but weren't in the original commit
+    const filesToRemove = currentFiles.filter((file) => !originalFilesSet.has(file));
+    if (filesToRemove.length > 0) {
+      filesToRemove.forEach((file) => {
+        try {
+          gitCommand(`rm ${file}`);
+        } catch {
+          // File might already be removed or not exist, continue
+        }
+      });
+      console.log(`🗑️  Removed ${filesToRemove.length} file(s) that weren't in original commit`);
+    }
+
     console.log(`✅ Restored original code from commit ${commitHash.substring(0, 7)}`);
   } catch (error) {
     throw new Error(`Failed to restore from commit: ${error.message}`);
