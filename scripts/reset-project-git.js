@@ -42,13 +42,20 @@ const isWorkingDirectoryClean = () => {
 };
 
 /**
- * Creates a stash with a specific message
+ * Creates a stash from HEAD state with a specific message
+ * Since working directory is already verified to be clean, we stash the committed code
  * @param {string} message - Stash message
  */
 const createStash = (message) => {
   try {
-    gitCommand(`stash push -m "${message}"`);
-    console.log(`✅ Stashed current state with message: "${message}"`);
+    // Stash the HEAD state using git stash create
+    // This creates a stash from the current HEAD without modifying the working directory
+    const stashHash = gitCommand("stash create");
+    if (!stashHash || stashHash.trim() === "") {
+      throw new Error("Failed to create stash from HEAD");
+    }
+    gitCommand(`stash store -m "${message}" ${stashHash}`);
+    console.log(`✅ Stashed HEAD state with message: "${message}"`);
   } catch (error) {
     throw new Error(`Failed to create stash: ${error.message}`);
   }
@@ -59,7 +66,26 @@ const createStash = (message) => {
  */
 const popStash = () => {
   try {
-    gitCommand("stash pop");
+    // Find the stash index by message
+    const stashList = gitCommand("stash list");
+    if (stashList === "" || !stashList.includes(STASH_MESSAGE)) {
+      throw new Error(`Stash with message "${STASH_MESSAGE}" not found`);
+    }
+    
+    const lines = stashList.split("\n");
+    const stashLine = lines.find((line) => line.includes(STASH_MESSAGE));
+    if (!stashLine) {
+      throw new Error(`Stash with message "${STASH_MESSAGE}" not found`);
+    }
+    
+    const stashMatch = stashLine.match(/^stash@\{(\d+)\}/);
+    if (!stashMatch) {
+      throw new Error(`Could not parse stash index from: ${stashLine}`);
+    }
+    
+    const stashIndex = stashMatch[1];
+    gitCommand(`stash apply stash@{${stashIndex}}`);
+    gitCommand(`stash drop stash@{${stashIndex}}`);
     console.log("✅ Restored original code from stash");
   } catch (error) {
     throw new Error(`Failed to pop stash: ${error.message}`);
@@ -108,8 +134,8 @@ const main = async () => {
     }
     console.log("✅ Working directory is clean\n");
 
-    // Step 2: Stash current state
-    console.log("📦 Stashing current state...");
+    // Step 2: Stash HEAD state (committed code)
+    console.log("📦 Stashing HEAD state...");
     createStash(STASH_MESSAGE);
     console.log();
 
@@ -143,4 +169,3 @@ const main = async () => {
 };
 
 main();
-
