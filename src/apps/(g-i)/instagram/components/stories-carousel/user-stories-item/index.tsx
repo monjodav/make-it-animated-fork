@@ -11,11 +11,13 @@ import Animated, {
   useDerivedValue,
 } from "react-native-reanimated";
 import { Image } from "expo-image";
-import { Story } from "../../lib/data/users";
+import { Story } from "../../../lib/data/users";
 import { scheduleOnRN } from "react-native-worklets";
-import StoryDashItem from "./story-dash-item";
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import StoryDashItem from "../story-dash-item";
+import { TextInput } from "react-native-gesture-handler";
+import { Heart, Send, X } from "lucide-react-native";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { Footer } from "./footer";
 
 type UserItemProps = {
   userItem: User;
@@ -27,7 +29,7 @@ type UserItemProps = {
   totalUsers: number;
 };
 
-const UserItem: FC<UserItemProps> = ({
+const UserStoriesItem: FC<UserItemProps> = ({
   userItem,
   userIndex,
   animatedIndex,
@@ -227,35 +229,30 @@ const UserItem: FC<UserItemProps> = ({
   });
 
   return (
-    <AnimatedPressable
-      style={[{ width }, rItemStyle]}
-      onPressIn={pauseStories}
-      onPressOut={resumeStories}
-    >
-      <View className="absolute top-0 left-0 right-0 px-4 pt-2 z-10 flex-row gap-1">
-        {userItem.stories.map((story: Story, storyIdx: number) => (
-          <StoryDashItem
-            key={story.id}
-            story={story}
-            index={storyIdx}
-            storyIndexProgress={storyIndexProgress}
-          />
-        ))}
-      </View>
+    <Animated.View style={[{ width }, rItemStyle]}>
+      <Pressable className="flex-1" onPressIn={pauseStories} onPressOut={resumeStories}>
+        <View className="absolute top-0 left-0 right-0 px-4 pt-2 z-10 flex-row gap-1">
+          {userItem.stories.map((story: Story, storyIdx: number) => (
+            <StoryDashItem
+              key={story.id}
+              story={story}
+              index={storyIdx}
+              storyIndexProgress={storyIndexProgress}
+            />
+          ))}
+        </View>
 
-      <Image
-        contentFit="cover"
-        placeholder={{
-          blurhash: userItem.stories[currentStoryIndex]?.image || userItem.stories[0].image,
-        }}
-        style={{ width: "100%", height: "100%", borderRadius: 10 }}
-      />
-
-      <View className="p-3 border border-white bg-black/30 absolute bottom-4 left-4 right-4 rounded-full">
-        <Text className="text-lg text-white">Send message ...</Text>
-      </View>
-    </AnimatedPressable>
+        <Image
+          contentFit="cover"
+          placeholder={{
+            blurhash: userItem.stories[currentStoryIndex]?.image || userItem.stories[0].image,
+          }}
+          style={{ width: "100%", height: "100%", borderRadius: 10 }}
+        />
+      </Pressable>
+      <Footer />
+    </Animated.View>
   );
 };
 
-export default UserItem;
+export default UserStoriesItem;

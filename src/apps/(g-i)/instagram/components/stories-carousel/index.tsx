@@ -2,7 +2,7 @@ import { useWindowDimensions } from "react-native";
 import { useRef } from "react";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
 import { USERS } from "../../lib/data/users";
-import UserItem from "./user-item";
+import UserStoriesItem from "./user-stories-item";
 
 // instagram-stories-carousel-animation 🔽
 
@@ -28,7 +28,7 @@ const StoriesCarousel = () => {
       ref={scrollRef}
       data={USERS}
       renderItem={({ item, index }) => (
-        <UserItem
+        <UserStoriesItem
           userItem={item}
           userIndex={index}
           animatedIndex={animatedIndex}
