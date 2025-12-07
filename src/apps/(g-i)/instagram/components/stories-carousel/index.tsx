@@ -11,15 +11,15 @@ const StoriesCarousel = () => {
 
   const scrollRef = useRef<Animated.FlatList>(null);
 
-  const animatedIndex = useSharedValue(0);
-  const currentIndex = useSharedValue(0);
+  const listAnimatedIndex = useSharedValue(0);
+  const listCurrentIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      animatedIndex.set(event.contentOffset.x / width);
+      listAnimatedIndex.set(event.contentOffset.x / width);
     },
     onMomentumEnd: (event) => {
-      currentIndex.set(Math.round(event.contentOffset.x / width));
+      listCurrentIndex.set(Math.round(event.contentOffset.x / width));
     },
   });
 
@@ -32,8 +32,8 @@ const StoriesCarousel = () => {
           user={item}
           userIndex={index}
           totalUsers={USERS.length}
-          animatedIndex={animatedIndex}
-          currentIndex={currentIndex}
+          listAnimatedIndex={listAnimatedIndex}
+          listCurrentIndex={listCurrentIndex}
           scrollRef={scrollRef}
         />
       )}

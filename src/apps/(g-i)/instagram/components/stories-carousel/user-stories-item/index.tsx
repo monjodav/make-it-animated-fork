@@ -1,26 +1,19 @@
-import { FlatList, Pressable, useWindowDimensions, View } from "react-native";
+import { FlatList, Pressable } from "react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  SharedValue,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  useDerivedValue,
-} from "react-native-reanimated";
+import { SharedValue, useSharedValue, withTiming, useDerivedValue } from "react-native-reanimated";
 import { Image } from "expo-image";
 import { Story, User } from "../../../lib/data/users";
 import { scheduleOnRN } from "react-native-worklets";
 import { Footer } from "./footer";
 import { Header } from "./header";
+import { Container } from "./container";
 
 type UserItemProps = {
   user: User;
   userIndex: number;
   totalUsers: number;
-  animatedIndex: SharedValue<number>;
-  currentIndex: SharedValue<number>;
+  listAnimatedIndex: SharedValue<number>;
+  listCurrentIndex: SharedValue<number>;
   scrollRef: React.RefObject<FlatList<User> | null>;
 };
 
@@ -28,13 +21,11 @@ const UserStoriesItem: FC<UserItemProps> = ({
   user,
   userIndex,
   totalUsers,
-  animatedIndex,
-  currentIndex,
+  listAnimatedIndex,
+  listCurrentIndex,
   scrollRef,
 }) => {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
-
-  const { width: screenWidth } = useWindowDimensions();
 
   const storyIndexProgress = useSharedValue(0);
   const animationTimeoutRef = useRef<number[]>([]);
@@ -170,7 +161,7 @@ const UserStoriesItem: FC<UserItemProps> = ({
   };
 
   useDerivedValue(() => {
-    const currentUserIndex = Math.floor(currentIndex.get());
+    const currentUserIndex = Math.floor(listCurrentIndex.get());
 
     // Only trigger if the active index actually changed
     if (previousActiveIndexRef.current !== currentUserIndex) {
@@ -200,43 +191,8 @@ const UserStoriesItem: FC<UserItemProps> = ({
     };
   }, []);
 
-  const rItemStyle = useAnimatedStyle(() => {
-    const currentIdx = Math.floor(animatedIndex.get());
-    const progress = animatedIndex.get() - currentIdx;
-
-    if (userIndex === currentIdx) {
-      const rotateY = interpolate(progress, [0, 1], [0, -90], Extrapolation.CLAMP);
-      const translateX = interpolate(
-        progress,
-        [0, 1],
-        [0, -screenWidth / 10000],
-        Extrapolation.CLAMP
-      );
-      return {
-        transformOrigin: "right",
-        transform: [{ perspective: 2000 }, { translateX }, { rotateY: `${rotateY}deg` }],
-      };
-    }
-
-    if (userIndex === currentIdx + 1) {
-      const rotateY = interpolate(progress, [0, 1], [90, 0], Extrapolation.CLAMP);
-      const translateX = interpolate(
-        progress,
-        [0, 1],
-        [screenWidth / 10000, 0],
-        Extrapolation.CLAMP
-      );
-      return {
-        transformOrigin: "left",
-        transform: [{ perspective: 2000 }, { translateX }, { rotateY: `${rotateY}deg` }],
-      };
-    }
-
-    return {};
-  });
-
   return (
-    <Animated.View style={[{ width: screenWidth }, rItemStyle]}>
+    <Container listAnimatedIndex={listAnimatedIndex} userIndex={userIndex}>
       <Pressable className="flex-1" onPressIn={pauseStories} onPressOut={resumeStories}>
         <Image
           contentFit="cover"
@@ -248,7 +204,7 @@ const UserStoriesItem: FC<UserItemProps> = ({
       </Pressable>
       <Header user={user} storyIndexProgress={storyIndexProgress} />
       <Footer />
-    </Animated.View>
+    </Container>
   );
 };
 
