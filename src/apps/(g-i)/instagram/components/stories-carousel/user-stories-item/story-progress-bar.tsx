@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import React, { FC } from "react";
-import { Story } from "../../lib/data/users";
+import { Story } from "../../../lib/data/users";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -8,13 +8,13 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-type StoryDashItemProps = {
+type StoryProgressBarProps = {
   story: Story;
   index: number;
   storyIndexProgress: SharedValue<number>;
 };
 
-const StoryDashItem: FC<StoryDashItemProps> = ({ story, index, storyIndexProgress }) => {
+const StoryProgressBar: FC<StoryProgressBarProps> = ({ story, index, storyIndexProgress }) => {
   const rDashStyle = useAnimatedStyle(() => {
     const progress = storyIndexProgress.get();
 
@@ -33,10 +33,10 @@ const StoryDashItem: FC<StoryDashItemProps> = ({ story, index, storyIndexProgres
   });
 
   return (
-    <View key={story.id} className="flex-1 bg-neutral-500 h-1 rounded-full overflow-hidden">
+    <View key={story.id} className="flex-1 bg-neutral-500 h-[2.5px] rounded-full overflow-hidden">
       <Animated.View style={[rDashStyle, { height: "100%" }]} className="bg-white rounded-full" />
     </View>
   );
 };
 
-export default StoryDashItem;
+export default StoryProgressBar;

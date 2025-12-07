@@ -29,13 +29,12 @@ const StoriesCarousel = () => {
       data={USERS}
       renderItem={({ item, index }) => (
         <UserStoriesItem
-          userItem={item}
+          user={item}
           userIndex={index}
+          totalUsers={USERS.length}
           animatedIndex={animatedIndex}
-          width={width}
           currentIndex={currentIndex}
           scrollRef={scrollRef}
-          totalUsers={USERS.length}
         />
       )}
       horizontal

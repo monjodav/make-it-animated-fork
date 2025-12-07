@@ -1,6 +1,5 @@
-import { FlatList, Pressable, Text, View } from "react-native";
+import { FlatList, Pressable, useWindowDimensions, View } from "react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
-import { User } from "@sentry/react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -11,36 +10,34 @@ import Animated, {
   useDerivedValue,
 } from "react-native-reanimated";
 import { Image } from "expo-image";
-import { Story } from "../../../lib/data/users";
+import { Story, User } from "../../../lib/data/users";
 import { scheduleOnRN } from "react-native-worklets";
-import StoryDashItem from "../story-dash-item";
-import { TextInput } from "react-native-gesture-handler";
-import { Heart, Send, X } from "lucide-react-native";
-import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { Footer } from "./footer";
+import { Header } from "./header";
 
 type UserItemProps = {
-  userItem: User;
-  scrollRef: React.RefObject<FlatList<User> | null>;
+  user: User;
   userIndex: number;
-  animatedIndex: SharedValue<number>;
-  width: number;
-  currentIndex: SharedValue<number>;
   totalUsers: number;
+  animatedIndex: SharedValue<number>;
+  currentIndex: SharedValue<number>;
+  scrollRef: React.RefObject<FlatList<User> | null>;
 };
 
 const UserStoriesItem: FC<UserItemProps> = ({
-  userItem,
+  user,
   userIndex,
+  totalUsers,
   animatedIndex,
-  width,
   currentIndex,
   scrollRef,
-  totalUsers,
 }) => {
+  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+
+  const { width: screenWidth } = useWindowDimensions();
+
   const storyIndexProgress = useSharedValue(0);
   const animationTimeoutRef = useRef<number[]>([]);
-  const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const isAnimatingRef = useRef(false);
   const previousActiveIndexRef = useRef(-1);
 
@@ -61,7 +58,7 @@ const UserStoriesItem: FC<UserItemProps> = ({
 
     let totalDuration = 0;
 
-    userItem.stories.forEach((story: Story, storyIndex: number) => {
+    user.stories.forEach((story: Story, storyIndex: number) => {
       const duration = story.duration || 3000;
       const targetProgress = storyIndex + 1;
 
@@ -129,7 +126,7 @@ const UserStoriesItem: FC<UserItemProps> = ({
     // Resume from current story
     let totalDuration = 0;
 
-    userItem.stories.forEach((story: Story, storyIndex: number) => {
+    user.stories.forEach((story: Story, storyIndex: number) => {
       if (storyIndex < currentProgress) {
         // Story already completed, skip
         return;
@@ -192,7 +189,7 @@ const UserStoriesItem: FC<UserItemProps> = ({
   // Update current story index when storyIndexProgress changes
   useDerivedValue(() => {
     const storyIdx = Math.floor(storyIndexProgress.get());
-    if (storyIdx >= 0 && storyIdx < userItem.stories.length) {
+    if (storyIdx >= 0 && storyIdx < user.stories.length) {
       scheduleOnRN(setCurrentStoryIndex, storyIdx);
     }
   });
@@ -209,7 +206,12 @@ const UserStoriesItem: FC<UserItemProps> = ({
 
     if (userIndex === currentIdx) {
       const rotateY = interpolate(progress, [0, 1], [0, -90], Extrapolation.CLAMP);
-      const translateX = interpolate(progress, [0, 1], [0, -width / 10000], Extrapolation.CLAMP);
+      const translateX = interpolate(
+        progress,
+        [0, 1],
+        [0, -screenWidth / 10000],
+        Extrapolation.CLAMP
+      );
       return {
         transformOrigin: "right",
         transform: [{ perspective: 2000 }, { translateX }, { rotateY: `${rotateY}deg` }],
@@ -218,7 +220,12 @@ const UserStoriesItem: FC<UserItemProps> = ({
 
     if (userIndex === currentIdx + 1) {
       const rotateY = interpolate(progress, [0, 1], [90, 0], Extrapolation.CLAMP);
-      const translateX = interpolate(progress, [0, 1], [width / 10000, 0], Extrapolation.CLAMP);
+      const translateX = interpolate(
+        progress,
+        [0, 1],
+        [screenWidth / 10000, 0],
+        Extrapolation.CLAMP
+      );
       return {
         transformOrigin: "left",
         transform: [{ perspective: 2000 }, { translateX }, { rotateY: `${rotateY}deg` }],
@@ -229,27 +236,17 @@ const UserStoriesItem: FC<UserItemProps> = ({
   });
 
   return (
-    <Animated.View style={[{ width }, rItemStyle]}>
+    <Animated.View style={[{ width: screenWidth }, rItemStyle]}>
       <Pressable className="flex-1" onPressIn={pauseStories} onPressOut={resumeStories}>
-        <View className="absolute top-0 left-0 right-0 px-4 pt-2 z-10 flex-row gap-1">
-          {userItem.stories.map((story: Story, storyIdx: number) => (
-            <StoryDashItem
-              key={story.id}
-              story={story}
-              index={storyIdx}
-              storyIndexProgress={storyIndexProgress}
-            />
-          ))}
-        </View>
-
         <Image
           contentFit="cover"
           placeholder={{
-            blurhash: userItem.stories[currentStoryIndex]?.image || userItem.stories[0].image,
+            blurhash: user.stories[currentStoryIndex]?.image || user.stories[0].image,
           }}
           style={{ width: "100%", height: "100%", borderRadius: 10 }}
         />
       </Pressable>
+      <Header user={user} storyIndexProgress={storyIndexProgress} />
       <Footer />
     </Animated.View>
   );
