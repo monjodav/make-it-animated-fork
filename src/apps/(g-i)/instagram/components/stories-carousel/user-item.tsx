@@ -21,18 +21,18 @@ type UserItemProps = {
   userItem: User;
   scrollRef: React.RefObject<FlatList<User> | null>;
   userIndex: number;
-  indexUserProgress: SharedValue<number>;
+  animatedIndex: SharedValue<number>;
   width: number;
-  activeUserIndex: SharedValue<number>;
+  currentIndex: SharedValue<number>;
   totalUsers: number;
 };
 
 const UserItem: FC<UserItemProps> = ({
   userItem,
   userIndex,
-  indexUserProgress,
+  animatedIndex,
   width,
-  activeUserIndex,
+  currentIndex,
   scrollRef,
   totalUsers,
 }) => {
@@ -171,7 +171,7 @@ const UserItem: FC<UserItemProps> = ({
   };
 
   useDerivedValue(() => {
-    const currentUserIndex = Math.floor(activeUserIndex.get());
+    const currentUserIndex = Math.floor(currentIndex.get());
 
     // Only trigger if the active index actually changed
     if (previousActiveIndexRef.current !== currentUserIndex) {
@@ -202,8 +202,8 @@ const UserItem: FC<UserItemProps> = ({
   }, []);
 
   const rItemStyle = useAnimatedStyle(() => {
-    const currentIdx = Math.floor(indexUserProgress.get());
-    const progress = indexUserProgress.get() - currentIdx;
+    const currentIdx = Math.floor(animatedIndex.get());
+    const progress = animatedIndex.get() - currentIdx;
 
     if (userIndex === currentIdx) {
       const rotateY = interpolate(progress, [0, 1], [0, -90], Extrapolation.CLAMP);

@@ -4,20 +4,22 @@ import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native
 import { USERS } from "../../lib/data/users";
 import UserItem from "./user-item";
 
-const UsersCarousel = () => {
+// instagram-stories-carousel-animation 🔽
+
+const StoriesCarousel = () => {
   const { width } = useWindowDimensions();
 
   const scrollRef = useRef<Animated.FlatList>(null);
 
-  const indexUserProgress = useSharedValue(0);
-  const activeUserIndex = useSharedValue(0);
+  const animatedIndex = useSharedValue(0);
+  const currentIndex = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
-      indexUserProgress.set(event.contentOffset.x / width);
+      animatedIndex.set(event.contentOffset.x / width);
     },
     onMomentumEnd: (event) => {
-      activeUserIndex.set(Math.round(event.contentOffset.x / width));
+      currentIndex.set(Math.round(event.contentOffset.x / width));
     },
   });
 
@@ -25,14 +27,13 @@ const UsersCarousel = () => {
     <Animated.FlatList
       ref={scrollRef}
       data={USERS}
-      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item, index }) => (
         <UserItem
           userItem={item}
           userIndex={index}
-          indexUserProgress={indexUserProgress}
+          animatedIndex={animatedIndex}
           width={width}
-          activeUserIndex={activeUserIndex}
+          currentIndex={currentIndex}
           scrollRef={scrollRef}
           totalUsers={USERS.length}
         />
@@ -42,9 +43,10 @@ const UsersCarousel = () => {
       onScroll={scrollHandler}
       scrollEventThrottle={16}
       pagingEnabled
-      contentContainerClassName="bg-black"
     />
   );
 };
 
-export default UsersCarousel;
+export default StoriesCarousel;
+
+// instagram-stories-carousel-animation 🔼

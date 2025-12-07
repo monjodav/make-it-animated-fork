@@ -31,8 +31,6 @@ export default function Index() {
     return <Redirect href={DEV_HREF as Href} />;
   }
 
-  return <Redirect href="/instagram/search" />;
-
   return (
     <AlgoliaProvider>
       <View
