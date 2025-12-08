@@ -1,7 +1,9 @@
+import FakeVideo from "@/assets/videos/fake-video.mp4";
+
 export type Story = {
   id: string;
-  image: string;
-  duration: number;
+  source: string;
+  blurhash: string;
 };
 
 export type User = {
@@ -13,27 +15,31 @@ export const USERS: User[] = [
   {
     id: "1",
     stories: [
-      { id: "1", image: "LKO2:N%2Tw=w]~RBVZRi};RPxuwH", duration: 2000 },
-      { id: "2", image: "LEA]]RrW0}Os%KM{WBxu11Ip|=xZ", duration: 1000 },
-      { id: "3", image: "LJOXU1-pxuoz~XIoRjWBxsNHfOoJ", duration: 2000 },
+      { id: "1", source: FakeVideo, blurhash: "LKO2:N%2Tw=w]~RBVZRi};RPxuwH" },
+      { id: "2", source: FakeVideo, blurhash: "LEA]]RrW0}Os%KM{WBxu11Ip|=xZ" },
+      { id: "3", source: FakeVideo, blurhash: "LJOXU1-pxuoz~XIoRjWBxsNHfOoJ" },
     ],
   },
   {
     id: "2",
-    stories: [{ id: "1", image: "LEHLh[WB2yk8pyoJadR*.7kCMdnj", duration: 3000 }],
+    stories: [
+      { id: "1", source: FakeVideo, blurhash: "LOH]%h^N9^Iq}ts.oLaz=eR*ofxZ" },
+      { id: "2", source: FakeVideo, blurhash: "LEHLh[WB2yk8pyoJadR*.7kCMdnj" },
+    ],
   },
   {
     id: "3",
     stories: [
-      { id: "1", image: "LWD-8itmofRPKnWCV?kXM}RjkCoz", duration: 2000 },
-      { id: "2", image: "L25Xx[rV00%#Mw%M%2Mw00x]~qMd", duration: 2000 },
+      { id: "1", source: FakeVideo, blurhash: "LWD-8itmofRPKnWCV?kXM}RjkCoz" },
+      { id: "2", source: FakeVideo, blurhash: "LJOXU1-pxuoz~XIoRjWBxsNHfOoJ" },
+      { id: "3", source: FakeVideo, blurhash: "L25Xx[rV00%#Mw%M%2Mw00x]~qMd" },
     ],
   },
   {
     id: "4",
     stories: [
-      { id: "1", image: "L87Luf_JHtDk%yx@eUaOH[WByCx[", duration: 1000 },
-      { id: "2", image: "LOH]%h^N9^Iq}ts.oLaz=eR*ofxZ", duration: 1000 },
+      { id: "1", source: FakeVideo, blurhash: "L87Luf_JHtDk%yx@eUaOH[WByCx[" },
+      { id: "2", source: FakeVideo, blurhash: "LOH]%h^N9^Iq}ts.oLaz=eR*ofxZ" },
     ],
   },
 ];
