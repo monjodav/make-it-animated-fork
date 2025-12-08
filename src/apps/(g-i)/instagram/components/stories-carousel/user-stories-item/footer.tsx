@@ -3,6 +3,8 @@ import { Heart, Send } from "lucide-react-native";
 import React, { FC } from "react";
 import { View, TextInput, Pressable } from "react-native";
 
+// instagram-stories-carousel-animation 🔽
+
 export const Footer: FC = () => {
   return (
     <View className="flex-row items-center gap-4 px-5 pt-2">
@@ -24,3 +26,5 @@ export const Footer: FC = () => {
     </View>
   );
 };
+
+// instagram-stories-carousel-animation 🔼

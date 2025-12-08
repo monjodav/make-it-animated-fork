@@ -8,6 +8,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useAnimatedStyle } from "react-native-reanimated";
 
+// instagram-stories-carousel-animation 🔽
+
 type Props = {
   listAnimatedIndex: SharedValue<number>;
   userIndex: number;
@@ -62,3 +64,5 @@ export const Container: FC<PropsWithChildren<Props>> = ({
     <Animated.View style={[{ width: screenWidth }, rContainerStyle]}>{children}</Animated.View>
   );
 };
+
+// instagram-stories-carousel-animation 🔼

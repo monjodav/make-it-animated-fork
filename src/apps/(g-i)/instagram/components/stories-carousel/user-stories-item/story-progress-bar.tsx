@@ -8,6 +8,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+// instagram-stories-carousel-animation 🔽
+
 type StoryProgressBarProps = {
   story: Story;
   index: number;
@@ -45,3 +47,5 @@ const StoryProgressBar: FC<StoryProgressBarProps> = ({
 };
 
 export default StoryProgressBar;
+
+// instagram-stories-carousel-animation 🔼

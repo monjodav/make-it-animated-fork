@@ -18,6 +18,8 @@ import Video, { VideoRef } from "react-native-video";
 import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "@/src/shared/lib/utils/ease-gradient";
 
+// instagram-stories-carousel-animation 🔽
+
 type UserItemProps = {
   user: User;
   userIndex: number;
@@ -181,3 +183,5 @@ const UserStoriesItem: FC<UserItemProps> = ({
 };
 
 export default UserStoriesItem;
+
+// instagram-stories-carousel-animation 🔼
