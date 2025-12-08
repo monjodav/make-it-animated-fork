@@ -79,6 +79,7 @@ const StoriesCarousel = () => {
       pagingEnabled
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
+      decelerationRate="fast"
     />
   );
 };

@@ -49,6 +49,13 @@ export const Container: FC<PropsWithChildren<Props>> = ({
           )
         : 0;
 
+    const scaleY = interpolate(
+      listAnimatedIndex.get(),
+      [userIndex - 1, userIndex, userIndex + 1],
+      [0.98, 1, 0.98],
+      Extrapolation.CLAMP
+    );
+
     // Active card: rotates from 0° to -ANGLE° as user swipes right (next card)
     // Transform origin on right edge creates "flipping away" effect
     if (userIndex === listCurrentIndex.get()) {
@@ -56,7 +63,12 @@ export const Container: FC<PropsWithChildren<Props>> = ({
       return {
         transformOrigin: "right",
         // Perspective = 4x screen width creates realistic 3D depth perception
-        transform: [{ perspective: screenWidth * 4 }, { translateX }, { rotateY: `${rotateY}deg` }],
+        transform: [
+          { perspective: screenWidth * 4 },
+          { translateX },
+          { scaleY },
+          { rotateY: `${rotateY}deg` },
+        ],
       };
     }
 
@@ -66,7 +78,12 @@ export const Container: FC<PropsWithChildren<Props>> = ({
       const rotateY = interpolate(progress, [0, 1], [ANGLE, 0], Extrapolation.CLAMP);
       return {
         transformOrigin: "left",
-        transform: [{ perspective: screenWidth * 4 }, { translateX }, { rotateY: `${rotateY}deg` }],
+        transform: [
+          { perspective: screenWidth * 4 },
+          { translateX },
+          { scaleY },
+          { rotateY: `${rotateY}deg` },
+        ],
       };
     }
 
