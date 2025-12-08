@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren } from "react";
-import { useWindowDimensions } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -9,6 +9,8 @@ import Animated, {
 import { useAnimatedStyle } from "react-native-reanimated";
 
 // instagram-stories-carousel-animation 🔽
+
+const ANGLE = Platform.OS === "android" ? 75 : 90;
 
 type Props = {
   listAnimatedIndex: SharedValue<number>;
@@ -29,31 +31,29 @@ export const Container: FC<PropsWithChildren<Props>> = ({
   const rContainerStyle = useAnimatedStyle(() => {
     const progress = listAnimatedIndex.get() - listCurrentIndex.get();
 
+    const translateX =
+      Platform.OS === "android"
+        ? interpolate(
+            listAnimatedIndex.get(),
+            [userIndex - 1, userIndex, userIndex + 1],
+            [-10, 0, 10],
+            Extrapolation.CLAMP
+          )
+        : 0;
+
     if (userIndex === listCurrentIndex.get()) {
-      const rotateY = interpolate(progress, [0, 1], [0, -90], Extrapolation.CLAMP);
-      const translateX = interpolate(
-        progress,
-        [0, 1],
-        [0, -screenWidth / 10000],
-        Extrapolation.CLAMP
-      );
+      const rotateY = interpolate(progress, [0, 1], [0, -ANGLE], Extrapolation.CLAMP);
       return {
         transformOrigin: "right",
-        transform: [{ perspective: 2000 }, { translateX }, { rotateY: `${rotateY}deg` }],
+        transform: [{ perspective: screenWidth * 4 }, { translateX }, { rotateY: `${rotateY}deg` }],
       };
     }
 
     if (userIndex === listCurrentIndex.get() + 1) {
-      const rotateY = interpolate(progress, [0, 1], [90, 0], Extrapolation.CLAMP);
-      const translateX = interpolate(
-        progress,
-        [0, 1],
-        [screenWidth / 10000, 0],
-        Extrapolation.CLAMP
-      );
+      const rotateY = interpolate(progress, [0, 1], [ANGLE, 0], Extrapolation.CLAMP);
       return {
         transformOrigin: "left",
-        transform: [{ perspective: 2000 }, { translateX }, { rotateY: `${rotateY}deg` }],
+        transform: [{ perspective: screenWidth * 4 }, { translateX }, { rotateY: `${rotateY}deg` }],
       };
     }
 
