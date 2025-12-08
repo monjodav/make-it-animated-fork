@@ -43,10 +43,13 @@ const UserStoriesItem: FC<UserItemProps> = ({
 
   const { width: screenWidth } = useWindowDimensions();
 
+  // Only active card should play video and update progress
   const isActive = userIndex === listCurrentIndex;
 
   const videoPlayerRef = useRef<VideoRef>(null);
 
+  // Shared value tracks video playback progress (0-1) for progress bar animation
+  // Updated on UI thread via onProgress callback, read by progress bar component
   const storyProgress = useSharedValue(0);
 
   const pause = useCallback(() => {
@@ -57,6 +60,9 @@ const UserStoriesItem: FC<UserItemProps> = ({
     videoPlayerRef.current?.resume();
   }, []);
 
+  // Reset story progress and video position when:
+  // - User switches to this card (becomes active)
+  // - User navigates to different story within this card
   useEffect(() => {
     if (isActive) {
       storyProgress.set(0);
@@ -67,6 +73,9 @@ const UserStoriesItem: FC<UserItemProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStoryIndex, userIndex, listCurrentIndex]);
 
+  // Pause video playback during scroll drag to prevent stuttering
+  // Resumes only if this card is still active after drag ends
+  // scheduleOnRN bridges worklet context to React Native thread for video control
   useAnimatedReaction(
     () => isDragging.get(),
     (current) => {
@@ -91,6 +100,9 @@ const UserStoriesItem: FC<UserItemProps> = ({
     <Container listAnimatedIndex={listAnimatedIndex} userIndex={userIndex}>
       <Pressable
         className="flex-1"
+        // Tap left half: go to previous story/user
+        // Tap right half: go to next story/user
+        // Handles edge cases (first/last story/user) to prevent navigation errors
         onPress={(e) => {
           const screenX = e.nativeEvent.pageX;
           const isLeft = screenX < screenWidth / 2;
@@ -123,15 +135,20 @@ const UserStoriesItem: FC<UserItemProps> = ({
             }
           }
         }}
+        // Long press pauses video (e.g., to read text in story)
+        // 250ms delay prevents accidental pauses during quick taps
         onLongPress={() => {
           videoPlayerRef.current?.pause();
         }}
         delayLongPress={250}
+        // Resume on release, but only if not currently dragging (prevents conflicts)
         onPressOut={() => {
           if (isDragging.get()) return;
           videoPlayerRef.current?.resume();
         }}
       >
+        {/* Uses fake video source to simulate real app behavior and maintain animation consistency */}
+        {/* Hidden (opacity: 0) but drives progress bar timing - matches Instagram's video-based story system */}
         <Video
           ref={videoPlayerRef}
           source={{ uri: FakeVideo }}
@@ -139,7 +156,10 @@ const UserStoriesItem: FC<UserItemProps> = ({
           muted
           style={{ width: "100%", height: "100%", opacity: 0 }}
           controls={false}
+          // 16ms interval ≈ 60fps updates for smooth progress bar animation
           progressUpdateInterval={16}
+          // Update shared value on UI thread for real-time progress bar sync
+          // Only updates when this card is active to prevent unnecessary work
           onProgress={({ currentTime, playableDuration }) => {
             if (!isActive) return;
             const progress = currentTime / playableDuration;
@@ -156,6 +176,9 @@ const UserStoriesItem: FC<UserItemProps> = ({
             }
           }}
         />
+        {/* Decorative image overlay only - provides visual content while video drives timing */}
+        {/* Fade transition between stories: 200ms provides smooth visual continuity */}
+        {/* Key on blurhash forces remount when story changes, triggering enter/exit animations */}
         <Animated.View
           key={user.stories[currentStoryIndex]?.blurhash}
           entering={FadeIn.duration(200)}

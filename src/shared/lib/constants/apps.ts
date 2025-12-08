@@ -8,6 +8,11 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Stories carousel animation",
+    appName: "Instagram",
+    href: "/instagram/stories",
+  },
+  {
     animationName: "Profile segmented control animation",
     appName: "Perplexity",
     href: "/perplexity/profile",
