@@ -12,6 +12,7 @@ import { View } from "react-native";
 export const UpdateComingMessage: FC = () => {
   const showUpdateComingMessage = useAppStore.use.showUpdateComingMessage();
   const setShowUpdateComingMessage = useAppStore.use.setShowUpdateComingMessage();
+  const isOtaUpdateAvailable = useAppStore.use.isOtaUpdateAvailable();
 
   useEffect(() => {
     if (showUpdateComingMessage) {
@@ -25,7 +26,7 @@ export const UpdateComingMessage: FC = () => {
     }
   }, [showUpdateComingMessage, setShowUpdateComingMessage]);
 
-  if (!showUpdateComingMessage) {
+  if (!showUpdateComingMessage || isOtaUpdateAvailable) {
     return null;
   }
 
