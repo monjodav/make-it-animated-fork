@@ -1,6 +1,18 @@
 import { FC, memo } from "react";
-import { Text, StyleSheet, View, useWindowDimensions } from "react-native";
-import Animated, { interpolate, SharedValue, useAnimatedStyle } from "react-native-reanimated";
+import { Text, StyleSheet, View } from "react-native";
+import Animated, {
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+  withSpring,
+} from "react-native-reanimated";
+
+const SPRING_CONFIG = {
+  damping: 40,
+  stiffness: 240,
+  mass: 3,
+};
 
 type Props = {
   index: number;
@@ -17,13 +29,6 @@ const CarouselItemComponent: FC<Props> = ({
   itemWidth,
   itemHeight,
 }) => {
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-
-  // Circle parameters: center at bottom center, radius from bottom to card center
-  const circleCenterX = screenWidth / 2;
-  const circleCenterY = screenHeight;
-  const radius = screenHeight / 2;
-
   const rContainerStyle = useAnimatedStyle(() => {
     const inputRange = [index - 1, index, index + 1];
 
@@ -33,28 +38,49 @@ const CarouselItemComponent: FC<Props> = ({
       itemWidth * 0.3,
     ]);
     const translateY = interpolate(animatedIndex.get(), inputRange, [
-      itemHeight * 0.15,
+      itemHeight * 0.3,
       0,
-      itemHeight * 0.15,
+      itemHeight * 0.3,
     ]);
+    const scale = interpolate(animatedIndex.get(), inputRange, [0.9, 1, 0.9]);
+
+    const rotate = interpolate(animatedIndex.get(), inputRange, [45, 0, -45]);
 
     return {
-      transform: [{ translateX }, { translateY }],
+      transform: [{ translateX }, { translateY }, { scale }, { rotate: `${rotate}deg` }],
+    };
+  });
+
+  const isCurrent = useDerivedValue(() => {
+    const animatedIdx = animatedIndex.get();
+    return index > animatedIdx - 0.1 && index < animatedIdx + 0.5;
+  });
+
+  const rBackgroundElementContainerStyle = useAnimatedStyle(() => {
+    const targetValue = isCurrent.get() ? 1 : 0;
+
+    return {
+      opacity: withSpring(targetValue, SPRING_CONFIG),
+      transform: [{ scale: withSpring(targetValue, SPRING_CONFIG) }],
     };
   });
 
   return (
     <Animated.View
-      className="items-center justify-center bg-blue-200 border border-red-500"
-      style={[rContainerStyle, { width: itemWidth, height: itemHeight }]}
+      className="items-center justify-center"
+      style={[{ width: itemWidth, height: itemHeight }, rContainerStyle]}
     >
-      <Animated.View
-        className="w-[80%] aspect-[1/0.7] rounded-[36px] px-4 bg-white items-center justify-center"
-        style={[styles.borderCurve, { width: screenWidth * 0.6 }]}
-      >
-        <Text className="text-4xl mb-2">{index}</Text>
-        <Text className="text-4xl mb-2">{slide.emoji}</Text>
-        <Text className="text-3xl font-medium text-center">{slide.description}</Text>
+      <Animated.View className="w-[60%] aspect-[1/0.7]" style={styles.borderCurve}>
+        <Animated.View
+          className="absolute inset-0 justify-center items-center"
+          style={rBackgroundElementContainerStyle}
+        >
+          {slide.backgroundElement}
+        </Animated.View>
+        <View className="flex-1 rounded-[36px] px-4 bg-white items-center justify-center shadow-lg shadow-black/5">
+          <Text className="text-4xl mb-2">{slide.emoji}</Text>
+          <Text className="text-3xl font-medium text-center">{slide.description}</Text>
+        </View>
       </Animated.View>
     </Animated.View>
   );

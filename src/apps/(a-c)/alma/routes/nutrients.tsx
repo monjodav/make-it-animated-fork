@@ -19,9 +19,9 @@ const SLIDES: NutrientsItem[] = [
     description: "Bone health",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[150px] bg-orange-200/50 rotate-[-45deg]" />
-        <View className="absolute w-[90px] h-[90px] rounded-full bg-orange-700/50 -top-[80px] left-[0px]" />
-        <View className="absolute w-[80px] h-[120px] rounded-full bg-green-700 -bottom-[120px] right-[30px] rotate-[45deg]" />
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[-45deg]" />
+        <View className="absolute w-[50%] aspect-square rounded-full bg-orange-700/25 -top-[25%] -left-[5%]" />
+        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/25 -bottom-[25%] -right-[4%] rotate-[25deg]" />
       </>
     ),
   },
@@ -31,9 +31,9 @@ const SLIDES: NutrientsItem[] = [
     description: "Support energy",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[150px] bg-orange-200/50 rotate-[-45deg]" />
-        <View className="absolute w-[90px] h-[90px] rounded-full bg-orange-700/50 -top-[80px] left-[0px]" />
-        <View className="absolute w-[80px] h-[120px] rounded-full bg-green-700 -bottom-[120px] right-[30px] rotate-[45deg]" />
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[-45deg]" />
+        <View className="absolute w-[50%] aspect-square rounded-full bg-orange-700/25 -top-[25%] -left-[5%]" />
+        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/25 -bottom-[25%] -right-[4%] rotate-[25deg]" />
       </>
     ),
   },
@@ -43,9 +43,9 @@ const SLIDES: NutrientsItem[] = [
     description: "Gain weight",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[130px] bg-red-200 rotate-[45deg]" />
-        <View className="absolute w-[100px] h-[80px] rounded-full bg-orange-500 top-[20px] left-[10px]" />
-        <View className="absolute w-[90px] h-[130px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[20deg]" />
+        <View className="absolute w-[100%] h-[100%] bg-red-200/50 rounded-xl rotate-[45deg]" />
+        <View className="absolute w-[50%] aspect-video rounded-full bg-orange-700/25 -bottom-[15%] -left-[5%]" />
+        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/50 -top-[35%] right-[0%] rotate-[25deg]" />
       </>
     ),
   },
@@ -55,11 +55,11 @@ const SLIDES: NutrientsItem[] = [
     description: "Track custom nutrients",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[130px] bg-orange-100 rotate-[45deg]" />
-        <View className="absolute w-[130px] h-[130px] rounded-full bg-yellow-300 -top-[30px] left-[0px] items-center justify-center">
-          <View className="w-[110px] h-[110px] rounded-full bg-orange-500" />
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[45deg]" />
+        <View className="absolute h-[100%] aspect-square rounded-full bg-yellow-300/50 -bottom-[12%] -left-[17%] items-center justify-center">
+          <View className="w-[90%] h-[90%] rounded-full bg-orange-500/50" />
         </View>
-        <View className="absolute w-[80px] h-[100px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[40deg]" />
+        <View className="absolute h-[100%] aspect-square rounded-full bg-green-600/50 -top-[25%] -right-[10%]" />
       </>
     ),
   },
@@ -69,9 +69,9 @@ const SLIDES: NutrientsItem[] = [
     description: "Maintain weight",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[150px] bg-orange-200/50 rotate-[-45deg]" />
-        <View className="absolute w-[90px] h-[90px] rounded-full bg-orange-700/50 -top-[80px] left-[0px]" />
-        <View className="absolute w-[80px] h-[120px] rounded-full bg-green-700 -bottom-[120px] right-[30px] rotate-[45deg]" />
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[-45deg]" />
+        <View className="absolute w-[50%] aspect-square rounded-full bg-orange-700/25 -top-[25%] -left-[5%]" />
+        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/25 -bottom-[25%] -right-[4%] rotate-[25deg]" />
       </>
     ),
   },
@@ -81,9 +81,9 @@ const SLIDES: NutrientsItem[] = [
     description: "Heart health",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[130px] bg-red-200 rotate-[45deg]" />
-        <View className="absolute w-[100px] h-[80px] rounded-full bg-orange-500 top-[20px] left-[10px]" />
-        <View className="absolute w-[90px] h-[130px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[20deg]" />
+        <View className="absolute w-[100%] h-[100%] bg-red-200/50 rounded-xl rotate-[45deg]" />
+        <View className="absolute w-[50%] aspect-video rounded-full bg-orange-700/25 -bottom-[15%] -left-[5%]" />
+        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/50 -top-[35%] right-[0%] rotate-[25deg]" />
       </>
     ),
   },
@@ -93,11 +93,11 @@ const SLIDES: NutrientsItem[] = [
     description: "Boost immunity",
     backgroundElement: (
       <>
-        <View className="absolute w-[220px] h-[130px] bg-orange-100 rotate-[45deg]" />
-        <View className="absolute w-[130px] h-[130px] rounded-full bg-yellow-300 -top-[30px] left-[0px] items-center justify-center">
-          <View className="w-[110px] h-[110px] rounded-full bg-orange-500" />
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[45deg]" />
+        <View className="absolute h-[100%] aspect-square rounded-full bg-yellow-300/50 -bottom-[12%] -left-[17%] items-center justify-center">
+          <View className="w-[90%] h-[90%] rounded-full bg-orange-500/50" />
         </View>
-        <View className="absolute w-[80px] h-[100px] rounded-full bg-green-600 -bottom-[20px] right-[0px] rotate-[40deg]" />
+        <View className="absolute h-[100%] aspect-square rounded-full bg-green-600/50 -top-[25%] -right-[10%]" />
       </>
     ),
   },
