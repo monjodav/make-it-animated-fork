@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import { View, Pressable } from "react-native";
 import { Image } from "expo-image";
 
-import PairExtraordinaireImage from "@/assets/images/misc/github-achievement-1.png";
-import PullSharkImage from "@/assets/images/misc/github-achievement-2.png";
+import PairExtraordinaireImage from "@/assets/images/misc/github/achievement-1.png";
+import PullSharkImage from "@/assets/images/misc/github/achievement-2.png";
 import { useRouter } from "expo-router";
 import { Trophy } from "lucide-react-native";
 

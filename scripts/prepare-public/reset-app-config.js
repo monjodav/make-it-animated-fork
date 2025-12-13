@@ -2,9 +2,8 @@
 /* eslint-disable prettier/prettier */
 
 /**
- * This script is used to reset the project to a blank state.
- * It removes app.config.ts and creates app.json with basic configuration.
- * You can remove the `reset-project` script from package.json and safely delete this file after running it.
+ * This script removes app.config.ts and creates app.json with basic configuration for public branch.
+ * Can be run independently or as part of prepare-public.js
  */
 
 const fs = require("fs");
@@ -23,7 +22,6 @@ const appJsonContent = {
   "ios": {
     "supportsTablet": false,
     "icon": "./assets/images/icon-ios.png",
-    "bundleIdentifier": "com.volodymyr-serbulenko.make-it-animated"
   },
   "android": {
     "adaptiveIcon": {
@@ -64,7 +62,7 @@ const appJsonContent = {
   "owner": "volodymyr_serbulenko"
 };
 
-const resetProject = async () => {
+const resetAppConfig = async () => {
   try {
     // Remove app.config.ts if it exists
     const appConfigPath = path.join(root, "app.config.ts");
@@ -75,25 +73,27 @@ const resetProject = async () => {
       console.log("➡️ app.config.ts does not exist, skipping.");
     }
 
-    // Remove eas.json if it exists
-    const easJsonPath = path.join(root, "eas.json");
-    if (fs.existsSync(easJsonPath)) {
-      await fs.promises.rm(easJsonPath);
-      console.log("❌ eas.json deleted.");
-    } else {
-      console.log("➡️ eas.json does not exist, skipping.");
-    }
-
     // Create app.json with specified content
     const appJsonPath = path.join(root, "app.json");
     await fs.promises.writeFile(appJsonPath, JSON.stringify(appJsonContent, null, 2) + "\n");
     console.log("📝 Created app.json with specified configuration.");
-
-    console.log("\n✅ Project reset complete!");
   } catch (error) {
-    console.error(`❌ Error during script execution: ${error.message}`);
-    process.exit(1);
+    console.error(`❌ Error resetting app config: ${error.message}`);
+    throw error;
   }
 };
 
-resetProject();
+// Allow running as standalone script or being imported
+if (require.main === module) {
+  resetAppConfig()
+    .then(() => {
+      console.log("\n✅ App config reset complete!");
+    })
+    .catch((error) => {
+      console.error(`❌ Error during script execution: ${error.message}`);
+      process.exit(1);
+    });
+}
+
+module.exports = { resetAppConfig };
+

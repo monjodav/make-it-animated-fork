@@ -26,6 +26,7 @@ module.exports = {
         "sans-medium": ["Outfit_500Medium"],
         "sans-semibold": ["Outfit_600SemiBold"],
         "sans-bold": ["Outfit_700Bold"],
+        display: ["Bangers_400Regular"],
       },
     },
   },

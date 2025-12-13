@@ -20,6 +20,7 @@ import {
   Outfit_600SemiBold,
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
+import { Bangers_400Regular } from "@expo-google-fonts/bangers/400Regular";
 import { Stack } from "expo-router";
 
 if (!__DEV__) {
@@ -48,6 +49,7 @@ export default function RootLayout() {
     Outfit_500Medium,
     Outfit_600SemiBold,
     Outfit_700Bold,
+    Bangers_400Regular,
   });
 
   useVersionCheck();

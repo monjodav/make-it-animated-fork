@@ -6,6 +6,7 @@ interface State {
   isNewVersionAvailable: boolean;
   isOtaUpdateAvailable: boolean;
   isHomeAnchorButtonPressed: boolean;
+  showUpdateComingMessage: boolean;
 }
 
 interface Actions {
@@ -13,6 +14,7 @@ interface Actions {
   setIsNewVersionAvailable: (isNewVersionAvailable: boolean) => void;
   setIsOtaUpdateAvailable: (isOtaUpdateAvailable: boolean) => void;
   setIsHomeAnchorButtonPressed: (isHomeAnchorButtonPressed: boolean) => void;
+  setShowUpdateComingMessage: (showUpdateComingMessage: boolean) => void;
 }
 
 export const initialState: State = {
@@ -20,6 +22,7 @@ export const initialState: State = {
   isNewVersionAvailable: false,
   isOtaUpdateAvailable: false,
   isHomeAnchorButtonPressed: false,
+  showUpdateComingMessage: false,
 };
 
 const appStore = create<State & Actions>()((set) => ({
@@ -46,6 +49,12 @@ const appStore = create<State & Actions>()((set) => ({
     set((state) => ({
       ...state,
       isHomeAnchorButtonPressed,
+    }));
+  },
+  setShowUpdateComingMessage: (showUpdateComingMessage) => {
+    set((state) => ({
+      ...state,
+      showUpdateComingMessage,
     }));
   },
 }));

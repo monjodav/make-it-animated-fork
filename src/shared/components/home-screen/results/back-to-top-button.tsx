@@ -29,7 +29,7 @@ export const BackToTopButton: FC<Props> = ({ listRef, showBackToTop }) => {
       entering={FadeInDown.springify()}
       exiting={FadeOutDown.springify()}
       onPress={handlePress}
-      className="absolute w-12 h-12 right-6 bottom-4 bg-neutral-700 rounded-full items-center justify-center"
+      className="absolute size-12 right-6 bottom-4 bg-neutral-700 rounded-full items-center justify-center"
     >
       <ArrowUp size={20} color="#FFFFF5" strokeWidth={2.5} />
     </AnimatedPressable>
