@@ -14,6 +14,18 @@ export type NutrientsItem = {
 
 const SLIDES: NutrientsItem[] = [
   {
+    id: 0,
+    emoji: "🦴",
+    description: "Bone health",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[-45deg]" />
+        <View className="absolute w-[50%] aspect-square rounded-full bg-orange-700/25 -top-[25%] -left-[5%]" />
+        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/25 -bottom-[25%] -right-[4%] rotate-[25deg]" />
+      </>
+    ),
+  },
+  {
     id: 1,
     emoji: "🦴",
     description: "Bone health",
