@@ -5,12 +5,14 @@ import { useRef } from "react";
 import { FlashListRef } from "@shopify/flash-list";
 import { AlgoliaProvider } from "@/src/shared/lib/providers/algolia-provider";
 import { NumberOfAnimations } from "@/src/shared/components/home-screen/number-of-animations";
-import { Results } from "@/src/shared/components/home-screen/results";
+import { Results as AlgoliaResults } from "@/src/shared/components/home-screen/results";
 import { BottomBar } from "@/src/shared/components/home-screen/bottom-bar";
-import { SearchBar } from "@/src/shared/components/home-screen/search-bar";
+import { SearchBar as AlgoliaSearchBar } from "@/src/shared/components/home-screen/search-bar";
 import { Animation } from "@/src/shared/lib/types/app";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Redirect } from "expo-router";
+import { Href, Redirect } from "expo-router";
+
+const DEV_HREF = process.env.EXPO_PUBLIC_DEV_HREF;
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -22,7 +24,26 @@ export default function Index() {
 
   useWarmUpBrowser();
 
-  const listRef = useRef<FlashListRef<Animation>>(null);
+  const algoliaListRef = useRef<FlashListRef<Animation>>(null);
   const textInputRef = useRef<TextInput>(null);
-  return <Redirect href="/superlist/task" />;
+
+  if (__DEV__ && DEV_HREF !== "unset") {
+    return <Redirect href={DEV_HREF as Href} />;
+  }
+
+  return (
+    <AlgoliaProvider>
+      <View
+        className="flex-1 bg-background"
+        style={{
+          paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
+        }}
+      >
+        <NumberOfAnimations listRef={algoliaListRef} />
+        <AlgoliaResults listRef={algoliaListRef} />
+        <BottomBar textInputRef={textInputRef} />
+        <AlgoliaSearchBar textInputRef={textInputRef} listRef={algoliaListRef} />
+      </View>
+    </AlgoliaProvider>
+  );
 }

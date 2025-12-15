@@ -73,7 +73,10 @@ export default function Home() {
   const panGesture = Gesture.Pan()
     .onEnd((event) => {
       if (event.translationY <= SWIPE_UP_THRESHOLD) {
-        textInputRef.current?.focus();
+        setKeyboardOffsetClosed(0); // Reset sticky offset
+        setTimeout(() => {
+          textInputRef.current?.focus();
+        }, 100); // Small delay to ensure gesture finishes
       }
     })
     .runOnJS(true);

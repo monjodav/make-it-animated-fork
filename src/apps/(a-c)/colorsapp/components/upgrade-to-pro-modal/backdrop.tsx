@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { View, Text, StyleSheet } from "react-native";
 
 import IconImage from "@/assets/images/apps/colors-app.png";
-import PaywallBg from "@/assets/images/misc/paywall-bg.png";
+import PaywallBg from "@/assets/images/misc/colorsapp/paywall-bg.png";
 import { LinearGradient } from "expo-linear-gradient";
 import { colorKit } from "reanimated-color-picker";
 
