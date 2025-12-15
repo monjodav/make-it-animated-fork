@@ -8,6 +8,11 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Text strikethrough animation",
+    appName: "Superlist",
+    href: "/superlist/task",
+  },
+  {
     animationName: "Stories carousel animation",
     appName: "Instagram",
     href: "/instagram/stories",
