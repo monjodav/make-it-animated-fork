@@ -45,6 +45,13 @@ const preparePublic = async () => {
     await resetPackageScripts();
     console.log();
 
+    // Remove .cursor folder
+    const cursorFolderPath = path.join(process.cwd(), ".cursor");
+    if (fs.existsSync(cursorFolderPath)) {
+      fs.rmSync(cursorFolderPath, { recursive: true, force: true });
+      console.log("🗑️  Removed .cursor folder");
+    }
+
     // Remove scripts folder at the end
     const scriptsFolderPath = path.join(process.cwd(), "scripts");
     if (fs.existsSync(scriptsFolderPath)) {
