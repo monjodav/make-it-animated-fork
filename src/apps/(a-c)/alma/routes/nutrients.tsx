@@ -3,10 +3,11 @@ import { FC } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeft } from "lucide-react-native";
-import { Carousel } from "../components/carousel";
+import { NutrientsCarousel } from "../components/nutrients-carousel";
+
+// alma-nutrients-circular-carousel-animation 🔽
 
 export type NutrientsItem = {
-  id: number;
   emoji: string;
   description: string;
   backgroundElement: React.ReactNode;
@@ -14,7 +15,6 @@ export type NutrientsItem = {
 
 const SLIDES: NutrientsItem[] = [
   {
-    id: 0,
     emoji: "🦴",
     description: "Bone health",
     backgroundElement: (
@@ -26,19 +26,6 @@ const SLIDES: NutrientsItem[] = [
     ),
   },
   {
-    id: 1,
-    emoji: "🦴",
-    description: "Bone health",
-    backgroundElement: (
-      <>
-        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[-45deg]" />
-        <View className="absolute w-[50%] aspect-square rounded-full bg-orange-700/25 -top-[25%] -left-[5%]" />
-        <View className="absolute w-[50%] h-[100%] rounded-full bg-green-600/25 -bottom-[25%] -right-[4%] rotate-[25deg]" />
-      </>
-    ),
-  },
-  {
-    id: 2,
     emoji: "⚡️",
     description: "Support energy",
     backgroundElement: (
@@ -50,7 +37,6 @@ const SLIDES: NutrientsItem[] = [
     ),
   },
   {
-    id: 3,
     emoji: "⚖️",
     description: "Gain weight",
     backgroundElement: (
@@ -62,7 +48,6 @@ const SLIDES: NutrientsItem[] = [
     ),
   },
   {
-    id: 4,
     emoji: "🔬",
     description: "Track custom nutrients",
     backgroundElement: (
@@ -76,7 +61,6 @@ const SLIDES: NutrientsItem[] = [
     ),
   },
   {
-    id: 5,
     emoji: "⚖️",
     description: "Maintain weight",
     backgroundElement: (
@@ -88,7 +72,6 @@ const SLIDES: NutrientsItem[] = [
     ),
   },
   {
-    id: 6,
     emoji: "🫀",
     description: "Heart health",
     backgroundElement: (
@@ -100,9 +83,21 @@ const SLIDES: NutrientsItem[] = [
     ),
   },
   {
-    id: 7,
     emoji: "🤧",
     description: "Boost immunity",
+    backgroundElement: (
+      <>
+        <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[45deg]" />
+        <View className="absolute h-[100%] aspect-square rounded-full bg-yellow-300/50 -bottom-[12%] -left-[17%] items-center justify-center">
+          <View className="w-[90%] h-[90%] rounded-full bg-orange-500/50" />
+        </View>
+        <View className="absolute h-[100%] aspect-square rounded-full bg-green-600/50 -top-[25%] -right-[10%]" />
+      </>
+    ),
+  },
+  {
+    emoji: "🤧",
+    description: "Loose weight",
     backgroundElement: (
       <>
         <View className="absolute w-[100%] h-[100%] bg-orange-200/25 rounded-xl rotate-[45deg]" />
@@ -123,9 +118,7 @@ export const Nutrients: FC = () => {
       className="flex-1 bg-[#F7F5ED]"
       style={{ paddingTop: insets.top + 8, paddingBottom: insets.bottom + 8 }}
     >
-      <View className="absolute inset-0 justify-center items-center">
-        <Carousel slides={SLIDES} />
-      </View>
+      <NutrientsCarousel slides={SLIDES} />
 
       <View className="items-center justify-center mb-10">
         <Pressable
@@ -164,3 +157,5 @@ const styles = StyleSheet.create({
     borderCurve: "continuous",
   },
 });
+
+// alma-nutrients-circular-carousel-animation 🔼
