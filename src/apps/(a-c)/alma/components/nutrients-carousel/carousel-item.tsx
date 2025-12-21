@@ -11,7 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { NutrientsItem } from "../../routes/nutrients";
 
-// alma-nutrients-circular-carousel-item-animation 🔽
+// alma-nutrients-circular-carousel-animation 🔽
 
 // Angle step divides full circle (2π) into 9.5 segments
 // 9.5 creates slightly tighter spacing than 9, preventing overlap
@@ -187,4 +187,4 @@ CarouselItem.displayName = "CarouselItem";
 // Props comparison ensures items only update when their animation values change
 export default memo(CarouselItem);
 
-// alma-nutrients-circular-carousel-item-animation 🔼
+// alma-nutrients-circular-carousel-animation 🔼
