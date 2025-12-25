@@ -20,6 +20,23 @@ import { runOnJS, runOnUI } from "react-native-reanimated";
 import { scheduleOnRN, scheduleOnUI } from "react-native-worklets";
 ```
 
+### Type Definitions
+
+```tsx
+function scheduleOnRN<Args extends unknown[], ReturnValue>(
+  fun:
+    | ((...args: Args) => ReturnValue)
+    | RemoteFunction<Args, ReturnValue>
+    | WorkletFunction<Args, ReturnValue>,
+  ...args: Args
+): void;
+
+function scheduleOnUI<Args extends unknown[], ReturnValue>(
+  fun: (...args: Args) => ReturnValue,
+  ...args: Args
+): void;
+```
+
 ## Use scheduleOnUI for UI Thread Functions
 
 When scheduling functions to run on the UI thread, use `scheduleOnUI` instead of calling worklet functions directly or using `runOnUI`. The function should still include the `"worklet"` directive.
