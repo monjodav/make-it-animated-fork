@@ -12,15 +12,15 @@ Reading shared values is allowed only from worklets running on the UI thread. Yo
 const sv = useSharedValue(0);
 
 useEffect(() => {
-  console.log(sv.value); // ❌ reading shared value in the RN runtime (not recommended)
+  console.log(sv.get()); // ❌ reading shared value in the RN runtime (not recommended)
 }, []);
 
 const animatedStyle = useAnimatedStyle(() => {
-  return { opacity: sv.value }; // ✅ this is okay
+  return { opacity: sv.get() }; // ✅ this is okay
 });
 ```
 
-When you read the `sv.value` in the React Native runtime, the JS thread will get blocked until the value is fetched from the UI thread. In most cases it will be negligible, but if the UI thread is busy or you are reading a value multiple times, the wait time needed to synchronize both threads may significantly increase.
+When you read the `sv.get()` in the React Native runtime, the JS thread will get blocked until the value is fetched from the UI thread. In most cases it will be negligible, but if the UI thread is busy or you are reading a value multiple times, the wait time needed to synchronize both threads may significantly increase.
 
 ## Don't Read or Modify Shared Values During Render
 
@@ -78,7 +78,7 @@ setScale(1.2);
 const scale = useSharedValue(1);
 
 // This updates on the UI thread without re-renders
-scale.value = withSpring(1.2);
+scale.set(withSpring(1.2));
 ```
 
 It's okay to create animated contexts for components as long as they don't contain any state which can cause re-renders. Animated contexts that only provide shared values or animation configurations won't trigger unnecessary re-renders.
@@ -147,17 +147,17 @@ If you're doing expensive calculations inside `useAnimatedStyle`, those calculat
 
 ```tsx
 const animatedStyle = useAnimatedStyle(() => ({
-  width: Math.min(Math.max(offset.value * 2, 100), 500),
+  width: Math.min(Math.max(offset.get() * 2, 100), 500),
 }));
 ```
 
 **Instead**, use `useDerivedValue` to compute the value only when dependencies change:
 
 ```tsx
-const width = useDerivedValue(() => Math.min(Math.max(offset.value * 2, 100), 500));
+const width = useDerivedValue(() => Math.min(Math.max(offset.get() * 2, 100), 500));
 
 const animatedStyle = useAnimatedStyle(() => ({
-  width: width.value,
+  width: width.get(),
 }));
 ```
 
@@ -170,18 +170,19 @@ When you update multiple shared values, each update can trigger a separate re-re
 **Don't do this** – triggering multiple re-renders:
 
 ```tsx
-scale.value = withSpring(1.2);
-opacity.value = withSpring(0.8);
+scale.set(withSpring(1.2));
+opacity.set(withSpring(0.8));
 ```
 
-**Instead**, batch the updates using `scheduleOnUI` (react-native-worklets):
+**Instead**, batch the updates using `scheduleOnUI` (react-native-worklets). Define the function outside using `useCallback` and pass the function reference:
 
 ```tsx
-scheduleOnUI(() => {
-  "worklet";
-  scale.value = withSpring(1.2);
-  opacity.value = withSpring(0.8);
-})();
+const batchUpdates = useCallback(() => {
+  scale.set(withSpring(1.2));
+  opacity.set(withSpring(0.8));
+}, []);
+
+scheduleOnUI(batchUpdates);
 ```
 
 The `scheduleOnUI` function ensures both updates happen in the same frame, so the UI only re-renders once. This is especially important when updating many values at once, like in complex gestures or choreographed animations.
