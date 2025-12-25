@@ -1,0 +1,50 @@
+---
+alwaysApply: true
+---
+
+# Worklet Scheduling
+
+## Use scheduleOnRN and scheduleOnUI Instead of runOnJS and runOnUI
+
+Use `scheduleOnRN` and `scheduleOnUI` from `react-native-worklets` instead of `runOnJS` and `runOnUI` from `react-native-reanimated`.
+
+**Don't do this:**
+
+```tsx
+import { runOnJS, runOnUI } from "react-native-reanimated";
+```
+
+**Instead, do this:**
+
+```tsx
+import { scheduleOnRN, scheduleOnUI } from "react-native-worklets";
+```
+
+## Use scheduleOnUI for UI Thread Functions
+
+When scheduling functions to run on the UI thread, use `scheduleOnUI` instead of calling worklet functions directly or using `runOnUI`. The function should still include the `"worklet"` directive.
+
+**Don't do this:**
+
+```tsx
+import { runOnUI } from "react-native-reanimated";
+
+const myFunction = () => {
+  "worklet";
+  console.log("Hello from the UI Runtime!");
+};
+
+runOnUI(myFunction)();
+```
+
+**Instead, do this:**
+
+```tsx
+import { scheduleOnUI } from "react-native-worklets";
+
+const myFunction = (): void => {
+  console.log("Hello from the UI Runtime!");
+};
+
+scheduleOnUI(myFunction);
+```
