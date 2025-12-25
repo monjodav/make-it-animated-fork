@@ -4,6 +4,10 @@ alwaysApply: true
 
 # Worklet Scheduling
 
+## Don't Use 'worklet' Directive Unless Explicitly Asked
+
+**Never use the `"worklet"` directive unless explicitly requested.** In 99.9% of cases, there is no need to use it. `scheduleOnUI` handle worklet conversion automatically, so the directive is unnecessary. This also applies to gesture detector callbacks - you don't need to add the `"worklet"` directive in gesture handler callbacks.
+
 ## Use scheduleOnRN and scheduleOnUI Instead of runOnJS and runOnUI
 
 Use `scheduleOnRN` and `scheduleOnUI` from `react-native-worklets` instead of `runOnJS` and `runOnUI` from `react-native-reanimated`.
@@ -61,7 +65,6 @@ useAnimatedReaction(
 
 // ❌ scheduleOnUI with inline function
 scheduleOnUI(() => {
-  "worklet";
   scale.set(withSpring(1.2));
 });
 ```
@@ -83,7 +86,6 @@ useAnimatedReaction(
 
 // ✅ scheduleOnUI - UI thread function
 const updateAnimations = useCallback(() => {
-  "worklet";
   scale.set(withSpring(1.2));
   opacity.set(withSpring(0.8));
 }, []);
