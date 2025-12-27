@@ -39,10 +39,12 @@ export default function Index() {
           paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
         }}
       >
-        <NumberOfAnimations listRef={algoliaListRef} />
+        {/* VS ---------- */}
+        {/* <NumberOfAnimations listRef={algoliaListRef} /> */}
         <AlgoliaResults listRef={algoliaListRef} />
         <BottomBar textInputRef={textInputRef} />
-        <AlgoliaSearchBar textInputRef={textInputRef} listRef={algoliaListRef} />
+        {/* VS ---------- */}
+        {/* <AlgoliaSearchBar textInputRef={textInputRef} listRef={algoliaListRef} /> */}
       </View>
     </AlgoliaProvider>
   );

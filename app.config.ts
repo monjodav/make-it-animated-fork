@@ -122,6 +122,7 @@ export default ({ config }: { config: ExpoConfig }) => ({
     ],
     experiments: {
       typedRoutes: true,
+      reactCompiler: true,
     },
     extra: {
       router: {
