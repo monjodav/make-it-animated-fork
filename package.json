@@ -13,7 +13,7 @@
     "update:ios": "node ./scripts/check-dev-mode.js && eas update --platform=ios",
     "update:android": "node ./scripts/check-dev-mode.js && eas update --platform=android",
     "prepare-public": "node ./scripts/prepare-public/prepare-public.js",
-    "public": "node ./scripts/update-public-branch.js"
+    "public": "node ./scripts/update-public-branch.js && git push origin main"
   },
   "jest": {
     "preset": "jest-expo"
