@@ -1,6 +1,10 @@
 import { useWindowDimensions, ViewToken } from "react-native";
 import { useRef, useState, useCallback } from "react";
-import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { USERS } from "../../lib/data/users";
 import UserStoriesItem from "./user-stories-item";
 import { User } from "../../lib/data/users";
@@ -19,6 +23,10 @@ const StoriesCarousel = () => {
   const listAnimatedIndex = useSharedValue(0);
   // Tracks scroll drag state to pause video playback during user interaction
   const isDragging = useSharedValue(false);
+  // Disables pointer events during scroll to prevent double-tap conflicts
+  // When user taps last story to scroll to next user, prevents second tap from interrupting scroll
+  // Freezes gestures until scroll animation completes (onMomentumEnd)
+  const carouselPointerEvents = useSharedValue<"auto" | "none">("auto");
 
   // Viewability config: card must be 100% visible to be considered "viewable"
   // minimumViewTime: 0 ensures immediate index updates for responsive navigation
@@ -45,11 +53,24 @@ const StoriesCarousel = () => {
     // Normalize scroll position: contentOffset.x / width = current card index
     // Example: width=375px, offset=187.5px → index=0.5 (halfway between cards 0 and 1)
     onScroll: (event) => {
+      // Disable pointer events during scroll to prevent double-tap conflicts
+      // Prevents user from tapping again while scrolling to next user
+      carouselPointerEvents.set("none");
       listAnimatedIndex.set(event.contentOffset.x / width);
+    },
+    onMomentumEnd: () => {
+      // Re-enable pointer events after scroll animation completes
+      carouselPointerEvents.set("auto");
     },
     onEndDrag: () => {
       isDragging.set(false);
     },
+  });
+
+  const rContainerStyle = useAnimatedStyle(() => {
+    return {
+      pointerEvents: carouselPointerEvents.get(),
+    };
   });
 
   // Animated.FlatList enables Reanimated scroll handlers to run on UI thread
@@ -80,6 +101,7 @@ const StoriesCarousel = () => {
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
       decelerationRate="fast"
+      style={rContainerStyle}
     />
   );
 };

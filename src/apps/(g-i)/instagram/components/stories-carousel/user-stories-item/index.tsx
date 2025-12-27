@@ -1,4 +1,10 @@
-import { FlatList, Pressable, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  FlatList,
+  GestureResponderEvent,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import Animated, {
   SharedValue,
@@ -89,6 +95,51 @@ const UserStoriesItem: FC<UserItemProps> = ({
     }
   );
 
+  const onStoryPress = useCallback(
+    (e: GestureResponderEvent) => {
+      const screenX = e.nativeEvent.pageX;
+      const isLeft = screenX < screenWidth / 2;
+      const isLastStory = currentStoryIndex === user.stories.length - 1;
+      const isFirstStory = currentStoryIndex === 0;
+      const isFirstUser = userIndex === 0;
+      const isLastUser = userIndex === totalUsers - 1;
+
+      if (isLeft) {
+        if (isFirstUser && isFirstStory) {
+          return;
+        }
+        if (isFirstStory && !isFirstUser) {
+          scrollRef.current?.scrollToIndex({ index: userIndex - 1, animated: true });
+          return;
+        }
+        if (!isFirstStory) {
+          setCurrentStoryIndex(currentStoryIndex - 1);
+        }
+      } else {
+        if (isLastUser && isLastStory) {
+          return;
+        }
+        if (isLastStory) {
+          if (userIndex < totalUsers - 1) {
+            scrollRef.current?.scrollToIndex({ index: userIndex + 1, animated: true });
+          }
+        } else {
+          setCurrentStoryIndex(currentStoryIndex + 1);
+        }
+      }
+    },
+    [currentStoryIndex, userIndex, totalUsers, scrollRef, screenWidth, user.stories.length]
+  );
+
+  const onStoryLongPress = useCallback(() => {
+    videoPlayerRef.current?.pause();
+  }, []);
+
+  const onStoryPressOut = useCallback(() => {
+    if (isDragging.get()) return;
+    videoPlayerRef.current?.resume();
+  }, [isDragging]);
+
   const { colors, locations } = easeGradient({
     colorStops: {
       0: { color: "rgba(0,0,0,0.25)" },
@@ -103,49 +154,13 @@ const UserStoriesItem: FC<UserItemProps> = ({
         // Tap left half: go to previous story/user
         // Tap right half: go to next story/user
         // Handles edge cases (first/last story/user) to prevent navigation errors
-        onPress={(e) => {
-          const screenX = e.nativeEvent.pageX;
-          const isLeft = screenX < screenWidth / 2;
-          const isLastStory = currentStoryIndex === user.stories.length - 1;
-          const isFirstStory = currentStoryIndex === 0;
-          const isFirstUser = userIndex === 0;
-          const isLastUser = userIndex === totalUsers - 1;
-
-          if (isLeft) {
-            if (isFirstUser && isFirstStory) {
-              return;
-            }
-            if (isFirstStory && !isFirstUser) {
-              scrollRef.current?.scrollToIndex({ index: userIndex - 1, animated: true });
-              return;
-            }
-            if (!isFirstStory) {
-              setCurrentStoryIndex(currentStoryIndex - 1);
-            }
-          } else {
-            if (isLastUser && isLastStory) {
-              return;
-            }
-            if (isLastStory) {
-              if (userIndex < totalUsers - 1) {
-                scrollRef.current?.scrollToIndex({ index: userIndex + 1, animated: true });
-              }
-            } else {
-              setCurrentStoryIndex(currentStoryIndex + 1);
-            }
-          }
-        }}
+        onPress={onStoryPress}
         // Long press pauses video (e.g., to read text in story)
         // 250ms delay prevents accidental pauses during quick taps
-        onLongPress={() => {
-          videoPlayerRef.current?.pause();
-        }}
+        onLongPress={onStoryLongPress}
         delayLongPress={250}
         // Resume on release, but only if not currently dragging (prevents conflicts)
-        onPressOut={() => {
-          if (isDragging.get()) return;
-          videoPlayerRef.current?.resume();
-        }}
+        onPressOut={onStoryPressOut}
       >
         {/* Uses fake video source to simulate real app behavior and maintain animation consistency */}
         {/* Hidden (opacity: 0) but drives progress bar timing - matches Instagram's video-based story system */}
