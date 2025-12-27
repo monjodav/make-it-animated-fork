@@ -35,7 +35,7 @@ const Home = () => {
 
           <View className="flex-1 rounded-full border border-orange-400 flex-row items-center p-2">
             <View className="size-8 rounded-full bg-[#FF4400]" />
-            <Text className="absolute inset-x-0 text-center text-lg text-neutral-500">
+            <Text className="absolute inset-x-0 text-center text-base text-neutral-500">
               Find anything
             </Text>
           </View>

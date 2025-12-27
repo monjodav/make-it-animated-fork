@@ -20,10 +20,10 @@ export const Account: FC = () => {
             contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}
           >
-            <View className=" h-[200px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
-            <View className=" h-[120px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
-            <View className=" h-[180px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
-            <View className=" h-[100px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
+            <View className="h-[200px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
+            <View className="h-[120px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
+            <View className="h-[180px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
+            <View className="h-[100px] rounded-2xl bg-[#25272F]" style={styles.borderCurve} />
           </ScrollView>
         </Tabs.Tab>
         <Tabs.Tab name="Standing">

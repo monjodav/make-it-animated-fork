@@ -28,7 +28,7 @@ const TabControl = ({ value, setValue }: TabControlProps) => {
         // -ml-[1px]: Slight left offset to align with visual border spacing.
         // Indicator animates absolutely positioned, so these offsets ensure
         // precise visual alignment with tab items during transitions.
-        className="top-[3px] -ml-[1px] rounded-full bg-cyan-950 border border-cyan-800/50"
+        className="top-[4px] -ml-px rounded-full bg-cyan-950 border border-cyan-800/50"
         style={styles.borderCurve}
       />
 

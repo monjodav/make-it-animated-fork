@@ -58,7 +58,7 @@ const TabsLayout = () => {
         name={Tab.Add}
         options={{
           tabBarIcon: ({ color }) => (
-            <View className="w-16 h-12 rounded-2xl items-center justify-center bg-neutral-900">
+            <View className="w-14 h-10 rounded-xl items-center justify-center bg-neutral-900">
               <Plus size={26} color={color} strokeWidth={3} />
             </View>
           ),

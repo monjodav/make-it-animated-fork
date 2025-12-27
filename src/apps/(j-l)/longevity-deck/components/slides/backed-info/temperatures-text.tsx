@@ -35,7 +35,7 @@ export const TemperaturesText: FC<SlideItemProps> = ({ index }) => {
     <SlideTextContainer
       style={rContainerStyle}
       className="absolute top-[25%] left-[42%] max-w-[200px] rounded-3xl"
-      textClassName="text-lg text-center"
+      textClassName="text-center"
     >
       Temperatures between 88°C and 98°C are most beneficial. 20+ minutes 5-6 x week
     </SlideTextContainer>

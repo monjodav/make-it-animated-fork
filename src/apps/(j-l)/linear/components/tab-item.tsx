@@ -5,7 +5,7 @@ import { Tab } from "./tab-bar";
 // linear-button-tabs-indicator-animation 🔽
 
 // Shared styling constants exported for TabIndicator visual consistency
-export const _borderRadius = 8; // Rounded corners for modern button appearance
+export const _borderRadius = 10; // Rounded corners for modern button appearance
 export const _borderColor = "#28282B"; // Dark gray border matching Linear's design system
 export const _borderCurve = "continuous"; // iOS 16+ continuous curves for premium feel
 
@@ -27,7 +27,7 @@ export const TabItem: FC<TabItemProps> = ({ icon, label, onPress, onLayout }) =>
       onPress={onPress} // Triggers activeTab state change and scroll positioning
     >
       {/* Fixed icon container ensures consistent spacing regardless of icon complexity */}
-      <View className="w-4 h-4 items-center justify-center">{icon}</View>
+      <View className="size-4 items-center justify-center">{icon}</View>
       <Text className="text-linear-text font-medium">{label}</Text>
     </Pressable>
   );

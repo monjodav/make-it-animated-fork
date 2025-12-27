@@ -31,8 +31,8 @@ const PeriodControl = ({ value, setValue }: SwitcherProps) => {
         <Text
           className={cn(
             value === "monthly"
-              ? "text-neutral-50 text-lg font-semibold"
-              : "text-neutral-400 text-lg font-semibold"
+              ? "text-neutral-50 text-base font-semibold"
+              : "text-neutral-400 text-base font-semibold"
           )}
         >
           Monthly
@@ -43,14 +43,14 @@ const PeriodControl = ({ value, setValue }: SwitcherProps) => {
           <Text
             className={cn(
               value === "yearly"
-                ? "text-neutral-50 text-lg font-semibold"
-                : "text-neutral-400 text-lg font-semibold"
+                ? "text-neutral-50 text-base font-semibold"
+                : "text-neutral-400 text-base font-semibold"
             )}
           >
             Yearly
           </Text>
           <View className="pt-0.5 px-2 bg-neutral-50 rounded-full" style={styles.borderCurve}>
-            <Text className="text-neutral-900 text-base ">-20%</Text>
+            <Text className="text-neutral-900 text-sm">-20%</Text>
           </View>
         </View>
       </SegmentedControl.Item>

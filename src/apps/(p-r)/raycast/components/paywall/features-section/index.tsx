@@ -33,7 +33,7 @@ export const FeaturesSection = ({ title, children, entering, exiting }: Features
     >
       <GradientText
         text={title}
-        className="text-2xl font-semibold text-center"
+        className="text-xl font-semibold text-center"
         gradientProps={{ colors: ["#a3a3a390", "#fafafa", "#a3a3a390"] }}
       />
       <View

@@ -89,7 +89,7 @@ const Task = () => {
             onPress={handleCheckboxPress}
             style={styles.borderCurve}
             className={cn(
-              "size-9 rounded-[12px] mt-1 border-[2px] border-white/20 items-center justify-center",
+              "size-8 rounded-xl border-2 border-white/20 items-center justify-center",
               isTaskCompleted && "border-red-500 bg-red-500"
             )}
           >
@@ -106,7 +106,7 @@ const Task = () => {
             {/* StrikethroughText animates independently but duration matches checkmark for visual sync */}
             <StrikethroughText
               isSelected={isTaskCompleted}
-              className="self-start text-4xl font-semibold text-white"
+              className="self-start text-3xl font-semibold text-white"
               selectedTextClassName="text-white/40"
               animationDuration={STRIKETHROUGH_ANIMATION_DURATION}
             >

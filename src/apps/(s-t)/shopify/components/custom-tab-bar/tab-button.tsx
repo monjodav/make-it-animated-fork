@@ -59,7 +59,7 @@ export const TabButton: FC<TabButtonProps> = ({ focused, onPress, children }) =>
         }
       }}
     >
-      <Animated.View className="p-4 rounded-full" style={rStyle}>
+      <Animated.View className="p-3.5 rounded-full" style={rStyle}>
         {children}
       </Animated.View>
     </Pressable>

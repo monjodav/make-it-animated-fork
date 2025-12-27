@@ -89,7 +89,7 @@ export const TopTabs: FC<Props> = ({ activeTab, setActiveTab }) => {
       {/* Purple background (#7F61F2) matches Viber's brand color scheme */}
       {/* Rounded corners (6px) slightly less than container (8px from rounded-lg) for inset appearance */}
       <Animated.View
-        className="absolute rounded-[6px] bg-[#7F61F2]"
+        className="absolute rounded-[8px] bg-[#7F61F2]"
         // Combines animated left/width with fixed top/bottom positioning
         // top/bottom padding ensures indicator doesn't touch container edges
         style={[rIndicatorStyle, { top: _padding, bottom: _padding }]}

@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MENU_TRANSITION_SPRING_CONFIG } from "@/src/apps/(s-t)/shopify/lib/constants/animation-configs";
 import { TabButton } from "./tab-button";
 import { useRouter } from "expo-router";
+import { colorKit } from "reanimated-color-picker";
 
 // shopify-custom-bottom-tab-bar-animation 🔽
 
@@ -37,11 +38,11 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 
   return (
     <View
-      className="absolute flex-row items-center justify-between px-5 gap-2 shadow-[0_0px_20px_10px_rgba(218,218,218,0.8)]"
+      className="absolute flex-row items-center justify-between px-5 gap-2"
       style={{ bottom: insets.bottom + 12 }}
     >
       {/* Edge buttons are isolated for stronger shadow falloff and better touch separation */}
-      <View className="p-1 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>
+      <View className="p-0.5 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>
         <TabButton
           focused={isTabFocused(Tab.Search)}
           onPress={() => {
@@ -57,7 +58,7 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 
       {/* Center cluster mirrors Shopify's floating pill: group animates per-button, not as a single shared container */}
       <View
-        className="flex-1 flex-row items-center justify-around py-1 bg-white rounded-full"
+        className="flex-1 flex-row items-center justify-between p-0.5 bg-white rounded-full"
         style={[styles.buttonBorder, styles.shadow]}
       >
         <TabButton focused={isTabFocused(Tab.Home)} onPress={() => navigation.navigate(Tab.Home)}>
@@ -100,7 +101,7 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
         </TabButton>
       </View>
 
-      <View className="p-1 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>
+      <View className="p-0.5 rounded-full bg-white" style={[styles.buttonBorder, styles.shadow]}>
         <TabButton
           focused={isTabFocused(Tab.Profile)}
           onPress={() => navigation.navigate(Tab.Profile)}
@@ -115,11 +116,11 @@ export const CustomTabBar: FC<BottomTabBarProps> = ({ state, navigation }) => {
 const styles = StyleSheet.create({
   buttonBorder: { borderWidth: 1, borderColor: "#F1F1F1" },
   shadow: {
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: colorKit.setAlpha("#000", 0.5).hex(),
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowRadius: 4,
+    elevation: 4,
   },
 });
 

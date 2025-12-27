@@ -57,41 +57,39 @@ const MarqueeItemComponent: FC<Props> = ({ index, imageSrc, scrollOffsetX, allIt
       className="absolute h-full p-2"
       style={[rContainerStyle, { width: _itemWidth, transformOrigin: "bottom" }]} // Bottom origin makes rotation feel natural
     >
-      <View className="flex-1 shadow-md">
-        <View className="flex-1 rounded-3xl overflow-hidden">
-          {/* Base card image - sharp and clear */}
-          <Image source={imageSrc} className="h-full w-full" />
-          {/* Glassmorphism effect overlay - creates depth and iOS-style blur */}
-          <Animated.View
-            entering={FadeIn} // Smooth entrance when card becomes visible
-            className="absolute bottom-0"
-            style={{ width: _itemWidth, height: "100%" }}
+      <View className="flex-1 rounded-3xl shadow-md overflow-hidden">
+        {/* Base card image - sharp and clear */}
+        <Image source={imageSrc} className="h-full w-full" />
+        {/* Glassmorphism effect overlay - creates depth and iOS-style blur */}
+        <Animated.View
+          entering={FadeIn} // Smooth entrance when card becomes visible
+          className="absolute bottom-0"
+          style={{ width: _itemWidth, height: "100%" }}
+        >
+          {/* Gradient mask: transparent top 40%, visible bottom 60% for glass effect */}
+          <MaskedView
+            maskElement={
+              <LinearGradient
+                locations={[0, 0.4, 0.7, 1]} // Gradual transition from transparent to opaque
+                colors={["transparent", "transparent", "black", "black"]}
+                style={StyleSheet.absoluteFillObject}
+              />
+            }
+            style={StyleSheet.absoluteFillObject}
           >
-            {/* Gradient mask: transparent top 40%, visible bottom 60% for glass effect */}
-            <MaskedView
-              maskElement={
-                <LinearGradient
-                  locations={[0, 0.4, 0.7, 1]} // Gradual transition from transparent to opaque
-                  colors={["transparent", "transparent", "black", "black"]}
-                  style={StyleSheet.absoluteFillObject}
-                />
-              }
-              style={StyleSheet.absoluteFillObject}
-            >
-              {/* Duplicate image for blur effect - only bottom portion visible due to mask */}
-              <Image source={imageSrc} className="h-full w-full" />
-              {/* iOS-style blur overlay - intensity 100 creates strong glassmorphism */}
-              <BlurView intensity={100} style={StyleSheet.absoluteFillObject} />
-            </MaskedView>
-          </Animated.View>
-          {/* Content overlay with skeleton placeholders representing event details */}
-          <View style={StyleSheet.absoluteFillObject} className="items-center justify-end p-6">
-            {/* Event title placeholder - prominent and centered */}
-            <View className="bg-white/30 rounded-full h-8 w-1/2 mb-3" />
-            {/* Event description placeholders - varying widths for natural text appearance */}
-            <View className="bg-white/20 rounded-full h-5 w-3/4 mb-1" />
-            <View className="bg-white/20 rounded-full h-5 w-1/2" />
-          </View>
+            {/* Duplicate image for blur effect - only bottom portion visible due to mask */}
+            <Image source={imageSrc} className="h-full w-full" />
+            {/* iOS-style blur overlay - intensity 100 creates strong glassmorphism */}
+            <BlurView intensity={100} style={StyleSheet.absoluteFillObject} />
+          </MaskedView>
+        </Animated.View>
+        {/* Content overlay with skeleton placeholders representing event details */}
+        <View style={StyleSheet.absoluteFillObject} className="items-center justify-end p-6">
+          {/* Event title placeholder - prominent and centered */}
+          <View className="bg-white/30 rounded-full h-8 w-1/2 mb-3" />
+          {/* Event description placeholders - varying widths for natural text appearance */}
+          <View className="bg-white/20 rounded-full h-5 w-3/4 mb-1" />
+          <View className="bg-white/20 rounded-full h-5 w-1/2" />
         </View>
       </View>
     </Animated.View>
