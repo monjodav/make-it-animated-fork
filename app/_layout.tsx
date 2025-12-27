@@ -10,13 +10,17 @@ import * as Linking from "expo-linking";
 import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
 import { useCallback, useEffect } from "react";
 import { useFonts } from "expo-font";
-import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
+import {
+  LibreBaskerville_700Bold,
+  LibreBaskerville_400Regular,
+} from "@expo-google-fonts/libre-baskerville";
 import {
   Outfit_400Regular,
   Outfit_500Medium,
   Outfit_600SemiBold,
   Outfit_700Bold,
 } from "@expo-google-fonts/outfit";
+import { Bangers_400Regular } from "@expo-google-fonts/bangers/400Regular";
 import { Stack } from "expo-router";
 
 if (!__DEV__) {
@@ -40,10 +44,12 @@ KeyboardController.preload();
 export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
+    LibreBaskerville_400Regular,
     Outfit_400Regular,
     Outfit_500Medium,
     Outfit_600SemiBold,
     Outfit_700Bold,
+    Bangers_400Regular,
   });
 
   useVersionCheck();

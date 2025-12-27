@@ -6,7 +6,7 @@ import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 import { Backdrop } from "./backdrop";
 import { FeatureItem } from "./feature-item";
-import PaywallBlurBg from "@/assets/images/misc/paywall-blur-bg.png";
+import PaywallBlurBg from "@/assets/images/misc/colorsapp/paywall-blur-bg.png";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   useAnimatedStyle,
