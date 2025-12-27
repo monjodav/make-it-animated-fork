@@ -1,9 +1,9 @@
 import { FC, RefObject } from "react";
-import { View, StyleSheet, Pressable, Platform } from "react-native";
+import { View, StyleSheet, Pressable } from "react-native";
 import { useClearRefinements, useInstantSearch, useSearchBox } from "react-instantsearch-core";
 import { AppText } from "../app-text";
 import { useRefinementStatus } from "../../lib/hooks/use-refinement-status";
-import Animated, { LinearTransition } from "react-native-reanimated";
+import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
 import { cn } from "../../lib/utils/cn";
 import { fireHaptic } from "../../lib/utils/fire-haptic";
 import { FlashListRef } from "@shopify/flash-list";
@@ -40,8 +40,13 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
     }, 300);
   };
 
+  if (count === 0 && !hasRefinements) {
+    return null;
+  }
+
   return (
-    <View
+    <Animated.View
+      entering={FadeIn}
       className="px-6 py-3 border-neutral-700/75 flex-row items-center justify-between"
       style={{ borderBottomWidth: StyleSheet.hairlineWidth }}
     >
@@ -56,7 +61,7 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
               delay={3}
               colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
               containerStyle={{
-                width: Platform.OS === "android" ? 160 : 155,
+                width: 200,
                 alignItems: "center",
               }}
             >
@@ -74,6 +79,6 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
           </Pressable>
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 };

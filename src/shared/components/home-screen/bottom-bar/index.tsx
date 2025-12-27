@@ -31,7 +31,7 @@ export const BottomBar: FC<BottomBarProps> = ({ textInputRef }) => {
       <View className="flex-row items-center justify-between h-12">
         <View className="absolute left-0 right-0 items-center justify-center">
           <View
-            className="flex-row items-center bg-neutral-800 rounded-2xl shadow-xl shadow-neutral-700/40"
+            className="flex-row items-center bg-neutral-800 rounded-2xl"
             style={{ borderCurve: "continuous" }}
           >
             <Pressable
