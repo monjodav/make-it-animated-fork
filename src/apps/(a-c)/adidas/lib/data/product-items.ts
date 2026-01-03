@@ -1,9 +1,11 @@
+// adidas-product-infinite-carousel-animation 🔽
+
 export type ProductItem = {
   id: string;
   imageUrl: string;
 };
 
-export const data = [
+export const PRODUCT_ITEMS: ProductItem[] = [
   {
     id: "1",
     imageUrl:
@@ -41,17 +43,20 @@ export const data = [
   },
 ];
 
-export const addIndexToData = <T extends Record<string, any>>(
-  data: T[]
+export const addIndexToItems = <T extends Record<string, any>>(
+  items: T[]
 ): (T & { index: number })[] => {
-  return data.map((item, index) => ({ ...item, index }));
+  return items.map((item, index) => ({ ...item, index }));
 };
 
-export const INITIAL_DATA: (ProductItem & { index: number })[] = addIndexToData(data);
+export const DEFAULT_PRODUCT_ITEMS: (ProductItem & { index: number })[] =
+  addIndexToItems(PRODUCT_ITEMS);
 
-export const generateNewItems = () => {
-  return INITIAL_DATA.map((item) => ({
+export const generateNewProductItems = () => {
+  return DEFAULT_PRODUCT_ITEMS.map((item) => ({
     ...item,
     id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}-${Math.random().toString(36).substring(2, 9)}`,
   }));
 };
+
+// adidas-product-infinite-carousel-animation 🔼

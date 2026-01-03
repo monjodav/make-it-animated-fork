@@ -323,6 +323,70 @@ export default Component;
 - **Separation of Concerns**: Keep animation logic separate from business logic. Group related functionality together.
 - **Constants Inside Component**: If a constant depends on props or state, place it in the "Data-related variables" section after state.
 
+# Variable Naming
+
+## Declarative and Clear Variable Names
+
+All variable names must be declarative and clearly state their purpose. This applies to constants, state variables, computed values, refs, callbacks, and all other variables.
+
+**Don't do this** – ambiguous or unclear names:
+
+```tsx
+const data = useState([]);
+const rStyle = useAnimatedStyle(() => {});
+const item = viewableItems[0];
+const idx = data.findIndex(...);
+const insets = useSafeAreaInsets();
+```
+
+**Instead, do this** – declarative names that clearly state purpose:
+
+```tsx
+const productItems = useState([]);
+const animatedIndicatorStyle = useAnimatedStyle(() => {});
+const firstViewableItem = viewableItems[0];
+const targetProductIndex = data.findIndex(...);
+const safeAreaInsets = useSafeAreaInsets();
+```
+
+### Naming Conventions
+
+- **State variables**: Use descriptive nouns that indicate what the state represents (e.g., `productItems`, `currentProductItem`, `isLoading`)
+- **Refs**: Include "Ref" suffix (e.g., `productListRef`, `scrollViewRef`)
+- **Animated styles**: Include "Animated" or "Style" suffix (e.g., `animatedIndicatorStyle`, `containerAnimatedStyle`)
+- **Callbacks**: Use verb phrases that describe the action (e.g., `handleItemPress`, `onViewableItemsChanged`)
+- **Computed values**: Use descriptive names that explain what is computed (e.g., `productListHeight`, `totalPrice`)
+- **Constants**: Use UPPERCASE_SCREAMING_SNAKE_CASE with descriptive names (e.g., `DASH_HEIGHT`, `ANIMATION_DURATION`)
+
+**Examples:**
+
+```tsx
+// State
+const [productItems, setProductItems] = useState([]);
+const [currentProductItem, setCurrentProductItem] = useState(null);
+const currentSlideIndex = useSharedValue(0);
+
+// Refs
+const productListRef = useRef(null);
+const scrollViewRef = useRef(null);
+
+// Animated styles
+const animatedIndicatorStyle = useAnimatedStyle(() => {});
+const containerAnimatedStyle = useAnimatedStyle(() => {});
+
+// Callbacks
+const handleProductItemPress = useCallback(() => {});
+const onViewableItemsChanged = useRef(() => {}).current;
+
+// Computed values
+const productListHeight = screenHeight * 0.6;
+const totalProductCount = productItems.length;
+
+// Constants
+const DASH_HEIGHT = 1;
+const ANIMATION_DURATION = 300;
+```
+
 # Component Organization
 
 ## One File, One Component Pattern

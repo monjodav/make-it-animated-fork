@@ -1,82 +1,75 @@
-import {
-  Image,
-  useWindowDimensions,
-  View,
-  Text,
-  ViewToken,
-  Pressable,
-  StyleSheet,
-} from "react-native";
+import { useCallback, useRef, useState } from "react";
+import { Pressable, Text, useWindowDimensions, View, ViewToken } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft, Heart, MoveRight, Upload } from "lucide-react-native";
 import { LegendList, LegendListRef } from "@legendapp/list";
-import { useCallback, useEffect, useRef, useState } from "react";
-import Pagination from "../components/product/pagination";
-import { INITIAL_DATA, ProductItem, generateNewItems } from "../lib/data/data";
-import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import { ArrowLeft, Heart, MoveRight, Upload } from "lucide-react-native";
 import { useSharedValue } from "react-native-reanimated";
+import Pagination from "../components/product/pagination";
+import Divider from "../components/product/divider";
+import ProductImage from "../components/product/product-image";
+import { DEFAULT_PRODUCT_ITEMS, generateNewProductItems } from "../lib/data/product-items";
+import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
+import type { ProductItem } from "../lib/data/product-items";
 
-const Divider = () => {
-  return <View className="bg-neutral-400" style={{ height: StyleSheet.hairlineWidth }} />;
+// adidas-product-infinite-carousel-animation 🔽
+
+const getInitialProductItems = () => {
+  const newProductItems = generateNewProductItems();
+  return DEFAULT_PRODUCT_ITEMS.concat(newProductItems);
 };
 
 const Product = () => {
-  const insets = useSafeAreaInsets();
-  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
-
-  const listHeight = screenHeight * 0.6;
-
-  const listRef = useRef<LegendListRef>(null);
-
-  useEffect(() => {
-    setTimeout(() => {
-      loadMoreAtStart();
-    }, 50);
-  }, []);
-
-  const [data, setData] = useState([...INITIAL_DATA]);
-
-  const loadMoreAtEnd = useCallback(() => {
-    const newItems = generateNewItems();
-    setData((prev) => [...prev, ...newItems]);
-  }, []);
-
-  const loadMoreAtStart = useCallback(() => {
-    const newItems = generateNewItems();
-    setData((prev) => [...newItems, ...prev]);
-  }, []);
+  const [productItems, setProductItems] = useState(getInitialProductItems());
+  const [currentProductItem, setCurrentProductItem] = useState<
+    (ProductItem & { index: number }) | null
+  >(null);
 
   const currentSlideIndex = useSharedValue(0);
-  const [currentItem, setCurrentItem] = useState<(ProductItem & { index: number }) | null>(null);
 
+  const safeAreaInsets = useSafeAreaInsets();
+  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
+
+  const productListHeight = screenHeight * 0.6;
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
     minimumViewTime: 0,
   }).current;
 
+  const productListRef = useRef<LegendListRef>(null);
+
+  const loadMoreAtStart = useCallback(() => {
+    const newProductItems = generateNewProductItems();
+    setProductItems((prev) => newProductItems.concat(prev));
+  }, []);
+
+  const loadMoreAtEnd = useCallback(() => {
+    const newProductItems = generateNewProductItems();
+    setProductItems((prev) => prev.concat(newProductItems));
+  }, []);
+
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
     if (viewableItems.length > 0) {
-      const viewableItem = viewableItems[0];
-      if (viewableItem && viewableItem.index !== null) {
-        currentSlideIndex.set(viewableItem.item.index);
-        setCurrentItem(viewableItem.item);
+      const firstViewableItem = viewableItems[0];
+      if (firstViewableItem && firstViewableItem.index !== null) {
+        currentSlideIndex.set(firstViewableItem.item.index);
+        setCurrentProductItem(firstViewableItem.item);
       }
     }
   }).current;
 
-  const onMomentumScrollEnd = () => {
-    const targetIndex = data.findIndex((item) => item.id === currentItem?.id);
-    if (targetIndex !== -1 && listRef.current) {
-      listRef.current.scrollToIndex({
-        index: targetIndex,
+  const onMomentumScrollEnd = useCallback(() => {
+    const targetProductIndex = productItems.findIndex((item) => item.id === currentProductItem?.id);
+    if (targetProductIndex !== -1 && productListRef.current) {
+      productListRef.current.scrollToIndex({
+        index: targetProductIndex,
         animated: true,
         viewPosition: 0.5,
       });
     }
-  };
+  }, [productItems, currentProductItem]);
 
   return (
-    <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-white" style={{ paddingTop: safeAreaInsets.top }}>
       <View className="flex-row items-center justify-between px-4 pt-2 pb-4">
         <ArrowLeft size={20} color="black" strokeWidth={1} />
         <View className="flex-row items-center gap-5">
@@ -85,47 +78,36 @@ const Product = () => {
         </View>
       </View>
       <Divider />
-      <View style={{ height: listHeight }}>
+      <View style={{ height: productListHeight }}>
         <LegendList
-          ref={listRef}
-          data={data}
+          ref={productListRef}
+          data={productItems}
           renderItem={({ item }) => {
             return (
-              <View
-                className="w-full"
-                style={{
-                  height: listHeight,
-                  width: screenWidth,
-                  alignSelf: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  resizeMode="cover"
-                  style={{ height: listHeight, width: screenWidth }}
-                  source={{ uri: item.imageUrl }}
-                />
-              </View>
+              <ProductImage
+                imageUrl={item.imageUrl}
+                height={productListHeight}
+                width={screenWidth}
+              />
             );
           }}
+          estimatedItemSize={productListHeight}
+          initialScrollIndex={DEFAULT_PRODUCT_ITEMS.length}
           keyExtractor={(item) => item.id.toString()}
-          onEndReached={loadMoreAtEnd}
           onStartReached={loadMoreAtStart}
-          onEndReachedThreshold={0.5}
           onStartReachedThreshold={0.5}
-          snapToInterval={listHeight}
-          decelerationRate="normal"
+          onEndReached={loadMoreAtEnd}
+          onEndReachedThreshold={0.5}
           recycleItems
           showsVerticalScrollIndicator={false}
-          contentContainerClassName="items-center"
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           onMomentumScrollEnd={onMomentumScrollEnd}
         />
-        <Pagination initialData={INITIAL_DATA} currentSlideIndex={currentSlideIndex} />
+        <Pagination productItems={DEFAULT_PRODUCT_ITEMS} currentSlideIndex={currentSlideIndex} />
       </View>
       <View className="flex-1 pt-6 px-4">
-        <Text className="text-xl font-semibold mb-2">SNEAKERS TRAIL RUNNING</Text>
+        <Text className="text-xl font-semibold mb-1">SNEAKERS TRAIL RUNNING</Text>
         <View className="flex-row items-center pb-6 gap-2">
           <Text className="text-red-700 font-bold text-base">49$</Text>
           <Text className="text-black line-through text-base">59$</Text>
@@ -134,7 +116,7 @@ const Product = () => {
           </View>
           <Text className="text-black text-sm tracking-wider font-light">Performance</Text>
         </View>
-        <Divider />
+        <Divider className="-mx-4" />
         <Pressable
           className="flex-row justify-between items-center p-4 bg-black mt-4"
           onPress={simulatePress}
@@ -148,3 +130,5 @@ const Product = () => {
 };
 
 export default Product;
+
+// adidas-product-infinite-carousel-animation 🔼
