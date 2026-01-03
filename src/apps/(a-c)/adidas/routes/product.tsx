@@ -13,6 +13,9 @@ import type { ProductItem } from "../lib/data/product-items";
 
 // adidas-product-infinite-carousel-animation 🔽
 
+// Initial list prepends generated items to DEFAULT_PRODUCT_ITEMS
+// This creates a buffer at the start, enabling infinite scroll in both directions
+// Starting position will be at DEFAULT_PRODUCT_ITEMS.length (middle of list)
 const getInitialProductItems = () => {
   const newProductItems = generateNewProductItems();
   return DEFAULT_PRODUCT_ITEMS.concat(newProductItems);
@@ -24,12 +27,19 @@ const Product = () => {
     (ProductItem & { index: number }) | null
   >(null);
 
+  // Shared value tracks current slide index, synchronized with scroll position
+  // Updated on JS thread via onViewableItemsChanged, read on UI thread by Pagination component
+  // Enables cross-component animation coordination without React re-renders
   const currentSlideIndex = useSharedValue(0);
 
   const safeAreaInsets = useSafeAreaInsets();
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
+  // List height: 60% of screen creates full-screen product showcase effect
   const productListHeight = screenHeight * 0.6;
+  // Viewability config: 50% threshold means item is "viewable" when half-visible
+  // minimumViewTime: 0 ensures immediate updates during fast scrolling
+  // Used by onViewableItemsChanged to detect which slide is currently centered
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
     minimumViewTime: 0,
@@ -37,16 +47,24 @@ const Product = () => {
 
   const productListRef = useRef<LegendListRef>(null);
 
+  // Infinite scroll: prepends new items when scrolling up (toward start)
+  // Maintains scroll position by adding items before current viewport
   const loadMoreAtStart = useCallback(() => {
     const newProductItems = generateNewProductItems();
     setProductItems((prev) => newProductItems.concat(prev));
   }, []);
 
+  // Infinite scroll: appends new items when scrolling down (toward end)
+  // Creates seamless infinite loop effect
   const loadMoreAtEnd = useCallback(() => {
     const newProductItems = generateNewProductItems();
     setProductItems((prev) => prev.concat(newProductItems));
   }, []);
 
+  // Viewability callback: fires when scroll position changes visible items
+  // Updates shared value (UI thread) and React state (JS thread) synchronously
+  // firstViewableItem is the topmost visible item, used as current slide indicator
+  // currentSlideIndex.set() triggers Pagination animation without React re-render
   const onViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
     if (viewableItems.length > 0) {
       const firstViewableItem = viewableItems[0];
@@ -57,6 +75,9 @@ const Product = () => {
     }
   }).current;
 
+  // Snap-to-center: after scroll momentum ends, aligns current item to center
+  // viewPosition: 0.5 centers item vertically (0 = top, 1 = bottom)
+  // Prevents partial visibility, ensures clean transitions between slides
   const onMomentumScrollEnd = useCallback(() => {
     const targetProductIndex = productItems.findIndex((item) => item.id === currentProductItem?.id);
     if (targetProductIndex !== -1 && productListRef.current) {
@@ -79,6 +100,11 @@ const Product = () => {
       </View>
       <Divider />
       <View style={{ height: productListHeight }}>
+        {/* LegendList configuration for infinite scroll:
+            - estimatedItemSize: helps virtual list calculate scroll position accurately
+            - initialScrollIndex: starts at DEFAULT_PRODUCT_ITEMS.length (middle) for bidirectional scroll
+            - onStartReached/onEndReached: 0.5 threshold preloads items 50% before boundary
+            - recycleItems: reuses components during scroll, critical for performance with many items */}
         <LegendList
           ref={productListRef}
           data={productItems}

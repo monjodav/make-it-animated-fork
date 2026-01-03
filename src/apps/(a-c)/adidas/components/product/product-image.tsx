@@ -9,6 +9,9 @@ type ProductImageProps = {
   width: number;
 };
 
+// Memoized component: prevents re-renders when parent list updates
+// Critical for performance with recycleItems - reused components shouldn't re-render unnecessarily
+// Image uses expo-image for optimized loading and caching
 const ProductImage = ({ imageUrl, height, width }: ProductImageProps) => {
   return <Image style={{ height, width }} source={{ uri: imageUrl }} contentFit="cover" />;
 };

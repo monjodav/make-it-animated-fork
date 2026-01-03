@@ -52,6 +52,9 @@ export const addIndexToItems = <T extends Record<string, any>>(
 export const DEFAULT_PRODUCT_ITEMS: (ProductItem & { index: number })[] =
   addIndexToItems(PRODUCT_ITEMS);
 
+// Generates unique IDs for infinite scroll: timestamp + 2 random strings
+// Unique IDs prevent React key conflicts when prepending/appending items
+// Critical for LegendList to correctly track items during infinite scroll
 export const generateNewProductItems = () => {
   return DEFAULT_PRODUCT_ITEMS.map((item) => ({
     ...item,
