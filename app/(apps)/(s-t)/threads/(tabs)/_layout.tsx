@@ -15,6 +15,8 @@ enum Tab {
 }
 
 const TabsLayout = () => {
+  "use no memo";
+
   const isBottomTabsHidden = useBottomTabsStore.use.isBottomTabsHidden();
 
   return (

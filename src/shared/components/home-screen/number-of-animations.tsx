@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable } from "react-native";
 import { useClearRefinements, useInstantSearch, useSearchBox } from "react-instantsearch-core";
 import { AppText } from "../app-text";
 import { useRefinementStatus } from "../../lib/hooks/use-refinement-status";
-import Animated, { FadeIn, LinearTransition } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
 import { cn } from "../../lib/utils/cn";
 import { fireHaptic } from "../../lib/utils/fire-haptic";
 import { FlashListRef } from "@shopify/flash-list";
@@ -20,6 +20,7 @@ type NumberOfAnimationsProps = {
  * Uses Algolia's useHits hook to get the total number of results
  */
 export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => {
+  "use no memo";
   const { results } = useInstantSearch();
   const count = results?.nbHits ?? 0;
 
@@ -53,22 +54,34 @@ export const NumberOfAnimations: FC<NumberOfAnimationsProps> = ({ listRef }) => 
       <View className={cn("flex-1 items-center", hasRefinements && "items-start")}>
         <Animated.View layout={LinearTransition.springify()}>
           {count === 0 && hasRefinements ? (
-            <AppText className="text-base text-muted-foreground font-sans-medium">
-              No animations found
-            </AppText>
-          ) : (
-            <WithShimmer
-              delay={3}
-              colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
-              containerStyle={{
-                width: 200,
-                alignItems: "center",
-              }}
+            <Animated.View
+              key="no-animations"
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(200)}
             >
-              <AppText className="text-base font-sans-medium" maxFontSizeMultiplier={1}>
-                {`${count} awesome animations`}
+              <AppText className="text-base text-muted-foreground font-sans-medium ml-2">
+                No animations found
               </AppText>
-            </WithShimmer>
+            </Animated.View>
+          ) : (
+            <Animated.View
+              key="animations"
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(200)}
+            >
+              <WithShimmer
+                delay={3}
+                colors={{ start: "#B2ACA9", middle: "#FFFFF5", end: "#B2ACA9" }}
+                containerStyle={{
+                  width: 180,
+                  alignItems: "center",
+                }}
+              >
+                <AppText className="text-base font-sans-medium" maxFontSizeMultiplier={1}>
+                  {`${count} awesome animations`}
+                </AppText>
+              </WithShimmer>
+            </Animated.View>
           )}
         </Animated.View>
       </View>

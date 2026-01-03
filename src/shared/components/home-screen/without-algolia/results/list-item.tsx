@@ -20,12 +20,12 @@ export const ListItem: FC<Props> = ({ animation, index }) => {
     <Pressable onPress={handleRedirect} className="flex-row gap-3 items-center px-5 py-3">
       <View
         className={cn(
-          "size-[44px] rounded-[14px] border bg-muted border-foreground/5 items-center justify-center",
-          index > 98 && "w-[64px] h-[44px]"
+          "size-[48px] rounded-[14px] border bg-muted border-foreground/5 items-center justify-center",
+          index > 98 && "w-[64px] h-[48px]"
         )}
         style={[styles.borderCurve]}
       >
-        <AppText className="w-full text-center text-4xl font-display text-foreground">
+        <AppText className="w-full text-center text-3xl font-display text-foreground">
           {index + 1}
         </AppText>
       </View>

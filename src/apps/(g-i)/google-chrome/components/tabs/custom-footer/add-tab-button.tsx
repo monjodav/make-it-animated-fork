@@ -12,6 +12,7 @@ import { TabName } from "../../../lib/types";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export const AddTabButton = () => {
+  "use no memo";
   const focusedTabName = useTabsStore.use.focusedTabName();
   const addTabItem = useTabsStore.use.addTabItem();
 

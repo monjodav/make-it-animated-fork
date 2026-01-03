@@ -12,7 +12,7 @@ import { useBottomTabBarHeight } from "../lib/hooks/use-bottom-tab-bar-height";
 const AnimatedPressable = Animated.createAnimatedComponent(TouchableOpacity);
 
 // Button dimensions for expanded and collapsed states
-const _btnWidth = 125; // Full width shows "Compose" text
+const _btnWidth = 135; // Full width shows "Compose" text
 const _btnHeight = 50; // Height remains constant, width collapses to create circle
 
 // Animation duration (200ms) - faster than tab bar (300ms) for responsive feel

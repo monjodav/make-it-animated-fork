@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, useWindowDimensions, Pressable, Platform } from "react-native";
-import { Canvas, DiffRect, rect, rrect } from "@shopify/react-native-skia";
+import { Canvas } from "@shopify/react-native-skia";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { X } from "lucide-react-native";
@@ -39,18 +39,6 @@ export default function QrScanner() {
     Platform.OS === "ios"
       ? _rectFormSheetCorrection - 6
       : _rectFormSheetCorrection + insets.top - 13;
-
-  const outer = rrect(rect(0, 0, width, height), 0, 0);
-  const inner = rrect(
-    rect(
-      (width - _innerRectWidth) / 2,
-      (height - _innerRectHeight - insets.top - _rectFormSheetCorrection) / 2,
-      _innerRectWidth,
-      _innerRectHeight
-    ),
-    32,
-    32
-  );
 
   // Active box is 80% of screen width, centered
   const boxDimensions = useMemo(() => {
@@ -121,7 +109,6 @@ export default function QrScanner() {
         style={StyleSheet.absoluteFill}
       />
       <Canvas style={StyleSheet.absoluteFill}>
-        <DiffRect inner={inner} outer={outer} color="rgba(19, 19, 22, 0.5)" />
         {/* Top-left corner */}
         <SkiaCorner
           path={`

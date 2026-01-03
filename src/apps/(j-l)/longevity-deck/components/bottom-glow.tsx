@@ -22,6 +22,7 @@ export const BottomGlow: React.FC<GradientLayerProps> = ({
   height,
   activeIndex,
 }) => {
+  "use no memo";
   /**
    * Oval dimensions create a wide, low glow effect.
    * width * 1.2: Extends 20% beyond screen edges for seamless coverage.

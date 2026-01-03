@@ -17,6 +17,8 @@ export default function ShowcaseLayout() {
             Platform.OS === "ios"
               ? {
                   placeholder: "Search for movies and shows",
+                  textColor: "#d4d4d4",
+                  barTintColor: "#171717",
                 }
               : undefined,
           headerStyle: {

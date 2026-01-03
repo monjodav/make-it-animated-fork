@@ -21,6 +21,7 @@ type SearchBarProps = {
 };
 
 export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
+  "use no memo";
   const [isFocused, setIsFocused] = useState(false);
 
   const { clear, refine } = useSearchBox();
@@ -104,7 +105,6 @@ export const SearchBar: FC<SearchBarProps> = ({ textInputRef, listRef }) => {
             value={value}
             onChangeText={onChangeText}
             placeholder="Animation..."
-            placeholderClassName="text-lg/6 font-sans-medium"
             placeholderTextColor="#B2ACA9"
             selectionColor="#fffff4"
             className={cn(
