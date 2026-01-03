@@ -8,6 +8,16 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Product infinite carousel animation",
+    appName: "Adidas",
+    href: "/adidas/product",
+  },
+  {
+    animationName: "Nutrients circular carousel animation",
+    appName: "Alma",
+    href: "/alma/nutrients",
+  },
+  {
     animationName: "Text strikethrough animation",
     appName: "Superlist",
     href: "/superlist/task",
