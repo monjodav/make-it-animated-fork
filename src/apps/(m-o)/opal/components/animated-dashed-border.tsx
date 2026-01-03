@@ -1,3 +1,8 @@
+/**
+ * Special thanks to arunabhverma for the original implementation that served as the base for this component.
+ * Original repository: https://github.com/arunabhverma/expo-animated-dashed-border
+ */
+
 import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { View, ViewProps } from "react-native";
 import { Canvas, DashPathEffect, Path, Skia } from "@shopify/react-native-skia";

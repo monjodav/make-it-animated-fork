@@ -1,12 +1,9 @@
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
-import { DrawerActions } from "@react-navigation/routers";
-import { Stack, useNavigation } from "expo-router";
+import { Stack } from "expo-router";
 import { AlignLeft, SquarePen } from "lucide-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 
 export default function Layout() {
-  const navigation = useNavigation();
-
   return (
     <Stack screenOptions={{ headerShown: true }}>
       <Stack.Screen
@@ -16,7 +13,7 @@ export default function Layout() {
           headerTitleAlign: "center",
           headerTintColor: "white",
           headerLeft: () => (
-            <Pressable onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
+            <Pressable onPress={simulatePress}>
               <AlignLeft size={20} color="white" />
             </Pressable>
           ),

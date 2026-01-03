@@ -6,6 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        background: "#171717",
+        foreground: "#FFFFF5",
+        muted: "#212126",
+        "muted-foreground": "#B2ACA9",
         brand: "#FF4A3D",
         "linear-back": "#0A090C",
         "linear-front": "#3a3446",
@@ -18,10 +22,11 @@ module.exports = {
         "instagram-front": "#171717",
       },
       fontFamily: {
-        "poppins-normal": ["Poppins_400Regular"],
-        "poppins-medium": ["Poppins_500Medium"],
-        "poppins-semibold": ["Poppins_600SemiBold"],
-        "poppins-bold": ["Poppins_700Bold"],
+        "sans-normal": ["Outfit_400Regular"],
+        "sans-medium": ["Outfit_500Medium"],
+        "sans-semibold": ["Outfit_600SemiBold"],
+        "sans-bold": ["Outfit_700Bold"],
+        display: ["Bangers_400Regular"],
       },
     },
   },

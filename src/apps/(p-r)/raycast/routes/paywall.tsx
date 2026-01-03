@@ -18,7 +18,6 @@ import PlanControl from "../components/paywall/plan-control";
 import { ProgressiveBlurView } from "@/src/shared/components/progressive-blur-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { useDrawerControl } from "@/src/shared/lib/hooks/use-drawer-control";
 import { FeaturesSection, FeatureItem, Divider } from "../components/paywall/features-section";
 import { IconContainer } from "../components/paywall/features-section/icon-container";
 import { GradientText } from "@/src/shared/components/gradient-text";
@@ -40,8 +39,6 @@ export const Paywall = () => {
   const currentPrice = PRICE[period][plan === "pro" ? 0 : 1];
   const formattedPrice = `${currentPrice} USD`;
 
-  const { openDrawer } = useDrawerControl();
-
   const listRef = useRef<ScrollView>(null);
 
   return (
@@ -59,7 +56,7 @@ export const Paywall = () => {
         style={{ top: insets.top + 8 }}
       >
         <Pressable
-          onPress={openDrawer}
+          onPress={simulatePress}
           className="rounded-full p-2 overflow-hidden bg-neutral-700/30"
         >
           <BlurView tint="systemThickMaterialDark" style={StyleSheet.absoluteFill} />

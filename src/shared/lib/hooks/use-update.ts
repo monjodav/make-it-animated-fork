@@ -7,13 +7,14 @@ import { useAppStore } from "../store/app";
 export const updateAlert = {
   title: "Update available",
   message:
-    "We've added new animations or important updates that are ready for you to use! The app needs a quick refresh to load these updates (no download required).",
+    "New animations or important updates are ready for you to use! The app needs a quick refresh to load these updates (no download required).",
 };
 
 export const useOtaUpdate = () => {
   const isVersionChecked = useAppStore.use.isVersionChecked();
   const isNewVersionAvailable = useAppStore.use.isNewVersionAvailable();
   const setIsOtaUpdateAvailable = useAppStore.use.setIsOtaUpdateAvailable();
+  const setShowUpdateComingMessage = useAppStore.use.setShowUpdateComingMessage();
 
   const { isUpdateAvailable } = Updates.useUpdates();
 
@@ -22,7 +23,10 @@ export const useOtaUpdate = () => {
   const handleUpdate = useCallback(async () => {
     if (isUpdateAvailable && isVersionChecked && !isNewVersionAvailable) {
       Updates.fetchUpdateAsync()
-        .then(() =>
+        .then(() => {
+          // We hide the update coming message because we are going to show the alert
+          setShowUpdateComingMessage(false);
+          // We show the alert to the user
           Alert.alert(updateAlert.title, updateAlert.message, [
             {
               text: "Later",
@@ -33,8 +37,8 @@ export const useOtaUpdate = () => {
               isPreferred: true,
               onPress: () => Updates.reloadAsync(),
             },
-          ])
-        )
+          ]);
+        })
         .catch((error) => {
           MANUAL_ERROR_CAPTURE({
             title: "useOtaUpdate > Failed",
@@ -42,7 +46,13 @@ export const useOtaUpdate = () => {
           });
         });
     }
-  }, [isUpdateAvailable, setIsOtaUpdateAvailable, isNewVersionAvailable, isVersionChecked]);
+  }, [
+    isUpdateAvailable,
+    setIsOtaUpdateAvailable,
+    isNewVersionAvailable,
+    isVersionChecked,
+    setShowUpdateComingMessage,
+  ]);
 
   useEffect(() => {
     if (__DEV__) return;
