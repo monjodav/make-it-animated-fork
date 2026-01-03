@@ -1,4 +1,12 @@
-import { Image, useWindowDimensions, View, Text, ViewToken, Pressable } from "react-native";
+import {
+  Image,
+  useWindowDimensions,
+  View,
+  Text,
+  ViewToken,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeft, Heart, MoveRight, Upload } from "lucide-react-native";
 import { LegendList, LegendListRef } from "@legendapp/list";
@@ -7,6 +15,10 @@ import Pagination from "../components/product/pagination";
 import { INITIAL_DATA, ProductItem, generateNewItems } from "../lib/data/data";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import { useSharedValue } from "react-native-reanimated";
+
+const Divider = () => {
+  return <View className="bg-neutral-400" style={{ height: StyleSheet.hairlineWidth }} />;
+};
 
 const Product = () => {
   const insets = useSafeAreaInsets();
@@ -64,17 +76,15 @@ const Product = () => {
   };
 
   return (
-    <View className="flex-1">
-      <View className="bg-white z-50" style={{ paddingTop: insets.top }}>
-        <View className="flex-row items-center justify-between px-4 py-2 border-b border-neutral-200 bg-white">
-          <ArrowLeft size={20} color="black" strokeWidth={1} />
-
-          <View className="flex-row items-center gap-5">
-            <Upload size={20} color="black" strokeWidth={1} />
-            <Heart size={20} color="black" strokeWidth={1} />
-          </View>
+    <View className="flex-1 bg-white" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center justify-between px-4 pt-2 pb-4">
+        <ArrowLeft size={20} color="black" strokeWidth={1} />
+        <View className="flex-row items-center gap-5">
+          <Upload size={20} color="black" strokeWidth={1} />
+          <Heart size={20} color="black" strokeWidth={1} />
         </View>
       </View>
+      <Divider />
       <View style={{ height: listHeight }}>
         <LegendList
           ref={listRef}
@@ -107,23 +117,30 @@ const Product = () => {
           decelerationRate="normal"
           recycleItems
           showsVerticalScrollIndicator={false}
-          contentContainerClassName="bg-[#EAEFF0] items-center"
+          contentContainerClassName="items-center"
           onViewableItemsChanged={onViewableItemsChanged}
           viewabilityConfig={viewabilityConfig}
           onMomentumScrollEnd={onMomentumScrollEnd}
         />
         <Pagination initialData={INITIAL_DATA} currentSlideIndex={currentSlideIndex} />
       </View>
-      <View className="flex-1 w-full bg-white">
-        <Text className="text-xl font-semibold px-4 pt-6">SNEAKERS TRAIL RUNNING</Text>
-        <Text className="px-4 pb-6">2 999</Text>
-        <View className="border-b border-neutral-200 bg-white" />
+      <View className="flex-1 pt-6 px-4">
+        <Text className="text-xl font-semibold mb-2">SNEAKERS TRAIL RUNNING</Text>
+        <View className="flex-row items-center pb-6 gap-2">
+          <Text className="text-red-700 font-bold text-base">49$</Text>
+          <Text className="text-black line-through text-base">59$</Text>
+          <View className="bg-red-700 px-2 py-0.5">
+            <Text className="text-white text-base">- 17 %</Text>
+          </View>
+          <Text className="text-black text-sm tracking-wider font-light">Performance</Text>
+        </View>
+        <Divider />
         <Pressable
-          className="flex-row justify-between items-center p-4 mx-4 bg-black mt-4"
+          className="flex-row justify-between items-center p-4 bg-black mt-4"
           onPress={simulatePress}
         >
           <Text className="text-white font-semibold">CHOOSE SIZE</Text>
-          <MoveRight size={20} color="white" strokeWidth={2} />
+          <MoveRight size={24} color="white" strokeWidth={1.5} />
         </Pressable>
       </View>
     </View>

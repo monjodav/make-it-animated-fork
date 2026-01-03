@@ -24,13 +24,13 @@ const Pagination: FC<PaginationProps> = ({ initialData, currentSlideIndex }) => 
     <View className="absolute right-3 self-center top-1/2 -translate-y-1/2">
       {initialData.map((_, index) => (
         <View
-          className="w-[4px] bg-black"
+          className="w-1.5 bg-black"
           key={index}
           style={{ height: DASH_HEIGHT, marginVertical: DASH_SPACING / 2 }}
         />
       ))}
       <Animated.View
-        className=" absolute w-[4px] bg-black"
+        className="absolute w-1.5 bg-black"
         style={[rIndicatorStyle, { height: DASH_SPACING }]}
       />
     </View>
