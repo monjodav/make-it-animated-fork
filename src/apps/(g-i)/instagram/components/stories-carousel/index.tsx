@@ -1,4 +1,4 @@
-import { useWindowDimensions, ViewToken } from "react-native";
+import { Platform, useWindowDimensions, ViewToken } from "react-native";
 import { useRef, useState, useCallback } from "react";
 import Animated, {
   useAnimatedScrollHandler,
@@ -69,7 +69,7 @@ const StoriesCarousel = () => {
 
   const rContainerStyle = useAnimatedStyle(() => {
     return {
-      pointerEvents: carouselPointerEvents.get(),
+      pointerEvents: Platform.OS === "android" ? "auto" : carouselPointerEvents.get(),
     };
   });
 
