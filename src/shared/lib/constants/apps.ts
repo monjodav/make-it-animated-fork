@@ -8,6 +8,11 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Apple Pay hold near reader animation",
+    appName: "Apple Pay",
+    href: "/apple-pay/home",
+  },
+  {
     animationName: "Product infinite carousel animation",
     appName: "Adidas",
     href: "/adidas/product",
