@@ -31,7 +31,7 @@ export const Home = () => {
     progress.set(
       withRepeat(
         withSequence(
-          withDelay(100, withTiming(1, { duration: 1000, easing: Easing.inOut(Easing.ease) })),
+          withDelay(100, withTiming(1, { duration: 1300, easing: Easing.out(Easing.ease) })),
           withDelay(200, withTiming(0, { duration: 1000, easing: Easing.inOut(Easing.ease) }))
         ),
         -1
