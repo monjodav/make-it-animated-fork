@@ -14,12 +14,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { CreditCard } from "../components/credit-card";
 
-// apple-pay-hold-near-reader-animation 🔽
+// apple-wallet-hold-near-reader-animation 🔽
 
 // NFC reader circle diameter - matches Apple Pay's visual design system
 const CIRCLE_SIZE = 70;
 
-export const Home = () => {
+export const NfcPay = () => {
   const insets = useSafeAreaInsets();
   // Shared value drives the entire animation cycle: 0 = phone tilted away, 1 = phone near reader
   const progress = useSharedValue(0);
@@ -118,4 +118,4 @@ export const Home = () => {
   );
 };
 
-// apple-pay-hold-near-reader-animation 🔼
+// apple-wallet-hold-near-reader-animation 🔼
