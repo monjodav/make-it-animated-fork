@@ -8,13 +8,16 @@ import { MOCK_GAMES } from "../../lib/constants";
 import { DayItem } from "./day-item";
 
 const DaysScroll = () => {
+  // State
+  const [activeMonthIndex, setActiveMonthIndex] = useState(0);
+
+  // Data-related variables
   const { width: screenWidth } = useWindowDimensions();
   const { daysScrollRef, gamesScrollRef, scrollOffsetX, activeIndexProgress } =
     use(CalendarAnimatedContext);
-  const [activeMonthIndex, setActiveMonthIndex] = useState(0);
   const months = getMonths();
 
-  // Sync activeMonthIndex with activeIndexProgress
+  // Hooks
   const updateActiveMonthIndex = useCallback((index: number) => {
     setActiveMonthIndex(index);
   }, []);
@@ -37,6 +40,7 @@ const DaysScroll = () => {
     );
   }, [activeMonthIndex, months]);
 
+  // Animation-related logic and styles
   const daysScrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       const offsetX = event.contentOffset.x;
@@ -45,7 +49,7 @@ const DaysScroll = () => {
     },
   });
 
-  // Handle date click to scroll to corresponding game
+  // Callbacks
   const handleDatePress = useCallback(
     (date: Date) => {
       const gameIndex = activeMonthGames.findIndex(

@@ -1,6 +1,7 @@
 export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const MONTHS_GAP = 30;
 export const DATE_CELL_SIZE = 35;
+export const MONTHS_LENGTH = 19; // 1 year before now (-12) and 6 months ahead (+6) = 19 months total
 
 export type Game = {
   id: string;

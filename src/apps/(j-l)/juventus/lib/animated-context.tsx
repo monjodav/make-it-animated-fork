@@ -1,9 +1,10 @@
-import { createContext, useState, useMemo, type PropsWithChildren } from "react";
+import { createContext, useMemo, type PropsWithChildren } from "react";
 import Animated, {
   useAnimatedRef,
   useSharedValue,
   type SharedValue,
 } from "react-native-reanimated";
+import { MONTHS_LENGTH } from "./constants";
 
 /**
  * Context type for sharing animated values across calendar components.
@@ -13,8 +14,7 @@ import Animated, {
 type CalendarAnimatedContextType = {
   activeIndexProgress: SharedValue<number>;
   scrollOffsetX: SharedValue<number>;
-  monthWidths: number[];
-  setMonthWidths: React.Dispatch<React.SetStateAction<number[]>>;
+  monthWidths: SharedValue<number[]>;
   monthsScrollRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
   daysScrollRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
   gamesScrollRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
@@ -25,7 +25,7 @@ export const CalendarAnimatedContext = createContext<CalendarAnimatedContextType
 );
 
 export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
-  const [monthWidths, setMonthWidths] = useState<number[]>([]);
+  const monthWidths = useSharedValue<number[]>(new Array(MONTHS_LENGTH).fill(0));
 
   const scrollOffsetX = useSharedValue(0);
   const activeIndexProgress = useSharedValue(0);
@@ -39,7 +39,6 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
       activeIndexProgress,
       scrollOffsetX,
       monthWidths,
-      setMonthWidths,
       monthsScrollRef,
       daysScrollRef,
       gamesScrollRef,
@@ -48,7 +47,6 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
       activeIndexProgress,
       scrollOffsetX,
       monthWidths,
-      setMonthWidths,
       monthsScrollRef,
       daysScrollRef,
       gamesScrollRef,

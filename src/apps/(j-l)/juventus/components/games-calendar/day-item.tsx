@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { DATE_CELL_SIZE, Game } from "../../lib/constants";
 
@@ -8,7 +7,7 @@ type DayItemProps = {
   onDatePress?: (date: Date) => void;
 };
 
-export const DayItem: FC<DayItemProps> = ({ weeks, games, onDatePress }) => {
+export const DayItem = ({ weeks, games, onDatePress }: DayItemProps) => {
   const { width: screenWidth } = useWindowDimensions();
 
   // Helper to check if a date has a game

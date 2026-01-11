@@ -13,11 +13,14 @@ import { MOCK_GAMES } from "../../lib/constants";
 import GameCard from "./game-card";
 
 const GamesScroll = () => {
-  const { gamesScrollRef, activeIndexProgress } = use(CalendarAnimatedContext);
+  // State
   const [activeMonthIndex, setActiveMonthIndex] = useState(0);
+
+  // Data-related variables
+  const { gamesScrollRef, activeIndexProgress } = use(CalendarAnimatedContext);
   const months = getMonths();
 
-  // Sync activeMonthIndex with activeIndexProgress
+  // Hooks
   const updateActiveMonthIndex = useCallback((index: number) => {
     setActiveMonthIndex(index);
   }, []);
@@ -40,6 +43,7 @@ const GamesScroll = () => {
     );
   }, [activeMonthIndex, months]);
 
+  // Animation-related logic and styles
   const rGamesStyle = useAnimatedStyle(() => {
     const progress = activeIndexProgress.get();
     const frac = progress - Math.floor(progress);

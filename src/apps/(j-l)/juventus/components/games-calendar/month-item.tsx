@@ -1,4 +1,3 @@
-import { Pressable } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -11,11 +10,11 @@ import { CalendarAnimatedContext } from "../../lib/animated-context";
 type MonthItemProps = {
   month: { label: string; date: Date };
   idx: number;
-  setMonthWidths: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const MonthItem = ({ month, idx, setMonthWidths }: MonthItemProps) => {
-  const { activeIndexProgress } = use(CalendarAnimatedContext);
+const MonthItem = ({ month, idx }: MonthItemProps) => {
+  const { activeIndexProgress, monthWidths } = use(CalendarAnimatedContext);
+
   const rMonthStyle = useAnimatedStyle(() => {
     const scale = interpolate(
       activeIndexProgress.get(),
@@ -33,27 +32,22 @@ const MonthItem = ({ month, idx, setMonthWidths }: MonthItemProps) => {
       transform: [{ scale }],
     };
   });
+
   return (
-    <Pressable
-      onPress={() => {
-        activeIndexProgress.set(idx);
+    <Animated.Text
+      className="text-2xl font-semibold uppercase"
+      style={rMonthStyle}
+      onLayout={(e) => {
+        const { width } = e.nativeEvent.layout;
+        monthWidths.modify((value) => {
+          "worklet";
+          value[idx] = width;
+          return value;
+        });
       }}
     >
-      <Animated.Text
-        className="text-2xl font-semibold uppercase"
-        style={rMonthStyle}
-        onLayout={(e) => {
-          const { width } = e.nativeEvent.layout;
-          setMonthWidths((prev) => {
-            const newWidths = [...prev];
-            newWidths[idx] = Math.round(width);
-            return newWidths;
-          });
-        }}
-      >
-        {month.label}
-      </Animated.Text>
-    </Pressable>
+      {month.label}
+    </Animated.Text>
   );
 };
 export default MonthItem;

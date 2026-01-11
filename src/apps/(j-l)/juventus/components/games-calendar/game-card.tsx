@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { Text, View } from "react-native";
 import { Game } from "../../lib/constants";
 
@@ -6,7 +5,7 @@ type GameCardProps = {
   game: Game;
 };
 
-const GameCard: FC<GameCardProps> = ({ game }) => {
+const GameCard = ({ game }: GameCardProps) => {
   return (
     <View className="bg-white rounded-2xl p-4 mr-3 w-[280px] h-[120px]">
       <View className="flex-row items-center justify-between mb-3">
@@ -31,7 +30,7 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
               {String(game.date.getMonth() + 1).padStart(2, "0")}
             </Text>
           </View>
-          <Text className="text-blackfont-semibold">00:59</Text>
+          <Text className="text-black font-semibold">00:59</Text>
         </View>
       </View>
     </View>
