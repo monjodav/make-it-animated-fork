@@ -15,7 +15,7 @@ const Home = () => {
 
   const refresh = async () => {
     setRefreshing(true);
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setRefreshing(false);
   };
 

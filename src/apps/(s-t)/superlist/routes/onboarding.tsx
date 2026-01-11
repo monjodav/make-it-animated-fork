@@ -238,9 +238,26 @@ export const Onboarding = () => {
     };
   });
 
+  // Expand carousel when user taps "Continue with email" button
+  // Smoothly animates translateY to -TOP_CAROUSEL_OFFSET (expanded position)
+  const onContinueWithEmailPress = () => {
+    if (translateY.get() === -TOP_CAROUSEL_OFFSET) {
+      simulatePress();
+      return;
+    }
+
+    isDragging.set(true);
+    gestureStartY.set(translateY.get());
+    translateY.set(
+      withTiming(-TOP_CAROUSEL_OFFSET, {
+        duration: 300,
+      })
+    );
+  };
+
   // Collapse carousel when user taps chevron down button
   // Smoothly animates translateY back to 0 (collapsed position)
-  const slideBottomHandler = () => {
+  const onChevronDownPress = () => {
     isDragging.set(false);
     translateY.set(
       withTiming(0, {
@@ -250,49 +267,49 @@ export const Onboarding = () => {
   };
 
   return (
-    <GestureDetector gesture={Gesture.Race(panGesture, singleTap)}>
-      <View className="flex-1 bg-slate-900" style={{ paddingBottom: insets.bottom + 10 }}>
-        <Animated.View className="mt-auto" style={[rButtonsBlockStyle]}>
-          <Pressable className="self-center mb-6" onPress={slideBottomHandler}>
-            <ChevronDown size={26} color="grey" />
-          </Pressable>
-          <Text className="text-white text-center text-4xl font-bold">Let's get started</Text>
-          <Text className="text-slate-400 text-center mt-3">
-            Sign in to get things done - your task,
-          </Text>
-          <Text className="text-slate-400 text-center">notes, and meetings all in one place</Text>
-          <Pressable
-            onPress={simulatePress}
-            style={{ borderCurve: "continuous" }}
-            className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-8 bg-white"
-          >
-            <AntDesign name="google" size={24} color="black" />
-            <Text className="text-black">Continue with Google</Text>
-          </Pressable>
-          <Pressable
-            onPress={simulatePress}
-            style={{ borderCurve: "continuous" }}
-            className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-3 bg-white"
-          >
-            <AntDesign name="apple" size={24} color="black" />
-            <Text className="text-black">Continue with Apple</Text>
-          </Pressable>
-        </Animated.View>
+    <View className="flex-1 bg-slate-900" style={{ paddingBottom: insets.bottom + 10 }}>
+      <Animated.View className="mt-auto" style={[rButtonsBlockStyle]}>
+        <Pressable className="self-center mb-6" onPress={onChevronDownPress}>
+          <ChevronDown size={26} color="grey" />
+        </Pressable>
+        <Text className="text-white text-center text-4xl font-bold">Let's get started</Text>
+        <Text className="text-slate-400 text-center mt-3">
+          Sign in to get things done - your task,
+        </Text>
+        <Text className="text-slate-400 text-center">notes, and meetings all in one place</Text>
         <Pressable
           onPress={simulatePress}
           style={{ borderCurve: "continuous" }}
-          className="h-[40px] items-center justify-center rounded-full mx-20 mt-3 bg-slate-700 overflow-hidden"
+          className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-8 bg-white"
         >
-          <Animated.View className="flex-row gap-2 pt-0" style={rSignUpStyle}>
-            <UserRound size={16} color="white" />
-            <Text className="text-white">Sign Up / Sign In</Text>
-          </Animated.View>
-          <Animated.View className="flex-row gap-2 -mt-5" style={rContinueWithEmailStyle}>
-            <Mail size={16} color="white" />
-            <Text className="text-white">Continue with email</Text>
-          </Animated.View>
+          <AntDesign name="google" size={24} color="black" />
+          <Text className="text-black">Continue with Google</Text>
         </Pressable>
+        <Pressable
+          onPress={simulatePress}
+          style={{ borderCurve: "continuous" }}
+          className="flex-row h-[40px] items-center justify-center gap-2 rounded-full mx-20 mt-3 bg-white"
+        >
+          <AntDesign name="apple" size={24} color="black" />
+          <Text className="text-black">Continue with Apple</Text>
+        </Pressable>
+      </Animated.View>
+      <Pressable
+        onPress={onContinueWithEmailPress}
+        style={{ borderCurve: "continuous" }}
+        className="h-[40px] items-center justify-center rounded-full mx-20 mt-3 bg-slate-700 overflow-hidden"
+      >
+        <Animated.View className="flex-row gap-2 pt-0" style={rSignUpStyle}>
+          <UserRound size={16} color="white" />
+          <Text className="text-white">Sign Up / Sign In</Text>
+        </Animated.View>
+        <Animated.View className="flex-row gap-2 -mt-5" style={rContinueWithEmailStyle}>
+          <Mail size={16} color="white" />
+          <Text className="text-white">Continue with email</Text>
+        </Animated.View>
+      </Pressable>
 
+      <GestureDetector gesture={Gesture.Race(panGesture, singleTap)}>
         <Carousel
           SLIDES={SLIDES}
           currentSlideIndex={currentSlideIndex}
@@ -305,15 +322,15 @@ export const Onboarding = () => {
           isDragging={isDragging}
           topCarouselOffset={TOP_CAROUSEL_OFFSET}
         />
+      </GestureDetector>
 
-        <Animated.View className="absolute inset-0 pointer-events-none" style={rGradientStyle}>
-          <LinearGradient
-            colors={["rgba(0,0,0,0.6)", "transparent"]}
-            style={{ width: "100%", height: "60%" }}
-          />
-        </Animated.View>
-      </View>
-    </GestureDetector>
+      <Animated.View className="absolute inset-0 pointer-events-none" style={rGradientStyle}>
+        <LinearGradient
+          colors={["rgba(0,0,0,0.6)", "transparent"]}
+          style={{ width: "100%", height: "60%" }}
+        />
+      </Animated.View>
+    </View>
   );
 };
 

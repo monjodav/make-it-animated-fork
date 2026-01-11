@@ -8,14 +8,11 @@ import { NumberOfAnimations } from "@/src/shared/components/home-screen/number-o
 import { Results as AlgoliaResults } from "@/src/shared/components/home-screen/results";
 import { BottomBar } from "@/src/shared/components/home-screen/bottom-bar";
 import { SearchBar as AlgoliaSearchBar } from "@/src/shared/components/home-screen/search-bar";
-import { SearchBar as StaticSearchBar } from "@/src/shared/components/home-screen/without-algolia/search-bar";
 import { Animation } from "@/src/shared/lib/types/app";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Results as StaticResults } from "@/src/shared/components/home-screen/without-algolia/results";
-import { StaticAnimation } from "@/src/shared/lib/constants/apps";
-import { DEV_MODE_HREF, IS_ALGOLIA_ENABLED } from "@/src/shared/lib/constants/base";
-import { StaticBottomBar } from "@/src/shared/components/home-screen/without-algolia/static-bottom-bar";
-import { Redirect } from "expo-router";
+import { Href, Redirect } from "expo-router";
+
+const DEV_HREF = process.env.EXPO_PUBLIC_DEV_HREF;
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -28,36 +25,25 @@ export default function Index() {
   useWarmUpBrowser();
 
   const algoliaListRef = useRef<FlashListRef<Animation>>(null);
-  const staticListRef = useRef<FlashListRef<StaticAnimation>>(null);
   const textInputRef = useRef<TextInput>(null);
 
-  return <Redirect href='/juventus/home' />;
-
-  if (DEV_MODE_HREF) {
-    return <Redirect href={DEV_MODE_HREF} />;
+  if (__DEV__ && DEV_HREF !== "unset") {
+    return <Redirect href={DEV_HREF as Href} />;
   }
 
   return (
-    <View
-      className="flex-1 bg-background"
-      style={{
-        paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
-      }}
-    >
-      {IS_ALGOLIA_ENABLED ? (
-        <AlgoliaProvider>
-          <NumberOfAnimations listRef={algoliaListRef} />
-          <AlgoliaResults listRef={algoliaListRef} />
-          <BottomBar textInputRef={textInputRef} />
-          <AlgoliaSearchBar textInputRef={textInputRef} listRef={algoliaListRef} />
-        </AlgoliaProvider>
-      ) : (
-        <>
-          <StaticResults listRef={staticListRef} />
-          <StaticBottomBar textInputRef={textInputRef} />
-          <StaticSearchBar textInputRef={textInputRef} listRef={staticListRef} />
-        </>
-      )}
-    </View>
+    <AlgoliaProvider>
+      <View
+        className="flex-1 bg-background"
+        style={{
+          paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
+        }}
+      >
+        <NumberOfAnimations listRef={algoliaListRef} />
+        <AlgoliaResults listRef={algoliaListRef} />
+        <BottomBar textInputRef={textInputRef} />
+        <AlgoliaSearchBar textInputRef={textInputRef} listRef={algoliaListRef} />
+      </View>
+    </AlgoliaProvider>
   );
 }

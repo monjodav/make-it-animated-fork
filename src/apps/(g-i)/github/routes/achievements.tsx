@@ -9,8 +9,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { useMemo, useRef, useState } from "react";
 import { AchievementBadge } from "../components/achievment-badge";
-import PairExtraordinaireImage from "@/assets/images/misc/github-achievement-1.png";
-import PullSharkImage from "@/assets/images/misc/github-achievement-2.png";
+import PairExtraordinaireImage from "@/assets/images/misc/github/achievement-1.png";
+import PullSharkImage from "@/assets/images/misc/github/achievement-2.png";
 import { AchievementPagination } from "../components/achievement-pagination";
 import { useRouter } from "expo-router";
 

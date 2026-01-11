@@ -8,6 +8,36 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Apple Pay hold near reader animation",
+    appName: "Apple Pay",
+    href: "/apple-pay/home",
+  },
+  {
+    animationName: "Product infinite carousel animation",
+    appName: "Adidas",
+    href: "/adidas/product",
+  },
+  {
+    animationName: "Nutrients circular carousel animation",
+    appName: "Alma",
+    href: "/alma/nutrients",
+  },
+  {
+    animationName: "Text strikethrough animation",
+    appName: "Superlist",
+    href: "/superlist/task",
+  },
+  {
+    animationName: "Stories carousel animation",
+    appName: "Instagram",
+    href: "/instagram/stories",
+  },
+  {
+    animationName: "Profile segmented control animation",
+    appName: "Perplexity",
+    href: "/perplexity/profile",
+  },
+  {
     animationName: "Pull to refresh loading animation",
     appName: "Reddit",
     href: "/reddit/home",
