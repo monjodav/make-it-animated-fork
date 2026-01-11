@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Text, View } from "react-native";
-import { Game } from "../lib/constants";
+import { Game } from "../../lib/constants";
 
 type GameCardProps = {
   game: Game;

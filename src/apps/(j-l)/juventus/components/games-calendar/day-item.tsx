@@ -1,22 +1,16 @@
 import { FC } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { Game } from "../lib/constants";
+import { Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { DATE_CELL_SIZE, Game } from "../../lib/constants";
 
-type MonthDatesItemProps = {
-  screenWidth: number;
-  weeks: Array<Array<Date | null>>;
-  dateCellSize: number;
+type DayItemProps = {
+  weeks: (Date | null)[][];
   games: Game[];
   onDatePress?: (date: Date) => void;
 };
 
-const MonthDatesItem: FC<MonthDatesItemProps> = ({
-  screenWidth,
-  weeks,
-  dateCellSize,
-  games,
-  onDatePress,
-}) => {
+export const DayItem: FC<DayItemProps> = ({ weeks, games, onDatePress }) => {
+  const { width: screenWidth } = useWindowDimensions();
+
   // Helper to check if a date has a game
   const hasGame = (date: Date | null) => {
     if (!date) return false;
@@ -38,7 +32,7 @@ const MonthDatesItem: FC<MonthDatesItemProps> = ({
               <View
                 key={dIdx}
                 className="items-center justify-center"
-                style={{ width: dateCellSize, height: dateCellSize }}
+                style={{ width: DATE_CELL_SIZE, height: DATE_CELL_SIZE }}
               >
                 {date ? (
                   <TouchableOpacity
@@ -51,8 +45,8 @@ const MonthDatesItem: FC<MonthDatesItemProps> = ({
                         <View
                           className="absolute rounded-full border-2 border-red-700"
                           style={{
-                            width: dateCellSize - 4,
-                            height: dateCellSize - 4,
+                            width: DATE_CELL_SIZE - 4,
+                            height: DATE_CELL_SIZE - 4,
                           }}
                         />
                       )}
@@ -70,5 +64,3 @@ const MonthDatesItem: FC<MonthDatesItemProps> = ({
     </View>
   );
 };
-
-export default MonthDatesItem;

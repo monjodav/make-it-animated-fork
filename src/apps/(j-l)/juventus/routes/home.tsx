@@ -1,10 +1,10 @@
 import { View } from "react-native";
-import Calendar from "../components";
+import { GamesCalendar } from "../components/games-calendar";
 
 const Home = () => {
   return (
     <View className="flex-1 bg-black pt-[200px]">
-      <Calendar />
+      <GamesCalendar />
     </View>
   );
 };

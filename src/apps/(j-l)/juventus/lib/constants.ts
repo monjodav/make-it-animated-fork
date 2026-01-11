@@ -1,7 +1,6 @@
 export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const MONTHS_GAP = 30;
 export const DATE_CELL_SIZE = 35;
-export const MONTHS_OVERLAY_SCROLL_HEIGHT = 40;
 
 export type Game = {
   id: string;
