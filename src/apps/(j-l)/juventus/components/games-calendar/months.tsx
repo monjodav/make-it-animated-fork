@@ -20,40 +20,33 @@ export const Months = ({ data }: MonthsProps) => {
 
   const { width: screenWidth } = useWindowDimensions();
 
-  const centerItemWidth = useDerivedValue(() => {
-    return interpolate(
-      activeIndexProgress.get(),
-      Object.keys(monthWidths.get()).map(Number),
-      monthWidths.get()
-    );
-  });
+  const screenWidthHalf = screenWidth / 2;
 
   const inputRange = data.map((_, index) => index);
-  const outputRange = useDerivedValue(() => {
-    const cumulativeWidths = monthWidths
-      .get()
-      .reduce((acc: number[], width: number, index: number) => {
-        const previousSum = index === 0 ? 0 : acc[index - 1];
-        return [...acc, previousSum + width];
-      }, []);
-    return [0, ...cumulativeWidths];
-  });
 
   const translateX = useDerivedValue(() => {
-    const initialTranslateX = screenWidth / 2 - centerItemWidth.get() / 2;
+    const progress = activeIndexProgress.get();
+    const widths = monthWidths.get();
 
-    const baseTranslateX = interpolate(
-      activeIndexProgress.get(),
-      [0, 1],
-      [initialTranslateX, initialTranslateX + screenWidth]
-    );
+    // Calculate center item width using interpolation
+    const centerItemWidth = interpolate(progress, Object.keys(widths).map(Number), widths);
 
-    const itemCorrection = interpolate(
-      activeIndexProgress.get(),
-      inputRange,
-      outputRange.get(),
-      Extrapolation.CLAMP
-    );
+    // Calculate cumulative widths for item correction
+    const cumulativeWidths: number[] = [];
+    for (let i = 0; i < widths.length; i++) {
+      const previousSum = i === 0 ? 0 : cumulativeWidths[i - 1];
+      cumulativeWidths[i] = previousSum + widths[i];
+    }
+    const outputRange = [0, ...cumulativeWidths];
+
+    // Calculate initial translateX
+    const initialTranslateX = screenWidthHalf - centerItemWidth / 2;
+
+    // Calculate base translateX
+    const baseTranslateX = initialTranslateX + progress * screenWidth;
+
+    // Calculate item correction
+    const itemCorrection = interpolate(progress, inputRange, outputRange, Extrapolation.CLAMP);
 
     return baseTranslateX - itemCorrection;
   });
