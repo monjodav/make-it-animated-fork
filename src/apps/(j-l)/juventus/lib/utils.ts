@@ -6,7 +6,6 @@ export const getMonths = (): { label: string; date: Date }[] => {
     const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
     const label = d.toLocaleString("default", {
       month: "long",
-      //  year: "numeric"
     });
     months.push({ label, date: d });
   }

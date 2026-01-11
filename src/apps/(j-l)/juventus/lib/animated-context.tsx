@@ -1,4 +1,4 @@
-import { createContext, useMemo, type PropsWithChildren } from "react";
+import { createContext, type PropsWithChildren } from "react";
 import Animated, {
   useAnimatedRef,
   useSharedValue,
@@ -15,9 +15,7 @@ type CalendarAnimatedContextType = {
   activeIndexProgress: SharedValue<number>;
   scrollOffsetX: SharedValue<number>;
   monthWidths: SharedValue<number[]>;
-  monthsScrollRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
-  daysScrollRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
-  gamesScrollRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
+  scrollViewRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
 };
 
 export const CalendarAnimatedContext = createContext<CalendarAnimatedContextType>(
@@ -29,29 +27,14 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
 
   const scrollOffsetX = useSharedValue(0);
   const activeIndexProgress = useSharedValue(0);
+  const scrollViewRef = useAnimatedRef<Animated.ScrollView>();
 
-  const monthsScrollRef = useAnimatedRef<Animated.ScrollView>();
-  const daysScrollRef = useAnimatedRef<Animated.ScrollView>();
-  const gamesScrollRef = useAnimatedRef<Animated.ScrollView>();
-
-  const contextValue = useMemo(
-    () => ({
-      activeIndexProgress,
-      scrollOffsetX,
-      monthWidths,
-      monthsScrollRef,
-      daysScrollRef,
-      gamesScrollRef,
-    }),
-    [
-      activeIndexProgress,
-      scrollOffsetX,
-      monthWidths,
-      monthsScrollRef,
-      daysScrollRef,
-      gamesScrollRef,
-    ]
-  );
+  const contextValue: CalendarAnimatedContextType = {
+    activeIndexProgress,
+    scrollOffsetX,
+    monthWidths,
+    scrollViewRef,
+  };
 
   return (
     <CalendarAnimatedContext.Provider value={contextValue}>
