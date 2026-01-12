@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import { Text, useWindowDimensions, View } from "react-native";
 import { CalendarAnimatedProvider } from "../../lib/animated-context";
 import { DATE_CELL_SIZE, DAYS, MONTHS_HEIGHT, DAYS_HEADER_HEIGHT } from "../../lib/constants";
@@ -42,3 +44,5 @@ export const GamesCalendar = () => {
     </CalendarAnimatedProvider>
   );
 };
+
+// juventus-games-calendar-animation 🔼

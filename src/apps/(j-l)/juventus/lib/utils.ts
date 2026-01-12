@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 // Generate months: 1 year before now and 6 months ahead (18 months total)
 export const getMonths = (): { label: string; date: Date }[] => {
   const now = new Date();
@@ -40,3 +42,5 @@ export const getMonthWeeks = (monthObj: { label: string; date: Date }) => {
   }
   return weeks;
 };
+
+// juventus-games-calendar-animation 🔼

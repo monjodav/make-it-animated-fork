@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import { createContext, type PropsWithChildren } from "react";
 import Animated, {
   useAnimatedRef,
@@ -45,3 +47,5 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
     </CalendarAnimatedContext.Provider>
   );
 };
+
+// juventus-games-calendar-animation 🔼

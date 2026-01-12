@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import { Text, View } from "react-native";
 import { DATE_CELL_SIZE } from "../../lib/constants";
 import { getMonthWeeks } from "../../lib/utils";
@@ -31,3 +33,5 @@ export const Days = ({ data }: DaysProps) => {
     </View>
   );
 };
+
+// juventus-games-calendar-animation 🔼

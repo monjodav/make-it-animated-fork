@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import Animated, { useAnimatedStyle, interpolate } from "react-native-reanimated";
 import { use } from "react";
 import { CalendarAnimatedContext } from "../../lib/animated-context";
@@ -25,3 +27,5 @@ const MonthIndicator = () => {
 };
 
 export default MonthIndicator;
+
+// juventus-games-calendar-animation 🔼

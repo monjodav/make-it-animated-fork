@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import Animated, {
   Extrapolation,
   interpolate,
@@ -93,3 +95,5 @@ export const Months = ({ data }: MonthsProps) => {
     </Animated.View>
   );
 };
+
+// juventus-games-calendar-animation 🔼

@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import React, { FC, PropsWithChildren } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, { useAnimatedScrollHandler } from "react-native-reanimated";
@@ -36,3 +38,5 @@ export const ScrollContainer: FC<PropsWithChildren> = ({ children }) => {
     </Animated.ScrollView>
   );
 };
+
+// juventus-games-calendar-animation 🔼

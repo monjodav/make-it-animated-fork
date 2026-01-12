@@ -1,3 +1,5 @@
+// juventus-games-calendar-animation 🔽
+
 import Animated, {
   Extrapolation,
   interpolate,
@@ -41,3 +43,5 @@ export const MonthLabel = ({ label, index }: MonthLabelProps) => {
     </Animated.Text>
   );
 };
+
+// juventus-games-calendar-animation 🔼
