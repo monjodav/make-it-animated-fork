@@ -1,4 +1,9 @@
-import Animated, { interpolate, interpolateColor, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import { use } from "react";
 import { CalendarAnimatedContext } from "../../lib/animated-context";
 
@@ -20,7 +25,8 @@ export const MonthLabel = ({ label, index }: MonthLabelProps) => {
     const scale = interpolate(
       activeIndexProgress.get(),
       [index - 1, index, index + 1],
-      [0.8, 1.1, 0.8]
+      [0.8, 1.1, 0.8],
+      Extrapolation.CLAMP
     );
 
     return {
