@@ -9,6 +9,10 @@ const MonthIndicator = () => {
   const { monthWidths, activeIndexProgress } = use(CalendarAnimatedContext);
 
   const animatedIndicatorStyle = useAnimatedStyle(() => {
+    // Width interpolation: indicator width matches active month label width
+    // Input: progress values [0, 1, 2, ...] corresponding to month indices
+    // Output: month widths minus 12px padding (visual spacing from text edges)
+    // Creates smooth width transition as user scrolls between months
     const width = interpolate(
       activeIndexProgress.get(),
       Object.keys(monthWidths.get()).map(Number),

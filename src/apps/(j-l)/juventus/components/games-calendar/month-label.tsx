@@ -18,12 +18,21 @@ export const MonthLabel = ({ label, index }: MonthLabelProps) => {
   const { activeIndexProgress } = use(CalendarAnimatedContext);
 
   const rTextStyle = useAnimatedStyle(() => {
+    // Color interpolation: gray when inactive, white when active
+    // Input range: [prevMonth, currentMonth, nextMonth]
+    // Creates smooth color transition as user scrolls between months
+    // Active month (index) gets white, neighbors fade to gray
     const color = interpolateColor(
       activeIndexProgress.get(),
       [index - 1, index, index + 1],
       ["#888888", "#FFFFFF", "#888888"]
     );
 
+    // Scale interpolation: shrink inactive months, enlarge active month
+    // Input: progress relative to this month's index
+    // Output: scale values [0.8, 1.1, 0.8] for [prev, current, next]
+    // CLAMP prevents extrapolation beyond range (keeps scale between 0.8-1.1)
+    // Creates "pop" effect when month becomes active
     const scale = interpolate(
       activeIndexProgress.get(),
       [index - 1, index, index + 1],
