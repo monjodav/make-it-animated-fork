@@ -1,19 +1,24 @@
-import * as SplashScreen from "expo-splash-screen";
+#!/usr/bin/env node
+/* eslint-disable prettier/prettier */
+
+/**
+ * This script resets app/_layout.tsx to a clean state for public branch.
+ * Can be run independently or as part of prepare-public.js
+ */
+
+const fs = require("fs");
+const path = require("path");
+
+const root = process.cwd();
+
+const layoutTsxContent = `import * as SplashScreen from "expo-splash-screen";
 import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardController, KeyboardProvider } from "react-native-keyboard-controller";
 import "../global.css";
-import * as Sentry from "@sentry/react-native";
-import { LogLevel, OneSignal } from "react-native-onesignal";
-import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
-import * as Linking from "expo-linking";
-import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { useFonts } from "expo-font";
-import {
-  LibreBaskerville_700Bold,
-  LibreBaskerville_400Regular,
-} from "@expo-google-fonts/libre-baskerville";
+import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
 import {
   Outfit_400Regular,
   Outfit_500Medium,
@@ -22,15 +27,6 @@ import {
 } from "@expo-google-fonts/outfit";
 import { Bangers_400Regular } from "@expo-google-fonts/bangers/400Regular";
 import { Stack } from "expo-router";
-
-if (!__DEV__) {
-  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-  OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID!);
-
-  Sentry.init({
-    dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  });
-}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,7 +40,6 @@ KeyboardController.preload();
 export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
-    LibreBaskerville_400Regular,
     Outfit_400Regular,
     Outfit_500Medium,
     Outfit_600SemiBold,
@@ -52,26 +47,10 @@ export default function RootLayout() {
     Bangers_400Regular,
   });
 
-  useVersionCheck();
-  useOtaUpdate();
-
-  const url = Linking.useLinkingURL();
-
-  useEffect(() => {
-    if (url && url.includes("miaapp://")) {
-      Linking.openURL(url);
-    }
-  }, [url]);
-
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
       SplashScreen.hide();
     }, 500);
-    if (!__DEV__) {
-      setTimeout(() => {
-        OneSignal.Notifications.requestPermission(true);
-      }, 1000);
-    }
   }, []);
 
   if (!fontsLoaded) {
@@ -105,3 +84,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+`;
+
+const resetLayout = async () => {
+  try {
+    const layoutTsxPath = path.join(root, "app/_layout.tsx");
+    
+    // Write the clean _layout.tsx content
+    await fs.promises.writeFile(layoutTsxPath, layoutTsxContent, "utf8");
+    console.log("📝 Reset app/_layout.tsx to clean state.");
+  } catch (error) {
+    console.error(`❌ Error resetting _layout.tsx: ${error.message}`);
+    throw error;
+  }
+};
+
+// Allow running as standalone script or being imported
+if (require.main === module) {
+  resetLayout()
+    .then(() => {
+      console.log("\n✅ Layout reset complete!");
+    })
+    .catch((error) => {
+      console.error(`❌ Error during script execution: ${error.message}`);
+      process.exit(1);
+    });
+}
+
+module.exports = { resetLayout };
+
