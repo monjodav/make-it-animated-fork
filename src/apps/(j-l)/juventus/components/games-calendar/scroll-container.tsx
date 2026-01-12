@@ -6,7 +6,8 @@ import { use } from "react";
 import { DAYS_HEADER_HEIGHT, MONTHS_HEIGHT } from "../../lib/constants";
 
 export const ScrollContainer: FC<PropsWithChildren> = ({ children }) => {
-  const { scrollOffsetX, activeIndexProgress, scrollViewRef } = use(CalendarAnimatedContext);
+  const { scrollOffsetX, activeIndexProgress, isMonthPressed, scrollViewRef } =
+    use(CalendarAnimatedContext);
 
   const { width: screenWidth } = useWindowDimensions();
 
@@ -14,7 +15,9 @@ export const ScrollContainer: FC<PropsWithChildren> = ({ children }) => {
     onScroll: (event) => {
       const offsetX = event.contentOffset.x;
       scrollOffsetX.set(offsetX);
-      activeIndexProgress.set(offsetX / screenWidth);
+      if (!isMonthPressed.get()) {
+        activeIndexProgress.set(offsetX / screenWidth);
+      }
     },
   });
 

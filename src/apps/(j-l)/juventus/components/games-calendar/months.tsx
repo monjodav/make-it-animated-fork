@@ -16,7 +16,8 @@ type MonthsProps = {
 };
 
 export const Months = ({ data }: MonthsProps) => {
-  const { activeIndexProgress, monthWidths, scrollViewRef } = use(CalendarAnimatedContext);
+  const { activeIndexProgress, monthWidths, isMonthPressed, scrollViewRef } =
+    use(CalendarAnimatedContext);
 
   const { width: screenWidth } = useWindowDimensions();
 
@@ -73,6 +74,8 @@ export const Months = ({ data }: MonthsProps) => {
       {data.map((month, index) => (
         <Pressable
           key={index.toString()}
+          onPressIn={() => isMonthPressed.set(true)}
+          onPressOut={() => isMonthPressed.set(false)}
           onPress={() => scrollToIndex(index)}
           className="px-3"
           onLayout={(e) => {

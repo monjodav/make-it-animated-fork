@@ -15,6 +15,7 @@ type CalendarAnimatedContextType = {
   activeIndexProgress: SharedValue<number>;
   scrollOffsetX: SharedValue<number>;
   monthWidths: SharedValue<number[]>;
+  isMonthPressed: SharedValue<boolean>;
   scrollViewRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
 };
 
@@ -27,12 +28,14 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
 
   const scrollOffsetX = useSharedValue(0);
   const activeIndexProgress = useSharedValue(0);
+  const isMonthPressed = useSharedValue(false);
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>();
 
   const contextValue: CalendarAnimatedContextType = {
     activeIndexProgress,
     scrollOffsetX,
     monthWidths,
+    isMonthPressed,
     scrollViewRef,
   };
 
