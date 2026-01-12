@@ -5,6 +5,8 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useDerivedValue,
+  scrollTo,
+  withTiming,
 } from "react-native-reanimated";
 import { useCallback } from "react";
 import { use } from "react";
@@ -18,8 +20,7 @@ type MonthsProps = {
 };
 
 export const Months = ({ data }: MonthsProps) => {
-  const { activeIndexProgress, monthWidths, isMonthPressed, scrollViewRef } =
-    use(CalendarAnimatedContext);
+  const { activeIndexProgress, monthWidths, scrollViewRef } = use(CalendarAnimatedContext);
 
   const { width: screenWidth } = useWindowDimensions();
 
@@ -29,17 +30,14 @@ export const Months = ({ data }: MonthsProps) => {
   // Input range for interpolation: [0, 1, 2, ...] corresponding to month indices
   const inputRange = data.map((_, index) => index);
 
-  // Derived value recalculates only when activeIndexProgress or monthWidths change
-  // More efficient than recalculating in useAnimatedStyle on every frame
-  const translateX = useDerivedValue(() => {
-    const progress = activeIndexProgress.get();
-    const widths = monthWidths.get();
+  // Pre-compute width indices array once - avoids Object.keys().map() on every frame
+  // Since widths is an array, we can use indices directly
+  const widthIndices = inputRange;
 
-    // Interpolate current month's width based on scroll progress
-    // Input: progress (e.g., 2.5 = between month 2 and 3)
-    // Output: interpolated width at that progress point
-    // Enables smooth width transitions as user scrolls between months
-    const centerItemWidth = interpolate(progress, Object.keys(widths).map(Number), widths);
+  // Derived value that recalculates ONLY when monthWidths changes (not on every frame)
+  // Pre-computes cumulative widths and output range to avoid expensive array operations during swipe
+  const cumulativeWidthsData = useDerivedValue(() => {
+    const widths = monthWidths.get();
 
     // Build cumulative width array: [0, width[0], width[0]+width[1], ...]
     // Used to calculate total horizontal offset needed to center each month
@@ -48,7 +46,26 @@ export const Months = ({ data }: MonthsProps) => {
       const previousSum = i === 0 ? 0 : cumulativeWidths[i - 1];
       cumulativeWidths[i] = previousSum + widths[i];
     }
-    const outputRange = [0, ...cumulativeWidths];
+
+    return {
+      widths,
+      outputRange: [0, ...cumulativeWidths],
+    };
+  });
+
+  // Derived value recalculates only when activeIndexProgress or monthWidths change
+  // More efficient than recalculating in useAnimatedStyle on every frame
+  // Uses pre-computed cumulative widths data to minimize per-frame calculations
+  const translateX = useDerivedValue(() => {
+    const progress = activeIndexProgress.get();
+    const { widths, outputRange } = cumulativeWidthsData.get();
+
+    // Interpolate current month's width based on scroll progress
+    // Input: progress (e.g., 2.5 = between month 2 and 3)
+    // Output: interpolated width at that progress point
+    // Enables smooth width transitions as user scrolls between months
+    // Uses pre-computed widthIndices instead of Object.keys().map() on every frame
+    const centerItemWidth = interpolate(progress, widthIndices, widths);
 
     // Center the active month: screen center minus half of month width
     const initialTranslateX = screenWidthHalf - centerItemWidth / 2;
@@ -60,6 +77,7 @@ export const Months = ({ data }: MonthsProps) => {
     // Correction factor: accounts for variable month label widths
     // Without this, months with different widths wouldn't center correctly
     // Clamp prevents extrapolation beyond array bounds
+    // Uses pre-computed outputRange instead of rebuilding on every frame
     const itemCorrection = interpolate(progress, inputRange, outputRange, Extrapolation.CLAMP);
 
     // Final translation: base offset minus correction for variable widths
@@ -77,7 +95,10 @@ export const Months = ({ data }: MonthsProps) => {
   const scrollToIndex = useCallback(
     (index: number) => {
       const scrollToOffset = index * screenWidth;
-      scrollViewRef.current?.scrollTo({ x: scrollToOffset, animated: true });
+      // activeIndexProgress.set(withTiming(index, { duration: 200 }));
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({ x: scrollToOffset, animated: true });
+      }, 0);
     },
     [screenWidth, scrollViewRef]
   );
@@ -90,10 +111,6 @@ export const Months = ({ data }: MonthsProps) => {
       {data.map((month, index) => (
         <Pressable
           key={index.toString()}
-          // Set flag to prevent scroll handler from updating progress during tap
-          // Ensures smooth programmatic scroll without competing updates
-          onPressIn={() => isMonthPressed.set(true)}
-          onPressOut={() => isMonthPressed.set(false)}
           onPress={() => scrollToIndex(index)}
           className="px-3"
           // Measure actual rendered width of each month label

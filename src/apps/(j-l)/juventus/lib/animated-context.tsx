@@ -22,9 +22,6 @@ type CalendarAnimatedContextType = {
   // Dynamic widths array - each index stores measured width of corresponding month label
   // Updated via onLayout to handle variable text widths (e.g., "September" vs "May")
   monthWidths: SharedValue<number[]>;
-  // Prevents scroll handler from updating activeIndexProgress during month tap
-  // Ensures smooth programmatic scroll without interference
-  isMonthPressed: SharedValue<boolean>;
   // Animated ref for programmatic scrolling to specific month index
   scrollViewRef: ReturnType<typeof useAnimatedRef<Animated.ScrollView>>;
 };
@@ -43,8 +40,6 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
   // Normalized progress (0-based index + fractional scroll within page)
   // Calculated as offsetX / screenWidth in scroll handler
   const activeIndexProgress = useSharedValue(0);
-  // Flag to disable scroll-based progress updates during programmatic scroll
-  const isMonthPressed = useSharedValue(false);
   // Ref for Animated.ScrollView - enables programmatic scrolling from worklets
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>();
 
@@ -52,7 +47,6 @@ export const CalendarAnimatedProvider = ({ children }: PropsWithChildren) => {
     activeIndexProgress,
     scrollOffsetX,
     monthWidths,
-    isMonthPressed,
     scrollViewRef,
   };
 

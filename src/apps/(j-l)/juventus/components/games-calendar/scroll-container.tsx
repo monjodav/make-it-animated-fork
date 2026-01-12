@@ -8,8 +8,7 @@ import { use } from "react";
 import { DAYS_HEADER_HEIGHT, MONTHS_HEIGHT } from "../../lib/constants";
 
 export const ScrollContainer: FC<PropsWithChildren> = ({ children }) => {
-  const { scrollOffsetX, activeIndexProgress, isMonthPressed, scrollViewRef } =
-    use(CalendarAnimatedContext);
+  const { scrollOffsetX, activeIndexProgress, scrollViewRef } = use(CalendarAnimatedContext);
 
   const { width: screenWidth } = useWindowDimensions();
 
@@ -19,12 +18,8 @@ export const ScrollContainer: FC<PropsWithChildren> = ({ children }) => {
     onScroll: (event) => {
       const offsetX = event.contentOffset.x;
       scrollOffsetX.set(offsetX);
-      // Only update progress if user is scrolling (not during programmatic scroll)
-      // Prevents jumpy animations when tapping month labels
-      if (!isMonthPressed.get()) {
-        // Normalize scroll offset to progress: 0 = first page, 1 = second page, etc.
-        activeIndexProgress.set(offsetX / screenWidth);
-      }
+      // Normalize scroll offset to progress: 0 = first page, 1 = second page, etc.
+      activeIndexProgress.set(offsetX / screenWidth);
     },
   });
 
