@@ -36,7 +36,7 @@ export const MonthLabel = ({ label, index }: MonthLabelProps) => {
     const scale = interpolate(
       activeIndexProgress.get(),
       [index - 1, index, index + 1],
-      [0.8, 1.1, 0.8],
+      [0.85, 1.1, 0.85],
       Extrapolation.CLAMP
     );
 

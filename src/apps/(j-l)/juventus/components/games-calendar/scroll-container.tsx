@@ -34,8 +34,6 @@ export const ScrollContainer: FC<PropsWithChildren> = ({ children }) => {
       scrollEventThrottle={16}
       // Snap to full screen widths - enables page-based navigation
       pagingEnabled
-      // Faster deceleration for snappier feel when releasing scroll
-      decelerationRate="fast"
       // Top padding accounts for fixed header (months + day labels)
       // Ensures content doesn't hide behind absolute-positioned headers
       contentContainerStyle={{ paddingTop: MONTHS_HEIGHT + DAYS_HEADER_HEIGHT }}
