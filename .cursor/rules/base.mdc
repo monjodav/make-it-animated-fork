@@ -1,0 +1,7 @@
+---
+alwaysApply: true
+---
+
+# Base Rules
+
+- Project uses React Compiler. Prefer shared.get() / shared.set() over shared.value in app code (React Compiler friendly)
