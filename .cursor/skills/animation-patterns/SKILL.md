@@ -22,8 +22,9 @@ Reference these patterns when:
 
 | Pattern | Description | Use Case |
 |---------|-------------|----------|
-| `show-hide-on-scroll.md` | Show/hide elements based on scroll direction and position | Headers, tab bars, FABs, search bars |
 | `animation-context.md` | Distribute animation values via context without triggering re-renders | Shared animation state, coordinated animations |
+| `show-hide-on-scroll.md` | Show/hide elements based on scroll direction and position | Headers, tab bars, FABs, search bars |
+| `single-progress-shared-value.md` | Use single progress shared value with interpolated values for synchronized animations | Multi-property transitions, modal sheets, 3D transforms, coordinated animations |
 
 ## Pattern Selection Guide
 
@@ -34,3 +35,6 @@ Reference these patterns when:
 | Coordinated animations across multiple components | `show-hide-on-scroll.md` |
 | Sharing animation values across components without re-renders | `animation-context.md` |
 | Creating animation context with shared values | `animation-context.md` |
+| Multiple properties that must animate in sync (translateY, scale, opacity, etc.) | `single-progress-shared-value.md` |
+| Complex multi-property transitions (modal sheets, card flips, 3D transforms) | `single-progress-shared-value.md` |
+| Animations that need to reverse or restart together | `single-progress-shared-value.md` |
