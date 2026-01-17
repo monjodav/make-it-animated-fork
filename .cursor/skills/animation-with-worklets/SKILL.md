@@ -1,14 +1,30 @@
 ---
-alwaysApply: true
+name: animation-with-worklets
+description: Provides React Native Worklets guidelines for scheduling functions between JS and UI threads. Applies to tasks involving scheduleOnRN, scheduleOnUI, worklets, thread scheduling, useAnimatedReaction, gesture handlers, or cross-thread function calls.
 ---
 
 # Worklet Scheduling
 
-## Don't Use 'worklet' Directive Unless Explicitly Asked
+## Overview
 
-**Never use the `"worklet"` directive unless explicitly requested.** In 99.9% of cases, there is no need to use it. `scheduleOnUI` handle worklet conversion automatically, so the directive is unnecessary. This also applies to gesture detector callbacks - you don't need to add the `"worklet"` directive in gesture handler callbacks.
+Guidelines for scheduling functions between JavaScript and UI threads using React Native Worklets. This skill covers when and how to use `scheduleOnRN` and `scheduleOnUI`, proper function definition patterns, and avoiding unnecessary worklet directives.
 
-## Use scheduleOnRN and scheduleOnUI Instead of runOnJS and runOnUI
+## When to Apply
+
+Reference these guidelines when:
+- Scheduling functions to run on UI thread from JS thread
+- Calling JS thread functions from UI thread worklets
+- Working with `useAnimatedReaction` or gesture handlers
+- Batching shared value updates
+- Implementing cross-thread communication in animations
+
+## Key Guidelines
+
+### Don't Use 'worklet' Directive Unless Explicitly Asked
+
+**Never use the `"worklet"` directive unless explicitly requested.** In 99.9% of cases, there is no need to use it. `scheduleOnUI` handles worklet conversion automatically, so the directive is unnecessary. This also applies to gesture detector callbacks - you don't need to add the `"worklet"` directive in gesture handler callbacks.
+
+### Use scheduleOnRN and scheduleOnUI Instead of runOnJS and runOnUI
 
 Use `scheduleOnRN` and `scheduleOnUI` from `react-native-worklets` instead of `runOnJS` and `runOnUI` from `react-native-reanimated`.
 
@@ -41,7 +57,9 @@ function scheduleOnUI<Args extends unknown[], ReturnValue>(
 ): void;
 ```
 
-## Use scheduleOnRN and scheduleOnUI
+## Usage Patterns
+
+### Always Define Functions Outside Using useCallback
 
 Both `scheduleOnRN` and `scheduleOnUI` follow the same usage pattern: **always define the function outside using `useCallback` and pass the function reference** (not inline arrow functions).
 
@@ -69,7 +87,7 @@ scheduleOnUI(() => {
 });
 ```
 
-**Instead, do this** – define function outside:
+**Instead**, do this – define function outside:
 
 ```tsx
 // ✅ scheduleOnRN - JS thread function
@@ -93,7 +111,7 @@ const updateAnimations = useCallback(() => {
 scheduleOnUI(updateAnimations); // pass function reference
 ```
 
-**Passing arguments:**
+### Passing Arguments
 
 Arguments are passed directly (not as an array) using rest parameter syntax:
 
@@ -114,7 +132,9 @@ scheduleOnRN(handleUpdate, index, value); // ✅ correct - pass directly, not as
 scheduleOnUI(handleUpdate, index, value); // ✅ same pattern for scheduleOnUI
 ```
 
-**Common use cases for scheduleOnRN:**
+## Common Use Cases
+
+### scheduleOnRN Use Cases
 
 - React state setters (`setState`, `setExtendedSlides`, etc.)
 - API calls or side effects
@@ -122,12 +142,7 @@ scheduleOnUI(handleUpdate, index, value); // ✅ same pattern for scheduleOnUI
 - Haptic feedback
 - Navigation functions
 
-**Common use cases for scheduleOnUI:**
-
-- Batch multiple shared value updates in the same frame
-- UI thread worklet operations
-
-**Example from codebase:**
+**Example:**
 
 ```tsx
 // scheduleOnRN example
@@ -143,7 +158,16 @@ useAnimatedReaction(
     }
   }
 );
+```
 
+### scheduleOnUI Use Cases
+
+- Batch multiple shared value updates in the same frame
+- UI thread worklet operations
+
+**Example:**
+
+```tsx
 // scheduleOnUI example - batch updates
 const batchUpdates = useCallback(() => {
   scale.set(withSpring(1.2));
@@ -152,3 +176,11 @@ const batchUpdates = useCallback(() => {
 
 scheduleOnUI(batchUpdates);
 ```
+
+## Benefits
+
+- **Automatic Worklet Conversion**: `scheduleOnUI` handles worklet conversion automatically
+- **Better Performance**: Batching updates reduces UI thread overhead
+- **Type Safety**: Better TypeScript support with proper type definitions
+- **Cleaner Code**: No need for `"worklet"` directive in most cases
+- **Consistent API**: Unified approach for cross-thread communication
