@@ -47,6 +47,7 @@ Reference these guidelines when:
 - Read shared values only in worklets (`useAnimatedStyle`, `useDerivedValue`) - see `shared-values-read-in-worklets.md`
 - Access shared values in `useEffect` or callbacks, not during render - see `shared-values-during-render.md`
 - Use `useSharedValue` instead of `useState` for animation values - see `re-renders-use-shared-values.md`
+- Track animation state with `useRef` instead of reading shared values - see `shared-values-track-state-with-ref.md`
 - Initialize with simple values, compute complex ones in worklets - see `shared-values-initialization.md`
 
 ### Critical: Re-renders
@@ -79,6 +80,7 @@ Full documentation with code examples in `references/`:
 |------|--------|-------------|
 | `shared-values-read-in-worklets.md` | CRITICAL | Read shared values only in worklets, not on JS thread |
 | `shared-values-during-render.md` | CRITICAL | Don't read/modify shared values during render |
+| `shared-values-track-state-with-ref.md` | HIGH | Track animation state with useRef instead of reading shared values |
 | `shared-values-initialization.md` | HIGH | Avoid expensive initial values, use simple primitives |
 
 ### Re-renders (`re-renders-*`)
@@ -145,6 +147,7 @@ Full documentation with code examples in `references/`:
 | Problem | Start With |
 |---------|------------|
 | Animation feels janky/stuttering | `shared-values-read-in-worklets.md` → `re-renders-use-shared-values.md` |
+| Reading shared value to determine toggle state | `shared-values-track-state-with-ref.md` |
 | Too many re-renders during animation | `re-renders-use-shared-values.md` → `memoization-animations.md` |
 | Expensive calculations every frame | `calculations-use-derived-value.md` → `calculations-avoid-conditionals.md` |
 | Conditional logic in worklets causing jank | `calculations-avoid-conditionals.md` |
