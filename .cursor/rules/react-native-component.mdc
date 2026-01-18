@@ -8,40 +8,6 @@ alwaysApply: true
 
 All components must be defined using function expressions (arrow functions) instead of function declarations.
 
-**Don't do this:**
-
-```tsx
-function Component() {
-  return <View />;
-}
-```
-
-**Instead, do this:**
-
-```tsx
-const Component = () => {
-  return <View />;
-};
-```
-
-This applies to all component definitions, including exported components:
-
-**Don't do this:**
-
-```tsx
-export function Component() {
-  return <View />;
-}
-```
-
-**Instead, do this:**
-
-```tsx
-export const Component = () => {
-  return <View />;
-};
-```
-
 # Component Structure
 
 All components must follow a consistent structure from top to bottom. This ensures readability, maintainability, and makes it easier to locate specific code sections.

@@ -6,7 +6,7 @@
 
 I'm thrilled to have you on board. Your support means a lot to me, and I'm confident that this library will help you create stunning and engaging applications. I'm excited to see what you'll build! Stay tuned for future updates.
 
-> **Note:** All animation previews are available on the website: [www.makeitanimated.dev](https://www.makeitanimated.dev)
+> **Note:** All animation previews are available on the website: [www.makeitanimated.dev](https://makeitanimated.dev)
 
 ## Quick Start
 
@@ -46,7 +46,7 @@ npm run dev
 
 ---
 
-> **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
+> **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./docs/GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
 
 ---
 

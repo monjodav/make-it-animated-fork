@@ -4,4 +4,9 @@ alwaysApply: true
 
 # Base Rules
 
-- Project uses React Compiler. Prefer shared.get() / shared.set() over shared.value in app code (React Compiler friendly)
+- Use Reanimated v4 for all animations
+- `runOnJS` and `runOnUI` are deprecated. Use `scheduleOnRN` and `scheduleOnUI` instead. Refer to `.cursor/skills/animation-with-worklets/SKILL.md` for more details.
+- Always prefer Tailwind classes over StyleSheet.create when possible
+- Project uses React Compiler. Prefer shared.get() / shared.set() over shared.value in app code. Refer to `.cursor/skills/animation-with-react-compiler/SKILL.md` for more details.
+- Name all files in kebab-case
+- Always refer to README.md for project structure on adding new files

@@ -14,7 +14,7 @@ This command finds all files in the codebase that contain a specific animation s
 
 ### Step 2: Locate Search Key (if user needs help)
 The search key can be found in one of these ways:
-1. **makeitanimated.dev website**: Press the "Copy search key" button on the animation website page (https://makeitanimated.dev/animations/[slug])
+1. **makeitanimated.dev website**: Press the "Copy search key" button on the animation website page (https://makeitanimated.dev/animations/[slug]) - *Note: You must be logged in to access this feature*
 2. **URL slug**: Extract the slug from the animation URL
 3. **Constants file**: Look up the slug in `src/shared/lib/constants/animations.ts`
 
