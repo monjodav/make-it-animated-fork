@@ -20,6 +20,7 @@ import { SearchBar as StaticSearchBar } from "@/src/shared/components/home-scree
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Results as StaticResults } from "@/src/shared/components/home-screen/without-algolia/results";
 import { StaticAnimation } from "@/src/shared/lib/constants/apps";
+import { DEV_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -34,6 +35,15 @@ export default function Index() {
   const staticListRef = useRef<FlashListRef<StaticAnimation>>(null);
   const textInputRef = useRef<TextInput>(null);
 
+  if (__DEV__) {
+    if (SANDBOX) {
+      return <Redirect href="/sandbox" />;
+    }
+    if (DEV_HREF) {
+      return <Redirect href={DEV_HREF as Href} />;
+    }
+  }
+  
   return (
     <View
       className="flex-1 bg-background"
@@ -51,7 +61,7 @@ export default function Index() {
 const resetIndex = async () => {
   try {
     const indexTsxPath = path.join(root, "app/index.tsx");
-    
+
     // Write the clean index.tsx content
     await fs.promises.writeFile(indexTsxPath, indexTsxContent, "utf8");
     console.log("📝 Reset app/index.tsx to clean state.");
