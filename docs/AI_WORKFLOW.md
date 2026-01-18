@@ -26,6 +26,8 @@ The following commands are available to assist with animation development and an
 |---------|-------------|
 | `detect-animation-files` | Finds all files in the codebase that contain a specific animation search key (slug). Useful for locating all components, routes, and utilities related to an animation. |
 | `explain-animation-logic` | Provides comprehensive analysis of animation implementation, including file architecture, component hierarchy, state flow, animation techniques, and performance optimizations. |
+| `make-code-review` | Performs a comprehensive code review based on all project rules and guidelines. Analyzes code for component structure, style preferences, animation performance optimization, React Compiler compatibility, and worklet scheduling patterns. Fixes issues directly in the code rather than generating a report. |
+| `make-performance-review` | Performs a focused animation performance review based on animation-performance guidelines. Analyzes code for performance issues, anti-patterns, and optimization opportunities. Fixes issues directly in priority order (Critical → High → Medium). |
 | `sandbox` | Sets the `SANDBOX` constant to `true` in `src/shared/lib/constants/dev.ts` to enable sandbox mode for testing and experimentation. |
 | `wip-animation` | Sets the `WIP_SCREEN_HREF` constant in `src/shared/lib/constants/dev.ts` by finding the href for a given animation slug. Useful for quickly switching to work-in-progress animations during development. |
 
