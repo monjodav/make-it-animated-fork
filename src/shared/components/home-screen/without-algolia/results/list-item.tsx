@@ -4,7 +4,7 @@ import { AppText } from "../../../app-text";
 import { router } from "expo-router";
 import { fireHaptic } from "@/src/shared/lib/utils/fire-haptic";
 import { cn } from "@/src/shared/lib/utils/cn";
-import { StaticAnimation } from "@/src/shared/lib/constants/apps";
+import { StaticAnimation } from "@/src/shared/lib/constants/animations";
 
 type Props = {
   animation: StaticAnimation;

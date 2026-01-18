@@ -4,6 +4,8 @@ TL;DR;
 
 Personal License: Build unlimited projects as an individual, but keep the code private and don't share it.
 
+AI Usage: You are permitted to expose the code to AI tools and services (such as ChatGPT, GitHub Copilot, Cursor, or similar AI assistants) for development purposes. This includes sharing code snippets, entire files, or the codebase with AI services to assist with development, debugging, or learning.
+
 ---
 
 By accessing, downloading, or using the Make It Animated React Native animation library and code repository (the "Product"), you ("Licensee" or "you") agree to be bound by the terms of this License Agreement ("Agreement"). If you do not agree with these terms, you are prohibited from using the Product.
@@ -77,12 +79,28 @@ We reserve the right to immediately terminate your license and access to the Pro
 
 If any part of this Agreement is found to be invalid or unenforceable, the remaining terms will continue to be valid and enforceable. The invalid portion will be removed to the minimum extent necessary.
 
-10. Complete Agreement
+10. AI Tools and Services
+
+You are explicitly permitted to use the Product with AI tools and services, including but not limited to:
+
+- AI coding assistants (e.g., GitHub Copilot, Cursor, Codeium)
+- AI chat services (e.g., ChatGPT, Claude, Gemini)
+- AI-powered development tools and platforms
+
+This permission includes:
+
+- Sharing code snippets, files, or the entire codebase with AI services
+- Using AI tools to analyze, modify, or generate code based on the Product
+- Exposing the code to AI models for development, debugging, or learning purposes
+
+This permission does not extend to sharing the code with other human users or making it publicly available. The restrictions in Section 2 ("What You Cannot Do") still apply to human-to-human sharing and public distribution.
+
+11. Complete Agreement
 
 This Agreement represents the complete understanding between you and Make It Animated regarding the Product. It supersedes any prior agreements, discussions, or representations about the subject matter.
 
 ---
 
-Last updated: December 6, 2025
+Last updated: January 14, 2026
 
 Make It Animated

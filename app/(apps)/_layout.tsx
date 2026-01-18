@@ -1,10 +1,9 @@
 import { HomeAnchorButton } from "@/src/shared/components/home-anchor-button";
 import { Slot } from "expo-router";
-
-const DEV_HREF = process.env.EXPO_PUBLIC_DEV_HREF;
+import { WIP_SCREEN_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
 
 export default function AppsLayout() {
-  if (__DEV__ && DEV_HREF !== "unset") {
+  if (__DEV__ && (SANDBOX || WIP_SCREEN_HREF)) {
     return <Slot />;
   }
 

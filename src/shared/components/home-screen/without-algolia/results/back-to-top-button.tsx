@@ -4,7 +4,7 @@ import { ArrowUp } from "lucide-react-native";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { fireHaptic } from "../../../../lib/utils/fire-haptic";
 import { FlashListRef } from "@shopify/flash-list";
-import { StaticAnimation } from "@/src/shared/lib/constants/apps";
+import { StaticAnimation } from "@/src/shared/lib/constants/animations";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 

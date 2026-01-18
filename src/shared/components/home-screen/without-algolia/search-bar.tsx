@@ -8,7 +8,7 @@ import { useAppStore } from "../../../lib/store/app";
 import { useAnimationsStore } from "../../../lib/store/animations";
 import { fireHaptic } from "../../../lib/utils/fire-haptic";
 import { cn } from "../../../lib/utils/cn";
-import { StaticAnimation } from "@/src/shared/lib/constants/apps";
+import { StaticAnimation } from "@/src/shared/lib/constants/animations";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const HEIGHT = 48;

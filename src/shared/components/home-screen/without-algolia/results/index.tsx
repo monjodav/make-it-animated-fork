@@ -1,6 +1,6 @@
 import { FC, RefObject, useState } from "react";
 import { NativeScrollEvent, NativeSyntheticEvent, useWindowDimensions, View } from "react-native";
-import { STATIC_ANIMATIONS, StaticAnimation } from "../../../../lib/constants/apps";
+import { STATIC_ANIMATIONS, StaticAnimation } from "../../../../lib/constants/animations";
 import { useAnimationsStore } from "../../../../lib/store/animations";
 import { ListItem } from "./list-item";
 import { BackToTopButton } from "./back-to-top-button";

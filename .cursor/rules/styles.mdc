@@ -2,22 +2,22 @@
 alwaysApply: true
 ---
 
+# StyleSheet Preferences
+
+## Prefer Tailwind Classes
+
+Always prefer Tailwind classes over StyleSheet.create when possible
+
+## Use `borderCurve: "continuous"` for Rounded Corners
+
+When using rounded corners with a border radius greater than 12 but less than `full` (i.e., `rounded-xl`, `rounded-2xl`, `rounded-3xl`), always include `borderCurve: "continuous"` in the StyleSheet to achieve smooth, continuous corner curves on iOS.
+
+**Note:** This applies to border radius values greater than 12px (e.g., `rounded-xl` = 12px, `rounded-2xl` = 16px, `rounded-3xl` = 24px) but not to `rounded-full` which creates a perfect circle/ellipse.
+
 # Tailwind CSS Preferences
 
 ## Use `size-*` Instead of `width-*` and `height-*`
 
 When setting equal width and height values, always prefer the `size-*` utility class instead of using both `width-*` and `height-*` classes.
-
-**Don't do this:**
-
-```tsx
-<View className="w-12 h-12" />
-```
-
-**Instead, do this:**
-
-```tsx
-<View className="size-12" />
-```
 
 This rule applies to all size values (e.g., `size-1`, `size-2`, `size-4`, `size-8`, `size-12`, `size-16`, `size-20`, `size-24`, `size-32`, `size-40`, `size-48`, `size-64`, `size-80`, `size-96`, and any custom size values).
