@@ -1,4 +1,4 @@
-# sandbox
+# Sandbox
 
 Set SANDBOX to `true` in `src/shared/lib/constants/dev.ts`.
 
@@ -12,4 +12,4 @@ Set SANDBOX to `true` in `src/shared/lib/constants/dev.ts`.
 
 3. Verify the change was applied correctly by reading the file and confirming `SANDBOX = true`.
 
-4. Reload the dev server if it is running to apply the changes.
+4. Reload the dev server if it is running (Type `r` in the terminal) to apply the changes.

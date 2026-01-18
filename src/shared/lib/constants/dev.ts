@@ -4,10 +4,10 @@
 // SANDBOX: When set to "true", redirects to /sandbox route
 // (useful for testing sandbox features)
 
-// DEV_HREF: When set to any value other than "",
+// WIP_SCREEN_HREF: When set to any value other than "",
 // redirects to the specified route path
 // (useful for quickly navigating to a specific app/route during development)
-// Example: DEV_HREF=/whatsapp/chats
+// Example: WIP_SCREEN_HREF=/whatsapp/chats
 
 export const SANDBOX = false;
-export const DEV_HREF = "";
+export const WIP_SCREEN_HREF = "";

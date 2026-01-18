@@ -11,7 +11,7 @@ import { SearchBar as AlgoliaSearchBar } from "@/src/shared/components/home-scre
 import { Animation } from "@/src/shared/lib/types/app";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Href, Redirect } from "expo-router";
-import { DEV_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
+import { WIP_SCREEN_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -30,8 +30,8 @@ export default function Index() {
     if (SANDBOX) {
       return <Redirect href="/sandbox" />;
     }
-    if (DEV_HREF) {
-      return <Redirect href={DEV_HREF as Href} />;
+    if (WIP_SCREEN_HREF) {
+      return <Redirect href={WIP_SCREEN_HREF as Href} />;
     }
   }
 

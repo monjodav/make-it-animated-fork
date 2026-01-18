@@ -1,9 +1,9 @@
 import { HomeAnchorButton } from "@/src/shared/components/home-anchor-button";
 import { Slot } from "expo-router";
-import { DEV_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
+import { WIP_SCREEN_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
 
 export default function AppsLayout() {
-  if (__DEV__ && (SANDBOX || DEV_HREF)) {
+  if (__DEV__ && (SANDBOX || WIP_SCREEN_HREF)) {
     return <Slot />;
   }
 
