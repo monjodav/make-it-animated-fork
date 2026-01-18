@@ -6,7 +6,7 @@ alwaysApply: true
 
 ## Use Function Expressions Instead of Function Declarations
 
-All components must be defined using function expressions (arrow functions) instead of function declarations.
+All components must be defined as arrow functions.
 
 # Component Structure
 
@@ -49,7 +49,7 @@ All module-level constants must be named in UPPERCASE (using SCREAMING_SNAKE_CAS
 import { View } from "react-native";
 import { FadeIn } from "react-native-reanimated";
 
-const Component = () => {
+export const Component = () => {
   const FADE_IN = FadeIn.duration(300);
   // ... rest of component
 };
@@ -65,7 +65,7 @@ const FADE_IN = FadeIn.duration(300);
 const MAX_ITEMS = 10;
 const ANIMATION_DURATION = 300;
 
-const Component = () => {
+export const Component = () => {
   // ... rest of component
 };
 ```
@@ -103,7 +103,7 @@ Define all React state (`useState`) and shared values (`useSharedValue`) first.
 **Example:**
 
 ```tsx
-const Component = ({ initialData, onPress }: ComponentProps) => {
+export const Component = ({ initialData, onPress }: ComponentProps) => {
   const [data, setData] = useState([...initialData]);
   const [isActive, setIsActive] = useState(false);
   const scale = useSharedValue(1);
@@ -215,7 +215,7 @@ If using `StyleSheet.create`, define it after the component but before exports. 
 **Example:**
 
 ```tsx
-const Component = () => {
+export const Component = () => {
   // ... component code
 };
 
@@ -244,42 +244,34 @@ type ComponentProps = {
   onPress?: () => void;
 };
 
-const Component = ({ initialData, onPress }: ComponentProps) => {
-  // State
+export const Component = ({ initialData, onPress }: ComponentProps) => {
   const [data, setData] = useState([...initialData]);
   const scale = useSharedValue(1);
 
-  // Data-related variables
   const itemCount = data.length;
 
-  // Hooks
   const listRef = useRef(null);
 
   useEffect(() => {
     // effect logic
   }, []);
 
-  // Callbacks
   const handlePress = useCallback(() => {
     onPress?.();
   }, [onPress]);
 
-  // Animation-related logic and styles
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.get() }],
     };
   });
 
-  // Render
   return (
     <View className="flex-1">
       <Text>{itemCount}</Text>
     </View>
   );
 };
-
-export default Component;
 ```
 
 ## Additional Guidelines
@@ -380,20 +372,16 @@ const ProductHeader = () => {
 
 ```tsx
 // components/product/product-card.tsx
-const ProductCard = () => {
+export const ProductCard = () => {
   return <View>...</View>;
 };
-
-export default ProductCard;
 ```
 
 ```tsx
 // components/product/product-list.tsx
-const ProductList = () => {
+export const ProductList = () => {
   return <View>...</View>;
 };
-
-export default ProductList;
 ```
 
 ## Feature Slice Pattern and App Animation Structure
@@ -438,7 +426,7 @@ src/apps/[some-app]/
 
 ```tsx
 // routes/product.tsx (300+ lines)
-const Product = () => {
+export const Product = () => {
   // State, hooks, callbacks, animations, render all in one file
   return <View>...</View>;
 };
@@ -453,7 +441,7 @@ import ProductHeader from "../components/product/product-header";
 import { useProductData } from "../lib/product/use-product-data";
 import { useProductAnimations } from "../lib/product/use-product-animations";
 
-const Product = () => {
+export const Product = () => {
   const { data, handlers } = useProductData();
   const { animatedStyles } = useProductAnimations();
 
@@ -468,14 +456,14 @@ const Product = () => {
 
 ```tsx
 // components/product/product-list.tsx
-const ProductList = ({ data, animatedStyles }) => {
+export const ProductList = ({ data, animatedStyles }) => {
   return <View>...</View>;
 };
 ```
 
 ```tsx
 // components/product/product-header.tsx
-const ProductHeader = () => {
+export const ProductHeader = () => {
   return <View>...</View>;
 };
 ```
