@@ -74,7 +74,11 @@ export const SearchBar: FC<Props> = ({
       style={[rHeightStyle, style]} // Height and margin animations applied to container
     >
       <Animated.View className="justify-center h-full" style={rOpacityStyle}>
-        <TextInput className="px-4 py-2 pl-9" placeholder="Search" placeholderTextColor="gray" />
+        <TextInput
+          className="px-4 py-2 pl-9 text-base/5"
+          placeholder="Search"
+          placeholderTextColor="gray"
+        />
         <Search size={16} color="gray" style={styles.searchIcon} />
       </Animated.View>
     </Animated.View>

@@ -20,9 +20,10 @@ const PlanCard = ({ title, price, subtitle, isSelected, onPress }: PlanCardProps
   return (
     <View
       className={cn(
-        "flex-1 rounded-[18px] border-[2px]",
+        "flex-1 rounded-[18px] border-2",
         isSelected ? "border-white" : "border-transparent"
       )}
+      style={styles.borderCurve}
     >
       <TouchableOpacity
         activeOpacity={0.8}
@@ -39,16 +40,16 @@ const PlanCard = ({ title, price, subtitle, isSelected, onPress }: PlanCardProps
             <Check size={10} color="#404040" strokeWidth={5} />
           </View>
         )}
-        <Text className="text-neutral-50 text-xl font-bold">{title}</Text>
+        <Text className="text-neutral-50 text-lg font-bold">{title}</Text>
         <Animated.Text
           key={title + price}
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(200)}
-          className="text-neutral-50 text-xl font-bold mb-1"
+          className="text-neutral-50 text-lg font-bold mb-1"
         >
           {price}
         </Animated.Text>
-        <Text className="text-neutral-400">{subtitle}</Text>
+        <Text className="text-neutral-400 text-sm">{subtitle}</Text>
       </TouchableOpacity>
     </View>
   );

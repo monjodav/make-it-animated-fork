@@ -151,7 +151,7 @@ export const HomeAnchorButton: FC = () => {
   });
 
   return (
-    <View className="absolute inset-0 pointer-events-box-none z-[9999]">
+    <View pointerEvents="box-none" className="absolute inset-0 z-[9999]">
       <GestureDetector gesture={composedGesture}>
         <Animated.View
           entering={SlideInRight.springify().damping(80).mass(3).delay(100)}

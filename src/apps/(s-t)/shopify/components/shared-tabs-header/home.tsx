@@ -19,7 +19,7 @@ export const Home: FC = () => {
       className="flex-row items-center justify-between"
     >
       <Pressable className="flex-row items-center gap-2" onPress={simulatePress}>
-        <View className="size-9 items-center justify-center rounded-lg bg-green-500">
+        <View className="size-8 items-center justify-center rounded-lg bg-green-500">
           <Text className="text-black text-sm font-medium">MS</Text>
         </View>
         <Text className="font-semibold text-white">My Store</Text>
@@ -32,7 +32,7 @@ export const Home: FC = () => {
           <Bell size={20} color="white" />
         </Pressable>
         <Pressable
-          className="size-9 items-center justify-center rounded-full bg-fuchsia-600"
+          className="size-8 items-center justify-center rounded-full bg-fuchsia-600"
           onPress={simulatePress}
         >
           <Text className="text-white text-sm font-medium">VS</Text>

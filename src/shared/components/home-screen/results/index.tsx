@@ -7,6 +7,7 @@ import {
   ViewToken,
   useWindowDimensions,
   RefreshControl,
+  View,
 } from "react-native";
 import { Animation } from "../../../lib/types/app";
 import { FlashList, FlashListRef } from "@shopify/flash-list";
@@ -17,6 +18,7 @@ import { useRefinementStatus } from "../../../lib/hooks/use-refinement-status";
 import { OtaUpdateButton } from "./ota-update-button";
 import { BackToTopButton } from "./back-to-top-button";
 import { UpdateComingMessage } from "./update-coming-message";
+import { DotsLoader } from "../animation-card/loader";
 
 type Props = {
   listRef: RefObject<FlashListRef<Animation> | null>;
@@ -105,6 +107,11 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
 
   return (
     <Animated.View className="flex-1">
+      {items.length === 0 && !hasRefinements && (
+        <View className="absolute inset-0 items-center justify-center">
+          <DotsLoader size="lg" />
+        </View>
+      )}
       <FlashList
         ref={listRef}
         data={items}
@@ -134,7 +141,11 @@ export const Results: FC<Props> = ({ listRef }: Props) => {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="grey" />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColorClassName="accent-muted-foreground"
+          />
         }
         onEndReachedThreshold={0.5}
         onEndReached={() => {

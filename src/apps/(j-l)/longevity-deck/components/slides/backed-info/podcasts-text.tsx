@@ -35,7 +35,7 @@ export const PodcastsText: FC<SlideItemProps> = ({ index }) => {
     <SlideTextContainer
       style={rContainerStyle}
       className="absolute top-[80%] left-[20%] max-w-[250px]"
-      textClassName="text-lg text-center"
+      textClassName="text-center"
     >
       Scanned 17 podcasts, 12 blogs and 5 scientific publications.
     </SlideTextContainer>

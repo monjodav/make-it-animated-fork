@@ -22,6 +22,8 @@ import {
 } from "@expo-google-fonts/outfit";
 import { Bangers_400Regular } from "@expo-google-fonts/bangers/400Regular";
 import { Stack } from "expo-router";
+import { SafeAreaListener } from "react-native-safe-area-context";
+import { Uniwind } from "uniwind";
 
 if (!__DEV__) {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
@@ -80,22 +82,28 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
-      <KeyboardProvider>
-        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
-          <Stack.Screen name="(apps)" options={{ animation: "slide_from_right" }} />
-          <Stack.Screen
-            name="qr-scanner"
-            options={{
-              gestureEnabled: true,
-              presentation: "formSheet",
-              sheetCornerRadius: 32,
-              contentStyle: {
-                height: "100%",
-              },
-            }}
-          />
-        </Stack>
-      </KeyboardProvider>
+      <SafeAreaListener
+        onChange={({ insets }) => {
+          Uniwind.updateInsets(insets);
+        }}
+      >
+        <KeyboardProvider>
+          <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+            <Stack.Screen name="(apps)" options={{ animation: "slide_from_right" }} />
+            <Stack.Screen
+              name="qr-scanner"
+              options={{
+                gestureEnabled: true,
+                presentation: "formSheet",
+                sheetCornerRadius: 32,
+                contentStyle: {
+                  height: "100%",
+                },
+              }}
+            />
+          </Stack>
+        </KeyboardProvider>
+      </SafeAreaListener>
     </GestureHandlerRootView>
   );
 }

@@ -57,7 +57,7 @@ const UpgradeButton = () => {
           <Animated.Text
             key="text"
             entering={FadeIn}
-            className="text-black text-xl text-nowrap font-medium"
+            className="text-black text-lg text-nowrap font-medium"
           >
             Upgrade to SuperGrok
           </Animated.Text>

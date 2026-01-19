@@ -35,7 +35,7 @@ export const SlideTextContainer: FC<PropsWithChildren<Props>> = ({
       {...props}
     >
       {Platform.OS === "ios" && <BlurView tint="dark" style={StyleSheet.absoluteFill} />}
-      <Text className={cn("text-xl font-medium text-white", textClassName)}>{children}</Text>
+      <Text className={cn("text-base font-medium text-white", textClassName)}>{children}</Text>
     </Animated.View>
   );
 };

@@ -26,6 +26,7 @@ const VERTICAL_GAP = DOT_GAP * (Math.sqrt(3) / 2);
 const DOT_COLORS = ["#f9a8d4", "#fb923c", "#bef264", "#60a5fa"]; // pink, orange, lime, blue
 
 const Dot: FC<{ refreshing: boolean }> = ({ refreshing }) => {
+  "use no memo";
   // scale: subtle breathing to imply activity while refreshing; 0.7–1 mirror repeated with yoyo
   const scale = useDerivedValue(() => {
     return refreshing

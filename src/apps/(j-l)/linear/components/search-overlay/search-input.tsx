@@ -28,7 +28,7 @@ export const SearchInput = () => {
             placeholder="Quick find"
             placeholderTextColor="#888"
             returnKeyType="search"
-            className="flex-1 text-white text-lg/6fdg text-semibold"
+            className="flex-1 text-white text-lg/6 font-medium"
             selectionColor="#c3c3c3"
             onSubmitEditing={onCloseSearchModal}
             autoFocus

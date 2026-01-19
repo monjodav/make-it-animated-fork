@@ -51,7 +51,7 @@ export const SlideItem: FC<SlideItemProps> = ({ item, index, width, scrollOffset
           borderCurve: "continuous",
         }}
       >
-        <Text className="text-white text-4xl font-bold text-center mb-20">{item.title}</Text>
+        <Text className="text-white text-3xl font-bold text-center mb-20">{item.title}</Text>
         <View className="w-3/4 aspect-[1/1.3] rounded-3xl bg-white/20" />
       </View>
     </Animated.View>

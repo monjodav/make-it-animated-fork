@@ -62,7 +62,7 @@ export const Paywall = () => {
           <BlurView tint="systemThickMaterialDark" style={StyleSheet.absoluteFill} />
           <X size={20} color="#d4d4d4" />
         </Pressable>
-        <Text onPress={simulatePress} className="text-neutral-400 text-lg">
+        <Text onPress={simulatePress} className="text-neutral-400 text-base font-medium">
           Restore
         </Text>
       </View>
@@ -77,7 +77,7 @@ export const Paywall = () => {
       >
         <GradientText
           text="Powerful Productivity for IOS and macOS"
-          className="text-neutral-50 w-3/4 text-3xl font-bold self-center text-center"
+          className="text-neutral-50 w-3/4 text-2xl font-bold self-center text-center"
           gradientProps={{ colors: ["#a3a3a390", "#fafafa", "#a3a3a390"] }}
         />
 
@@ -220,25 +220,26 @@ export const Paywall = () => {
 
         <Pressable
           onPress={simulatePress}
-          className="mb-4 p-4 items-center rounded-[15px] bg-white"
+          className="mb-4 p-4 items-center rounded-2xl bg-white"
+          style={styles.borderCurve}
         >
-          <Text className="text-black text-xl font-semibold">Try free for 2 weeks</Text>
+          <Text className="text-black text-lg font-semibold">Try free for 2 weeks</Text>
         </Pressable>
 
         <Animated.Text
           key={formattedPrice + period}
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(200)}
-          className="text-neutral-50 text-sm font-medium mb-2 text-center"
+          className="text-neutral-50 text-xs font-medium mb-2 text-center"
         >
           {`2 weeks free, then ${formattedPrice} per ${period.slice(0, -2)}. Auto-renews ${period} until cancelled.`}
         </Animated.Text>
         <View className="w-full flex-row mb-8 items-center justify-center gap-5">
           <Pressable onPress={simulatePress}>
-            <Text className="text-neutral-400 text-sm font-medium">Terms of Service</Text>
+            <Text className="text-neutral-400 text-xs font-medium">Terms of Service</Text>
           </Pressable>
           <Pressable onPress={simulatePress}>
-            <Text className="text-neutral-400 text-sm font-medium">Privacy Policy</Text>
+            <Text className="text-neutral-400 text-xs font-medium">Privacy Policy</Text>
           </Pressable>
         </View>
       </View>
@@ -252,6 +253,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  borderCurve: {
+    borderCurve: "continuous",
   },
 });
 

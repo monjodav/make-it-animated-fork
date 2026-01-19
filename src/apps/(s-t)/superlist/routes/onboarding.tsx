@@ -272,7 +272,7 @@ export const Onboarding = () => {
         <Pressable className="self-center mb-6" onPress={onChevronDownPress}>
           <ChevronDown size={26} color="grey" />
         </Pressable>
-        <Text className="text-white text-center text-4xl font-bold">Let's get started</Text>
+        <Text className="text-white text-center text-3xl font-bold">Let's get started</Text>
         <Text className="text-slate-400 text-center mt-3">
           Sign in to get things done - your task,
         </Text>

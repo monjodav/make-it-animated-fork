@@ -24,7 +24,7 @@ export const SourceToggleRow: React.FC<SourceToggleRowProps> = ({
           {icon}
           <Text className="text-white text-lg font-medium">{title}</Text>
         </View>
-        <Text className="text-[#9ea2a6] text-sm ml-7 mt-2">{description}</Text>
+        <Text className="text-[#9ea2a6] text-sm ml-6">{description}</Text>
       </View>
       <Switch
         value={value}

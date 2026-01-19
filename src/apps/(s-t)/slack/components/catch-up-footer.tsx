@@ -47,7 +47,7 @@ export const CatchUpFooter: FC = () => {
           isKeepUnreadPressed.set(true);
         }}
       >
-        <Text className="text-lg font-semibold text-neutral-300">Keep Unread</Text>
+        <Text className="text-base font-semibold text-neutral-300">Keep Unread</Text>
       </AnimatedPressable>
       <AnimatedPressable
         className="flex-1 p-[12px] bg-emerald-900 border border-emerald-700/50 rounded-2xl items-center justify-center"
@@ -64,7 +64,7 @@ export const CatchUpFooter: FC = () => {
           isMarkAsReadPressed.set(true);
         }}
       >
-        <Text className="text-lg font-semibold text-neutral-300">Mark as Read</Text>
+        <Text className="text-base font-semibold text-neutral-300">Mark as Read</Text>
       </AnimatedPressable>
     </Animated.View>
   );

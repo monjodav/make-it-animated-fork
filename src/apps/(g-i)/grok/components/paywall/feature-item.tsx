@@ -33,7 +33,7 @@ export const FeatureItem: FC<Props> = ({ icon, text }) => {
         className="flex-1 flex-row items-center gap-3"
       >
         {icon}
-        <Text className="flex-1 text-neutral-50 text-lg font-bold">{text}</Text>
+        <Text className="flex-1 text-neutral-50 text-base font-bold">{text}</Text>
       </Animated.View>
       <Check size={18} color="#fafafa" strokeWidth={3} />
     </Animated.View>

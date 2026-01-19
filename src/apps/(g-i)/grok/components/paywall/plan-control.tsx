@@ -50,7 +50,7 @@ const PricingItem = ({ isActive, title, price, period = "/mo" }: PricingItemProp
     <>
       <Text
         className={cn(
-          isActive ? "text-neutral-50 text-lg font-bold" : "text-neutral-400 text-lg font-bold"
+          isActive ? "text-neutral-50 text-base font-bold" : "text-neutral-400 text-base font-bold"
         )}
       >
         {title}
@@ -58,14 +58,16 @@ const PricingItem = ({ isActive, title, price, period = "/mo" }: PricingItemProp
       <View className="flex-row items-end">
         <Text
           className={cn(
-            isActive ? "text-neutral-50 text-2xl font-bold" : "text-neutral-400 text-2xl font-bold"
+            isActive ? "text-neutral-50 text-xl font-bold" : "text-neutral-400 text-xl font-bold"
           )}
         >
           {price}
         </Text>
         <Text
           className={cn(
-            isActive ? "text-neutral-50 text-lg font-bold" : "text-neutral-400 text-lg font-bold"
+            isActive
+              ? "text-neutral-50 text-base font-bold"
+              : "text-neutral-400 text-base font-bold"
           )}
         >
           {period}

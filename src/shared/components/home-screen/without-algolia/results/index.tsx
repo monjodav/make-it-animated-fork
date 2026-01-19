@@ -44,7 +44,7 @@ export const Results: FC<Props> = ({ listRef }) => {
             <CurvedDivider />
           </View>
         )}
-        contentContainerClassName="py-5"
+        contentContainerClassName="pt-5 pb-safe-offset-24"
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}

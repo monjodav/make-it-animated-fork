@@ -62,8 +62,8 @@ export const Paywall = () => {
           contentContainerStyle={{ paddingTop: _imageHeight * 0.7 }}
           showsVerticalScrollIndicator={false}
         >
-          <Text className="text-neutral-50 text-5xl font-semibold self-center mb-3">SuperGrok</Text>
-          <Text className="text-neutral-50 text-2xl font-semibold self-center text-center mb-12">
+          <Text className="text-neutral-50 text-4xl font-semibold self-center mb-3">SuperGrok</Text>
+          <Text className="text-neutral-50 text-xl font-semibold self-center text-center mb-12">
             Introducing Grok 4 Fast: the most intelligent fast model
           </Text>
           <Animated.View
@@ -148,15 +148,15 @@ export const Paywall = () => {
 
       <View className="w-full flex-row px-6 mb-8 items-center justify-between self-center">
         <Pressable onPress={simulatePress}>
-          <Text className="text-neutral-500 text-sm font-medium">Terms & Conditions</Text>
+          <Text className="text-neutral-500 text-xs font-medium">Terms & Conditions</Text>
         </Pressable>
         <View className="border-l border-neutral-600 border-[0.5px] h-3/4" />
         <Pressable onPress={simulatePress}>
-          <Text className="text-neutral-500 text-sm font-medium">Privacy Policy</Text>
+          <Text className="text-neutral-500 text-xs font-medium">Privacy Policy</Text>
         </Pressable>
         <View className="border-l border-neutral-600 border-[0.5px] h-3/4" />
         <Pressable onPress={simulatePress}>
-          <Text className="text-neutral-500 text-sm font-medium">Restore Purchases</Text>
+          <Text className="text-neutral-500 text-xs font-medium">Restore Purchases</Text>
         </Pressable>
       </View>
     </View>

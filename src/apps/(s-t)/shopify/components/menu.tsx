@@ -1,12 +1,4 @@
-import {
-  FlatList,
-  Pressable,
-  Text,
-  View,
-  StyleSheet,
-  useWindowDimensions,
-  Platform,
-} from "react-native";
+import { FlatList, Pressable, Text, View, StyleSheet, useWindowDimensions } from "react-native";
 import { Settings, X } from "lucide-react-native";
 import Animated, {
   interpolate,
@@ -114,7 +106,7 @@ export const Menu = () => {
       ]}
     >
       {/* Header */}
-      <Animated.View style={rHeaderStyle} className="flex-row items-center justify-between">
+      <Animated.View style={rHeaderStyle} className="flex-row items-center justify-between pr-3">
         <Pressable
           className="p-3 rounded-full"
           // Close uses spring for a natural deceleration and to stay consistent with the open motion
@@ -125,19 +117,13 @@ export const Menu = () => {
           onPressIn={() => isPressed.set(true)}
           onPressOut={() => isPressed.set(false)}
         >
-          <Animated.View className="p-3 rounded-full bg-neutral-700">
-            {Platform.OS === "ios" && (
-              <View className="absolute h-10 w-10 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
-            )}
+          <Animated.View className="p-3 rounded-full bg-neutral-800">
             <X size={20} color="#E5E7EB" />
           </Animated.View>
         </Pressable>
-        <View className="flex-row items-center gap-3  bg-neutral-700 px-4 py-3 rounded-full">
-          {Platform.OS === "ios" && (
-            <View className="absolute h-10 w-32 self-center top-1.5 bg-neutral-800 rounded-full shadow-[0_0_6px_#0E0E0E]" />
-          )}
+        <View className="flex-row items-center gap-3 bg-neutral-800 px-4 py-3 rounded-full">
           <Settings size={20} color="#E5E7EB" />
-          <Text className="text-md font-semibold text-[#E5E7EB]">Settings</Text>
+          <Text className="text-base font-semibold text-[#E5E7EB]">Settings</Text>
         </View>
       </Animated.View>
       {/* Menu */}
@@ -148,6 +134,9 @@ export const Menu = () => {
           keyExtractor={(item, index) => `${item}-${index}`}
           renderItem={_renderListItem}
           contentContainerClassName="pt-3"
+          contentContainerStyle={{
+            paddingBottom: insets.bottom + 100,
+          }}
         />
       </Animated.View>
     </Animated.View>

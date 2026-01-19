@@ -133,7 +133,7 @@ const Onboarding = () => {
             className="h-[50px] rounded-full bg-white justify-center items-center"
             style={[rButtonStyle, styles.borderCurve]}
           >
-            <Text className="text-black text-xl font-medium">I understand</Text>
+            <Text className="text-black text-lg font-medium">I understand</Text>
           </AnimatedPressable>
         </View>
       </View>

@@ -152,7 +152,7 @@ export const FeatureItem: FC<Props> = ({ label, itemIndex, activeIndex, prevInde
     <Animated.View className="absolute p-4" style={rContainerStyle}>
       {/* Main feature card with rounded corners and shadow */}
       <View className="px-3 py-2 bg-white rounded-[14px]" style={styles.container}>
-        <Text className="text-lg">{label}</Text>
+        <Text className="text-base">{label}</Text>
       </View>
       {/* iOS-only blur backdrop for premium depth effect */}
       {Platform.OS === "ios" && (

@@ -33,7 +33,7 @@ type Props = {
 export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
   const insets = useSafeAreaInsets();
   const paddingTop = insets.top;
-  const paddingBottom = 12;
+  const paddingBottom = 20;
 
   // Safe-area adjusted heights ensure the animation math accounts for device top inset.
   // Keeping a dedicated paddingBottom stabilizes the final resting height across devices.
@@ -94,7 +94,7 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
       <Animated.View style={animatedTranslateContainer}>
         <Animated.View style={animatedOpacityContainer}>
           <View className="flex-row flex-wrap items-center justify-between mb-[30]">
-            <Text className="font-p-sb text-lg" style={{ color: THEME[theme].text }}>
+            <Text className="text-lg" style={{ color: THEME[theme].text }}>
               👋 Hello
             </Text>
             <View className="flex-row items-center gap-2">
@@ -108,10 +108,10 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
               </Pressable>
             </View>
           </View>
-          <Text className="text-2xl font-bold" style={{ color: THEME[theme].text }}>
+          <Text className="text-2xl font-semibold" style={{ color: THEME[theme].text }}>
             Welcome to your
           </Text>
-          <Text className="text-2xl font-bold mb-5" style={{ color: THEME[theme].text }}>
+          <Text className="text-2xl font-semibold mb-5" style={{ color: THEME[theme].text }}>
             app colors playground!
           </Text>
           <View className="h-px w-full opacity-20 my-3 bg-neutral-500" />
@@ -122,11 +122,13 @@ export const HomeHeader: FC<Props> = ({ scrollOffsetY, theme, setTheme }) => {
           {/* colorsapp-theme-toggle-animation 🔼 */}
           <View className="w-2" />
           <Pressable
-            className="py-3 px-4 rounded-full"
+            className="py-2.5 ios:py-3 px-4 rounded-full"
             style={{ backgroundColor: THEME[theme].bgElement }}
             onPress={simulatePress}
           >
-            <Text style={{ color: THEME[theme].text }}>Set colors</Text>
+            <Text className="font-medium" style={{ color: THEME[theme].text }}>
+              Set colors
+            </Text>
           </Pressable>
         </View>
         <View style={{ height: paddingBottom }} />

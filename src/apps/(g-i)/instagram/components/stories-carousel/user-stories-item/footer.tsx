@@ -11,7 +11,7 @@ export const Footer: FC = () => {
       <TextInput
         placeholder="Send message..."
         placeholderTextColor="white"
-        className="flex-1 h-14 text-white text-lg/6 font-medium border border-neutral-500 rounded-full px-4"
+        className="flex-1 h-12 text-white text-base/5 font-medium border border-neutral-500 rounded-full px-4"
         style={{ borderCurve: "continuous" }}
         editable={false}
       />
