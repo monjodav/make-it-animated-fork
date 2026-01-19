@@ -6,6 +6,8 @@ import { CalendarAnimatedContext } from "../../lib/animated-context";
 import { MONTHS_HEIGHT } from "../../lib/constants";
 
 const MonthIndicator = () => {
+  "use no memo";
+  
   const { monthWidths, activeIndexProgress } = use(CalendarAnimatedContext);
 
   const animatedIndicatorStyle = useAnimatedStyle(() => {
