@@ -3,9 +3,17 @@ import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardController, KeyboardProvider } from "react-native-keyboard-controller";
 import "../global.css";
-import { useCallback } from "react";
+import * as Sentry from "@sentry/react-native";
+import { LogLevel, OneSignal } from "react-native-onesignal";
+import { useVersionCheck } from "@/src/shared/lib/hooks/use-version-check";
+import * as Linking from "expo-linking";
+import { useOtaUpdate } from "@/src/shared/lib/hooks/use-update";
+import { useCallback, useEffect } from "react";
 import { useFonts } from "expo-font";
-import { LibreBaskerville_700Bold } from "@expo-google-fonts/libre-baskerville";
+import {
+  LibreBaskerville_700Bold,
+  LibreBaskerville_400Regular,
+} from "@expo-google-fonts/libre-baskerville";
 import {
   Outfit_400Regular,
   Outfit_500Medium,
@@ -14,6 +22,17 @@ import {
 } from "@expo-google-fonts/outfit";
 import { Bangers_400Regular } from "@expo-google-fonts/bangers/400Regular";
 import { Stack } from "expo-router";
+import { SafeAreaListener } from "react-native-safe-area-context";
+import { Uniwind } from "uniwind";
+
+if (!__DEV__) {
+  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+  OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID!);
+
+  Sentry.init({
+    dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  });
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,6 +46,7 @@ KeyboardController.preload();
 export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     LibreBaskerville_700Bold,
+    LibreBaskerville_400Regular,
     Outfit_400Regular,
     Outfit_500Medium,
     Outfit_600SemiBold,
@@ -34,10 +54,26 @@ export default function RootLayout() {
     Bangers_400Regular,
   });
 
+  useVersionCheck();
+  useOtaUpdate();
+
+  const url = Linking.useLinkingURL();
+
+  useEffect(() => {
+    if (url && url.includes("miaapp://")) {
+      Linking.openURL(url);
+    }
+  }, [url]);
+
   const onLayoutRootView = useCallback(() => {
     setTimeout(() => {
       SplashScreen.hide();
     }, 500);
+    if (!__DEV__) {
+      setTimeout(() => {
+        OneSignal.Notifications.requestPermission(true);
+      }, 1000);
+    }
   }, []);
 
   if (!fontsLoaded) {
@@ -46,22 +82,28 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={styles.container} onLayout={onLayoutRootView}>
-      <KeyboardProvider>
-        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
-          <Stack.Screen name="(apps)" options={{ animation: "slide_from_right" }} />
-          <Stack.Screen
-            name="qr-scanner"
-            options={{
-              gestureEnabled: true,
-              presentation: "formSheet",
-              sheetCornerRadius: 32,
-              contentStyle: {
-                height: "100%",
-              },
-            }}
-          />
-        </Stack>
-      </KeyboardProvider>
+      <SafeAreaListener
+        onChange={({ insets }) => {
+          Uniwind.updateInsets(insets);
+        }}
+      >
+        <KeyboardProvider>
+          <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+            <Stack.Screen name="(apps)" options={{ animation: "slide_from_right" }} />
+            <Stack.Screen
+              name="qr-scanner"
+              options={{
+                gestureEnabled: true,
+                presentation: "formSheet",
+                sheetCornerRadius: 32,
+                contentStyle: {
+                  height: "100%",
+                },
+              }}
+            />
+          </Stack>
+        </KeyboardProvider>
+      </SafeAreaListener>
     </GestureHandlerRootView>
   );
 }
