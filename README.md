@@ -46,7 +46,7 @@ npm run dev
 
 ---
 
-> **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./docs/GIT-WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
+> **💡 Git Workflow Tip:** Planning to make local changes or experiment with the code? Check out the [Git Workflow Guide](./docs/GIT_WORKFLOW.md) to learn about branch strategies for local development and how to stay up-to-date with the latest changes while avoiding merge conflicts.
 
 > **🤖 AI Workflow Guide:** Using AI-assisted development? Check out the [AI Workflow Guide](./docs/AI_WORKFLOW.md) to learn about available commands, rules, and skills that can help you work more efficiently with animations, code reviews, and performance optimization.
 
