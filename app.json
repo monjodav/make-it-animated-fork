@@ -1,0 +1,50 @@
+{
+  "name": "Make It Animated",
+  "slug": "make-it-animated",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "scheme": "make-it-animated",
+  "userInterfaceStyle": "automatic",
+  "icon": "./assets/images/icon-ios.png",
+  "ios": {
+    "supportsTablet": false,
+    "icon": "./assets/images/icon-ios.png"
+  },
+  "android": {
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/images/icon-android.png",
+      "backgroundColor": "#fffff4"
+    },
+    "permissions": [
+      "android.permission.CAMERA"
+    ]
+  },
+  "plugins": [
+    "expo-router",
+    "expo-font",
+    [
+      "expo-splash-screen",
+      {
+        "image": "./assets/images/splash.png",
+        "imageWidth": 150,
+        "resizeMode": "contain",
+        "backgroundColor": "#171717"
+      }
+    ],
+    [
+      "expo-camera",
+      {
+        "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+      }
+    ]
+  ],
+  "experiments": {
+    "typedRoutes": true
+  },
+  "extra": {
+    "router": {
+      "origin": false
+    }
+  },
+  "owner": "volodymyr_serbulenko"
+}
