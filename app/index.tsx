@@ -3,10 +3,14 @@ import { configureReanimatedLogger, ReanimatedLogLevel } from "react-native-rean
 import { Platform, TextInput, View } from "react-native";
 import { useRef } from "react";
 import { FlashListRef } from "@shopify/flash-list";
-import { SearchBar as StaticSearchBar } from "@/src/shared/components/home-screen/without-algolia/search-bar";
+import { AlgoliaProvider } from "@/src/shared/lib/providers/algolia-provider";
+import { NumberOfAnimations } from "@/src/shared/components/home-screen/number-of-animations";
+import { Results as AlgoliaResults } from "@/src/shared/components/home-screen/results";
+import { BottomBar } from "@/src/shared/components/home-screen/bottom-bar";
+import { SearchBar as AlgoliaSearchBar } from "@/src/shared/components/home-screen/search-bar";
+import { Animation } from "@/src/shared/lib/types/app";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Results as StaticResults } from "@/src/shared/components/home-screen/without-algolia/results";
-import { StaticAnimation } from "@/src/shared/lib/constants/animations";
+import { Href, Redirect } from "expo-router";
 import { WIP_SCREEN_HREF, SANDBOX } from "@/src/shared/lib/constants/dev";
 
 configureReanimatedLogger({
@@ -19,7 +23,7 @@ export default function Index() {
 
   useWarmUpBrowser();
 
-  const staticListRef = useRef<FlashListRef<StaticAnimation>>(null);
+  const algoliaListRef = useRef<FlashListRef<Animation>>(null);
   const textInputRef = useRef<TextInput>(null);
 
   if (__DEV__) {
@@ -30,16 +34,20 @@ export default function Index() {
       return <Redirect href={WIP_SCREEN_HREF as Href} />;
     }
   }
-  
+
   return (
-    <View
-      className="flex-1 bg-background"
-      style={{
-        paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
-      }}
-    >
-      <StaticResults listRef={staticListRef} />
-      <StaticSearchBar textInputRef={textInputRef} listRef={staticListRef} />
-    </View>
+    <AlgoliaProvider>
+      <View
+        className="flex-1 bg-background"
+        style={{
+          paddingTop: Platform.OS === "ios" ? insets.top : insets.top + 6,
+        }}
+      >
+        <NumberOfAnimations listRef={algoliaListRef} />
+        <AlgoliaResults listRef={algoliaListRef} />
+        <BottomBar textInputRef={textInputRef} />
+        <AlgoliaSearchBar textInputRef={textInputRef} listRef={algoliaListRef} />
+      </View>
+    </AlgoliaProvider>
   );
 }
