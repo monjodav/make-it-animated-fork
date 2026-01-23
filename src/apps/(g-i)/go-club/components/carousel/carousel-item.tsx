@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from "react-native";
-import { FC } from "react";
 import { Image } from "expo-image";
 
 type CarouselItemProps = {
@@ -9,7 +8,8 @@ type CarouselItemProps = {
   };
   width: number;
 };
-const CarouselItem: FC<CarouselItemProps> = ({ item, width }) => {
+
+export const CarouselItem = ({ item, width }: CarouselItemProps) => {
   return (
     <View style={[{ width, height: 550 }, styles.borderCurve]} className="px-6">
       <View className="flex-1 rounded-[50px] overflow-hidden bg-red-200">
@@ -37,8 +37,6 @@ const CarouselItem: FC<CarouselItemProps> = ({ item, width }) => {
     </View>
   );
 };
-
-export default CarouselItem;
 
 const styles = StyleSheet.create({
   borderCurve: { borderCurve: "continuous" },

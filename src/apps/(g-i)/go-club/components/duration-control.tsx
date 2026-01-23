@@ -1,13 +1,12 @@
-import { Text, StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import SegmentedControl from "@/src/shared/components/segmented-control";
-import { FC } from "react";
 
 type DurationControlProps = {
   value: "overall" | "today";
   setValue: (value: "overall" | "today") => void;
 };
 
-const DurationControl: FC<DurationControlProps> = ({ value, setValue }) => {
+export const DurationControl = ({ value, setValue }: DurationControlProps) => {
   return (
     <SegmentedControl
       value={value}
@@ -30,8 +29,6 @@ const DurationControl: FC<DurationControlProps> = ({ value, setValue }) => {
     </SegmentedControl>
   );
 };
-
-export default DurationControl;
 
 const styles = StyleSheet.create({
   borderCurve: {

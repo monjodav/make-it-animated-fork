@@ -1,7 +1,7 @@
-import { useWindowDimensions, View } from "react-native";
 import React from "react";
+import { useWindowDimensions, View } from "react-native";
 import Animated, { useAnimatedScrollHandler, useSharedValue } from "react-native-reanimated";
-import CarouselItem from "./carousel-item";
+import { CarouselItem } from "./carousel-item";
 import { PaginationDots } from "./pagination-dots";
 
 const SLIDES = [
@@ -13,11 +13,11 @@ const SLIDES = [
 ];
 
 const Carousel = () => {
-  const { width } = useWindowDimensions();
-
   const activeIndex = useSharedValue(0);
 
-  const scrollHandler = useAnimatedScrollHandler((event) => {
+  const { width } = useWindowDimensions();
+
+  const onScrollHandler = useAnimatedScrollHandler((event) => {
     const offsetX = event.contentOffset.x;
     activeIndex.set(offsetX / width);
   });
@@ -32,7 +32,7 @@ const Carousel = () => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         contentContainerClassName="pt-8"
-        onScroll={scrollHandler}
+        onScroll={onScrollHandler}
       />
       <View className="pt-12">
         <PaginationDots numberOfDots={SLIDES.length} activeIndex={activeIndex} />

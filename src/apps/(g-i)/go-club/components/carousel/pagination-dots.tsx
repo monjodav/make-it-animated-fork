@@ -29,6 +29,7 @@ const Dot: FC<DotProps> = ({ index, activeIndex }) => {
       }
     }
   );
+  
   const animatedStyle = useAnimatedStyle(() => {
     const progress = activeIndex.get();
 
