@@ -1,7 +1,7 @@
 {
   "arrowParens": "always",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
+  "bracketSameLine": false,
   "jsxSingleQuote": false,
   "quoteProps": "as-needed",
   "singleQuote": false,
@@ -9,5 +9,12 @@
   "printWidth": 100,
   "useTabs": false,
   "tabWidth": 2,
-  "trailingComma": "es5"
+  "trailingComma": "all",
+  "endOfLine": "lf",
+  "proseWrap": "preserve",
+  "requirePragma": false,
+  "insertPragma": false,
+  "htmlWhitespaceSensitivity": "css",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": false
 }

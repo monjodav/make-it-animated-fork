@@ -1,12 +1,10 @@
 // https://docs.expo.dev/guides/using-eslint/
-const { defineConfig } = require("eslint/config");
-const expoConfig = require("eslint-config-expo/flat");
-const reactCompiler = require("eslint-plugin-react-compiler");
-
-module.exports = defineConfig([
-  expoConfig,
-  reactCompiler.configs.recommended,
-  {
-    ignores: ["dist/*"],
+module.exports = {
+  extends: ["expo", "prettier"],
+  plugins: ["react-compiler", "prettier"],
+  rules: {
+    "react-compiler/react-compiler": "error",
+    "prettier/prettier": "error",
   },
-]);
+  ignorePatterns: ["dist/*"],
+};
