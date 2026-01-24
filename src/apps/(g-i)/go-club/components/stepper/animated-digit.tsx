@@ -1,13 +1,27 @@
 import { FC, useMemo } from "react";
 import { Paragraph, Skia, Group, Paint, Blur, Canvas } from "@shopify/react-native-skia";
-import { useDerivedValue, interpolate, Extrapolation, SharedValue } from "react-native-reanimated";
+import {
+  useDerivedValue,
+  SharedValue,
+  withSequence,
+  withTiming,
+  withSpring,
+} from "react-native-reanimated";
+
+const SPRING_CONFIG = {
+  mass: 1,
+  damping: 14,
+  stiffness: 220,
+  overshootClamping: true,
+};
 
 type AnimatedDigitProps = {
   index: number;
-  animatedIndex: SharedValue<number>;
+  currentIndex: SharedValue<number>;
+  previousIndex: SharedValue<number>;
 };
 
-export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, animatedIndex }) => {
+export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, previousIndex }) => {
   const paragraph = useMemo(() => {
     return Skia.ParagraphBuilder.Make()
       .pushStyle({
@@ -22,21 +36,27 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, animatedIndex }) 
   }, [index]);
 
   const opacity = useDerivedValue(() => {
-    return interpolate(
-      animatedIndex.get(),
-      [index - 1, index, index + 1],
-      [0, 1, 0],
-      Extrapolation.CLAMP,
-    );
+    if (currentIndex.get() === index) {
+      return withSequence(withTiming(0, { duration: 0 }), withSpring(1, SPRING_CONFIG));
+    }
+
+    if (previousIndex.get() === index) {
+      return withSpring(0, SPRING_CONFIG);
+    }
+
+    return 0;
   });
 
   const blurIntensity = useDerivedValue(() => {
-    return interpolate(
-      animatedIndex.get(),
-      [index - 0.25, index, index + 0.25],
-      [5, 0, 5],
-      Extrapolation.CLAMP,
-    );
+    if (currentIndex.get() === index) {
+      return withSequence(withTiming(10, { duration: 0 }), withSpring(0, SPRING_CONFIG));
+    }
+
+    if (previousIndex.get() === index) {
+      return withSpring(10, SPRING_CONFIG);
+    }
+
+    return 10;
   });
 
   return (

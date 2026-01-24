@@ -8,15 +8,20 @@ import { DigitalWheel } from "../components/stepper/digital-wheel";
 export const Stepper = () => {
   const safeAreaInsets = useSafeAreaInsets();
 
+  const previousIndex = useSharedValue(-1);
   const currentIndex = useSharedValue(0);
 
   const handleIncrement = useCallback(() => {
-    currentIndex.set(Math.min(9, Math.floor(currentIndex.get()) + 3));
-  }, [currentIndex]);
+    if (currentIndex.get() === 9) return;
+    previousIndex.set(currentIndex.get());
+    currentIndex.set(Math.min(9, Math.floor(currentIndex.get()) + 1));
+  }, [currentIndex, previousIndex]);
 
   const handleDecrement = useCallback(() => {
+    if (currentIndex.get() === 0) return;
+    previousIndex.set(currentIndex.get());
     currentIndex.set(Math.max(0, Math.ceil(currentIndex.get()) - 1));
-  }, [currentIndex]);
+  }, [currentIndex, previousIndex]);
 
   return (
     <View
@@ -40,7 +45,7 @@ export const Stepper = () => {
           <Plus size={24} color="#ffffff" />
         </Pressable>
       </View>
-      <DigitalWheel currentIndex={currentIndex} />
+      <DigitalWheel currentIndex={currentIndex} previousIndex={previousIndex} />
       {/* <Text
         className="absolute opacity-0 text-white text-5xl font-bold"
         onLayout={(event) => {
