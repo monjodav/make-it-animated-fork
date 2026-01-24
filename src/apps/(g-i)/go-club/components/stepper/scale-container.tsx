@@ -1,7 +1,10 @@
 import React, { FC, PropsWithChildren } from "react";
 import Animated, {
+  Extrapolation,
+  interpolate,
   SharedValue,
   useAnimatedStyle,
+  useDerivedValue,
   withSequence,
   withSpring,
   withTiming,
@@ -14,7 +17,7 @@ const SPRING_CONFIG = {
   overshootClamping: true,
 };
 
-const MIN_SCALE = 0.25;
+const MIN_SCALE = 0.7;
 
 type Props = {
   index: number;
@@ -28,28 +31,25 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
   currentIndex,
   previousIndex,
 }) => {
-  const rScaleStyle = useAnimatedStyle(() => {
+  const animatedProgress = useDerivedValue(() => {
     if (currentIndex.get() === index) {
-      return {
-        transform: [
-          {
-            scale: withSequence(
-              withTiming(MIN_SCALE, { duration: 0 }),
-              withSpring(1, SPRING_CONFIG),
-            ),
-          },
-        ],
-      };
+      return withSequence(withTiming(0, { duration: 0 }), withSpring(1, SPRING_CONFIG));
     }
 
     if (previousIndex.get() === index) {
-      return {
-        transform: [{ scale: withSpring(MIN_SCALE, SPRING_CONFIG) }],
-      };
+      return withSpring(0, SPRING_CONFIG);
     }
 
+    return 0;
+  });
+
+  const rScaleStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: MIN_SCALE }],
+      transform: [
+        {
+          scale: interpolate(animatedProgress.get(), [0, 1], [MIN_SCALE, 1], Extrapolation.CLAMP),
+        },
+      ],
     };
   });
 

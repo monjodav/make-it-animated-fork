@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Animated, { SharedValue } from "react-native-reanimated";
+import Animated, { SharedValue, useDerivedValue } from "react-native-reanimated";
 import { AnimatedDigit } from "./animated-digit";
 import { ScaleContainer } from "./scale-container";
 import { TranslateContainer } from "./translate-container";

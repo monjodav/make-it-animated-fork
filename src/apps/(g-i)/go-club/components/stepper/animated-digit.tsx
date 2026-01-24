@@ -6,6 +6,8 @@ import {
   withSequence,
   withTiming,
   withSpring,
+  interpolate,
+  Extrapolation,
 } from "react-native-reanimated";
 
 const SPRING_CONFIG = {
@@ -35,7 +37,7 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, pre
       .build();
   }, [index]);
 
-  const opacity = useDerivedValue(() => {
+  const animatedProgress = useDerivedValue(() => {
     if (currentIndex.get() === index) {
       return withSequence(withTiming(0, { duration: 0 }), withSpring(1, SPRING_CONFIG));
     }
@@ -47,16 +49,12 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, pre
     return 0;
   });
 
+  const opacity = useDerivedValue(() => {
+    return interpolate(animatedProgress.get(), [0, 1], [0, 1]);
+  });
+
   const blurIntensity = useDerivedValue(() => {
-    if (currentIndex.get() === index) {
-      return withSequence(withTiming(10, { duration: 0 }), withSpring(0, SPRING_CONFIG));
-    }
-
-    if (previousIndex.get() === index) {
-      return withSpring(10, SPRING_CONFIG);
-    }
-
-    return 10;
+    return interpolate(animatedProgress.get(), [0.5, 1], [10, 0], Extrapolation.CLAMP);
   });
 
   return (
