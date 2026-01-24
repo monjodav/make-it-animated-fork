@@ -1,64 +1,53 @@
 import { useCallback } from "react";
-import { Pressable, View, Text } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  useDerivedValue,
-  withSpring,
-} from "react-native-reanimated";
+import { Pressable, View } from "react-native";
+import Animated, { useSharedValue, withSpring, useAnimatedReaction } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ReText } from "react-native-redash";
 import { Plus, Minus } from "lucide-react-native";
 import { AnimatedDigit } from "../components/stepper/animated-digit";
+import { ScaleContainer } from "../components/stepper/scale-container";
+import { TranslateContainer } from "../components/stepper/translate-container";
 
 const SPRING_CONFIG = {
   mass: 1,
-  damping: 16,
-  stiffness: 240,
+  damping: 14,
+  stiffness: 220,
+};
+
+const SPRING_CONFIG_FOR_DIGIT_BLUR_AND_OPACITY = {
+  mass: 1,
+  damping: 14,
+  stiffness: 220,
+  overshootClamping: true,
 };
 
 export const Stepper = () => {
   const safeAreaInsets = useSafeAreaInsets();
 
+  const fontSize = 56;
+
   const digitWidth = useSharedValue(0);
   const digitHeight = useSharedValue(0);
+  const currentIndex = useSharedValue(0);
   const animatedIndex = useSharedValue(0);
+  const animatedIndexWithOvershootClamping = useSharedValue(0);
 
-  const indexString = useDerivedValue(() => {
-    return animatedIndex.get().toString();
-  });
+  useAnimatedReaction(
+    () => currentIndex.get(),
+    (value) => {
+      animatedIndex.set(withSpring(value, SPRING_CONFIG));
+      animatedIndexWithOvershootClamping.set(
+        withSpring(value, SPRING_CONFIG_FOR_DIGIT_BLUR_AND_OPACITY),
+      );
+    },
+  );
 
   const handleIncrement = useCallback(() => {
-    animatedIndex.set((currentValue) => withSpring(Math.min(9, currentValue + 1), SPRING_CONFIG));
-  }, [animatedIndex]);
+    currentIndex.set(Math.min(9, Math.floor(currentIndex.get()) + 1));
+  }, [currentIndex]);
 
   const handleDecrement = useCallback(() => {
-    animatedIndex.set((currentValue) => withSpring(Math.max(0, currentValue - 1), SPRING_CONFIG));
-  }, [animatedIndex]);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      width: digitWidth.get() + 4,
-      height: digitHeight.get(),
-    };
-  });
-
-  const allDigitsContainerAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: -animatedIndex.get() * digitHeight.get(),
-        },
-      ],
-    };
-  });
-
-  const singleDigitContainerAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      width: digitWidth.get(),
-      height: digitHeight.get(),
-    };
-  });
+    currentIndex.set(Math.max(0, Math.ceil(currentIndex.get()) - 1));
+  }, [currentIndex]);
 
   return (
     <View
@@ -66,51 +55,45 @@ export const Stepper = () => {
       style={{ paddingTop: safeAreaInsets.top }}
     >
       <View
-        className="absolute top-0 left-0 right-0 flex-row items-center justify-center gap-4 px-4 py-3 z-10"
+        className="absolute top-[384px] left-0 right-0 flex-row items-center justify-between gap-4 px-24 py-3 z-10"
         style={{ paddingTop: safeAreaInsets.top }}
       >
         <Pressable
           onPress={handleDecrement}
-          className="size-12 items-center justify-center rounded-full bg-white/20"
+          className="size-10 items-center justify-center rounded-full bg-white/20"
         >
           <Minus size={24} color="#ffffff" />
         </Pressable>
-        <View className="w-[60px] items-center justify-center px-4 py-2 rounded-lg bg-white/10">
-          <ReText
-            text={indexString}
-            style={{
-              fontSize: 24,
-              fontWeight: "bold",
-              color: "#ffffff",
-              textAlign: "center",
-            }}
-          />
-        </View>
         <Pressable
           onPress={handleIncrement}
-          className="size-12 items-center justify-center rounded-full bg-white/20"
+          className="size-10 items-center justify-center rounded-full bg-white/20"
         >
           <Plus size={24} color="#ffffff" />
         </Pressable>
       </View>
-      <Animated.View className="border border-red-500" style={animatedStyle}>
-        <Animated.View
-          className="w-full items-center"
-          style={allDigitsContainerAnimatedStyle}
-          pointerEvents="none"
-        >
-          {Array.from({ length: 10 }, (_, index) => (
-            <Animated.View
-              key={index}
-              style={singleDigitContainerAnimatedStyle}
-              className="items-center justify-center"
-            >
-              <AnimatedDigit key={index} index={index} animatedIndex={animatedIndex} />
-            </Animated.View>
-          ))}
-        </Animated.View>
+      <Animated.View className="w-[30px]" style={{ height: fontSize }}>
+        <TranslateContainer animatedIndex={animatedIndex} fontSize={fontSize}>
+          {Array.from({ length: 10 }, (_, index) => {
+            return (
+              <View
+                key={index}
+                className="absolute w-[34px]"
+                style={{ top: index * fontSize, height: fontSize }}
+              >
+                <ScaleContainer index={index} animatedIndex={animatedIndexWithOvershootClamping}>
+                  <AnimatedDigit
+                    index={index}
+                    animatedIndex={animatedIndexWithOvershootClamping}
+                    digitWidth={digitWidth}
+                    digitHeight={digitHeight}
+                  />
+                </ScaleContainer>
+              </View>
+            );
+          })}
+        </TranslateContainer>
       </Animated.View>
-      <Text
+      {/* <Text
         className="absolute opacity-0 text-white text-5xl font-bold"
         onLayout={(event) => {
           digitWidth.set(event.nativeEvent.layout.width);
@@ -119,7 +102,7 @@ export const Stepper = () => {
         pointerEvents="none"
       >
         0
-      </Text>
+      </Text> */}
     </View>
   );
 };
