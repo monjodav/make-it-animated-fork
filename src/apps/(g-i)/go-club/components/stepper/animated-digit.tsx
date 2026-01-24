@@ -54,7 +54,7 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, pre
   });
 
   const blurIntensity = useDerivedValue(() => {
-    return interpolate(animatedProgress.get(), [0.5, 1], [5, 0], Extrapolation.CLAMP);
+    return interpolate(animatedProgress.get(), [0.25, 1], [5, 0], Extrapolation.CLAMP);
   });
 
   return (
