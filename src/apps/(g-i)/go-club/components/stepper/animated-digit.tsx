@@ -11,9 +11,9 @@ import {
 } from "react-native-reanimated";
 
 const SPRING_CONFIG = {
-  mass: 1,
+  mass: 2,
   damping: 14,
-  stiffness: 220,
+  stiffness: 180,
   overshootClamping: true,
 };
 
@@ -54,7 +54,7 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, pre
   });
 
   const blurIntensity = useDerivedValue(() => {
-    return interpolate(animatedProgress.get(), [0.5, 1], [10, 0], Extrapolation.CLAMP);
+    return interpolate(animatedProgress.get(), [0.5, 1], [5, 0], Extrapolation.CLAMP);
   });
 
   return (

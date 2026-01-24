@@ -17,7 +17,7 @@ const SPRING_CONFIG = {
   overshootClamping: true,
 };
 
-const MIN_SCALE = 0.7;
+const MIN_SCALE = 0.2;
 
 type Props = {
   index: number;

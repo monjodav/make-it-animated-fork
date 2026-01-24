@@ -10,7 +10,7 @@ import Animated, {
 const SPRING_CONFIG = {
   mass: 1,
   damping: 14,
-  stiffness: 220,
+  stiffness: 200,
 };
 
 type Props = {
