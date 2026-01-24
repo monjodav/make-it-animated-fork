@@ -5,16 +5,9 @@ import { useDerivedValue, interpolate, Extrapolation, SharedValue } from "react-
 type AnimatedDigitProps = {
   index: number;
   animatedIndex: SharedValue<number>;
-  digitWidth: SharedValue<number>;
-  digitHeight: SharedValue<number>;
 };
 
-export const AnimatedDigit: FC<AnimatedDigitProps> = ({
-  index,
-  animatedIndex,
-  digitWidth,
-  digitHeight,
-}) => {
+export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, animatedIndex }) => {
   const paragraph = useMemo(() => {
     return Skia.ParagraphBuilder.Make()
       .pushStyle({
