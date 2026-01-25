@@ -10,4 +10,4 @@
 // Example: WIP_SCREEN_HREF=/whatsapp/chats
 
 export const SANDBOX = false;
-export const WIP_SCREEN_HREF = "/go-club/daily-steps";
+export const WIP_SCREEN_HREF = "";
