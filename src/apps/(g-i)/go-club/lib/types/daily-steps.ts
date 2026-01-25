@@ -1,3 +1,5 @@
+// daily-steps-counter-animation 🔽
+
 import type { PropsWithChildren } from "react";
 import { SharedValue } from "react-native-reanimated";
 
@@ -23,3 +25,5 @@ export type DigitalCounterProviderProps = PropsWithChildren & {
 };
 
 export type WheelDirection = "increase" | "decrease" | "idle";
+
+// daily-steps-counter-animation 🔼

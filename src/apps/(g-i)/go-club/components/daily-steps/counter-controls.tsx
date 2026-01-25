@@ -4,11 +4,8 @@ import { Plus, Minus } from "lucide-react-native";
 import { useDigitalCounter } from "../../lib/digital-counter-context";
 import { CounterButton } from "./counter-button";
 
-/**
- * Counter controls component with side-by-side increment/decrement buttons.
- * Buttons are contained within a rounded container with semi-transparent background.
- * Includes animated highlight overlay on press.
- */
+// daily-steps-counter-animation 🔽
+
 export const CounterControls: FC = () => {
   const { handleIncrement, handleDecrement } = useDigitalCounter();
 
@@ -20,3 +17,5 @@ export const CounterControls: FC = () => {
     </View>
   );
 };
+
+// daily-steps-counter-animation 🔼

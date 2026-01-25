@@ -12,6 +12,8 @@ import { TranslateContainer } from "./translate-container";
 import { useDigitalCounter } from "../../lib/digital-counter-context";
 import { WheelDirection } from "../../lib/types/daily-steps";
 
+// daily-steps-counter-animation 🔽
+
 const FONT_SIZE = 54;
 const FONT_WEIGHT = 700;
 
@@ -129,3 +131,5 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
     </>
   );
 };
+
+// daily-steps-counter-animation 🔼

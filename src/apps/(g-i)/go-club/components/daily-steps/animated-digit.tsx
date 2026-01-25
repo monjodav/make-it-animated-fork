@@ -13,6 +13,8 @@ import { WheelDirection } from "../../lib/types/daily-steps";
 import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 import { Platform } from "react-native";
 
+// daily-steps-counter-animation 🔽
+
 const MAX_BLUR_INTENSITY = Platform.OS === "ios" ? 7.5 : 5;
 
 type AnimatedDigitProps = {
@@ -97,3 +99,5 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({
     </Canvas>
   );
 };
+
+// daily-steps-counter-animation 🔼

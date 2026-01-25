@@ -2,34 +2,19 @@ import { StyleSheet, View } from "react-native";
 import { useWindowDimensions } from "react-native";
 import { Blur, Canvas, RoundedRect } from "@shopify/react-native-skia";
 
-/**
- * Background component with blurred ovals creating a gradient effect.
- * Creates multiple large, blurred oval shapes positioned across the screen
- * to achieve a soft, glowing background effect transitioning from dark purple-blue to vibrant blue.
- */
 export const ScreenBackground = () => {
   const { width, height } = useWindowDimensions();
 
-  /**
-   * Top oval: Large, positioned near the top to create the dark purple-blue gradient start.
-   * Extends beyond screen edges for seamless coverage.
-   */
   const topOvalWidth = width * 1.4;
   const topOvalHeight = height * 0.5;
   const topOvalX = (width - topOvalWidth) / 2;
   const topOvalY = -height * 0.1;
 
-  /**
-   * Middle oval: Medium-sized, positioned in the middle to create transition effect.
-   */
   const middleOvalWidth = width;
   const middleOvalHeight = height;
   const middleOvalX = 0;
   const middleOvalY = height * 0.25;
 
-  /**
-   * Bottom oval: Large, positioned at the bottom to create the vibrant blue gradient end.
-   */
   const bottomOvalWidth = width * 1.3;
   const bottomOvalHeight = height * 0.6;
   const bottomOvalX = (width - bottomOvalWidth) / 2;

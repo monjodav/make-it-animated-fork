@@ -8,6 +8,8 @@ import Animated, {
   Extrapolation,
 } from "react-native-reanimated";
 
+// daily-steps-counter-animation 🔽
+
 const HIGHLIGHT_ANIMATION_DURATION = 150;
 const MIN_SCALE = 0.9;
 const MAX_SCALE = 1.05;
@@ -17,10 +19,6 @@ type CounterButtonProps = {
   icon: ReactNode;
 };
 
-/**
- * Reusable counter button component with animated highlight overlay and scale on press.
- * Handles press animation logic internally.
- */
 export const CounterButton: FC<CounterButtonProps> = ({ onPress, icon }) => {
   const pressProgress = useSharedValue(0);
 
@@ -61,3 +59,5 @@ export const CounterButton: FC<CounterButtonProps> = ({ onPress, icon }) => {
     </Pressable>
   );
 };
+
+// daily-steps-counter-animation 🔼

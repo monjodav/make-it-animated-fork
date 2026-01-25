@@ -1,3 +1,5 @@
+// daily-steps-counter-animation 🔽
+
 export const SPRING_CONFIG = {
   mass: 1,
   damping: 12,
@@ -8,3 +10,5 @@ export const SPRING_CONFIG_WITH_OVERSHOOT = {
   ...SPRING_CONFIG,
   overshootClamping: true,
 };
+
+// daily-steps-counter-animation 🔼

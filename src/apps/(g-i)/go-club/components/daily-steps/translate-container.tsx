@@ -10,6 +10,8 @@ import Animated, {
 import { WheelDirection } from "../../lib/types/daily-steps";
 import { SPRING_CONFIG, SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 
+// daily-steps-counter-animation 🔽
+
 const ANGLE = 30;
 
 type Props = {
@@ -143,3 +145,5 @@ export const TranslateContainer: FC<PropsWithChildren<Props>> = ({
     </Animated.View>
   );
 };
+
+// daily-steps-counter-animation 🔼

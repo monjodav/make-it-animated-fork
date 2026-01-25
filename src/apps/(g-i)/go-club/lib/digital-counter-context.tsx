@@ -2,6 +2,8 @@ import { createContext, FC, useCallback, useContext } from "react";
 import type { DigitalCounterContextValue, DigitalCounterProviderProps } from "./types/daily-steps";
 import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 
+// daily-steps-counter-animation 🔽
+
 const getDigits = (value: number, max: number): number[] => {
   "worklet";
   const maxLength = max.toString().length;
@@ -95,3 +97,5 @@ export const useDigitalCounter = () => {
 
   return context;
 };
+
+// daily-steps-counter-animation 🔼

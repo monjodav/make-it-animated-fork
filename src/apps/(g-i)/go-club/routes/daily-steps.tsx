@@ -7,6 +7,8 @@ import { ScreenBackground } from "../components/daily-steps/screen-background";
 import { simulatePress } from "@/src/shared/lib/utils/simulate-press";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
+// daily-steps-counter-animation 🔽
+
 const MIN_VALUE = 10000;
 const MAX_VALUE = 32000;
 const STEP_VALUE = 500;
@@ -50,3 +52,5 @@ export const DailySteps = () => {
     </DigitalCounterProvider>
   );
 };
+
+// daily-steps-counter-animation 🔼

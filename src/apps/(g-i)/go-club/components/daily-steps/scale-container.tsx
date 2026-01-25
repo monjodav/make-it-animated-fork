@@ -12,6 +12,8 @@ import Animated, {
 import { WheelDirection } from "../../lib/types/daily-steps";
 import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 
+// daily-steps-counter-animation 🔽
+
 const MIN_SCALE = 0.5;
 
 type Props = {
@@ -80,3 +82,5 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
     </Animated.View>
   );
 };
+
+// daily-steps-counter-animation 🔼

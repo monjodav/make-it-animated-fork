@@ -3,6 +3,8 @@ import { useDigitalCounter } from "../../lib/digital-counter-context";
 import { DigitalWheel } from "./digital-wheel";
 import { View } from "react-native";
 
+// daily-steps-counter-animation 🔽
+
 export const DigitalCounter: FC = () => {
   const { max } = useDigitalCounter();
 
@@ -14,3 +16,5 @@ export const DigitalCounter: FC = () => {
     </View>
   );
 };
+
+// daily-steps-counter-animation 🔼
