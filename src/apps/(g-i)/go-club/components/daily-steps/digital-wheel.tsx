@@ -21,10 +21,9 @@ const FONT_WEIGHT = 700;
 
 type DigitalWheelProps = {
   index: number;
-  marginRight?: number;
 };
 
-export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginRight = 0 }) => {
+export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex }) => {
   // Track measured width of each digit (0-9) for consistent layout
   // Different digits have different widths (e.g., '1' vs '8')
   const [digitWidths, setDigitWidths] = useState<number[]>([]);
@@ -66,15 +65,19 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
     // const width = digitWidths[currentDigitIndex] ?? 0;
     const maxWidth = Math.max(...digitWidths);
 
+    const wheelIndexWithMarginRight = counter.get() > 9999 ? 1 : 0;
+
     if (wheelIndex + 1 > counter.get().toString().length) {
       return {
         opacity: 0,
         width: 0,
+        marginRight: 0,
       };
     }
     return {
       opacity: 1,
       width: maxWidth,
+      marginRight: wheelIndex === wheelIndexWithMarginRight ? 12 : 0,
     };
   });
 
@@ -87,7 +90,7 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
         className="items-center justify-center"
         style={[
           rContainerStyle,
-          { height: FONT_SIZE, marginRight, transform: [{ translateX: -4 * wheelIndex }] },
+          { height: FONT_SIZE, transform: [{ translateX: -4 * wheelIndex }] },
         ]}
       >
         {/* Render all 10 digits (0-9) stacked absolutely, only current digit visible */}

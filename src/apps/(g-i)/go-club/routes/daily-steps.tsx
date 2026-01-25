@@ -10,7 +10,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 // daily-steps-counter-animation 🔽
 
 // Counter configuration: daily steps range and increment/decrement step size
-const MIN_VALUE = 10000;
+const MIN_VALUE = 9000;
 const MAX_VALUE = 32000;
 const STEP_VALUE = 500;
 

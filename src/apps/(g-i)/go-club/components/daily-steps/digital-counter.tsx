@@ -14,7 +14,7 @@ export const DigitalCounter: FC = () => {
   return (
     <View className="flex-row items-center justify-center self-start">
       {Array.from({ length: max.toString().length }).map((_, index) => (
-        <DigitalWheel key={index} index={index} marginRight={index === 1 ? 16 : 0} />
+        <DigitalWheel key={index} index={index} />
       ))}
     </View>
   );
