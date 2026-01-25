@@ -9,6 +9,12 @@ export type StaticAnimation = {
 
 export const STATIC_ANIMATIONS: StaticAnimation[] = [
   {
+    animationName: "Daily steps counter animation",
+    appName: "Go Club",
+    slug: "go-club-daily-steps-counter-animation",
+    href: "/go-club/daily-steps",
+  },
+  {
     animationName: "Juventus games calendar animation",
     appName: "Juventus",
     slug: "juventus-games-calendar-animation",
