@@ -6,6 +6,8 @@ import { CounterButton } from "./counter-button";
 
 // daily-steps-counter-animation 🔽
 
+// Control buttons container: increment and decrement with visual separator
+// bg-white/5 creates subtle background, overflow-hidden clips rounded corners
 export const CounterControls: FC = () => {
   const { handleIncrement, handleDecrement } = useDigitalCounter();
 

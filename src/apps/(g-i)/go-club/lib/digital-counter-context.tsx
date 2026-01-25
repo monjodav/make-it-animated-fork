@@ -4,12 +4,16 @@ import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 
 // daily-steps-counter-animation 🔽
 
+// Extracts individual digits from counter value, padding with leading zeros
+// Example: value=5000, max=32000 → [5, 0, 0, 0]
+// Worklet annotation allows execution on UI thread for performance
 const getDigits = (value: number, max: number): number[] => {
   "worklet";
   const maxLength = max.toString().length;
   const counterString = Math.floor(value).toString();
   const digits = Array.from(counterString, (digit) => parseInt(digit, 10));
 
+  // Pad with leading zeros to match max value's digit count
   while (digits.length < maxLength) {
     digits.push(0);
   }
@@ -26,6 +30,11 @@ export const DigitalCounterProvider: FC<DigitalCounterProviderProps> = ({
   onValueChange,
   children,
 }) => {
+  // Shared values coordinate state across all wheel components
+  // counter: current numeric value
+  // previousCounter: value before last change (for transition detection)
+  // direction: animation direction (increase/decrease)
+  // currentWheelDigits/previousWheelDigits: digit arrays for each wheel position
   const counter = useSharedValue(min);
   const previousCounter = useSharedValue(0);
 
@@ -34,6 +43,9 @@ export const DigitalCounterProvider: FC<DigitalCounterProviderProps> = ({
   const currentWheelDigits = useSharedValue<number[]>([]);
   const previousWheelDigits = useSharedValue<number[]>([]);
 
+  // Synchronizes digit arrays when counter changes
+  // Runs on UI thread (worklet) for smooth animation coordination
+  // Updates both current and previous digit arrays for transition detection
   useAnimatedReaction(
     () => counter.get(),
     (value) => {
@@ -45,6 +57,9 @@ export const DigitalCounterProvider: FC<DigitalCounterProviderProps> = ({
     },
   );
 
+  // Increment handler: sets direction, updates previous value, then updates counter
+  // Clamps to max value to prevent overflow
+  // Math.floor ensures integer values for digit extraction
   const handleIncrement = useCallback(() => {
     direction.set("increase");
     previousCounter.set(counter.get());
@@ -57,6 +72,9 @@ export const DigitalCounterProvider: FC<DigitalCounterProviderProps> = ({
     }
   }, [direction, counter, previousCounter, max, step, onValueChange]);
 
+  // Decrement handler: sets direction, updates previous value, then updates counter
+  // Clamps to min value to prevent underflow
+  // Math.ceil ensures integer values for digit extraction
   const handleDecrement = useCallback(() => {
     direction.set("decrease");
     previousCounter.set(counter.get());

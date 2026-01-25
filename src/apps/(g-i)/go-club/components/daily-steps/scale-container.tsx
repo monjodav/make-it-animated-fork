@@ -14,6 +14,8 @@ import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 
 // daily-steps-counter-animation 🔽
 
+// Minimum scale value during transition creates "zoom in" effect
+// Digits scale from 50% to 100% as they become active
 const MIN_SCALE = 0.5;
 
 type Props = {
@@ -30,6 +32,7 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
   previousIndex,
   wheelDirection,
 }) => {
+  // Derived values track digit state to avoid recalculations in worklets
   const isCurrentDigit = useDerivedValue(() => {
     return currentIndex.get() === index;
   });
@@ -38,6 +41,10 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
     return previousIndex.get() === index;
   });
 
+  // Animation progress: 0 = start of transition, 1 = fully transitioned
+  // Current digit: springs from 0 to 1 (with overshoot for bounce effect)
+  // Previous digit: springs from 1 to 0 (fades out)
+  // Instant timing (duration: 0) resets to 0 before spring animation starts
   const animatedProgress = useDerivedValue(() => {
     if (isCurrentDigit.get()) {
       return withSequence(
@@ -53,8 +60,14 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
     return 0;
   });
 
+  // Scale interpolation: maps progress [0, 1] to scale [MIN_SCALE, 1]
+  // Input range: 0 (start) to 1 (end)
+  // Output range: MIN_SCALE (0.5) to 1 (full size)
+  // CLAMP prevents values outside [0, 1] range
+  // Only applies scale during active transitions (not idle)
   const rScaleStyle = useAnimatedStyle(() => {
     if (wheelDirection.get() === "idle") {
+      // Idle state: no transforms, digits at full scale
       return {
         transform: [
           {
