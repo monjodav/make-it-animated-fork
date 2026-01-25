@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { WheelDirection } from "../../lib/types";
 
 const SPRING_CONFIG = {
   mass: 1,
@@ -17,12 +18,13 @@ const SPRING_CONFIG = {
   overshootClamping: true,
 };
 
-const MIN_SCALE = 0.2;
+const MIN_SCALE = 0.5;
 
 type Props = {
   index: number;
   currentIndex: SharedValue<number>;
   previousIndex: SharedValue<number>;
+  wheelDirection: SharedValue<WheelDirection>;
 };
 
 export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
@@ -30,13 +32,22 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
   index,
   currentIndex,
   previousIndex,
+  wheelDirection,
 }) => {
+  const isCurrentDigit = useDerivedValue(() => {
+    return currentIndex.get() === index;
+  });
+
+  const isPreviousDigit = useDerivedValue(() => {
+    return previousIndex.get() === index;
+  });
+
   const animatedProgress = useDerivedValue(() => {
-    if (currentIndex.get() === index) {
+    if (isCurrentDigit.get()) {
       return withSequence(withTiming(0, { duration: 0 }), withSpring(1, SPRING_CONFIG));
     }
 
-    if (previousIndex.get() === index) {
+    if (isPreviousDigit.get()) {
       return withSpring(0, SPRING_CONFIG);
     }
 
@@ -44,6 +55,16 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
   });
 
   const rScaleStyle = useAnimatedStyle(() => {
+    if (wheelDirection.get() === "idle") {
+      return {
+        transform: [
+          {
+            scale: 1,
+          },
+        ],
+      };
+    }
+
     return {
       transform: [
         {

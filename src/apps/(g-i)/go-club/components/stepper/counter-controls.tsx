@@ -10,7 +10,7 @@ export const CounterControls: FC = () => {
 
   return (
     <View
-      className="absolute top-[384px] left-0 right-0 flex-row items-center justify-between gap-4 px-24 py-3 z-10"
+      className="absolute top-[384px] left-0 right-0 flex-row items-center justify-between gap-4 px-12 py-3 z-10"
       style={{ paddingTop: safeAreaInsets.top }}
     >
       <Pressable

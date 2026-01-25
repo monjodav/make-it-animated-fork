@@ -1,7 +1,19 @@
 import { createContext, FC, useCallback, useContext } from "react";
 import type { DigitalCounterContextValue, DigitalCounterProviderProps } from "./types";
 import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
-import { scheduleOnRN } from "react-native-worklets";
+
+const getDigits = (value: number, max: number): number[] => {
+  "worklet";
+  const maxLength = max.toString().length;
+  const counterString = Math.floor(value).toString();
+  const digits = Array.from(counterString, (digit) => parseInt(digit, 10));
+
+  while (digits.length < maxLength) {
+    digits.push(0);
+  }
+
+  return digits;
+};
 
 const DigitalCounterContext = createContext<DigitalCounterContextValue | undefined>(undefined);
 
@@ -12,26 +24,55 @@ export const DigitalCounterProvider: FC<DigitalCounterProviderProps> = ({
   onValueChange,
   children,
 }) => {
-  const counter = useSharedValue(0);
+  const counter = useSharedValue(min);
+  const previousCounter = useSharedValue(0);
+
+  const direction = useSharedValue<"increase" | "decrease">("increase");
+
+  const currentWheelDigits = useSharedValue<number[]>([]);
+  const previousWheelDigits = useSharedValue<number[]>([]);
 
   useAnimatedReaction(
     () => counter.get(),
     (value) => {
-      if (onValueChange) {
-        scheduleOnRN(onValueChange, value);
-      }
+      const currentDigits = getDigits(value, max);
+      const previousDigits = getDigits(previousCounter.get(), max);
+
+      currentWheelDigits.set(currentDigits);
+      previousWheelDigits.set(previousDigits);
     },
   );
 
   const handleIncrement = useCallback(() => {
-    counter.set(Math.min(max, Math.floor(counter.get()) + step));
-  }, [counter, max, step]);
+    direction.set("increase");
+    previousCounter.set(counter.get());
+
+    const newValue = Math.min(max, Math.floor(counter.get()) + step);
+    counter.set(newValue);
+
+    if (onValueChange) {
+      onValueChange?.(newValue);
+    }
+  }, [direction, counter, previousCounter, max, step, onValueChange]);
 
   const handleDecrement = useCallback(() => {
-    counter.set(Math.max(min, Math.ceil(counter.get()) - step));
-  }, [counter, min, step]);
+    direction.set("decrease");
+    previousCounter.set(counter.get());
+
+    const newValue = Math.max(min, Math.ceil(counter.get()) - step);
+    counter.set(newValue);
+
+    if (onValueChange) {
+      onValueChange?.(newValue);
+    }
+  }, [direction, counter, previousCounter, min, step, onValueChange]);
 
   const contextValue: DigitalCounterContextValue = {
+    counter,
+    previousCounter,
+    currentWheelDigits,
+    previousWheelDigits,
+    direction,
     min,
     max,
     step,

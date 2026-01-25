@@ -1,19 +1,15 @@
 import { View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DigitalWheel } from "../components/stepper/digital-wheel";
 import { CounterControls } from "../components/stepper/counter-controls";
 import { DigitalCounterProvider } from "../lib/digital-counter-context";
+import { DigitalCounter } from "../components/stepper/digital-counter";
 
-const MIN_VALUE = 0;
-const MAX_VALUE = 9;
-const STEP_VALUE = 1;
+const MIN_VALUE = 10000;
+const MAX_VALUE = 30000;
+const STEP_VALUE = 500;
 
 export const Stepper = () => {
   const safeAreaInsets = useSafeAreaInsets();
-
-  const previousIndex = useSharedValue(-1);
-  const currentIndex = useSharedValue(0);
 
   return (
     <DigitalCounterProvider min={MIN_VALUE} max={MAX_VALUE} step={STEP_VALUE}>
@@ -22,7 +18,7 @@ export const Stepper = () => {
         style={{ paddingTop: safeAreaInsets.top }}
       >
         <CounterControls />
-        <DigitalWheel currentIndex={currentIndex} previousIndex={previousIndex} />
+        <DigitalCounter />
         {/* <Text
           className="absolute opacity-0 text-white text-5xl font-bold"
           onLayout={(event) => {

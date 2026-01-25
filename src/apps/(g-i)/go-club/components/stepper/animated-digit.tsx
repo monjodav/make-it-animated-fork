@@ -9,6 +9,7 @@ import {
   interpolate,
   Extrapolation,
 } from "react-native-reanimated";
+import { WheelDirection } from "../../lib/types";
 
 const SPRING_CONFIG = {
   mass: 2,
@@ -21,9 +22,15 @@ type AnimatedDigitProps = {
   index: number;
   currentIndex: SharedValue<number>;
   previousIndex: SharedValue<number>;
+  wheelDirection: SharedValue<WheelDirection>;
 };
 
-export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, previousIndex }) => {
+export const AnimatedDigit: FC<AnimatedDigitProps> = ({
+  index,
+  currentIndex,
+  previousIndex,
+  wheelDirection,
+}) => {
   const paragraph = useMemo(() => {
     return Skia.ParagraphBuilder.Make()
       .pushStyle({
@@ -37,12 +44,20 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, pre
       .build();
   }, [index]);
 
+  const isCurrentDigit = useDerivedValue(() => {
+    return currentIndex.get() === index;
+  });
+
+  const isPreviousDigit = useDerivedValue(() => {
+    return previousIndex.get() === index;
+  });
+
   const animatedProgress = useDerivedValue(() => {
-    if (currentIndex.get() === index) {
+    if (isCurrentDigit.get()) {
       return withSequence(withTiming(0, { duration: 0 }), withSpring(1, SPRING_CONFIG));
     }
 
-    if (previousIndex.get() === index) {
+    if (isPreviousDigit.get()) {
       return withSpring(0, SPRING_CONFIG);
     }
 
@@ -50,11 +65,19 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({ index, currentIndex, pre
   });
 
   const opacity = useDerivedValue(() => {
+    if (wheelDirection.get() === "idle") {
+      return 1;
+    }
+
     return interpolate(animatedProgress.get(), [0, 1], [0, 1]);
   });
 
   const blurIntensity = useDerivedValue(() => {
-    return interpolate(animatedProgress.get(), [0.25, 1], [5, 0], Extrapolation.CLAMP);
+    if (wheelDirection.get() === "idle") {
+      return 0;
+    }
+
+    return interpolate(animatedProgress.get(), [0, 1], [5, 0], Extrapolation.CLAMP);
   });
 
   return (
