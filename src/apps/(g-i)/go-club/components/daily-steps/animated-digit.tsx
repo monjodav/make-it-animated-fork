@@ -9,7 +9,7 @@ import {
   interpolate,
   Extrapolation,
 } from "react-native-reanimated";
-import { WheelDirection } from "../../lib/types";
+import { WheelDirection } from "../../lib/types/daily-steps";
 import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 import { Platform } from "react-native";
 
@@ -18,6 +18,8 @@ const MAX_BLUR_INTENSITY = Platform.OS === "ios" ? 7.5 : 5;
 type AnimatedDigitProps = {
   index: number;
   fontSize: number;
+  fontWeight: number;
+  digitWidth: number;
   currentIndex: SharedValue<number>;
   previousIndex: SharedValue<number>;
   wheelDirection: SharedValue<WheelDirection>;
@@ -26,6 +28,8 @@ type AnimatedDigitProps = {
 export const AnimatedDigit: FC<AnimatedDigitProps> = ({
   index,
   fontSize,
+  fontWeight,
+  digitWidth,
   currentIndex,
   previousIndex,
   wheelDirection,
@@ -36,12 +40,12 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({
         color: Skia.Color("white"),
         fontSize,
         fontStyle: {
-          weight: 700,
+          weight: fontWeight,
         },
       })
       .addText(index.toString())
       .build();
-  }, [index, fontSize]);
+  }, [index, fontSize, fontWeight]);
 
   const isCurrentDigit = useDerivedValue(() => {
     return currentIndex.get() === index;
@@ -88,7 +92,7 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({
           </Paint>
         }
       >
-        <Paragraph paragraph={paragraph} x={2} y={2} width={34} />
+        <Paragraph paragraph={paragraph} x={2} y={fontSize * 0.05} width={digitWidth} />
       </Group>
     </Canvas>
   );

@@ -9,7 +9,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { WheelDirection } from "../../lib/types";
+import { WheelDirection } from "../../lib/types/daily-steps";
 import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 
 const MIN_SCALE = 0.5;

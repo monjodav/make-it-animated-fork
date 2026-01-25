@@ -1,19 +1,16 @@
 import React, { FC } from "react";
 import { useDigitalCounter } from "../../lib/digital-counter-context";
 import { DigitalWheel } from "./digital-wheel";
-import Animated, { LinearTransition } from "react-native-reanimated";
+import { View } from "react-native";
 
 export const DigitalCounter: FC = () => {
   const { max } = useDigitalCounter();
 
   return (
-    <Animated.View
-      layout={LinearTransition.springify()}
-      className="flex-row items-center justify-center"
-    >
+    <View className="flex-row items-center justify-center self-start">
       {Array.from({ length: max.toString().length }).map((_, index) => (
-        <DigitalWheel key={index} index={index} />
+        <DigitalWheel key={index} index={index} marginRight={index === 1 ? 16 : 0} />
       ))}
-    </Animated.View>
+    </View>
   );
 };

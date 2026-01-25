@@ -1,5 +1,5 @@
 import { createContext, FC, useCallback, useContext } from "react";
-import type { DigitalCounterContextValue, DigitalCounterProviderProps } from "./types";
+import type { DigitalCounterContextValue, DigitalCounterProviderProps } from "./types/daily-steps";
 import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 
 const getDigits = (value: number, max: number): number[] => {
