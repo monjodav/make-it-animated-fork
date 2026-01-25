@@ -45,8 +45,10 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
   );
 
   const rContainerStyle = useAnimatedStyle(() => {
-    const currentDigitIndex = currentIndex.get();
-    const width = digitWidths[currentDigitIndex] ?? 0;
+    // Use it if you want dynamic width based on the current digit
+    // const currentDigitIndex = currentIndex.get();
+    // const width = digitWidths[currentDigitIndex] ?? 0;
+    const maxWidth = Math.max(...digitWidths);
 
     if (wheelIndex + 1 > counter.get().toString().length) {
       return {
@@ -56,7 +58,7 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
     }
     return {
       opacity: 1,
-      width,
+      width: maxWidth,
     };
   });
 
@@ -65,7 +67,10 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
       <Animated.View
         layout={LinearTransition.springify()}
         className="items-center justify-center"
-        style={[rContainerStyle, { height: FONT_SIZE, marginRight }]}
+        style={[
+          rContainerStyle,
+          { height: FONT_SIZE, marginRight, transform: [{ translateX: -4 * wheelIndex }] },
+        ]}
       >
         {Array.from({ length: 10 }, (_, index) => {
           return (
@@ -108,7 +113,7 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex, marginR
               fontWeight: FONT_WEIGHT,
             }}
             onTextLayout={({ nativeEvent }) => {
-              const width = Math.round(nativeEvent.lines[0].width) - 2;
+              const width = Math.round(nativeEvent.lines[0].width);
               setDigitWidths((prev) => {
                 const updated = [...prev];
                 updated[index] = width;

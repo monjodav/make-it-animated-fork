@@ -92,7 +92,7 @@ export const AnimatedDigit: FC<AnimatedDigitProps> = ({
           </Paint>
         }
       >
-        <Paragraph paragraph={paragraph} x={2} y={fontSize * 0.05} width={digitWidth} />
+        <Paragraph paragraph={paragraph} x={0} y={fontSize * 0.05} width={digitWidth} />
       </Group>
     </Canvas>
   );
