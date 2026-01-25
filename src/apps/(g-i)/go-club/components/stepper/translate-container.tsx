@@ -28,7 +28,7 @@ export const TranslateContainer: FC<PropsWithChildren<Props>> = ({
   wheelDirection,
   fontSize,
 }) => {
-  const translateDistance = fontSize / 1.5;
+  const translateDistance = fontSize / 1.75;
 
   const opacity = useDerivedValue(() => {
     const isCurrentDigit = currentIndex.get() === index;
@@ -88,7 +88,10 @@ export const TranslateContainer: FC<PropsWithChildren<Props>> = ({
 
     if (isCurrentDigit) {
       if (wheelDirection.get() === "increase") {
-        return withSequence(withTiming(-ANGLE, { duration: 0 }), withSpring(0, SPRING_CONFIG));
+        return withSequence(
+          withTiming(360 - ANGLE, { duration: 0 }),
+          withSpring(360, SPRING_CONFIG),
+        );
       }
 
       if (wheelDirection.get() === "decrease") {
@@ -98,11 +101,14 @@ export const TranslateContainer: FC<PropsWithChildren<Props>> = ({
 
     if (isPreviousDigit) {
       if (wheelDirection.get() === "increase") {
-        return withSpring(-ANGLE, SPRING_CONFIG);
+        return withSequence(withTiming(0, { duration: 0 }), withSpring(ANGLE, SPRING_CONFIG));
       }
 
       if (wheelDirection.get() === "decrease") {
-        return withSpring(ANGLE, SPRING_CONFIG);
+        return withSequence(
+          withTiming(360, { duration: 0 }),
+          withSpring(360 - ANGLE, SPRING_CONFIG),
+        );
       }
     }
 
@@ -113,6 +119,9 @@ export const TranslateContainer: FC<PropsWithChildren<Props>> = ({
     return {
       opacity: opacity.get(),
       transform: [
+        {
+          perspective: 500,
+        },
         {
           translateY: translateY.get(),
         },

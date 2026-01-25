@@ -63,7 +63,7 @@ export const useLinearHeader = ({
         withTiming(scrollY, {
           duration: durationMs,
           easing: Easing.out(Easing.cubic), // fast-out for snappy reveal
-        })
+        }),
       );
     }
   });
@@ -133,7 +133,7 @@ export const useLinearHeader = ({
         </Animated.Text>
       </View>
     ),
-    [width, rOutgoingStyle, placeholderText, rIncomingStyle, title]
+    [width, rOutgoingStyle, placeholderText, rIncomingStyle, title],
   );
 
   useEffect(() => {

@@ -11,8 +11,9 @@ import {
 } from "react-native-reanimated";
 import { WheelDirection } from "../../lib/types";
 import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
+import { Platform } from "react-native";
 
-const MAX_BLUR_INTENSITY = 8;
+const MAX_BLUR_INTENSITY = Platform.OS === "ios" ? 7.5 : 5;
 
 type AnimatedDigitProps = {
   index: number;
