@@ -8,12 +8,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { WheelDirection } from "../../lib/types";
+import { SPRING_CONFIG, SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 
-const SPRING_CONFIG = {
-  mass: 1,
-  damping: 14,
-  stiffness: 200,
-};
+const ANGLE = 30;
 
 type Props = {
   index: number;
@@ -31,76 +28,96 @@ export const TranslateContainer: FC<PropsWithChildren<Props>> = ({
   wheelDirection,
   fontSize,
 }) => {
-  const translateDistance = fontSize;
+  const translateDistance = fontSize / 1.5;
 
-  const isCurrentDigit = useDerivedValue(() => {
-    return currentIndex.get() === index;
+  const opacity = useDerivedValue(() => {
+    const isCurrentDigit = currentIndex.get() === index;
+    const isPreviousDigit = previousIndex.get() === index;
+
+    if (isCurrentDigit) {
+      return withSpring(1, SPRING_CONFIG_WITH_OVERSHOOT);
+    }
+
+    if (isPreviousDigit) {
+      return withSpring(0, SPRING_CONFIG_WITH_OVERSHOOT);
+    }
+
+    return 0;
   });
 
-  const isPreviousDigit = useDerivedValue(() => {
-    return previousIndex.get() === index;
+  const translateY = useDerivedValue(() => {
+    const isCurrentDigit = currentIndex.get() === index;
+    const isPreviousDigit = previousIndex.get() === index;
+
+    if (isCurrentDigit) {
+      if (wheelDirection.get() === "increase") {
+        return withSequence(
+          withTiming(translateDistance, { duration: 0 }),
+          withSpring(0, SPRING_CONFIG),
+        );
+      }
+
+      if (wheelDirection.get() === "decrease") {
+        return withSequence(
+          withTiming(-translateDistance, { duration: 0 }),
+          withSpring(0, SPRING_CONFIG),
+        );
+      }
+    }
+
+    if (isPreviousDigit) {
+      if (wheelDirection.get() === "increase") {
+        return withSpring(-translateDistance, SPRING_CONFIG);
+      }
+
+      if (wheelDirection.get() === "decrease") {
+        return withSpring(translateDistance, SPRING_CONFIG);
+      }
+    }
+
+    return wheelDirection.get() === "idle"
+      ? withSpring(0, SPRING_CONFIG)
+      : wheelDirection.get() === "increase"
+        ? translateDistance
+        : -translateDistance;
+  });
+
+  const angle = useDerivedValue(() => {
+    const isCurrentDigit = currentIndex.get() === index;
+    const isPreviousDigit = previousIndex.get() === index;
+
+    if (isCurrentDigit) {
+      if (wheelDirection.get() === "increase") {
+        return withSequence(withTiming(-ANGLE, { duration: 0 }), withSpring(0, SPRING_CONFIG));
+      }
+
+      if (wheelDirection.get() === "decrease") {
+        return withSequence(withTiming(ANGLE, { duration: 0 }), withSpring(0, SPRING_CONFIG));
+      }
+    }
+
+    if (isPreviousDigit) {
+      if (wheelDirection.get() === "increase") {
+        return withSpring(-ANGLE, SPRING_CONFIG);
+      }
+
+      if (wheelDirection.get() === "decrease") {
+        return withSpring(ANGLE, SPRING_CONFIG);
+      }
+    }
+
+    return 0;
   });
 
   const rTranslateYContainerStyle = useAnimatedStyle(() => {
-    if (isCurrentDigit.get()) {
-      if (wheelDirection.get() === "increase") {
-        return {
-          opacity: 1,
-          transform: [
-            {
-              translateY: withSequence(
-                withTiming(translateDistance, { duration: 0 }),
-                withSpring(0, SPRING_CONFIG),
-              ),
-            },
-          ],
-        };
-      }
-
-      if (wheelDirection.get() === "decrease") {
-        return {
-          opacity: 1,
-          transform: [
-            {
-              translateY: withSequence(
-                withTiming(-translateDistance, { duration: 0 }),
-                withSpring(0, SPRING_CONFIG),
-              ),
-            },
-          ],
-        };
-      }
-    }
-
-    if (isPreviousDigit.get()) {
-      if (wheelDirection.get() === "increase") {
-        return {
-          opacity: 1,
-          transform: [
-            {
-              translateY: withSpring(-translateDistance, SPRING_CONFIG),
-            },
-          ],
-        };
-      }
-
-      if (wheelDirection.get() === "decrease") {
-        return {
-          opacity: 1,
-          transform: [
-            {
-              translateY: withSpring(translateDistance, SPRING_CONFIG),
-            },
-          ],
-        };
-      }
-    }
-
     return {
-      opacity: isCurrentDigit.get() ? 1 : 0,
+      opacity: opacity.get(),
       transform: [
         {
-          translateY: isCurrentDigit.get() ? 0 : 0,
+          translateY: translateY.get(),
+        },
+        {
+          rotateX: `${angle.get()}deg`,
         },
       ],
     };

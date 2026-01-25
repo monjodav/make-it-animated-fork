@@ -73,6 +73,7 @@ export const DigitalWheel: FC<DigitalWheelProps> = ({ index: wheelIndex }) => {
             >
               <AnimatedDigit
                 index={index}
+                fontSize={FONT_SIZE}
                 currentIndex={currentIndex}
                 previousIndex={previousIndex}
                 wheelDirection={wheelDirection}

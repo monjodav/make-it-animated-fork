@@ -10,13 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { WheelDirection } from "../../lib/types";
-
-const SPRING_CONFIG = {
-  mass: 1,
-  damping: 14,
-  stiffness: 220,
-  overshootClamping: true,
-};
+import { SPRING_CONFIG_WITH_OVERSHOOT } from "../../lib/constants/daily-steps";
 
 const MIN_SCALE = 0.5;
 
@@ -44,11 +38,14 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
 
   const animatedProgress = useDerivedValue(() => {
     if (isCurrentDigit.get()) {
-      return withSequence(withTiming(0, { duration: 0 }), withSpring(1, SPRING_CONFIG));
+      return withSequence(
+        withTiming(0, { duration: 0 }),
+        withSpring(1, SPRING_CONFIG_WITH_OVERSHOOT),
+      );
     }
 
     if (isPreviousDigit.get()) {
-      return withSpring(0, SPRING_CONFIG);
+      return withSpring(0, SPRING_CONFIG_WITH_OVERSHOOT);
     }
 
     return 0;
@@ -60,6 +57,9 @@ export const ScaleContainer: FC<PropsWithChildren<Props>> = ({
         transform: [
           {
             scale: 1,
+          },
+          {
+            rotateX: "0deg",
           },
         ],
       };
