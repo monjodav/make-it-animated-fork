@@ -32,6 +32,10 @@ npm run android
 npm run dev
 ```
 
+> **🔒 Private Repository Required:** If you want to push the cloned repository to a remote, you **must** use a private repository to comply with the [Terms of Service](https://makeitanimated.dev/terms) and [License Agreement](./LICENSE).
+
+---
+
 > **📌 Default Branch:** The default branch of this repository is `public`. When you clone the repository, you'll be on the `public` branch by default.
 
 ---
